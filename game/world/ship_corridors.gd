@@ -34,12 +34,13 @@ func _seal_hallway() -> void:
 			_solid_box(self, Vector3(side * 3.0, 1.55, (span.x + span.y) * 0.5), Vector3(0.18, 3.1, span.y - span.x), wall)
 		for end in [-20.85, 20.85]:
 			_solid_box(self, Vector3(side * 2.4, 1.55, end), Vector3(1.2, 3.1, 0.18), wall)
-	for spec in [[-6.0, "PROA · PUENTE\nCAMAROTES  ←   →  ENFERMERÍA"], [6.0, "POPA · INGENIERÍA\nBODEGA  ←   →  COMEDOR"]]:
+	# Ship-relative labels remain true when approached from the other direction.
+	for spec in [[-6.0, "PROA · PUENTE\nCAMAROTES (BABOR) · ENFERMERÍA (ESTRIBOR)"], [6.0, "POPA · INGENIERÍA\nBODEGA (BABOR) · COMEDOR (ESTRIBOR)"]]:
 		var sign = Label3D.new()
 		sign.text = spec[1]
 		sign.position = Vector3(0, 2.6, spec[0])
-		sign.font_size = 32
-		sign.pixel_size = 0.006
+		sign.font_size = 28
+		sign.pixel_size = 0.004
 		sign.modulate = ConsoleUI.TEAL
 		sign.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 		add_child(sign)

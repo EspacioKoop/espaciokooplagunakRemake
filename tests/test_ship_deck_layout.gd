@@ -53,8 +53,14 @@ static func run(runner: SceneTree) -> void:
 		deck.teleport_zone(i)
 		await runner.settle(18)
 		runner.check(deck.body.is_on_floor() and deck.zone == i, "rotated arrival has reachable floor in " + layout.ZONES[i].name)
-	# Test every hatch from both sides without relying on a room-centre heuristic.
 	var previous_motion: bool = deck.reduced_motion
+	var controls = runner.root.get_node("Controls")
+	var previous_touch: bool = controls.touch.enabled
+	var previous_walking: bool = controls.touch.walking
+	var previous_paused: bool = runner.session.paused
+	controls.touch.set_enabled(true)
+	controls.touch.walking = true
+	runner.session.paused = true
 	deck.reduced_motion = true
 	for index in deck._corridors.doors.size():
 		var door: Dictionary = deck._corridors.doors[index]
@@ -65,17 +71,27 @@ static func run(runner: SceneTree) -> void:
 			runner.check(deck._corridors.destination_for(index, point) == (door.target if side < 0 else door.source), "hatch label names the destination on this side")
 		deck.body.position = door.position - normal * 1.2 + Vector3(0, 0.4, 0)
 		deck.body.velocity = Vector3.ZERO
-		await runner.settle(8)
+		await runner.settle(12)
 		runner.check(deck._corridors.set_open(index, false), "empty hatch can close")
 		await runner.settle(3)
 		runner.check(deck.body.test_move(deck.body.global_transform, normal * 2.0), "closed hatch has real collision %d" % index)
 		runner.check(is_equal_approx(door.panel.position.y, 1.35), "reduced motion closes without tween")
 		deck._corridors.set_open(index, true)
 		await runner.settle(3)
-		runner.check(not deck.body.test_move(deck.body.global_transform, normal * 2.0), "open hatch provides physical passage %d" % index)
+		runner.check(door.collider.disabled, "open hatch releases its collider %d" % index)
+		# A horizontal test_move may report the supporting floor at the hallway
+		# seam. Require actual movement across each open portal instead: this also
+		# detects blockers, fall recovery and discontinuities, not just its flag.
+		var crossed: bool = await preload("res://../tests/test_ship_corridors.gd").walk(runner, door.position + normal * 0.8, "open hatch crossing %d" % index)
+		runner.check(crossed, "open hatch provides real physical passage %d" % index)
 		deck.body.position = door.position + Vector3(0, 0.1, 0)
 		deck.body.velocity = Vector3.ZERO
 		runner.check(not deck._corridors.set_open(index, false) and door.open, "hatch refuses to close onto a player %d" % index)
+	Input.action_release("move_forward")
+	Input.action_release("sprint")
+	controls.touch.set_enabled(previous_touch)
+	controls.touch.walking = previous_walking
+	runner.session.paused = previous_paused
 	deck.reduced_motion = previous_motion
 	deck.teleport_zone(0)
 	await runner.settle(3)
