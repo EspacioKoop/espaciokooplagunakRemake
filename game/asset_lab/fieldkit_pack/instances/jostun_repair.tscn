@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/fieldkit_pack/jostun_repair.glb" id="1"]
+
+[node name="jostun_repair" type="Node3D"]
+metadata/asset_id = "fieldkit/jostun_repair"
+
+[node name="Model" parent="." instance=ExtResource("1")]
