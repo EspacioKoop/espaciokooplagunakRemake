@@ -87,7 +87,7 @@ func _build_shell() -> void:
 	root.add_child(line)
 	_content = ConsoleUI.column(root, 16)
 	ConsoleUI.expand(_content)
-	var footer_row = ConsoleUI.row(_content.get_parent())
+	var footer_row = ConsoleUI.row(root)
 	_footer = ConsoleUI.label("F1 · Guía     F5 · Guardar     F11 · Pantalla completa", 13, ConsoleUI.MUTED)
 	_footer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_footer.clip_text = true
@@ -102,7 +102,7 @@ func _build_shell() -> void:
 	add_child(_new_confirmation)
 	_help = AcceptDialog.new()
 	_help.title = "Guía de la tripulación"
-	_help.dialog_text = "JUEGO LOCAL\nControlas los ocho puestos. Cambia con los botones o con las teclas 1–8.\nSelecciona un contacto en la lista o el radar antes de emitir órdenes.\n\nPRIMER VUELO\n1. Navegación: selecciona Argi y activa el piloto automático.\n2. Sensores: analiza el faro a menos de 900 m.\n3. Comunicaciones: abre un canal con Kaia.\n4. Navegación: acércate y atraca por debajo de 35 m/s.\n\nCUBIERTA\nPulsa en la vista para capturar el ratón. WASD, Mayús y E para caminar e interactuar. Esc libera el ratón.\n\nCOOPERACIÓN\nEl anfitrión abre una sesión y comparte su dirección y clave. Cada persona\nocupa un puesto diferente. La campaña se guarda en el equipo anfitrión.\n\nF5 guarda. F11 alterna pantalla completa. Foundry es opcional."
+	_help.dialog_text = "JUEGO LOCAL\nControlas los ocho puestos. Cambia con los botones o con las teclas 1–8.\nSelecciona un contacto en la lista o el radar antes de emitir órdenes.\n\nPRIMER VUELO\n1. Navegación: selecciona Argi y activa el piloto automático.\n2. Sensores: analiza el faro a menos de 900 m.\n3. Comunicaciones: abre un canal con Kaia.\n4. Navegación: acércate y atraca por debajo de 35 m/s.\n\nCUBIERTA\nPulsa en la vista para capturar el ratón. WASD para caminar, Mayús para correr.\nE accede a escotillas y consolas. Esc libera el ratón.\n\nCOOPERACIÓN\nEl anfitrión abre una sesión y comparte su dirección y clave. Cada persona\nocupa un puesto diferente. La campaña se guarda en el equipo anfitrión.\n\nF5 guarda. F11 alterna pantalla completa. Foundry es opcional."
 	add_child(_help)
 
 func _go(page: String) -> void:
@@ -375,7 +375,7 @@ func _build_actions() -> void:
 			var system = OptionButton.new()
 			for system_name in Catalog.SYSTEMS: system.add_item(Catalog.SYSTEM_NAMES[system_name])
 			buttons.add_child(system)
-			buttons.add_child(ConsoleUI.button("Enviar drones · 2 repuestos", _send.bind("repair", {"system": Catalog.SYSTEMS[system.selected]}), true))
+			buttons.add_child(ConsoleUI.button("Enviar drones · 2 repuestos", func(): _send("repair", {"system": Catalog.SYSTEMS[system.selected]}), true))
 			buttons.add_child(ConsoleUI.button("Reparar estación", func(): _send("repair_target", {"target": _target})))
 			_actions.add_child(ConsoleUI.paragraph("Los drones reparan 35 puntos de un sistema en 5 segundos. Reparar una estación consume 5 repuestos y requiere estar a menos de 300 m.", 15))
 	if Session.role != "ingenieria":
@@ -871,6 +871,7 @@ func _refresh() -> void:
 		for i in data.contacts.size():
 			var c: Dictionary = data.contacts[i]
 			_refs.atlas_contacts.add_item(c.name + " · %d m" % _distance(c, ship))
+			_refs.atlas_contacts.set_item_metadata(i, c.id)
 			if c.id == _target: _refs.atlas_contacts.select(i)
 	if _refs.has("contact_info"):
 		_refs.contact_info.text = "Selecciona un contacto." if chosen.is_empty() else "%s\n\n%s · %d m\n%s\n%s" % [chosen.name, (Catalog.CONTACT_NAMES[Catalog.CONTACT_KINDS.find(chosen.kind)] if chosen.kind in Catalog.CONTACT_KINDS else "Sin identificar"), _distance(chosen, ship), "Canal abierto" if chosen.get("hailed", false) else "Canal sin abrir", "Sonda activa" if chosen.get("probed", false) else "Sin sonda"]
