@@ -2,7 +2,8 @@ extends SceneTree
 var failures = 0
 var checks = 0
 
-func _initialize() -> void: call_deferred("run")
+func _initialize() -> void:
+	call_deferred("run_peer" if "--campaign-peer" in OS.get_cmdline_user_args() else "run")
 
 func check(value: bool, label: String) -> void:
 	checks += 1
@@ -64,6 +65,12 @@ func run() -> void:
 	check(not CampaignDocument.validate(bad).is_empty(), "boolean is not version 1")
 	check(CampaignDocument.decode(" ".repeat(CampaignDocument.MAX_BYTES + 1)).has("error"), "bounded import")
 	check(CampaignDocument.decode("{bad").has("error"), "invalid JSON")
+	var deep: Dictionary = {"leaf": "metadata"}
+	for i in 16: deep = {"child": deep}
+	bad = document.duplicate(true)
+	bad.extra = deep
+	check(LocalStorage.validate_json(bad), "boundary fixture was valid before embedding")
+	check(not CampaignDocument.validate(bad).is_empty(), "content reserves save envelope nesting level")
 	var explicit = document.duplicate(true)
 	explicit.missions[1].requires = ["stage_0"]
 	explicit.missions[2].requires = ["stage_0", "stage_1"]
@@ -160,6 +167,19 @@ func run() -> void:
 	check(editor.selected == 0, "UI reorders selected mission")
 	editor._undo()
 	check(editor.document.missions.size() == 2, "UI undo retains campaign")
+	editor.selected = 1
+	editor._refresh()
+	editor.linear.button_pressed = false
+	editor.dependency_fields.values()[0].button_pressed = true
+	editor._apply_dependencies()
+	check(editor.document.missions[1].requires == [editor.document.missions[0].id], "UI chooses prerequisite without typing IDs")
+	editor._delete()
+	for child in editor.get_children():
+		if child is ConfirmationDialog: child.confirmed.emit()
+	await settle()
+	check(editor.document.missions.size() == 1, "UI confirms deletion")
+	editor._undo()
+	check(editor.document.missions.size() == 2, "UI restores deleted stage")
 	editor._edit_mission()
 	await settle()
 	editor.mission_editor._set_text("Etapa editada", "title")
@@ -178,6 +198,27 @@ func run() -> void:
 	if "--campaign-capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
 		editor.get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../docs/images/campaign-editor.png"))
+	for size in [Vector2i(1000, 650), Vector2i(1280, 800)]:
+		editor.size = size
+		await settle()
+		for button in editor.find_children("*", "Button", true, false):
+			if button.text == "Cerrar taller": check(button.get_global_rect().end.y <= size.y, "editor close stays in compact viewport")
+	# Preview retains the same draft, including unapplied mission edits.
+	editor._edit_mission()
+	await settle()
+	editor.mission_editor._set_text("Borrador para probar", "title")
+	editor.mission_editor._play()
+	await settle()
+	for child in editor.mission_window.get_children():
+		if child is ConfirmationDialog: child.confirmed.emit()
+	await settle()
+	check(not editor.visible and not editor.mission_window.visible, "preview exposes the playable bridge")
+	app._go("campaign")
+	check(app._open_campaign_editor() == editor, "return reuses draft after page navigation")
+	await settle()
+	check(editor.mission_editor.mission.title == "Borrador para probar", "preview preserves unapplied edits")
+	editor._apply_mission()
+	await settle()
 	editor._play_campaign()
 	await settle()
 	var confirmation: ConfirmationDialog
@@ -190,6 +231,19 @@ func run() -> void:
 	app._go("campaign")
 	await settle()
 	check(app._content.get_global_rect().end.x <= root.size.x + 1, "campaign list stays within viewport")
+	var wide = fixture()
+	wide.missions[0].title = "Exploración y encuentro con los navegantes del faro occidental"
+	for mission in wide.missions: mission.requires = []
+	check(session.start_campaign(wide).ok, "valid long-title campaign starts")
+	app._go("campaign")
+	await settle()
+	check(app._content.get_global_rect().end.x <= root.size.x + 1, "long mission title cannot widen campaign list")
+	var embark_buttons = 0
+	for button in app.find_children("*", "Button", true, false):
+		if button.text == "Embarcar":
+			embark_buttons += 1
+			check(button.get_global_rect().end.x <= root.size.x, "all three embark actions stay visible")
+	check(embark_buttons == 3, "three independent authored stages remain reachable")
 	app._ambient.stop()
 	app._effects.stop()
 	app._ambient.stream = null
@@ -199,4 +253,46 @@ func run() -> void:
 	for target in [path, path + ".bak", local_path, "user://campaign-test-save.json", "user://campaign-test-save.json.bak"]:
 		if FileAccess.file_exists(target): DirAccess.remove_absolute(ProjectSettings.globalize_path(target))
 	print("CAMPAIGN_OK ", checks, " checks; ", failures, " failures")
+	quit(1 if failures else 0)
+
+func run_peer() -> void:
+	var args = OS.get_cmdline_user_args()
+	var peer_case: String = args[args.find("--campaign-peer") + 1]
+	var port = int(args[args.find("--port") + 1])
+	var session = root.get_node("Session")
+	var document = fixture()
+	document.missions[0].contacts.append({"id": "hidden", "name": "ACTIVE_SECRET_CONTACT", "kind": "beacon", "position": [1500, 1500], "known": false})
+	document.missions[2].contacts[0].name = "FUTURE_SECRET_CONTACT"
+	if peer_case == "host":
+		check(session.start_campaign(document).ok, "network host selects custom campaign")
+		check(session.host_session(port, "campaign-integration-test-key").ok, "real ENet host starts")
+		print("CAMPAIGN_HOST_READY")
+		for i in 80:
+			if session.roster.size() == 2: break
+			await create_timer(0.05).timeout
+		check(session.roster.size() == 2, "real authenticated campaign participant")
+		await create_timer(0.8).timeout
+		check(session.sim.state.campaign_document == document, "network activity cannot replace document")
+		check(session.start_mission(1).ok, "host starts unlocked second mission over ENet")
+		await create_timer(1.2).timeout
+	else:
+		check(session.join_session("127.0.0.1", port, "campaign-integration-test-key", "Campaign QA", "navegacion").ok, "real client starts")
+		for i in 80:
+			if not session.view.is_empty(): break
+			await create_timer(0.05).timeout
+		check(not session.view.is_empty(), "client receives authored mission")
+		if not session.view.is_empty():
+			check(session.view.mission.id == CampaignDocument.runtime_id(document, "stage_0"), "client sees active stage only")
+			check(not session.start_campaign(document).ok and not session.start_mission(2).ok, "connected client cannot select host campaign")
+			check(not session.view.has("campaign_document"), "ENet never sends authoring document")
+			var serialized = JSON.stringify(session.view)
+			check(not serialized.contains("ACTIVE_SECRET_CONTACT") and not serialized.contains("FUTURE_SECRET_CONTACT"), "ENet redacts active and future hidden contacts")
+			check(session.campaign_missions().size() == 1, "client lists no future stage")
+			for i in 60:
+				if session.view.get("mission", {}).get("id") == CampaignDocument.runtime_id(document, "stage_1"): break
+				await create_timer(0.05).timeout
+			check(session.view.mission.id == CampaignDocument.runtime_id(document, "stage_1"), "host transition reaches actual client")
+			check(not session.view.has("campaign_document"), "transition keeps document private")
+	session.close_session()
+	print("CAMPAIGN_PEER_OK ", peer_case, " checks=", checks, " failures=", failures)
 	quit(1 if failures else 0)

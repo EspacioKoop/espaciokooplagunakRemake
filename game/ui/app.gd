@@ -9,6 +9,7 @@ var _space: SpaceView
 var _deck: WorldDeck
 var _radar: Radar
 var _editor: MissionEditor
+var _campaign_window: CampaignEditor
 var _draft: Dictionary = {}
 var _refs: Dictionary = {}
 var _action_refs: Dictionary = {}
@@ -552,7 +553,11 @@ func _campaign() -> void:
 	var header = ConsoleUI.row(_content)
 	var heading = ConsoleUI.column(header, 4)
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	heading.add_child(ConsoleUI.label(authored.get("title", "La ruta compartida"), 32))
+	var campaign_title = ConsoleUI.paragraph(authored.get("title", "La ruta compartida"), 32, ConsoleUI.TEXT)
+	campaign_title.max_lines_visible = 2
+	campaign_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	campaign_title.tooltip_text = campaign_title.text
+	heading.add_child(campaign_title)
 	heading.add_child(ConsoleUI.label("EL ANFITRIÓN SELECCIONA LA SIGUIENTE MISIÓN." if Session.mode == "client" else "%d TRAVESÍAS. UNA TRIPULACIÓN." % missions.size(), 13, ConsoleUI.TEAL))
 	if Session.mode != "client":
 		header.add_child(ConsoleUI.button("Taller de campañas", _open_campaign_editor))
@@ -581,7 +586,11 @@ func _campaign() -> void:
 		card.get_parent().size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		card.get_parent().custom_minimum_size = Vector2(430, 225)
 		card.add_child(ConsoleUI.label("COMPLETADA" if won else ("DISPONIBLE" if unlocked else "RUTA BLOQUEADA"), 12, ConsoleUI.TEAL if unlocked else ConsoleUI.MUTED))
-		card.add_child(ConsoleUI.label(mission.title, 25))
+		var mission_title = ConsoleUI.paragraph(mission.title, 25, ConsoleUI.TEXT)
+		mission_title.max_lines_visible = 2
+		mission_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		mission_title.tooltip_text = mission.title
+		card.add_child(mission_title)
 		var briefing = ConsoleUI.paragraph(mission.briefing, 15)
 		briefing.max_lines_visible = 3
 		briefing.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -604,7 +613,12 @@ func _open_campaign_editor() -> CampaignEditor:
 	if Session.mode == "client":
 		_notice("El anfitrión edita y selecciona las campañas.", false)
 		return null
+	if is_instance_valid(_campaign_window):
+		_campaign_window.popup_centered()
+		if is_instance_valid(_campaign_window.mission_window): _campaign_window.mission_window.popup_centered()
+		return _campaign_window
 	var editor = CampaignEditor.new()
+	_campaign_window = editor
 	editor.document = Session.sim.state.get("campaign_document", {}).duplicate(true)
 	editor.campaign_requested.connect(func(document):
 		var confirm = ConfirmationDialog.new()
@@ -630,11 +644,12 @@ func _open_campaign_editor() -> CampaignEditor:
 			var result = Session.start_mission(0, mission)
 			_notice(result.message, result.ok)
 			if result.ok:
+				editor.mission_window.hide()
 				editor.hide()
 				_target = ""
 				_go("bridge")
 				# Closing the preview returns to the still-live authored draft.
-				var return_button = ConsoleUI.button("Volver al taller de campañas", func(): editor.popup_centered())
+				var return_button = ConsoleUI.button("Volver al taller de campañas", _open_campaign_editor)
 				_content.add_child(return_button)
 			confirm.queue_free())
 		confirm.canceled.connect(confirm.queue_free)
@@ -1063,6 +1078,24 @@ func _capture(args: PackedStringArray) -> void:
 	table_window.send("start")
 	await _take(path, "19_poker.png")
 	table_window.queue_free()
+	if "--capture-campaign-editor" in args:
+		# queue_free is deferred; release the table's exclusive modal first.
+		await get_tree().process_frame
+		_go("campaign")
+		var editor = _open_campaign_editor()
+		editor.fields.title.text = "Expedición de los tres faros"
+		editor._add_mission()
+		editor._add_mission()
+		editor.linear.button_pressed = false
+		for field in editor.dependency_fields.values(): field.button_pressed = true
+		editor._apply_dependencies()
+		if editor.document.missions.size() != 3 or not CampaignDocument.validate(editor.document).is_empty():
+			push_error("El taller de campañas no produjo contenido válido.")
+			get_tree().quit(1)
+			return
+		await _take(path, "campaign-editor.png")
+		editor.queue_free()
+		print("LAGUNAK_CAMPAIGN_CAPTURE_OK")
 	print("LAGUNAK_CAPTURE_OK 19 screenshots")
 	_ambient.stop()
 	_effects.stop()

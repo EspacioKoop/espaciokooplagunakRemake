@@ -14,7 +14,8 @@ static func valid_id(value: Variant) -> bool:
 	return pattern.search(value) != null
 
 static func validate(value: Variant) -> String:
-	if not value is Dictionary or not LocalStorage.validate_json(value): return "Estructura de campaña inválida."
+	# Reserve the extra level added by state.campaign_document on persistence.
+	if not value is Dictionary or not LocalStorage.validate_json(value, 1): return "Estructura de campaña inválida."
 	if value.get("format") != FORMAT or not Catalog.finite_number(value.get("version")) or value.version != VERSION: return "Formato o versión de campaña no compatible."
 	if not valid_id(value.get("id")): return "Identificador de campaña inválido."
 	for field in ["title", "description"]:

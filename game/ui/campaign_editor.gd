@@ -9,7 +9,8 @@ var fields: Dictionary = {}
 var mission_list: ItemList
 var status: Label
 var details: Label
-var dependencies: LineEdit
+var dependencies: VBoxContainer
+var dependency_fields: Dictionary = {}
 var linear: CheckBox
 var file_dialog: FileDialog
 var mission_window: Window
@@ -20,7 +21,7 @@ var _file_action = "open"
 
 func _ready() -> void:
 	title = "Taller de campañas"
-	size = Vector2i(1280, 730)
+	size = Vector2i(1280, 800)
 	min_size = Vector2i(1000, 650)
 	transient = true
 	exclusive = true
@@ -40,7 +41,11 @@ func _ready() -> void:
 	toolbar.add_child(ConsoleUI.button("Guardar copia local", _save_local, true))
 	toolbar.add_child(ConsoleUI.button("Exportar JSON", _export))
 	toolbar.add_child(ConsoleUI.button("Jugar campaña", _play_campaign, true))
-	var body = ConsoleUI.row(root, 18)
+	var scroll = ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	ConsoleUI.expand(scroll)
+	root.add_child(scroll)
+	var body = ConsoleUI.row(scroll, 18)
 	ConsoleUI.expand(body)
 	var left = ConsoleUI.column(body, 8)
 	left.custom_minimum_size.x = 325
@@ -54,14 +59,15 @@ func _ready() -> void:
 		left.add_child(edit)
 		fields[field[0]] = edit
 	left.add_child(ConsoleUI.label("MISIONES · ORDEN DE LA EXPEDICIÓN", 13, ConsoleUI.TEAL))
-	mission_list = ItemList.new()
-	mission_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	left.add_child(mission_list)
-	mission_list.item_selected.connect(func(index): selected = index; _refresh_selection())
 	var order = ConsoleUI.row(left, 6)
 	order.add_child(ConsoleUI.button("Subir", _move.bind(-1)))
 	order.add_child(ConsoleUI.button("Bajar", _move.bind(1)))
 	order.add_child(ConsoleUI.button("Eliminar", _delete))
+	mission_list = ItemList.new()
+	mission_list.custom_minimum_size.y = 160
+	mission_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	left.add_child(mission_list)
+	mission_list.item_selected.connect(func(index): selected = index; _refresh_selection())
 	var right = ConsoleUI.column(body, 12)
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.custom_minimum_size.x = 400
@@ -76,12 +82,16 @@ func _ready() -> void:
 	linear = CheckBox.new()
 	linear.text = "Ruta lineal: completar la misión anterior"
 	right.add_child(linear)
-	linear.toggled.connect(func(value): dependencies.editable = not value)
-	dependencies = LineEdit.new()
-	dependencies.placeholder_text = "IDs de misiones anteriores, separados por comas"
-	right.add_child(dependencies)
+	linear.toggled.connect(func(value):
+		for field in dependency_fields.values(): field.disabled = value)
+	var dependency_scroll = ScrollContainer.new()
+	dependency_scroll.custom_minimum_size.y = 110
+	dependency_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	right.add_child(dependency_scroll)
+	dependencies = ConsoleUI.column(dependency_scroll, 4)
+	dependencies.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.add_child(ConsoleUI.button("Aplicar requisitos", _apply_dependencies))
-	right.add_child(ConsoleUI.paragraph("Desmarca la ruta lineal para escoger requisitos concretos. Una lista vacía permite empezar esta misión sin completar otra. No se admiten ciclos ni referencias a misiones posteriores.", 15))
+	right.add_child(ConsoleUI.paragraph("Desmarca la ruta lineal y marca las misiones necesarias. Sin ninguna marcada, esta etapa estará disponible desde el inicio. Sólo se ofrecen misiones anteriores, para evitar ciclos.", 15))
 	right.add_child(ConsoleUI.paragraph("El taller reutiliza el mapa, los objetivos y el astillero del editor de misiones. La campaña guarda todo el contenido: no depende de archivos externos ni de Foundry.", 15, ConsoleUI.MUTED))
 	status = ConsoleUI.paragraph("", 15)
 	root.add_child(status)
@@ -110,8 +120,21 @@ func _refresh_selection() -> void:
 	var mission: Dictionary = document.missions[selected]
 	details.text = "%s\nID: %s\n%s\n%d contactos · %d objetivos · %d créditos" % [mission.title, mission.id, mission.sector, mission.contacts.size(), mission.objectives.size(), mission.get("reward", 0)]
 	linear.set_pressed_no_signal(not mission.has("requires"))
-	dependencies.editable = not linear.button_pressed
-	dependencies.text = ", ".join(mission.get("requires", []))
+	for child in dependencies.get_children():
+		dependencies.remove_child(child)
+		child.queue_free()
+	dependency_fields.clear()
+	if selected == 0: dependencies.add_child(ConsoleUI.paragraph("Primera misión: disponible desde el inicio.", 14, ConsoleUI.MUTED))
+	for i in selected:
+		var previous: Dictionary = document.missions[i]
+		var field = CheckBox.new()
+		field.text = "%02d · %s" % [i + 1, previous.title]
+		field.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		field.tooltip_text = previous.id
+		field.disabled = linear.button_pressed
+		field.button_pressed = previous.id in mission.get("requires", [])
+		dependencies.add_child(field)
+		dependency_fields[previous.id] = field
 
 func _metadata() -> bool:
 	var candidate = document.duplicate(true)
@@ -174,8 +197,8 @@ func _apply_dependencies() -> void:
 	if linear.button_pressed: mission.erase("requires")
 	else:
 		mission.requires = []
-		if not dependencies.text.strip_edges().is_empty():
-			for item in dependencies.text.split(","): mission.requires.append(item.strip_edges())
+		for id in dependency_fields:
+			if dependency_fields[id].button_pressed: mission.requires.append(id)
 	_accept(CampaignDocument.replace_mission(document, selected, mission))
 
 func _edit_mission() -> void:
