@@ -133,7 +133,8 @@ func test_ui() -> void:
  session.order("assist_begin", {"recipient": "ingenieria", "mode": "precision"})
  var real_before: Dictionary = session.sim.state.duplicate(true)
  var view_before: Dictionary = session.view.duplicate(true)
- var live = AssistanceConsole.new()
+ # --script is compiled before autoloads; load UI only after Session exists.
+ var live = load("res://ui/assistance_console.gd").new()
  live.size = Vector2(1000, 800)
  root.add_child(live)
  await process_frame
@@ -146,11 +147,11 @@ func test_ui() -> void:
  await process_frame
  await process_frame
  var window = live.get_node_or_null("AssistanceTraining")
- check(window is AssistanceTrainingWindow, "entry opens native training window")
+ check(window is Window and window.get_script().resource_path == "res://ui/assistance_training_window.gd", "entry opens native training window")
  if window == null:
   live.queue_free()
   return
- var practice: AssistanceConsole = window.console
+ var practice = window.console
  check(practice.training != null, "practice model installed before ready")
  check(practice.recipient.disabled and practice.chooser.item_count == 4, "guided recipient and four modes")
  var text_before = practice.status.text
