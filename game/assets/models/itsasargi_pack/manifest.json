@@ -1,0 +1,975 @@
+{
+  "schema": "espaciokoop-asset-pack",
+  "schema_version": 1,
+  "pack": "itsasargi",
+  "version": 1,
+  "library_issue": 52,
+  "source_of_truth": "saved .blend files",
+  "assets": [
+    {
+      "id": "itsasargi/arc_welder",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/arc_welder.blend",
+      "runtime": "game/assets/models/itsasargi_pack/arc_welder.glb",
+      "source_sha256": "6e02983487a26ce5cb72c4e6e8951abedad22ba560646d5145c61b4bb7abe33f",
+      "sha256": "c16bb6db609f835dc30b6bdf84a61ac73fab5bac3b9b846c71d98c9a910b4751",
+      "bytes": 244476,
+      "triangles": 2972,
+      "mesh_nodes": 2,
+      "aabb": {
+        "min": [
+          -0.113,
+          -0.22,
+          -0.37
+        ],
+        "max": [
+          0.113,
+          0.184,
+          0.1975
+        ]
+      },
+      "dimensions": [
+        0.226,
+        0.404,
+        0.5675
+      ],
+      "materials": [
+        "I_cyan_emitter",
+        "I_ceramic_ivory",
+        "I_titanium",
+        "I_safety_amber",
+        "I_deep_petrol",
+        "I_graphite_grip"
+      ],
+      "sockets": [
+        {
+          "name": "socket_battery",
+          "position": [
+            0.0,
+            0.05,
+            0.205
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_effect_arc",
+          "position": [
+            0.0,
+            0.075,
+            -0.385
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_grip_primary",
+          "position": [
+            0.0,
+            -0.12,
+            0.12
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Lotu · soldador de arco",
+      "category": "tools",
+      "description": "Colimador retráctil y batería extraíble visual; reparación ficticia.",
+      "preview": "docs/images/itsasargi_pack/arc_welder.png"
+    },
+    {
+      "id": "itsasargi/eva_winch",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/eva_winch.blend",
+      "runtime": "game/assets/models/itsasargi_pack/eva_winch.glb",
+      "source_sha256": "4d35a24cc73987bac4297d183c6a945fced29f591fe1808d69cfea07bf39a0a0",
+      "sha256": "291dc62c3f6218301ddbbcf0ae658c8911cfbb619704fa413ce4bab08eda1315",
+      "bytes": 513856,
+      "triangles": 7108,
+      "mesh_nodes": 2,
+      "aabb": {
+        "min": [
+          -0.16,
+          -0.188,
+          -0.39
+        ],
+        "max": [
+          0.16,
+          0.232,
+          0.065
+        ]
+      },
+      "dimensions": [
+        0.32,
+        0.42,
+        0.455
+      ],
+      "materials": [
+        "I_ceramic_ivory",
+        "I_deep_petrol",
+        "I_graphite_grip",
+        "I_titanium",
+        "I_safety_amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_grip_primary",
+          "position": [
+            0.0,
+            0.21,
+            -0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_mount",
+          "position": [
+            0.0,
+            0.0,
+            0.075
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_tether_exit",
+          "position": [
+            0.0,
+            0.0,
+            -0.21
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Amarra · cabrestante EVA",
+      "category": "tools",
+      "description": "Tambor, guía y mosquetón para cable de seguridad; sin simulación de cuerda.",
+      "preview": "docs/images/itsasargi_pack/eva_winch.png"
+    },
+    {
+      "id": "itsasargi/rescue_beacon",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/rescue_beacon.blend",
+      "runtime": "game/assets/models/itsasargi_pack/rescue_beacon.glb",
+      "source_sha256": "5ec9bf4039b2c74aa316c03a8869b08bdeb6fea5a238e733ab4dab8d3c7aa719",
+      "sha256": "53a0b242b80e2cfe49f40664290ea851a77d9cd6911035edffe5f6d30447b478",
+      "bytes": 200756,
+      "triangles": 2548,
+      "mesh_nodes": 5,
+      "aabb": {
+        "min": [
+          -0.338599,
+          0.0,
+          -0.365
+        ],
+        "max": [
+          0.338599,
+          0.98,
+          0.221471
+        ]
+      },
+      "dimensions": [
+        0.677199,
+        0.98,
+        0.586471
+      ],
+      "materials": [
+        "I_amber_indicator",
+        "I_ceramic_ivory",
+        "I_graphite_grip",
+        "I_titanium",
+        "I_deep_petrol",
+        "I_safety_amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_grip_primary",
+          "position": [
+            0.0,
+            0.36,
+            -0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_ground",
+          "position": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_signal",
+          "position": [
+            0.0,
+            0.7,
+            -0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Argi · baliza de emergencia",
+      "category": "tools",
+      "description": "Trípode, reflector rotatorio y antena de señalización.",
+      "preview": "docs/images/itsasargi_pack/rescue_beacon.png"
+    },
+    {
+      "id": "itsasargi/specimen_case",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/specimen_case.blend",
+      "runtime": "game/assets/models/itsasargi_pack/specimen_case.glb",
+      "source_sha256": "681bfb098f2f4e1f30aaa9ba77b86af043efbe7f141de69b900f45be2a832237",
+      "sha256": "828f4ce716ae4ef86d7cfa652d312aee39faabec546222dffd89ef2d4c7221e1",
+      "bytes": 295896,
+      "triangles": 3928,
+      "mesh_nodes": 2,
+      "aabb": {
+        "min": [
+          -0.26,
+          0.01,
+          -0.2835
+        ],
+        "max": [
+          0.26,
+          0.329,
+          0.2
+        ]
+      },
+      "dimensions": [
+        0.52,
+        0.319,
+        0.4835
+      ],
+      "materials": [
+        "I_deep_petrol",
+        "I_ceramic_ivory",
+        "I_safety_amber",
+        "I_graphite_grip",
+        "I_titanium",
+        "I_cyan_emitter"
+      ],
+      "sockets": [
+        {
+          "name": "socket_grip_primary",
+          "position": [
+            0.0,
+            0.12,
+            -0.266
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_ground",
+          "position": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_sample_0",
+          "position": [
+            -0.145,
+            0.34,
+            0.065
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_sample_1",
+          "position": [
+            0.0,
+            0.34,
+            0.065
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_sample_2",
+          "position": [
+            0.145,
+            0.34,
+            0.065
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_sample_3",
+          "position": [
+            -0.145,
+            0.34,
+            -0.065
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_sample_4",
+          "position": [
+            0.0,
+            0.34,
+            -0.065
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_sample_5",
+          "position": [
+            0.145,
+            0.34,
+            -0.065
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Hazi · maletín de especímenes",
+      "category": "tools",
+      "description": "Tapa articulada, seis cápsulas y cierres; transporte científico.",
+      "preview": "docs/images/itsasargi_pack/specimen_case.png"
+    },
+    {
+      "id": "itsasargi/oxygen_rebreather",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/oxygen_rebreather.blend",
+      "runtime": "game/assets/models/itsasargi_pack/oxygen_rebreather.glb",
+      "source_sha256": "b1dc92fcc528dea20f66fc6cb773b0376374d0a74f2b0aff4127ec0fbcaf86ea",
+      "sha256": "563f9ab7efbf2cd3178853ed17a394b331e0ce7a19ca11451cb4fca54190a10c",
+      "bytes": 371040,
+      "triangles": 4908,
+      "mesh_nodes": 2,
+      "aabb": {
+        "min": [
+          -0.198,
+          -0.02,
+          -0.516
+        ],
+        "max": [
+          0.299,
+          0.489,
+          0.0375
+        ]
+      },
+      "dimensions": [
+        0.497,
+        0.509,
+        0.5535
+      ],
+      "materials": [
+        "I_cyan_emitter",
+        "I_graphite_grip",
+        "I_ceramic_ivory",
+        "I_deep_petrol",
+        "I_safety_amber",
+        "I_titanium"
+      ],
+      "sockets": [
+        {
+          "name": "socket_back_mount",
+          "position": [
+            0.0,
+            0.19,
+            0.043
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_grip_primary",
+          "position": [
+            0.0,
+            0.42,
+            -0.04
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_mask",
+          "position": [
+            0.0,
+            0.14,
+            -0.39
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Arnasa · respirador portátil",
+      "category": "tools",
+      "description": "Dos depósitos, regulador, máscara y tubo; accesorio de ciencia ficción.",
+      "preview": "docs/images/itsasargi_pack/oxygen_rebreather.png"
+    },
+    {
+      "id": "itsasargi/field_transceiver",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/field_transceiver.blend",
+      "runtime": "game/assets/models/itsasargi_pack/field_transceiver.glb",
+      "source_sha256": "f69031d4268c99989179452ab31355eb81e62262551c1746e6dc0c1df11b33a5",
+      "sha256": "e761dd302b21eceab3690d3f8e3dc622d6ae1f64cfc4999557afac6c59e65bc3",
+      "bytes": 184652,
+      "triangles": 2136,
+      "mesh_nodes": 2,
+      "aabb": {
+        "min": [
+          -0.0995,
+          -0.02,
+          -0.0795
+        ],
+        "max": [
+          0.08,
+          0.5445,
+          0.068
+        ]
+      },
+      "dimensions": [
+        0.1795,
+        0.5645,
+        0.1475
+      ],
+      "materials": [
+        "I_titanium",
+        "I_deep_petrol",
+        "I_ceramic_ivory",
+        "I_opaque_blue_glass",
+        "I_cyan_emitter",
+        "I_graphite_grip",
+        "I_safety_amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_belt",
+          "position": [
+            0.0,
+            0.16,
+            0.07
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_grip_primary",
+          "position": [
+            0.0,
+            0.12,
+            -0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_signal",
+          "position": [
+            -0.055,
+            0.547,
+            -0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Irrati · transceptor de campo",
+      "category": "tools",
+      "description": "Antena desplegable, dial, pantalla y altavoz para comunicaciones.",
+      "preview": "docs/images/itsasargi_pack/field_transceiver.png"
+    },
+    {
+      "id": "itsasargi/prism_sidearm",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/prism_sidearm.blend",
+      "runtime": "game/assets/models/itsasargi_pack/prism_sidearm.glb",
+      "source_sha256": "e13f6ff97f316bb350b89ff0eb9f1bd2fda7006aa4f7b56517e5bfaba949d995",
+      "sha256": "f3c7f05f2fd5499a70cfb01c02ec34884c48a1fabcbbd6b1cf1276ade1552e9b",
+      "bytes": 247456,
+      "triangles": 2992,
+      "mesh_nodes": 2,
+      "aabb": {
+        "min": [
+          -0.085,
+          -0.205,
+          -0.2465
+        ],
+        "max": [
+          0.085,
+          0.18,
+          0.18
+        ]
+      },
+      "dimensions": [
+        0.17,
+        0.385,
+        0.4265
+      ],
+      "materials": [
+        "I_ceramic_ivory",
+        "I_cyan_emitter",
+        "I_deep_petrol",
+        "I_graphite_grip",
+        "I_titanium",
+        "I_prism_emitter",
+        "I_safety_amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_cell",
+          "position": [
+            0.0,
+            -0.228,
+            0.12
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_grip_primary",
+          "position": [
+            0.0,
+            -0.095,
+            0.12
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_holster",
+          "position": [
+            0.092,
+            -0.05,
+            0.12
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_muzzle",
+          "position": [
+            0.0,
+            0.072,
+            -0.255
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Prisma · pistola fotónica",
+      "category": "weapons",
+      "description": "Arma visual ficticia con prisma, corredera y boca para efectos.",
+      "preview": "docs/images/itsasargi_pack/prism_sidearm.png"
+    },
+    {
+      "id": "itsasargi/gravity_lance",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/gravity_lance.blend",
+      "runtime": "game/assets/models/itsasargi_pack/gravity_lance.glb",
+      "source_sha256": "646b5d5f3be33f560990ecc214ebce1e35b78120f8435c8c99231e273b375ed6",
+      "sha256": "f95628b7c01a68c52594ce5de1d13746cf850b346baa753e8885cf9c431e0356",
+      "bytes": 356624,
+      "triangles": 4356,
+      "mesh_nodes": 4,
+      "aabb": {
+        "min": [
+          -0.171,
+          -0.25,
+          -0.657164
+        ],
+        "max": [
+          0.171,
+          0.2065,
+          0.648
+        ]
+      },
+      "dimensions": [
+        0.342,
+        0.4565,
+        1.305164
+      ],
+      "materials": [
+        "I_titanium",
+        "I_deep_petrol",
+        "I_graphite_grip",
+        "I_ceramic_ivory",
+        "I_safety_amber",
+        "I_cyan_emitter",
+        "I_prism_emitter"
+      ],
+      "sockets": [
+        {
+          "name": "socket_grip_primary",
+          "position": [
+            0.0,
+            -0.14,
+            0.28
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_grip_support",
+          "position": [
+            0.0,
+            -0.11,
+            -0.05
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_muzzle",
+          "position": [
+            0.0,
+            0.075,
+            -0.67
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_stock",
+          "position": [
+            0.0,
+            0.015,
+            0.65
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Indar · lanza gravitatoria",
+      "category": "weapons",
+      "description": "Arma visual ficticia de dos manos con emisores abiertos y anillos.",
+      "preview": "docs/images/itsasargi_pack/gravity_lance.png"
+    },
+    {
+      "id": "itsasargi/marra_interceptor",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/marra_interceptor.blend",
+      "runtime": "game/assets/models/itsasargi_pack/marra_interceptor.glb",
+      "source_sha256": "daf9d9f30ea788b31ac16a05d14fb45b26511748d224ab112d98f8feb417eaae",
+      "sha256": "a7fb3c33644ea2c8ea04f9069a713cf6b4facc4a98a3a4191bd5b554f3e268cc",
+      "bytes": 412444,
+      "triangles": 4828,
+      "mesh_nodes": 3,
+      "aabb": {
+        "min": [
+          -5.6423,
+          -0.618203,
+          -5.3
+        ],
+        "max": [
+          5.6423,
+          1.174651,
+          4.665
+        ]
+      },
+      "dimensions": [
+        11.284599,
+        1.792854,
+        9.965
+      ],
+      "materials": [
+        "I_opaque_blue_glass",
+        "I_ceramic_ivory",
+        "I_deep_petrol",
+        "I_safety_amber",
+        "I_titanium",
+        "I_cyan_emitter",
+        "I_graphite_grip",
+        "I_amber_indicator"
+      ],
+      "sockets": [
+        {
+          "name": "socket_centre_of_mass",
+          "position": [
+            0.0,
+            0.0,
+            0.6
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_cockpit",
+          "position": [
+            0.0,
+            0.9,
+            -1.2
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_dock",
+          "position": [
+            0.0,
+            -0.03,
+            4.6
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_engine_left_exhaust",
+          "position": [
+            -1.55,
+            -0.12,
+            4.645
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_engine_right_exhaust",
+          "position": [
+            1.55,
+            -0.12,
+            4.645
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_hardpoint_left",
+          "position": [
+            -1.25,
+            -0.1,
+            -1.3
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_hardpoint_right",
+          "position": [
+            1.25,
+            -0.1,
+            -1.3
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Marra · interceptor de ala manta",
+      "category": "ships",
+      "description": "Silueta ancha, alas articuladas, cabina y dos propulsores.",
+      "preview": "docs/images/itsasargi_pack/marra_interceptor.png"
+    },
+    {
+      "id": "itsasargi/hodei_surveyor",
+      "version": 1,
+      "source": "art/blender/itsasargi_pack/hodei_surveyor.blend",
+      "runtime": "game/assets/models/itsasargi_pack/hodei_surveyor.glb",
+      "source_sha256": "af54a307bc62ea00656021fa77b7b0e1c9ed70f540f52c6c510f53b238fc2908",
+      "sha256": "4559ec2b4606ea187b18c7361d8027a6ad04d3a8c7cecb21fb53db38b8c7ba68",
+      "bytes": 604864,
+      "triangles": 7328,
+      "mesh_nodes": 4,
+      "aabb": {
+        "min": [
+          -3.95,
+          -0.7,
+          -5.8
+        ],
+        "max": [
+          3.95,
+          2.525,
+          6.2767
+        ]
+      },
+      "dimensions": [
+        7.9,
+        3.225,
+        12.0767
+      ],
+      "materials": [
+        "I_titanium",
+        "I_deep_petrol",
+        "I_opaque_blue_glass",
+        "I_safety_amber",
+        "I_ceramic_ivory",
+        "I_cyan_emitter"
+      ],
+      "sockets": [
+        {
+          "name": "socket_centre_of_mass",
+          "position": [
+            0.0,
+            0.0,
+            0.3
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_cockpit",
+          "position": [
+            0.0,
+            1.34,
+            -2.2
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_dock",
+          "position": [
+            0.0,
+            0.0,
+            5.15
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_payload_left",
+          "position": [
+            -3.1,
+            -0.74,
+            -0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_payload_right",
+          "position": [
+            3.1,
+            -0.74,
+            -0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_sensor",
+          "position": [
+            0.0,
+            2.1,
+            0.56
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_survey_engine_left_exhaust",
+          "position": [
+            -3.1,
+            -0.1,
+            6.245
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_survey_engine_right_exhaust",
+          "position": [
+            3.1,
+            -0.1,
+            6.245
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "title": "Hodei · corbeta de exploración",
+      "category": "ships",
+      "description": "Casco catamarán, observatorio giratorio y bahía científica exterior.",
+      "preview": "docs/images/itsasargi_pack/hodei_surveyor.png"
+    }
+  ],
+  "limits": "Art resources only. No inventory, weapon rules, ship selection, humanoid rig, collisions or networking."
+}
