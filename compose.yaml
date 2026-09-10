@@ -1,0 +1,29 @@
+services:
+  lagunak:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    image: espaciokoop-lagunak-server:local
+    platform: linux/amd64
+    init: true
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    stop_grace_period: 20s
+    ports:
+      - '${LAGUNAK_BIND_ADDRESS:-127.0.0.1}:${LAGUNAK_HOST_PORT:-27840}:27840/udp'
+    environment:
+      LAGUNAK_LOAD_MODE: '${LAGUNAK_LOAD_MODE:-auto}'
+      LAGUNAK_MISSION_INDEX: '${LAGUNAK_MISSION_INDEX:--1}'
+    volumes:
+      - lagunak-data:/var/lib/lagunak
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m,mode=1777
+    secrets:
+      - session_key
+secrets:
+  session_key:
+    file: '${LAGUNAK_KEY_FILE:?Set LAGUNAK_KEY_FILE to an existing absolute key file outside the repository}'
+volumes:
+  lagunak-data:

@@ -1,0 +1,18 @@
+# Positive context list: user saves, credentials, .git and build caches never enter the image.
+**
+!game/
+!game/**
+game/.godot/
+game/**/*.tmp
+game/**/*.bak
+!tools/
+!tools/bootstrap.py
+!tools/export_targets.py
+!server/
+!server/*.py
+!server/*.gd
+!server/Dockerfile
+!LICENSE
+!CREDITS.md
+!third_party/
+!third_party/**
