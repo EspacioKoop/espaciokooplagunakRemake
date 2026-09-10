@@ -1,0 +1,39 @@
+name: Dedicated server Docker
+
+on:
+  push:
+    branches: [agent/5-dedicated-docker]
+  pull_request:
+    paths:
+      - 'server/**'
+      - 'compose.yaml'
+      - '.dockerignore'
+      - 'tests/*dedicated*'
+      - 'tests/test_server_config.py'
+      - 'tests/smoke_docker.py'
+      - 'game/core/**'
+      - 'game/net/**'
+      - 'tools/bootstrap.py'
+      - 'tools/export_targets.py'
+      - '.github/workflows/dedicated-server.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dedicated-server:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: python3 tools/bootstrap.py
+      - run: .toolchain/godot --headless --editor --path game --quit
+      - name: Validate configuration and internal health
+        run: python3 -m unittest discover -s tests -p test_server_config.py
+      - name: Real standalone host and recovery negatives
+        run: python3 tests/run_dedicated_server.py
+      - name: Build and start the actual Docker Compose service
+        run: python3 tests/smoke_docker.py
