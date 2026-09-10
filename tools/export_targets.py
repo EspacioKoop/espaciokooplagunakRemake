@@ -8,7 +8,7 @@ import struct
 import zipfile
 
 GODOT_VERSION = "4.7.1"
-VERSION = "0.9.0"
+VERSION = "0.9.1"
 BUNDLE_ID = "org.espaciokoop.lagunak"
 DEFAULT_TARGETS = ("linux", "windows")
 

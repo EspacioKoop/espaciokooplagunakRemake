@@ -2,7 +2,7 @@
   "id": "espaciokoop-lagunak",
   "title": "Espaciokoop Lagunak · Puestos y bitácora",
   "description": "Ficha propia, controles concedidos por el anfitrión e importación manual de bitácoras desde el juego standalone.",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "compatibility": {
     "minimum": "13",
     "maximum": "13"
@@ -20,6 +20,6 @@
   ],
   "url": "https://github.com/VaroTv7/espaciokooplagunakRemake",
   "manifest": "https://raw.githubusercontent.com/VaroTv7/espaciokooplagunakRemake/main/integrations/foundry/module.json",
-  "download": "https://github.com/VaroTv7/espaciokooplagunakRemake/releases/download/v0.9.0/espaciokoop-lagunak-foundry.zip",
+  "download": "https://github.com/VaroTv7/espaciokooplagunakRemake/releases/download/v0.9.1/espaciokoop-lagunak-foundry.zip",
   "license": "LICENSE"
 }
