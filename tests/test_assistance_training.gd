@@ -137,8 +137,12 @@ func test_ui() -> void:
  var session = root.get_node("Session")
  session.new_campaign()
  session.paused = true
- session.set_process(false)
- session.set_physics_process(false)
+ # Freeze all independent live writers, not just Session. Armaments/Fleet
+ # can initialize state in _process even while Session.paused is true.
+ # This is a test fixture only: the production training never pauses them.
+ for service in root.get_children():
+  service.set_process(false)
+  service.set_physics_process(false)
  check(session.order("assist_begin", {"recipient": "ingenieria", "mode": "precision"}).ok, "live challenge fixture begins")
  check(session.sim.state.cooperation.tasks.has("local"), "live fixture has an active task")
  var real_before: Dictionary = session.sim.state.duplicate(true)
