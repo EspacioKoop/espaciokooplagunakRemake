@@ -12,7 +12,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_ALL
 	custom_minimum_size = Vector2(300, 340)
-	tooltip_text = "Libera el ratón y pulsa una sala para señalar el recorrido. Flechas: elegir sala. Esc: borrar ruta. No teletransporta."
+	tooltip_text = "Pulsa una sala para marcar la ruta.\nFlechas: cambiar · Esc: borrar."
 
 func _process(delta: float) -> void:
 	_redraw_clock += delta

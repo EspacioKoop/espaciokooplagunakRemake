@@ -19,6 +19,14 @@ func settle(frames: int = 8) -> void:
 	for i in frames: await physics_frame
 
 func capture(name: String) -> void:
+	# Leave the map tooltip before capturing, without altering the UI itself.
+	Input.warp_mouse(Vector2(16, 16))
+	var motion = InputEventMouseMotion.new()
+	motion.position = Vector2(16, 16)
+	motion.global_position = motion.position
+	Input.parse_input_event(motion)
+	Input.flush_buffered_events()
+	await settle(4)
 	await RenderingServer.frame_post_draw
 	var image = root.get_texture().get_image()
 	check(image.save_png(output.path_join(name + ".png")) == OK, "capture " + name)
@@ -93,8 +101,14 @@ func run() -> void:
 	await capture("04_aft_engineering")
 	root.size = Vector2i(960, 600)
 	await settle(10)
-	var bounds = deck._map.get_global_rect()
-	check(bounds.position.x >= 0 and bounds.position.y >= 0 and bounds.end.x <= root.size.x and bounds.end.y <= root.size.y, "map remains on screen at minimum desktop resolution")
+	# The app uses a stretched logical canvas. Compare screen-space bounds to
+	# the physical window, not unscaled 1600x900 canvas coordinates to 960x600.
+	var transform = root.get_screen_transform() * deck._map.get_global_transform_with_canvas()
+	var bounds: Rect2 = transform * Rect2(Vector2.ZERO, deck._map.size)
+	var window_bounds = Rect2(Vector2(root.position), Vector2(root.size))
+	print("SHIP_LAYOUT_SCREEN_BOUNDS ", bounds, " window=", window_bounds)
+	check(window_bounds.grow(1.0).encloses(bounds), "map remains on screen at minimum desktop resolution")
+	check(app.get_global_rect().encloses(deck._map.get_global_rect()), "map also remains inside logical UI bounds")
 	await capture("05_minimum_resolution")
 	app._ambient.stop()
 	app._effects.stop()
