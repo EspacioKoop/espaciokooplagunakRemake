@@ -76,7 +76,7 @@ def network(directory):
             output = path.read_text(encoding="utf-8")
             print(output, flush=True)
             if code or ERRORS.search(output) or not re.search(
-                    rf"CHARACTER_NETWORK_RESULT {name} checks=\d+ failures=0", output):
+                    rf"CHARACTER_NETWORK_RESULT {name} checks=[1-9]\d* failures=0", output):
                 failed.append(name)
         if failed:
             raise RuntimeError("Character network failures: " + ", ".join(failed))
@@ -156,7 +156,10 @@ def capture_export(directory, output, binary, env):
                     if attempt == 0:
                         x("mousemove", "640", "293", "click", "1", "key", "ctrl+a",
                           "type", "Tripulante probado")
-                        x("mousemove", "1120", "710", "click", "1")
+                        x("mousemove", "1120", "710")
+                        wait_for(lambda: image().convert("RGB").getpixel((1036, 710)) == (101, 223, 202),
+                                 "rendered enabled Apply button")
+                        x("click", "1")
                         wait_for(lambda: (persisted() or {}).get("name") == "Tripulante probado",
                                  "profile saved through public editor controls")
                         profile = persisted()
@@ -168,13 +171,22 @@ def capture_export(directory, output, binary, env):
                                                                         "negociacion", "combate"), 1)}.items():
                             if profile.get(key) != expected:
                                 raise RuntimeError("Unexpected progression change: " + key)
+                        wait_for(lambda: image().convert("RGB").getpixel((1036, 710)) != (101, 223, 202),
+                                 "rendered acknowledgement after application")
                         image().save(output)
                     else:
                         # A second real UI edit after restarting proves load + persistence.
                         x("mousemove", "640", "293", "click", "1", "key", "End", "type", " recargado")
-                        x("mousemove", "1120", "710", "click", "1")
+                        x("mousemove", "1120", "710")
+                        wait_for(lambda: image().convert("RGB").getpixel((1036, 710)) == (101, 223, 202),
+                                 "rendered enabled Apply button")
+                        x("click", "1")
                         wait_for(lambda: (persisted() or {}).get("name") == "Tripulante probado recargado",
                                  "persisted profile reloaded and edited after executable restart")
+                except Exception:
+                    image().save(output.with_suffix(f".failure-{attempt}.png"))
+                    print("Export failure log:\n" + log_path.read_text(), flush=True)
+                    raise
                 finally:
                     if game.poll() is None:
                         game.terminate()
@@ -273,10 +285,10 @@ def main():
         checked_run([GODOT, "--headless", "--editor", "--path", str(ROOT / "game"), "--quit"],
                     isolated_env(directory / "import"))
         for script, marker in (
-            ("test_character_editor.gd", r"CHARACTER_EDITOR_TESTS \d+ checks; 0 failures"),
-            ("test_crew.gd", r"CREW_TESTS \d+ checks; 0 failures"),
-            ("test_expedition.gd", r"EXPEDITION_TESTS \d+ checks; 0 failures"),
-            ("test_ground_combat.gd", r"GROUND_COMBAT_TESTS \d+ checks; 0 failures"),
+            ("test_character_editor.gd", r"CHARACTER_EDITOR_TESTS [1-9]\d* checks; 0 failures"),
+            ("test_crew.gd", r"CREW_TESTS [1-9]\d* checks; 0 failures"),
+            ("test_expedition.gd", r"EXPEDITION_TESTS [1-9]\d* checks; 0 failures"),
+            ("test_ground_combat.gd", r"GROUND_COMBAT_TESTS [1-9]\d* checks; 0 failures"),
         ):
             if args.from_crew and script == "test_crew.gd":
                 continue

@@ -214,3 +214,50 @@ emite `CHARACTER_EDITOR_CAPTURE_OK` y continúa su cierre normal. La comprobaci�
 gráfica exige exactamente 1040×740 a 1600×900; el display dummy headless puede
 reducir el popup a su mínimo y ahí se verifican los límites reales de todos los
 controles, sin presentar esa pasada como validación visual.
+
+## Evidencia del bloque y reproducción del ejecutable
+
+![Editor de ficha aplicado en el ejecutable standalone Linux](images/character-editor.png)
+
+La captura procede del ejecutable Linux, no del editor de Godot ni de una escena
+sustitutiva. El arnés abre **F4 → Editar ficha** con entrada X11 real, escribe un
+nombre, espera a que Aplicar esté habilitado, pulsa, comprueba el JSON guardado y
+reinicia el ejecutable. Una segunda edición añade un sufijo al nombre recargado y
+verifica de nuevo el guardado. No invoca comandos debug ni `--script` en el
+export (los templates release no permiten ese modo de prueba).
+
+```sh
+python3 tools/build.py
+python3 tests/run_character_editor.py --capture-only \
+  --binary build/linux/EspaciokoopLagunak.x86_64 \
+  --capture-to /tmp/character-editor-export.png
+```
+
+Requiere Linux, Xvfb, xdotool y Pillow (`PIL.ImageGrab`). Busca los ejecutables en
+PATH o en `.toolchain/display/usr/bin`; no instala paquetes automáticamente.
+Utiliza display propio autenticado, sin listener TCP, y datos de usuario
+puramente temporales. Solo termina los procesos que crea. La imagen requiere una
+ruta nueva y se acompaña de `.evidence.json` con hash del binario, perfil de prueba,
+resultado del reinicio y logs; los fallos visuales conservan una captura diagnóstica.
+
+Resultado observado en el candidato de este bloque:
+
+- **295** comprobaciones de documento/UI, **24** de Crew, **18** de Expedition y
+  **22** de combate terrestre: cero fallos.
+- ENet real: anfitrión **9** y dos clientes autenticados **24 + 24**, cero fallos;
+  ambos clientes aplican desde la UI real y el host conserva estado/persistencia.
+- Export Linux ejecutado por controles públicos, guardado y reinicio: correcto.
+  SHA-256 del binario capturado:
+  `5d4193b5325b68980d3e120cc474f8afe0aa021800b6a77c124a8e5b6d306698`.
+- Export Windows generado; no se atribuye una prueba física Windows a esta pasada.
+- La exportación conserva un aviso Unicode de cosmografía ya presente en la base,
+  cuyo archivo reservado no se modifica aquí. El runtime probado no emite errores
+  de script; el display software únicamente avisa de V-Sync no disponible.
+
+La CI canónica invoca ahora este runner al terminar `tests/test_crew.gd`, sin
+modificar el workflow ni eliminar sus pruebas. `--from-crew` y `--character-child`
+impiden recursión; la ejecución directa del runner mantiene todas las regresiones.
+Los marcadores exigen comprobaciones positivas y cero fallos. Las rutas de partida
+y recursos se protegen también frente a variantes de mayúsculas para sistemas de
+archivos insensibles a capitalización. No se declara playtest humano ni paridad
+completa del proyecto por estas pruebas automatizadas.
