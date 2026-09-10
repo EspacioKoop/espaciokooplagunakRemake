@@ -23,6 +23,8 @@ jobs:
           persist-credentials: false
       - name: Install display runtime
         run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Validate release package publishing
+        run: python3 -m unittest discover -s tests -p test_publish_release.py
       - name: Download verified Godot toolchain
         run: python3 tools/bootstrap.py --templates
       - name: Import resources
