@@ -1,0 +1,158 @@
+name: Fieldkit Blender models
+
+on:
+  push:
+    branches: [agent/52-fieldkit-models]
+    paths:
+      - 'art/blender/fieldkit_pack/**'
+      - 'game/asset_lab/fieldkit_pack/**'
+      - 'tests/fieldkit_pack/**'
+      - 'docs/FIELDKIT_ASSET_PACK.md'
+      - '.github/workflows/fieldkit-assets.yml'
+  pull_request:
+    paths:
+      - 'art/blender/fieldkit_pack/**'
+      - 'game/assets/models/fieldkit_pack/**'
+      - 'game/asset_lab/fieldkit_pack/**'
+      - 'tests/fieldkit_pack/**'
+      - '.github/workflows/fieldkit-assets.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fieldkit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Install pinned Blender module and display runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri libegl1 libxi6 libxrender1 libxfixes3 libxxf86vm1
+          python -m pip install 'bpy==4.5.3' 'Pillow==11.3.0'
+      - name: Check source syntax and existing committed exports
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/fieldkit
+          python -m compileall -q art/blender/fieldkit_pack tests/fieldkit_pack
+          if test -f game/assets/models/fieldkit_pack/manifest.json; then
+            python tests/fieldkit_pack/validate.py 2>&1 | tee build/fieldkit/committed-assets.log
+          fi
+      - name: Construct missing editable Blender models
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u art/blender/fieldkit_pack/build.py --missing-only 2>&1 | tee build/fieldkit/build.log
+      - name: Export from sources and render delivered GLBs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u art/blender/fieldkit_pack/export.py --render 2>&1 | tee build/fieldkit/export.log
+      - name: Validate six tools two weapons and two ships
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tests/fieldkit_pack/validate.py 2>&1 | tee build/fieldkit/validate.log
+      - name: Download repository-pinned verified Godot
+        run: python tools/bootstrap.py
+      - name: Import and exercise all models and equipment views
+        run: python tests/fieldkit_pack/run.py
+      - name: Package actual sources models scenes and evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          import zipfile
+          root=Path.cwd()
+          out=root/'build/fieldkit'
+          out.mkdir(parents=True,exist_ok=True)
+          target=out/'Fieldkit_Biblioteca_3D.zip'
+          folders=['art/blender/fieldkit_pack','game/assets/models/fieldkit_pack','game/asset_lab/fieldkit_pack','tests/fieldkit_pack','docs/images/fieldkit_pack']
+          with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED) as archive:
+              for folder in folders:
+                  for path in sorted((root/folder).rglob('*')):
+                      if path.is_file() and '__pycache__' not in path.parts and path.suffix not in {'.pyc','.blend1','.blend2'}:
+                          archive.write(path,path.relative_to(root))
+              for name in ['docs/FIELDKIT_ASSET_PACK.md','docs/fieldkit_assets.json','LICENSE']:
+                  if (root/name).is_file():
+                      archive.write(root/name,name)
+          (out/'SHA256SUMS.txt').write_text(hashlib.sha256(target.read_bytes()).hexdigest()+'  '+target.name+'\n')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: fieldkit-models-and-evidence
+          path: |
+            build/fieldkit/*.log
+            build/fieldkit/*.json
+            build/fieldkit/SHA256SUMS.txt
+            build/fieldkit/Fieldkit_Biblioteca_3D.zip
+            build/fieldkit/captures/*.png
+          if-no-files-found: error
+          retention-days: 14
+
+  preserve-models:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/agent/52-fieldkit-models'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: agent/52-fieldkit-models
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: fieldkit-models-and-evidence
+          path: fieldkit-evidence
+      - name: Preserve verified generated files on this branch only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFIED_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$VERIFIED_SHA" || { echo 'Branch advanced; refusing to overwrite newer work'; exit 1; }
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, zipfile
+          root=Path.cwd()
+          evidence=root/'fieldkit-evidence'
+          archive=next(evidence.rglob('Fieldkit_Biblioteca_3D.zip'))
+          sums=next(evidence.rglob('SHA256SUMS.txt')).read_text().split()[0]
+          assert hashlib.sha256(archive.read_bytes()).hexdigest()==sums
+          prefixes=('art/blender/fieldkit_pack/','game/assets/models/fieldkit_pack/','game/asset_lab/fieldkit_pack/instances/','docs/images/fieldkit_pack/')
+          with zipfile.ZipFile(archive) as z:
+              for member in z.infolist():
+                  name=member.filename
+                  if member.is_dir() or not (name.startswith(prefixes) or name=='docs/fieldkit_assets.json'):
+                      continue
+                  # Do not replace recipe/test/viewer code from the archive.
+                  if name.endswith('.py'):
+                      continue
+                  destination=(root/name).resolve()
+                  assert destination.is_relative_to(root) and '..' not in Path(name).parts
+                  destination.parent.mkdir(parents=True,exist_ok=True)
+                  destination.write_bytes(z.read(member))
+          PY
+          git add art/blender/fieldkit_pack game/assets/models/fieldkit_pack game/asset_lab/fieldkit_pack/instances docs/images/fieldkit_pack docs/fieldkit_assets.json
+          if git diff --cached --quiet; then echo 'Verified models already committed'; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'art: preserve ten verified Fieldkit Blender sources GLBs and instance scenes [skip ci]'
+          git -c credential.helper='!f() { printf "username=x-access-token\npassword=%s\n" "$GH_TOKEN"; }; f' push origin HEAD:refs/heads/agent/52-fieldkit-models

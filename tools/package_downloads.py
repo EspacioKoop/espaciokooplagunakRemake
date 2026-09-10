@@ -51,7 +51,7 @@ def package_exports(root, names, android_debug=False, foundry=True):
             module = root / "integrations/foundry"
             path = staging / "espaciokoop-lagunak-foundry.zip"
             with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
-                for name in ("module.json", "main.mjs", "client.mjs", "style.css", "README.md"):
+                for name in ("module.json", "main.mjs", "client.mjs", "workspace.mjs", "style.css", "README.md"):
                     archive.write(module / name, name)
                 archive.write(root / "LICENSE", "LICENSE")
             files.append(path)

@@ -1,0 +1,70 @@
+{
+  "schema": "espaciokoop-asset-discovery",
+  "version": 1,
+  "pack": "fieldkit",
+  "issue": 52,
+  "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+  "viewer": "game/asset_lab/fieldkit_pack/viewer.tscn",
+  "assets": [
+    {
+      "id": "fieldkit/giltza_hack_tool",
+      "category": "tools",
+      "title": "Giltza · interfaz de hackeo",
+      "scene": "game/asset_lab/fieldkit_pack/instances/giltza_hack_tool.tscn"
+    },
+    {
+      "id": "fieldkit/kako_tether",
+      "category": "tools",
+      "title": "Kako · gancho magnético",
+      "scene": "game/asset_lab/fieldkit_pack/instances/kako_tether.tscn"
+    },
+    {
+      "id": "fieldkit/argi_scanner",
+      "category": "tools",
+      "title": "Argi · escáner de campo",
+      "scene": "game/asset_lab/fieldkit_pack/instances/argi_scanner.tscn"
+    },
+    {
+      "id": "fieldkit/jostun_repair",
+      "category": "tools",
+      "title": "Jostun · reparador",
+      "scene": "game/asset_lab/fieldkit_pack/instances/jostun_repair.tscn"
+    },
+    {
+      "id": "fieldkit/ebaki_cutter",
+      "category": "tools",
+      "title": "Ebaki · cortador de campo",
+      "scene": "game/asset_lab/fieldkit_pack/instances/ebaki_cutter.tscn"
+    },
+    {
+      "id": "fieldkit/soros_medkit",
+      "category": "tools",
+      "title": "Soros · botiquín de campaña",
+      "scene": "game/asset_lab/fieldkit_pack/instances/soros_medkit.tscn"
+    },
+    {
+      "id": "fieldkit/tximista_carbine",
+      "category": "weapons",
+      "title": "Tximista · carabina de pulsos",
+      "scene": "game/asset_lab/fieldkit_pack/instances/tximista_carbine.tscn"
+    },
+    {
+      "id": "fieldkit/txinparta_sidearm",
+      "category": "weapons",
+      "title": "Txinparta · pistola iónica",
+      "scene": "game/asset_lab/fieldkit_pack/instances/txinparta_sidearm.tscn"
+    },
+    {
+      "id": "fieldkit/enara_shuttle",
+      "category": "ships",
+      "title": "Enara · lanzadera de expedición",
+      "scene": "game/asset_lab/fieldkit_pack/instances/enara_shuttle.tscn"
+    },
+    {
+      "id": "fieldkit/hontz_corvette",
+      "category": "ships",
+      "title": "Hontz · corbeta de patrulla",
+      "scene": "game/asset_lab/fieldkit_pack/instances/hontz_corvette.tscn"
+    }
+  ]
+}

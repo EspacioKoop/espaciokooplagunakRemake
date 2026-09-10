@@ -1,0 +1,36 @@
+name: Foundry workspace contracts
+
+on:
+  pull_request:
+    paths:
+      - 'integrations/foundry/**'
+      - 'docs/FOUNDRY_WORKSPACE.md'
+      - 'tools/package_downloads.py'
+      - 'tools/export_targets.py'
+      - 'tests/test_foundry_workspace_package.py'
+      - 'tests/test_platform_exports.py'
+      - '.github/workflows/foundry-workspace.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  workspace:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check JavaScript syntax
+        run: |
+          node --version
+          node --check integrations/foundry/main.mjs
+          node --check integrations/foundry/workspace.mjs
+      - name: Run all Foundry client and presentation contracts
+        run: node --test integrations/foundry/tests/*.test.mjs
+      - name: Verify packaged dependencies and legacy export contracts
+        run: |
+          python3 tests/test_foundry_workspace_package.py
+          python3 tests/test_platform_exports.py

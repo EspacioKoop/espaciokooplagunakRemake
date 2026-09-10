@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/fieldkit_pack/soros_medkit.glb" id="1"]
+
+[node name="soros_medkit" type="Node3D"]
+metadata/asset_id = "fieldkit/soros_medkit"
+
+[node name="Model" parent="." instance=ExtResource("1")]
