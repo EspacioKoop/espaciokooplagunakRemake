@@ -232,12 +232,11 @@ func _binding(action: String, fallback: String) -> String:
 	return controls.binding_label(action) if controls != null else fallback
 
 func _input(event: InputEvent) -> void:
-	if not is_visible_in_tree() or body == null: return
+	if not is_visible_in_tree() or body == null or _controls_blocked(): return
 	if _input_action(event, "release_pointer", KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		get_viewport().set_input_as_handled()
 		return
-	if _controls_blocked(): return
 	if _input_action(event, "capture_pointer", MOUSE_BUTTON_LEFT):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
