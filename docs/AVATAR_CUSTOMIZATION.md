@@ -1,5 +1,9 @@
 # Avatar de tripulación
 
+![Editor y retrato renderizados desde Godot](images/avatar-editor.png)
+
+Captura real del editor en CI, ejecución `34502779934` (commit `c9ab0648`).
+
 Desde Inicio o Puente, pulsa **Mi avatar** sobre la vista 3D; **Alt+A** abre el
 mismo editor desde otras pantallas. Elige entre cuatro trajes, tres visores y
 tres opciones de equipo cosmético. El retrato y la vista giratoria usan el mismo
