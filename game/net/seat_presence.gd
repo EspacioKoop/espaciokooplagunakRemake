@@ -3,6 +3,7 @@ extends Node
 ## and owns walking position/yaw. This node owns only peer -> physical seat.
 signal changed
 signal result_received(ok: bool, message: String)
+signal request_finished(operation: String, ok: bool, message: String)
 const VERSION = 1
 const MAX_REQUESTS_PER_SECOND = 12
 var _seats: Dictionary = {}
@@ -55,12 +56,14 @@ func _request(operation: String, seat_id: String) -> Dictionary:
 		if not _negotiated or multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
 			var result = {"ok": false, "message": "Este anfitrión aún no ofrece asientos compartidos."}
 			result_received.emit(result.ok, result.message)
+			request_finished.emit(operation, result.ok, result.message)
 			return result
 		_request_sequence += 1
 		_receive_request.rpc_id(1, VERSION, _request_sequence, operation, seat_id)
 		return {"ok": true, "pending": true, "message": "Esperando al anfitrión…"}
 	var result = _command(1, operation, seat_id)
 	result_received.emit(result.ok, result.message)
+	request_finished.emit(operation, result.ok, result.message)
 	return result
 
 func _position(peer: int) -> Variant:
@@ -175,7 +178,7 @@ func _receive_request(version: int, sequence: int, operation: String, seat_id: S
 	_sequences[peer] = sequence
 	if operation.length() > 8 or seat_id.length() > 32: return
 	var result = _command(peer, operation, seat_id)
-	_response.rpc_id(peer, result.ok, result.message)
+	_response.rpc_id(peer, operation, result.ok, result.message)
 
 func _publish() -> void:
 	_revision += 1
@@ -201,8 +204,10 @@ func _receive_snapshot(version: int, revision: int, occupants: Dictionary) -> vo
 	changed.emit()
 
 @rpc("authority", "call_remote", "reliable", 0)
-func _response(ok: bool, message: String) -> void:
-	if _session.mode == "client": result_received.emit(ok, message.left(160))
+func _response(operation: String, ok: bool, message: String) -> void:
+	if _session.mode != "client": return
+	result_received.emit(ok, message.left(160))
+	request_finished.emit(operation, ok, message.left(160))
 
 func _exit_tree() -> void:
 	if is_instance_valid(_session) and _session.mode == "host" and _session.roster.has(1):

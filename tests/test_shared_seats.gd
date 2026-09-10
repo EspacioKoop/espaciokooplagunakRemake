@@ -48,6 +48,21 @@ func run() -> void:
 	check(deck.seated, "can sit again")
 	deck.teleport_zone(8)
 	check(not deck.seated and seats.occupant("seat_10_0") == 0 and deck.zone == 8, "changing zone releases without reanchoring")
+	# A late accepted-sit packet must not undo a zone transition while its
+	# reliable stand cancellation is awaiting acknowledgement.
+	var destination: Vector3 = deck.body.position
+	deck._seat_requested = true
+	deck._leaving_seat = true
+	deck._sync_seat()
+	check(deck._leaving_seat, "empty old projection does not acknowledge pending cancellation")
+	seats._occupants[seat.id] = 1
+	seats.changed.emit()
+	check(not deck.seated and deck.body.position == destination, "late sit snapshot cannot reanchor after zone change")
+	seats.request_finished.emit("sit", true, "Sentado")
+	check(deck._leaving_seat and not deck._seat_requested and not deck.seated, "sit response does not acknowledge stand cancellation")
+	seats._occupants.clear()
+	seats.request_finished.emit("stand", true, "De pie")
+	check(not deck._leaving_seat and not deck.seated, "only stand response completes cancellation")
 	deck.teleport_zone(10)
 	deck.body.position = seat.approach
 	check(seats.request_sit("seat_10_0").ok, "reserve for deck close")

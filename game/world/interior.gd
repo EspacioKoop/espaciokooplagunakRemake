@@ -44,6 +44,7 @@ var reduced_motion = false
 var seated = false
 var _standing_position = Vector3.ZERO
 var _leaving_seat = false
+var _seat_requested = false
 var _seat_notice = ""
 var _seat_notice_until = 0
 var _book_page = 0
@@ -184,6 +185,7 @@ func _ready() -> void:
 		presence.bind_body(body)
 		presence.changed.connect(_sync_seat)
 		presence.result_received.connect(_seat_result)
+		presence.request_finished.connect(_seat_finished)
 	teleport_zone(0)
 
 func _add_door(position: Vector3, destination: int, title: String, source: int) -> void:
@@ -273,6 +275,7 @@ func interact() -> void:
 			_leaving_seat = false
 			var session = _session()
 			if session != null: session.update_pose(body.position, body.rotation.y)
+			_seat_requested = true
 			presence.request_sit(_near_interaction.id)
 		elif _near_interaction.kind == "lights":
 			_studio_mode = (_studio_mode + 1) % 4
@@ -291,13 +294,17 @@ func _seat_result(ok: bool, message: String) -> void:
 		_seat_notice_until = Time.get_ticks_msec() + 2500
 	_sync_seat()
 
+func _seat_finished(operation: String, _ok: bool, _message: String) -> void:
+	if operation == "sit": _seat_requested = false
+	elif operation == "stand": _leaving_seat = false
+	_sync_seat()
+
 func _sync_seat() -> void:
 	if body == null: return
 	var presence = _presence()
 	if presence == null: return
 	var seat: Dictionary = presence.seat_for(presence.local_peer())
 	if seat.is_empty():
-		_leaving_seat = false
 		_restore_standing()
 	elif not _leaving_seat:
 		if not seated:
@@ -321,10 +328,11 @@ func _restore_standing() -> void:
 
 func stand_up() -> void:
 	# Cancel even a pending reservation when leaving the zone or closing the deck.
-	_leaving_seat = true
-	_restore_standing()
 	var presence = _presence()
-	if presence != null: presence.request_stand()
+	var must_release = _seat_requested or seated or (presence != null and not presence.seat_for(presence.local_peer()).is_empty())
+	_leaving_seat = must_release
+	_restore_standing()
+	if presence != null and must_release: presence.request_stand()
 
 func turn_book(page: int) -> void:
 	_book_page = page

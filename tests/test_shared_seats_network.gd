@@ -9,6 +9,9 @@ var mode = ""
 var directory = ""
 var responses: Array = []
 var catalog: Dictionary
+var _transmit_pose = Vector3.ZERO
+var _pose_active = false
+var _pose_sent_at = 0
 func _initialize() -> void: call_deferred("run")
 func check(value: bool, label: String) -> void:
 	checks += 1
@@ -28,13 +31,26 @@ func mark(name: String, text: String = "ready") -> void:
 func reached(name: String) -> bool: return FileAccess.file_exists(marker(name))
 func phase(name: String) -> void:
 	check(await wait_for(func(): return reached(name)), "phase " + name)
+func _stream_pose() -> void:
+	if not _pose_active or session.mode != "client" or not joined: return
+	var now = Time.get_ticks_msec()
+	if now - _pose_sent_at < 100: return
+	_pose_sent_at = now
+	session.update_pose(_transmit_pose, 0.0)
+func echoed_position() -> bool:
+	var peer = str(seats.local_peer())
+	var pose: Dictionary = session.poses.get(peer, {})
+	if pose.is_empty(): return false
+	return Vector3(pose.position[0], pose.position[1], pose.position[2]).distance_to(_transmit_pose) < 0.01
 func place(id: String) -> void:
-	session.update_pose(catalog[id].approach + Vector3(0, 0.2, 0), 0.0)
-	await create_timer(0.25).timeout
+	_transmit_pose = catalog[id].approach + Vector3(0, 0.2, 0)
+	_pose_active = true
+	check(await wait_for(echoed_position), "host echoes approach position before reservation")
 func run() -> void:
 	session = root.get_node("Session")
 	seats = root.get_node("SeatPresence")
 	catalog = PhysicalSeatCatalog.all_seats()
+	physics_frame.connect(_stream_pose)
 	var args = OS.get_cmdline_user_args()
 	mode = args[args.find("--case") + 1]
 	var port = int(args[args.find("--port") + 1])
@@ -70,6 +86,8 @@ func host_case(port: int) -> void:
 	check(seats.occupant("seat_7_0") == 1, "clients cannot release host by requesting stand or changing seat id")
 	mark("zone")
 	check(await wait_for(func(): return reached("player_zone_seen") and reached("rival_zone_seen")), "all clients acknowledge zone release before next phase")
+	if seats.occupant("seat_7_1") != 0:
+		print("SEATS_ZONE_DIAGNOSTIC occupants=", seats._occupants, " positions=", session.poses)
 	check(seats.occupant("seat_7_1") == 0, "legacy position update to another zone releases seat")
 	mark("disconnect")
 	check(await wait_for(func(): return reached("disconnect_reserved")), "client reserves before disconnect")
@@ -120,10 +138,9 @@ func client_case(port: int) -> void:
 	mark(mode + "_negative")
 	await phase("zone")
 	if peer != winner:
-		# Position/yaw use the existing unreliable 10Hz stream, as the real deck.
-		for tick in 5:
-			session.update_pose(Vector3(80, 0.2, 80), 0.0)
-			await create_timer(0.1).timeout
+		# Keep the real unreliable 10Hz movement stream alive until host echo.
+		_transmit_pose = Vector3(80, 0.2, 80)
+		check(await wait_for(echoed_position), "host echoes new zone position")
 	check(await wait_for(func(): return seats.occupant("seat_7_1") == 0), "zone release reaches all clients")
 	mark(mode + "_zone_seen")
 	await phase("disconnect")
@@ -133,6 +150,7 @@ func client_case(port: int) -> void:
 		check(await wait_for(func(): return seats.occupant("seat_7_1") == peer), "reserve before disconnect")
 		mark("disconnect_reserved")
 		await create_timer(0.15).timeout
+		_pose_active = false
 		session.close_session()
 		check(seats._occupants.is_empty(), "local close clears client projection")
 		joined = false

@@ -41,6 +41,8 @@ API del nodo `/root/SeatPresence`:
 - `seat_for(peer_id)`: metadatos físicos canónicos del asiento, o `{}` de pie.
 - `occupant(seat_id)`: peer propietario, o `0` libre.
 - `changed` y `result_received(ok, message)`: proyección y feedback de UI.
+- `request_finished(operation, ok, message)`: distingue confirmaciones de sentarse
+  y levantarse para que una aceptación tardía no deshaga un cambio de zona.
 
 `WorldDeck` presenta la posición canónica mientras alguien está sentado y vuelve
 al canal original al levantarse. La malla propia `crew.glb` recibe una flexión de
