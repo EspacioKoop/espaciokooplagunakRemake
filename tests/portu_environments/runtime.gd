@@ -96,5 +96,8 @@ func run() -> void:
 	root.remove_child(lab)
 	lab.queue_free()
 	await process_frame
-	print("PORTU_CAPTURE_PASS checks=", checks, " failures=", failures, " captures=16" if capturing else " (capture mode not requested)") if capturing else print("PORTU_RUNTIME_PASS checks=", checks, " failures=", failures)
+	if capturing:
+		print("PORTU_CAPTURE_PASS checks=", checks, " failures=", failures, " captures=16")
+	else:
+		print("PORTU_RUNTIME_PASS checks=", checks, " failures=", failures)
 	quit(0 if failures == 0 else 1)
