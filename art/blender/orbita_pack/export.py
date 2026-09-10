@@ -3,7 +3,8 @@
 python art/blender/orbita_pack/export.py --render
 blender -b --python art/blender/orbita_pack/export.py -- --render
 Static parts are joined only in memory, by parent. Named articulated pivots and
-sockets survive export. No textures, external resources or network are used.
+sockets survive export. Previews reimport the exported GLB in a clean scene.
+No textures, external resources or network are used.
 """
 from __future__ import annotations
 import argparse
@@ -50,7 +51,6 @@ def optimise(root):
         bm=bmesh.new(); bm.from_mesh(ob.data)
         bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces))
         bm.to_mesh(ob.data); bm.free(); ob.data.update()
-        # Never join directly animated meshes or meshes with children.
         if not ob.animation_data and not ob.children:
             groups.setdefault(ob.parent,[]).append(ob)
     for parent,parts in groups.items():
@@ -113,10 +113,19 @@ def render(root,path):
     bpy.ops.render.render(write_still=True)
 
 
+def render_exported(ident,target,path):
+    # Round-trip validation: render the delivered GLB, never a richer source scene.
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    bpy.ops.import_scene.gltf(filepath=str(target))
+    root=bpy.data.objects.get(ident)
+    if root is None: raise ValueError('Root lost during GLB reimport: '+ident)
+    bpy.context.scene.frame_set(1)
+    render(root,path)
+
+
 def contact_sheet(entries):
     from PIL import Image,ImageDraw,ImageFont
-    width,height=1600,1510
-    page=Image.new('RGB',(width,height),'#101c29'); draw=ImageDraw.Draw(page)
+    page=Image.new('RGB',(1600,1510),'#101c29'); draw=ImageDraw.Draw(page)
     font_path='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
     try:
         large=ImageFont.truetype(font_path,42); small=ImageFont.truetype(font_path,18); text=ImageFont.truetype(font_path,21)
@@ -124,39 +133,38 @@ def contact_sheet(entries):
         large=small=text=ImageFont.load_default()
     draw.text((48,28),'ÓRBITA / BIBLIOTECA 3D',font=large,fill='#e4eeed')
     draw.text((50,87),'12 modelos originales · Blender 4.5.3 · renders de los GLB exportados',font=small,fill='#88a9b3')
+    categories={'ships':'Naves','equipment':'Equipo','avatars':'Tripulación','enemies':'Enemigos','worlds':'Mundos','infrastructure':'Infraestructura'}
     for i,entry in enumerate(entries):
         x=32+(i%4)*392; y=137+(i//4)*440
         draw.rounded_rectangle((x,y,x+374,y+418),radius=16,fill='#192b3b')
         image=Image.open(IMAGES/(entry['id'].split('/')[-1]+'.png')).convert('RGBA')
         image.thumbnail((358,344),Image.Resampling.LANCZOS)
         page.paste(image,(x+(374-image.width)//2,y+8),image)
-        ident=entry['id'].split('/')[-1]
         title=entry['title'].split(' · ')[0]
         draw.text((x+18,y+347),title,font=text,fill='#e4eeed')
-        draw.text((x+18,y+378),entry['category']+' / '+str(entry['triangles'])+' tris',font=small,fill='#88a9b3')
+        draw.text((x+18,y+378),categories[entry['category']]+' / '+str(entry['triangles'])+' tris',font=small,fill='#88a9b3')
     draw.text((50,1475),'Modelos para reutilizar. No implica nuevas mecánicas integradas en la campaña.',font=small,fill='#88a9b3')
     page.save(IMAGES/'overview.png')
 
 
 def write_guide(entries):
-    lines=['# Pack Órbita — biblioteca original de modelos',
-      '', 'Índice permanente: [issue #52](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/52). '
+    lines=['# Pack Órbita — biblioteca original de modelos', '',
+      'Índice permanente: [issue #52](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/52). '
       'Biblioteca global: [ASSET_LIBRARY.md](ASSET_LIBRARY.md).', '',
-      '![Renders reales de los modelos Órbita](images/orbita_pack/overview.png)', '',
+      '![Renders de los GLB reimportados en Blender](images/orbita_pack/overview.png)', '',
       '**Estado:** modelos exportados; consultar PR/CI para la importación verificada. '
       'No se han integrado automáticamente en campaña, combate, IA, avatar, Atlas ni selección de nave. '
-      'Las imágenes son renders de los modelos, no capturas del juego final.', '',
+      'La galería son renders de los modelos, no capturas del juego final.', '',
       '## Catálogo', '', '| ID | Modelo | GLB | Fuente editable | Triángulos | Animación |',
       '| --- | --- | --- | --- | ---: | --- |']
     for e in entries:
-        ident=e['id'].split('/')[-1]
         lines.append(f"| `{e['id']}` | {e['title']} | [GLB](../{e['runtime']}) | [.blend](../{e['source']}) | {e['triangles']} | {', '.join(e['animations']) or 'Estático'} |")
     lines += ['', '## Uso en Godot', '',
       'Los GLB son autocontenidos y no requieren Blender para jugar. Arrastra el GLB a una escena '
       'o instancia su PackedScene. El catálogo verificable está en '
       '`game/assets/models/orbita_pack/manifest.json` (hashes, dimensiones, materiales y anclajes).', '',
       '```gdscript', 'var model = preload("res://assets/models/orbita_pack/karramarro_tug.glb").instantiate()',
-      'add_child(model)', '```', '',
+      'add_child(model)', 'var tow_socket = model.find_child("socket_tow_left", true, false)', '```', '',
       'Para inspección aislada: abre `game/asset_lab/orbita_pack/viewer.tscn` y pulsa F6, o ejecuta:', '',
       '```sh', '.toolchain/godot --path game res://asset_lab/orbita_pack/viewer.tscn', '```', '',
       'El visor permite elegir modelo, orbitar, acercar, restablecer y reproducir la animación mecánica. '
@@ -168,8 +176,9 @@ def write_guide(entries):
       '- El origen permanece en el origen de autoría. Robots, torreta, proyector y collar se apoyan '
       'en el plano Y=0; naves/sonda/módulo solar usan un origen de montaje; mundos centrados en (0,0,0). '
       'Consultar AABB y dimensiones reales en el manifiesto.',
-      '- `socket_*` son nodos vacíos conservados. Usar la ruta de cada anclaje del manifiesto; '
-      'las bocas apuntan al -Z local salvo elementos industriales cuya orientación debe adaptarse al consumidor.',
+      '- Los nodos `socket_*` tienen nombres únicos. `path` en el manifiesto describe la jerarquía glTF, '
+      'no una NodePath relativa de Godot. Resolver el nombre con `find_child(..., true, false)` '
+      'desde la instancia. Las bocas apuntan al -Z local; adaptar los anclajes industriales a su consumidor.',
       '- `mechanical_cycle` mueve pivotes rígidos. Los robots NO tienen esqueleto humano, '
       'pesos, locomoción, retargeting ni controladores. No sustituyen directamente el `crew.glb` existente.',
       '- Materiales Principled PBR, color/metal/roughness/emisión, sin texturas externas ni nodos de ruido que se pierdan en glTF. '
@@ -186,6 +195,8 @@ def write_guide(entries):
       'python art/blender/orbita_pack/export.py --render', '# Equivalente desde Blender:',
       'blender -b --python art/blender/orbita_pack/export.py -- --render',
       '# Verificación estructural:', 'python tests/orbita_pack/validate.py', '```', '',
+      'Cada render abre el GLB exportado en una escena limpia. Las pruebas de Godot comprueban '
+      'materiales, anclajes, clips y selección de los doce modelos, y guardan una captura real del visor.', '',
       '## Ampliaciones', '',
       'Reserva archivos en #7 y registra altas/revisiones en #52. Conserva IDs publicados; '
       'versiona cambios de escala, origen, materiales o anclajes. No sobrescribas packs de otros agentes. '
@@ -206,6 +217,7 @@ def main():
         root=bpy.data.objects.get(ident)
         if root is None or root.get('asset_id')!='orbita/'+ident: raise ValueError('Wrong source root: '+ident)
         bpy.context.scene.frame_set(1)
+        bpy.context.scene.name='mechanical_cycle'
         parts=sum(o.type=='MESH' for o in root.children_recursive)
         optimise(root)
         objects=descendants(root); low,high=bounds(objects)
@@ -215,8 +227,8 @@ def main():
         bpy.context.view_layer.objects.active=root
         target=MODELS/(ident+'.glb')
         options=dict(filepath=str(target),export_format='GLB',use_selection=True,
-          export_yup=True,export_extras=True,export_animations=True,export_animation_mode='SCENE',
-          export_frame_range=True,export_animation_name='mechanical_cycle',
+          export_yup=True,export_extras=True,export_animations=any(o.animation_data for o in objects),
+          export_animation_mode='SCENE',export_frame_range=True,
           export_anim_scene_split_object=False,export_cameras=False,export_lights=False,
           export_apply=False,export_copyright='Original Espaciokoop Lagunak art — MIT')
         allowed=set(bpy.ops.export_scene.gltf.get_rna_type().properties.keys())
@@ -235,6 +247,9 @@ def main():
                 index=parents[index]; result.append(nodes[index].get('name','node'))
             return '/'.join(reversed(result))
         sockets=[{'name':n['name'],'path':node_path(i)} for i,n in enumerate(nodes) if n.get('name','').startswith('socket_')]
+        names=[s['name'] for s in sockets]
+        if len(names)!=len(set(names)) or any(not name.isidentifier() for name in names):
+            raise ValueError('Socket names must be unique portable identifiers: '+ident)
         animations=[a.get('name','') for a in doc.get('animations',[])]
         entry=dict(id='orbita/'+ident,version=1,title=title,category=category,description=description,
           runtime=target.relative_to(ROOT).as_posix(),resource='res://assets/models/orbita_pack/'+ident+'.glb',
@@ -248,7 +263,7 @@ def main():
           license='MIT',status='exported_not_gameplay_integrated',rig='rigid_object_hierarchy',
           collision='not_included',lod='not_included',provenance='Original authored geometry; no imported art')
         entries.append(entry)
-        if args.render: render(root,IMAGES/(ident+'.png'))
+        if args.render: render_exported(ident,target,IMAGES/(ident+'.png'))
         if sha(source)!=before: raise RuntimeError('Editable source was modified by export')
         print('ORBITA_ASSET_EXPORTED '+ident+' triangles='+str(triangles),flush=True)
     manifest=dict(schema='espaciokoop-asset-pack',version=1,pack='orbita',issue=52,
