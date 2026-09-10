@@ -1,7 +1,7 @@
 class_name SocialTableDisplay
 extends Node3D
-## A recipient-specific 3D projection of a native ShipLounge table.
-## The projection consumes only the injected recipient view, so hidden cards never cross the privacy boundary.
+## Recipient-specific 3D projection of a native ShipLounge table.
+## It consumes only the injected recipient view, so hidden cards never cross the privacy boundary.
 
 var table_id = "poker"
 var session: Node
@@ -33,10 +33,11 @@ func _refresh(force: bool) -> void:
 	for i in seats.size():
 		var seat: Dictionary = seats[i]
 		var angle = TAU * float(i) / maxf(1.0, seats.size()) - PI * 0.5
-		var position = Vector3(cos(angle) * 2.15, 0.55, sin(angle) * 1.75)
+		var position = Vector3(cos(angle) * 2.25, 0.0, sin(angle) * 1.9)
+		_avatar(seat, position, angle)
 		var status = "NPC" if seat.get("bot", false) else ("AUSENTE" if seat.get("away", false) else "TRIPULANTE")
 		var resource = "%d dados" % int(seat.get("dice", 0)) if table_id == "dados" else "%d fichas" % int(seat.get("chips", 0))
-		_title("%s\n%s · %s" % [seat.get("name", "—"), status, resource], position, 20, ConsoleUI.MUTED if seat.get("away", false) else ConsoleUI.TEXT)
+		_title("%s\n%s · %s" % [seat.get("name", "—"), status, resource], position + Vector3(0, 1.35, 0), 18, ConsoleUI.MUTED if seat.get("away", false) else ConsoleUI.TEXT)
 	var round: Dictionary = table.get("round", {})
 	if round.is_empty():
 		_title("Mesa preparada\nE · jugar", Vector3(0, 0.62, 0), 22, ConsoleUI.AMBER)
@@ -46,6 +47,22 @@ func _refresh(force: bool) -> void:
 		"blackjack": _render_blackjack(round)
 		"dados": _render_dice(round)
 	if not str(round.get("result", "")).is_empty(): _title(round.result, Vector3(0, 0.34, 1.55), 18, ConsoleUI.AMBER)
+
+func _avatar(seat: Dictionary, position: Vector3, angle: float) -> void:
+	var avatar = SpaceView.model("crew")
+	avatar.position = position + Vector3(0, 0.04, 0)
+	avatar.rotation.y = -angle - PI * 0.5
+	avatar.scale = Vector3(0.62, 0.46, 0.62) if not seat.get("away", false) else Vector3.ONE * 0.5
+	_dynamic.add_child(avatar)
+	var personality = posmod(str(seat.get("name", "crew")).hash(), 3)
+	avatar.rotation.z = [-0.035, 0.0, 0.035][personality]
+	for mesh in avatar.find_children("*", "MeshInstance3D", true, false):
+		if seat.get("away", false): mesh.transparency = 0.65
+		elif seat.get("bot", false):
+			var material = StandardMaterial3D.new()
+			material.albedo_color = [Color("4e9a91"), Color("a88752"), Color("7a718f")][personality]
+			material.roughness = 0.78
+			mesh.material_override = material
 
 func _render_poker(round: Dictionary) -> void:
 	var board: Array = round.get("board", [])
