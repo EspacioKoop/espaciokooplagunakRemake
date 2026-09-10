@@ -33,6 +33,7 @@ func run() -> void:
 		app._choose_role(role)
 		await settle()
 		check(session.role == role and app._last_role == role, "station controls " + role)
+		check(app._footer.get_global_rect().end.y <= 900, "station layout stays inside actual window: " + role)
 	for page in ["home", "bridge", "deck", "atlas", "campaign", "editor", "sessions", "settings"]:
 		app._go(page)
 		await settle()
@@ -59,13 +60,27 @@ func run() -> void:
 			check(FileAccess.file_exists(path), "editor writes mission")
 			editor._load_file(ProjectSettings.globalize_path(path))
 			check(Catalog.validate_mission(editor.mission).is_empty(), "saved mission reopens")
+			editor._open_ship_design()
+			await settle()
+			var design_editor: ShipDesignEditor
+			for child in editor.get_children():
+				if child is ShipDesignEditor: design_editor = child
+			check(design_editor != null, "native ship design window opens")
+			design_editor.fields.hull.value = 175
+			design_editor._apply_design()
+			await settle()
+			check(editor.mission.ship_design.hull == 175, "design controls update authored mission")
+			var authored = Simulation.new()
+			authored.start(editor.mission)
+			check(authored.state.ship.max_hull == 175, "edited design changes actual playable ship")
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	session.select_role("ingenieria")
 	var operations = app._open_operations()
 	await settle()
 	var console = operations.get_child(0).get_child(0)
 	console.action_menu.item_selected.emit(console.definitions.find("coolant_level"))
-	console.fields.system.select(2)
+	for i in console.fields.system.item_count:
+		if console.fields.system.get_item_metadata(i) == "armas": console.fields.system.select(i)
 	console.fields.value.value = 3.0
 	for button in console.find_children("*", "Button", true, false):
 		if button.text == "Ejecutar orden": button.pressed.emit()

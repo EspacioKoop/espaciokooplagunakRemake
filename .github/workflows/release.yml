@@ -33,6 +33,7 @@ jobs:
         run: |
           .toolchain/godot --headless --path game --script ../tests/test_operations.gd -- --test
           .toolchain/godot --headless --path game --script ../tests/test_cooperation.gd -- --test
+          .toolchain/godot --headless --path game --script ../tests/test_ship_physics.gd -- --test
       - name: Exercise five actual network processes
         run: python3 tests/run_network.py
       - name: Verify actual HTTP boundary

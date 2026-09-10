@@ -37,17 +37,33 @@ Las órdenes siguientes tienen controles nativos en **Puente → Operaciones** y
 
 Las reglas, escalas y recursos son de esta implementación nueva. Esta tabla no afirma compatibilidad de escenarios, formatos antiguos o todas las variantes del motor original. Las fuentes contrastadas para los puestos incluyen `station-actions.mjs`, `PERMISOS_PUESTO.md`, componentes nativos de escaneo y los módulos de asistencia de la referencia.
 
+## Nave y espacio comprobados
+
+`tests/test_ship_physics.gd` añade 46 comprobaciones de efectos reales. El editor y su conexión con la simulación se prueban desde la interfaz nativa.
+
+| Función | Implementación y alcance |
+|---|---|
+| Nueve subsistemas originales | Reactor, Haces, Misiles, Maniobra, Impulso, Warp, Salto, Escudo de proa y Escudo de popa; Sensores es un décimo sistema propio. Cada avería afecta a su función. |
+| Escudos y disparos direccionales | Dos sectores independientes, desbordamiento hacia casco, daño de equipo y arco frontal de haces. |
+| Capacidades de diseño | Casco, escudos, velocidades, giro, aceleración, radio, salto, alcance, arco, daño, recarga y almacenes editables. |
+| Astillero standalone | Ventana nativa, aplicación a la misión, deshacer, importación/exportación `lagunak-ship` y prueba con las capacidades modificadas. |
+| Navegación física | Marcha atrás limitada por diseño, viraje progresivo y frenado del piloto automático. |
+| Objetos espaciales | Asteroides con colisión por trayectoria, atracción de planetas/agujeros negros, portales con destino y nebulosas que limitan el análisis. |
+| Partidas anteriores | Migración comprobada de los guardados previos de cuatro sistemas a diez, sin perder la misión. |
+
+Fuentes contrastadas: `src/content/shipDocument.h`, `src/systems/impulse.cpp`, `src/systems/shieldsystem.cpp` y componentes de haces y escudos del original. La física y las escalas son nuevas; no se afirma equivalencia de todas las variantes de objeto.
+
 ## Funciones que siguen pendientes o parciales
 
 | Área original | Estado comprobado en el remake | Trabajo necesario para paridad completa |
 |---|---|---|
-| Modelo de nave | Cuatro sistemas, casco y escudo agregado | Nueve subsistemas originales, escudos segmentados, arcos de tiro, capacidades por plantilla y todas sus interacciones |
-| Movimiento espacial | Impulso, warp, salto, maniobra y rutas | Marcha atrás, viraje limitado, colisiones, gravedad, agujeros de gusano y demás objetos con física |
+| Modelo de nave | Nueve subsistemas de la referencia más Sensores; proa/popa, arcos y diseño editable comprobados | Montajes múltiples, torretas, más de dos segmentos y equivalencia de todas las interacciones y plantillas |
+| Movimiento espacial | Impulso y marcha atrás, viraje limitado, warp, salto, rutas, colisiones barridas, gravedad y portales | Completar colisiones entre naves/estaciones, maniobra lateral continua y variantes físicas de todos los objetos originales |
 | Inteligencia artificial y facciones | Hostiles de combate, aliados y negociación | Facciones, relaciones, órdenes de flota, comercio y comportamientos completos de IA |
-| Sensores | Identificación, sondas, archivo científico y cancelación | Bandas corta/larga con filtrado completo, niveles de análisis, vista remota de sonda y minijuegos nativos de análisis/hackeo |
+| Sensores | Identificación, sondas, archivo científico, cancelación e interferencia física de nebulosas | Bandas corta/larga con filtrado completo, niveles de análisis, vista remota de sonda y minijuegos nativos de análisis/hackeo |
 | Asistencia de personajes | Cuatro retos y propuestas nativas | Fichas, enfoques de habilidad, probabilidades, conjuros, rasgos y gasto de recursos de personaje |
 | Mesas de ocio | Sin implementar | Póker completo, blackjack, dados de faroleo, NPC automáticos, espectadores, abandono y reconexión |
-| Edición de contenido | Editor visual de misiones, JSON y prueba jugable | Editor de campañas, mapas, naves y personajes; dependencias, migraciones de formatos y catálogo completo |
+| Edición de contenido | Misiones visuales, mapas de sector y astillero de capacidades con importación/exportación y prueba jugable | Campañas, personajes, montajes de naves, dependencias, migración de formatos originales y catálogo completo |
 | Atlas | Radar de misión y descubrimientos persistentes | Cosmografía jerárquica, HYG/Spelljammer, importación, conexiones, marcadores, mapas y navegación entre sectores |
 | Dirección de juego | Editor de misiones y pausa local | Tempo del anfitrión, reposición, encuentros, convocatoria, parlamento, iniciativas, consola GM y control de escenas |
 | Interiores | Siete salas recorribles, colisiones, escotillas y presencia | Geografía del original, minimapa interior, asientos, mobiliario y terminales, museo, playa, cantina, terraza, estudio y pasillo de recuerdos |

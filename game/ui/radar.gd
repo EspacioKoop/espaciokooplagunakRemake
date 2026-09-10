@@ -54,11 +54,20 @@ func _draw() -> void:
 	var arrow = PackedVector2Array([Vector2(10, 0).rotated(heading), Vector2(-7, -6).rotated(heading), Vector2(-4, 0).rotated(heading), Vector2(-7, 6).rotated(heading)])
 	for i in arrow.size(): arrow[i] += center
 	draw_colored_polygon(arrow, ConsoleUI.TEAL)
+	var ship: Dictionary = data.get("ship", {})
+	if ship.has("shield_segments") and ship.shields_enabled:
+		for entry in [["front", "front_shield", -PI / 2, PI / 2], ["rear", "rear_shield", PI / 2, 3 * PI / 2]]:
+			var fraction = float(ship.shield_segments[entry[0]]) / maxf(1, ship.design[entry[1]])
+			draw_arc(center, 19, heading + entry[2] + 0.06, heading + entry[3] - 0.06, 32, ConsoleUI.RED.lerp(ConsoleUI.TEAL, fraction), 3, true)
+	if ship.has("design") and not editable:
+		var half_arc = deg_to_rad(float(ship.design.beam_arc)) * 0.5
+		draw_arc(center, minf(radius, ship.design.beam_range * _scale()), heading - half_arc, heading + half_arc, 48, Color(1, 0.7, 0.3, 0.25), 1, true)
 	for c in data.get("contacts", []):
 		if c.get("hull", 100) <= 0: continue
 		var p = to_screen([_ghost.x, _ghost.y]) if _drag == c.id else to_screen(c.position)
 		if p.distance_to(center) > radius: continue
 		var color = {"hostile": ConsoleUI.RED, "station": ConsoleUI.TEAL, "friendly": ConsoleUI.TEAL, "unknown": ConsoleUI.MUTED, "anomaly": Color("bb9bde")}.get(c.kind, ConsoleUI.AMBER)
+		if c.kind in SpacePhysics.KINDS: draw_arc(p, maxf(5, SpacePhysics.radius(c) * _scale()), 0, TAU, 48, Color(color, 0.4), 1.5, true)
 		if c.kind == "station": draw_rect(Rect2(p - Vector2(5, 5), Vector2(10, 10)), color, false, 2)
 		else: draw_circle(p, 4.5, color)
 		if selected == c.id:

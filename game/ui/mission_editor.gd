@@ -2,8 +2,8 @@ class_name MissionEditor
 extends Control
 signal play_requested(mission: Dictionary)
 
-const KINDS = ["station", "friendly", "hostile", "derelict", "anomaly", "beacon"]
-const KIND_NAMES = ["Estación", "Aliado", "Hostil", "Nave averiada", "Anomalía", "Baliza"]
+const KINDS = Catalog.CONTACT_KINDS
+const KIND_NAMES = Catalog.CONTACT_NAMES
 const GOALS = ["navigate", "dock", "hail", "scan", "salvage", "rescue", "defeat", "repair_target", "choice", "probe"]
 const GOAL_NAMES = ["Llegar", "Atracar", "Contactar", "Escanear", "Recuperar", "Rescatar", "Neutralizar", "Reparar estación", "Decidir", "Lanzar sonda"]
 var mission: Dictionary = {}
@@ -34,6 +34,7 @@ func _ready() -> void:
 	toolbar.add_child(ConsoleUI.button("Abrir JSON", _open_dialog))
 	toolbar.add_child(ConsoleUI.button("Deshacer", _undo_change))
 	toolbar.add_child(ConsoleUI.button("Guardar", _save, true))
+	toolbar.add_child(ConsoleUI.button("Diseñar nave", _open_ship_design))
 	toolbar.add_child(ConsoleUI.button("Probar misión", _play))
 	var body = ConsoleUI.row(root, 16)
 	ConsoleUI.expand(body)
@@ -125,6 +126,14 @@ func _ready() -> void:
 		right.add_child(check)
 		_fields[flag[0]] = check
 		check.toggled.connect(_flag.bind(flag[0]))
+	for entry in [["radius", "Radio del objeto · m", 5, 2000], ["gravity", "Atracción gravitatoria", 0, 1e8], ["destination_x", "Salida del portal · X", -14000, 14000], ["destination_y", "Salida del portal · Y", -14000, 14000]]:
+		right.add_child(ConsoleUI.label(entry[1], 14, ConsoleUI.MUTED))
+		var spin = SpinBox.new()
+		spin.min_value = entry[2]
+		spin.max_value = entry[3]
+		right.add_child(spin)
+		_fields[entry[0]] = spin
+		spin.value_changed.connect(_physical_field.bind(entry[0]))
 	right.add_child(ConsoleUI.label("OBJETIVOS EN ORDEN", 13, ConsoleUI.MUTED))
 	_goals = ItemList.new()
 	_goals.custom_minimum_size.y = 150
@@ -198,6 +207,10 @@ func _refresh() -> void:
 		_fields.y.set_value_no_signal(c.position[1])
 		_fields.known.set_pressed_no_signal(c.get("known", false))
 		_fields.jammed.set_pressed_no_signal(c.get("jammed", false))
+		_fields.radius.set_value_no_signal(SpacePhysics.radius(c) if c.kind in SpacePhysics.KINDS else 5.0)
+		_fields.gravity.set_value_no_signal(c.get("gravity", 500000.0 if c.kind == "planet" else 1500000.0 if c.kind == "blackhole" else 0.0))
+		_fields.destination_x.set_value_no_signal(c.get("destination", [-c.position[0], -c.position[1]])[0])
+		_fields.destination_y.set_value_no_signal(c.get("destination", [-c.position[0], -c.position[1]])[1])
 		_map.selected = c.id
 	else:
 		_fields.contact_name.text = ""
@@ -245,6 +258,27 @@ func _flag(value: bool, key: String) -> void:
 	_checkpoint()
 	mission.contacts[_selected][key] = value
 	_validate()
+
+func _physical_field(value: float, key: String) -> void:
+	if _syncing or _selected < 0: return
+	_checkpoint()
+	var contact: Dictionary = mission.contacts[_selected]
+	if key.begins_with("destination_"):
+		var destination: Array = contact.get("destination", [-contact.position[0], -contact.position[1]]).duplicate()
+		destination[0 if key == "destination_x" else 1] = value
+		contact.destination = destination
+	else: contact[key] = value
+	_validate()
+
+func _open_ship_design() -> void:
+	var editor = ShipDesignEditor.new()
+	editor.design = mission.get("ship_design", ShipModel.standard_design()).duplicate(true)
+	editor.design_changed.connect(func(value):
+		_checkpoint()
+		mission.ship_design = value
+		_refresh())
+	add_child(editor)
+	editor.popup_centered()
 
 func _add_contact(position: Vector2) -> void:
 	if mission.contacts.size() >= 48: return

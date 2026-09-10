@@ -6,7 +6,7 @@ signal joined
 signal disconnected
 
 const DEFAULT_PORT = 27840
-const PROTOCOL = 2
+const PROTOCOL = 3
 var sim = Simulation.new()
 var view: Dictionary = {}
 var mode = "offline"

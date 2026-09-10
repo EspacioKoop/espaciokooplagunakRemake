@@ -129,7 +129,7 @@ func _options(kind: String) -> Array:
  elif kind == "waypoint":
   for point in o.get("waypoints", []): values.append([point.id, point.name])
  elif kind == "system":
-  for system in Catalog.SYSTEMS: values.append([system, system.capitalize()])
+  for system in Catalog.SYSTEMS: values.append([system, Catalog.SYSTEM_NAMES[system]])
  elif kind == "tube":
   values = [[0, "Tubo 1"], [1, "Tubo 2"]]
  elif kind == "ammo":
@@ -174,7 +174,7 @@ func _refresh_readout() -> void:
   for team in o.crews: lines.append("%s → %s · posición (%.1f, %.1f) · trabajo %.1f / 5 s" % [team.id, team.destination if not team.destination.is_empty() else "en espera", team.position[0], team.position[1], team.work])
  elif role == "ingenieria":
   var circuits = []
-  for system in Catalog.SYSTEMS: circuits.append("%s: %.1f" % [system.capitalize(), o.coolant[system]])
+  for system in Catalog.SYSTEMS: circuits.append("%s: %.1f" % [Catalog.SYSTEM_NAMES[system], o.coolant[system]])
   lines.append("Refrigerante · " + " · ".join(circuits))
  elif role == "comunicaciones":
   for message in o.comms.messages.slice(-6): lines.append(message.speaker + ": " + message.text)

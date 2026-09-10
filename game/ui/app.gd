@@ -14,6 +14,7 @@ var _refs: Dictionary = {}
 var _action_refs: Dictionary = {}
 var _roles: Dictionary = {}
 var _actions: VBoxContainer
+var _action_scroll: ScrollContainer
 var _last_role = ""
 var _target_menu: OptionButton
 var _ambient: AudioStreamPlayer
@@ -228,8 +229,12 @@ func _bridge() -> void:
 	_space.custom_minimum_size.y = 225
 	_space.reduced_motion = _preferences.motion
 	viewport_panel.add_child(_space)
-	_actions = ConsoleUI.card(center)
-	_actions.get_parent().custom_minimum_size.y = 250
+	_action_scroll = ScrollContainer.new()
+	_action_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_action_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	center.add_child(_action_scroll)
+	_actions = ConsoleUI.card(_action_scroll)
+	_actions.get_parent().size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_build_actions()
 	var right = ConsoleUI.column(body, 12)
 	right.custom_minimum_size.x = 288
@@ -273,6 +278,7 @@ func _build_actions() -> void:
 	ConsoleUI.clear(_actions)
 	_action_refs.clear()
 	_last_role = Session.role
+	_action_scroll.custom_minimum_size.y = 335 if Session.role == "ingenieria" else 250
 	var top = ConsoleUI.row(_actions)
 	var name = ConsoleUI.label(Catalog.role_name(Session.role), 24)
 	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -304,6 +310,7 @@ func _build_actions() -> void:
 			buttons.add_child(heading_label)
 			heading.value_changed.connect(func(value): heading_label.text = "%03d°" % value)
 			var throttle = HSlider.new()
+			throttle.min_value = -100
 			throttle.max_value = 100
 			throttle.step = 5
 			throttle.value = Session.view.ship.throttle * 100
@@ -318,25 +325,35 @@ func _build_actions() -> void:
 			orders.add_child(ConsoleUI.button("Impulso +", _send.bind("boost", {})))
 			orders.add_child(ConsoleUI.button("Frenar", func(): _send("helm", {"heading": Session.view.ship.heading, "throttle": 0.0})))
 		"ingenieria":
+			var circuits = GridContainer.new()
+			circuits.columns = 5
+			circuits.add_theme_constant_override("h_separation", 16)
+			circuits.add_theme_constant_override("v_separation", 12)
+			circuits.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			buttons.add_child(circuits)
 			for system in Catalog.SYSTEMS:
-				var column = ConsoleUI.column(buttons, 4)
+				var column = ConsoleUI.column(circuits, 4)
 				column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				column.add_child(ConsoleUI.label(system.capitalize(), 16))
+				column.add_child(ConsoleUI.label(Catalog.SYSTEM_NAMES[system], 16))
 				var values = ConsoleUI.label("", 13, ConsoleUI.MUTED)
 				column.add_child(values)
 				_action_refs[system] = values
 				var controls = ConsoleUI.row(column, 5)
 				controls.add_child(ConsoleUI.button("−", func(): _send("power", {"system": system, "value": int(Session.view.ship.systems[system].power) - 1})))
 				controls.add_child(ConsoleUI.button("+", func(): _send("power", {"system": system, "value": int(Session.view.ship.systems[system].power) + 1})))
-				var cool = ConsoleUI.button("Refrigerar", _send.bind("coolant", {"system": system}))
+				var cool = ConsoleUI.button("Frío", _send.bind("coolant", {"system": system}))
+				cool.tooltip_text = "Dirigir refrigeración a " + Catalog.SYSTEM_NAMES[system]
 				cool.add_theme_font_size_override("font_size", 13)
-				column.add_child(cool)
+				controls.add_child(cool)
+				for control in controls.get_children(): control.custom_minimum_size.y = 32
 			var shields = ConsoleUI.row(_actions)
 			shields.add_child(ConsoleUI.button("Subir escudos", _send.bind("shields", {"enabled": true})))
 			shields.add_child(ConsoleUI.button("Bajar escudos", _send.bind("shields", {"enabled": false})))
+			_action_refs.shield_segments = ConsoleUI.label("", 14, ConsoleUI.TEAL)
+			shields.add_child(_action_refs.shield_segments)
 		"armas":
-			buttons.add_child(ConsoleUI.button("Disparar pulso · 600 m", func(): _send("fire", {"target": _target}), true))
-			buttons.add_child(ConsoleUI.button("Lanzar torpedo · 900 m", func(): _send("missile", {"target": _target})))
+			buttons.add_child(ConsoleUI.button("Disparar pulso · %d m" % Session.view.ship.design.beam_range, func(): _send("fire", {"target": _target}), true))
+			buttons.add_child(ConsoleUI.button("Lanzar torpedo · %d m" % minf(900, Session.view.ship.design.missile_range), func(): _send("missile", {"target": _target})))
 			_action_refs.resources = ConsoleUI.label("", 17, ConsoleUI.AMBER)
 			_actions.add_child(_action_refs.resources)
 		"sensores":
@@ -355,7 +372,7 @@ func _build_actions() -> void:
 			_actions.add_child(ConsoleUI.paragraph("Sondas: 2500 m. Rescate y recuperación: contacto identificado a menos de 300 m. Los supervivientes se registran al completar la misión.", 15))
 		"reparaciones":
 			var system = OptionButton.new()
-			for system_name in Catalog.SYSTEMS: system.add_item(system_name.capitalize())
+			for system_name in Catalog.SYSTEMS: system.add_item(Catalog.SYSTEM_NAMES[system_name])
 			buttons.add_child(system)
 			buttons.add_child(ConsoleUI.button("Enviar drones · 2 repuestos", func(): _send("repair", {"system": Catalog.SYSTEMS[system.selected]}), true))
 			buttons.add_child(ConsoleUI.button("Reparar estación", func(): _send("repair_target", {"target": _target})))
@@ -738,7 +755,7 @@ func _refresh() -> void:
 			_refs.atlas_contacts.set_item_metadata(i, c.id)
 			if c.id == _target: _refs.atlas_contacts.select(i)
 	if _refs.has("contact_info"):
-		_refs.contact_info.text = "Selecciona un contacto." if chosen.is_empty() else "%s\n\n%s · %d m\n%s\n%s" % [chosen.name, {"station": "Estación", "friendly": "Aliado", "hostile": "Hostil", "derelict": "Nave averiada", "anomaly": "Anomalía", "beacon": "Baliza", "unknown": "Sin identificar"}[chosen.kind], _distance(chosen, ship), "Canal abierto" if chosen.get("hailed", false) else "Canal sin abrir", "Sonda activa" if chosen.get("probed", false) else "Sin sonda"]
+		_refs.contact_info.text = "Selecciona un contacto." if chosen.is_empty() else "%s\n\n%s · %d m\n%s\n%s" % [chosen.name, (Catalog.CONTACT_NAMES[Catalog.CONTACT_KINDS.find(chosen.kind)] if chosen.kind in Catalog.CONTACT_KINDS else "Sin identificar"), _distance(chosen, ship), "Canal abierto" if chosen.get("hailed", false) else "Canal sin abrir", "Sonda activa" if chosen.get("probed", false) else "Sin sonda"]
 		if _page == "bridge" and not chosen.is_empty(): _refs.contact_info.text = "%s · %d m\n%s" % [chosen.name, _distance(chosen, ship), "Identificado" if chosen.identified else "Eco sin identificar"]
 	if _page == "bridge":
 		if _last_role != Session.role: _build_actions()
@@ -748,8 +765,9 @@ func _refresh() -> void:
 		for system in Catalog.SYSTEMS:
 			if _action_refs.has(system):
 				var values: Dictionary = ship.systems[system]
-				_action_refs[system].text = "%d / 4 · %d°C\nIntegridad %d%%" % [values.power, values.heat, values.health]
+				_action_refs[system].text = "%d/4 · %d°C · %d%%" % [values.power, values.heat, values.health]
 				_action_refs[system].add_theme_color_override("font_color", ConsoleUI.RED if values.heat > 95 else (ConsoleUI.TEAL if ship.coolant == system else ConsoleUI.MUTED))
+		if _action_refs.has("shield_segments"): _action_refs.shield_segments.text = "Proa %d / %d · Popa %d / %d" % [ship.shield_segments.front, ship.design.front_shield, ship.shield_segments.rear, ship.design.rear_shield]
 		if _action_refs.has("resources"): _action_refs.resources.text = "%d torpedos · %d energía · %s" % [ship.torpedoes, ship.energy, "Armas listas" if ship.weapon_ready <= data.time else "Recarga %.1f s" % (ship.weapon_ready - data.time)]
 		if _action_refs.has("scan"): _action_refs.scan.text = "Sensores disponibles" if data.scan.target.is_empty() else "Analizando · %.1f s" % maxf(0, data.scan.remaining)
 		if _action_refs.has("summary"): _action_refs.summary.text = "%d repuestos · %d sondas · Alerta %s" % [ship.parts, ship.probes, ship.alert]
@@ -924,7 +942,10 @@ func _capture(args: PackedStringArray) -> void:
 	await _take(path, "10_asistencia.png")
 	assistance.queue_free()
 	await get_tree().process_frame
-	print("LAGUNAK_CAPTURE_OK 10 screenshots")
+	_go("editor")
+	_editor._open_ship_design()
+	await _take(path, "11_astillero.png")
+	print("LAGUNAK_CAPTURE_OK 11 screenshots")
 	_ambient.stop()
 	_effects.stop()
 	_ambient.stream = null

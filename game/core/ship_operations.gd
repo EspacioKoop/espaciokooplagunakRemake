@@ -13,7 +13,7 @@ const PERMISSIONS = {
  "reparaciones": ["crew_move"]
 }
 const AMMO = ["homing", "nuke", "mine", "emp", "hvli"]
-const ROOM_POSITIONS = {"motores": [-10.0, 12.0], "escudos": [10.0, 12.0], "armas": [-10.0, -12.0], "sensores": [10.0, -12.0]}
+const ROOM_POSITIONS = {"reactor": [0.0, 12.0], "motores": [-10.0, 12.0], "maniobra": [-8.0, 6.0], "warp": [-5.0, 12.0], "salto": [5.0, 12.0], "escudos": [10.0, -6.0], "escudos_popa": [10.0, 12.0], "armas": [-10.0, -12.0], "misiles": [-10.0, -8.0], "sensores": [10.0, -12.0]}
 const CONFIRMERS = ["mando", "ingenieria", "armas"]
 
 static func initialize(state: Dictionary) -> void:
@@ -24,6 +24,8 @@ static func initialize(state: Dictionary) -> void:
   "crews": [{"id": "equipo-1", "position": [0.0, 0.0], "destination": "", "work": 0.0}, {"id": "equipo-2", "position": [0.0, 0.0], "destination": "", "work": 0.0}],
   "comms": {"target": "", "messages": [], "replies": []}, "database": {},
   "destruct": {"armed": false, "codes": {}, "confirmed": {}, "principals": [], "remaining": -1.0}}
+ for system in Catalog.SYSTEMS: state.operations.coolant[system] = 0.0
+ if state.ship.has("design"): state.operations.ammo = state.ship.design.ammo.duplicate(true)
 
 static func number(args: Dictionary, field: String, low: float, high: float, integer: bool = false) -> bool:
  var value = args.get(field)
@@ -41,12 +43,12 @@ static func perform(sim, role: String, operation: String, args: Dictionary, prin
  match operation:
   "warp":
    if not number(args, "level", 0, 4, true): return result(false, "El nivel warp debe ser un entero entre 0 y 4.")
-   if int(args.level) > 0 and (not ship.docked.is_empty() or ship.fuel < 5 or ship.energy < 20 or o.jump.remaining > 0): return result(false, "Warp requiere vuelo libre, 5 de combustible y 20 de energía.")
+   if int(args.level) > 0 and (not ship.docked.is_empty() or ship.fuel < 5 or ship.energy < 20 or o.jump.remaining > 0 or ship.throttle < 0 or ship.design.warp_speed <= 0 or ShipModel.efficiency(ship, "warp") <= 0): return result(false, "Warp requiere motor operativo, vuelo hacia delante, 5 de combustible y 20 de energía.")
    o.warp = int(args.level)
    message = "Motor warp ajustado al nivel %d." % o.warp
   "jump":
-   if not number(args, "distance", 100, 3000): return result(false, "El salto debe medir entre 100 y 3000 m.")
-   if not ship.docked.is_empty() or o.jump.remaining > 0 or o.maneuver < 100 or ship.energy < 40: return result(false, "Salto requiere 100% de carga, 40 de energía y vuelo libre.")
+   if not number(args, "distance", 100, ship.design.jump_range): return result(false, "Distancia de salto fuera de la capacidad de esta nave.")
+   if not ship.docked.is_empty() or o.jump.remaining > 0 or o.maneuver < 100 or ship.energy < 40 or ShipModel.efficiency(ship, "salto") <= 0: return result(false, "Salto requiere motor operativo, 100% de carga, 40 de energía y vuelo libre.")
    ship.energy -= 40
    o.maneuver = 0.0
    o.warp = 0
@@ -57,7 +59,7 @@ static func perform(sim, role: String, operation: String, args: Dictionary, prin
   "strafe":
    if not number(args, "amount", -1, 1) or is_zero_approx(float(args.amount)): return result(false, "Selecciona un desplazamiento lateral entre −1 y 1, distinto de cero.")
    var cost = absf(float(args.amount)) * 30.0
-   if not ship.docked.is_empty() or o.maneuver < cost or ship.energy < cost / 3: return result(false, "Maniobra sin carga suficiente o nave atracada.")
+   if not ship.docked.is_empty() or o.maneuver < cost or ship.energy < cost / 3 or ShipModel.efficiency(ship, "maniobra") <= 0: return result(false, "Maniobra inoperativa, sin carga suficiente o nave atracada.")
    o.maneuver -= cost
    ship.energy -= cost / 3
    var direction = Vector2.from_angle(deg_to_rad(ship.heading) + PI / 2) * float(args.amount) * 90
@@ -122,9 +124,9 @@ static func perform(sim, role: String, operation: String, args: Dictionary, prin
     tube.remaining = 0.0
     message = "Munición devuelta al almacén."
    else:
-    if tube.ammo.is_empty() or tube.remaining > 0 or ship.systems.armas.power < 1: return result(false, "Tubo sin cargar o Armas sin potencia.")
+    if tube.ammo.is_empty() or tube.remaining > 0 or ShipModel.efficiency(ship, "misiles") <= 0: return result(false, "Tubo sin cargar o sistema de misiles inoperativo.")
     if tube.ammo == "mine" and o.mines.size() >= 64: return result(false, "Hay demasiadas minas desplegadas.")
-    if tube.ammo != "mine" and (c.is_empty() or not c.identified or c.kind != "hostile" or c.pacified or c.hull <= 0 or sim.distance_to(c) > 1600): return result(false, "El tubo necesita un hostil identificado a menos de 1600 m.")
+    if tube.ammo != "mine" and (c.is_empty() or not c.identified or c.kind != "hostile" or c.pacified or c.hull <= 0 or sim.distance_to(c) > ship.design.missile_range): return result(false, "El tubo necesita un hostil identificado dentro del alcance de esta nave.")
     var ammo: String = tube.ammo
     if ammo == "mine": o.mines.append({"position": ship.position.duplicate(), "armed_at": s.time + 3.0})
     elif ammo == "emp": c.attack_at = s.time + 18.0
@@ -134,7 +136,7 @@ static func perform(sim, role: String, operation: String, args: Dictionary, prin
     else: _damage(sim, c, 38 if ammo == "homing" else 20)
     tube.ammo = ""
     tube.remaining = 0.0
-    ship.systems.armas.heat = minf(120, ship.systems.armas.heat + 8)
+    ship.systems.misiles.heat = minf(120, ship.systems.misiles.heat + 8)
     message = "Tubo %d disparado: %s." % [int(args.tube) + 1, ammo]
   "scan_cancel":
    if s.scan.target.is_empty(): return result(false, "No hay un análisis en curso.")
@@ -264,15 +266,15 @@ static func tick(sim, delta: float) -> void:
  var s: Dictionary = sim.state
  var ship: Dictionary = s.ship
  var o: Dictionary = s.operations
- o.maneuver = minf(100, o.maneuver + 4.0 * delta)
+ o.maneuver = minf(100, o.maneuver + 4.0 * ShipModel.efficiency(ship, "maniobra") * delta)
  o.calibration = maxf(0, o.calibration - delta)
  if o.calibration > 0: ship.shields_enabled = false
  if o.warp > 0:
   ship.energy = maxf(0, ship.energy - o.warp * 4.0 * delta)
   ship.fuel = maxf(0, ship.fuel - o.warp * 0.08 * delta)
-  if ship.energy < 5 or ship.fuel <= 0 or not ship.docked.is_empty(): o.warp = 0
+  if ship.energy < 5 or ship.fuel <= 0 or not ship.docked.is_empty() or ShipModel.efficiency(ship, "warp") <= 0: o.warp = 0
  if o.jump.remaining > 0:
-  o.jump.remaining = maxf(0, o.jump.remaining - delta)
+  o.jump.remaining = maxf(0, o.jump.remaining - ShipModel.efficiency(ship, "salto") * delta)
   if o.jump.remaining <= 0:
    var offset = Vector2.from_angle(deg_to_rad(ship.heading)) * o.jump.distance
    ship.position = [clampf(ship.position[0] + offset.x, -14000, 14000), clampf(ship.position[1] + offset.y, -14000, 14000)]
@@ -282,7 +284,7 @@ static func tick(sim, delta: float) -> void:
   if waypoint.is_empty() or not ship.docked.is_empty(): o.route = ""
   else:
    var offset = Vector2(waypoint.position[0] - ship.position[0], waypoint.position[1] - ship.position[1])
-   ship.heading = fposmod(rad_to_deg(offset.angle()), 360.0)
+   ship.target_heading = fposmod(rad_to_deg(offset.angle()), 360.0)
    ship.throttle = clampf((offset.length() - 20) / 200, 0, 1)
    if offset.length() < 30:
     o.route = ""
@@ -295,7 +297,7 @@ static func tick(sim, delta: float) -> void:
    var docked = sim.command("navegacion", "dock", {"target": station.id})
    if docked.ok: o.docking = ""
  for system in Catalog.SYSTEMS: ship.systems[system].heat = maxf(0, ship.systems[system].heat - float(o.coolant[system]) * 2.0 * delta)
- for tube in o.tubes: tube.remaining = maxf(0, tube.remaining - delta)
+ for tube in o.tubes: tube.remaining = maxf(0, tube.remaining - ShipModel.efficiency(ship, "misiles") * delta)
  for mine in o.mines.duplicate():
   if mine.armed_at > s.time: continue
   for enemy in s.contacts:
@@ -325,7 +327,7 @@ static func tick(sim, delta: float) -> void:
  if not o.weapon_target.is_empty():
   var target = sim.contact(o.weapon_target)
   if target.is_empty() or target.hull <= 0 or target.pacified: o.weapon_target = ""
-  elif ship.weapon_ready <= s.time and ship.energy >= 12 and sim.distance_to(target) <= 600 and ship.systems.armas.power > 0:
+  elif ship.weapon_ready <= s.time and ship.energy >= 12 and sim.distance_to(target) <= ship.design.beam_range and ShipModel.efficiency(ship, "armas") > 0 and ShipModel.in_beam_arc(ship, target.position):
    sim.command("armas", "fire", {"target": target.id})
  if o.destruct.armed and o.destruct.remaining >= 0:
   o.destruct.remaining = maxf(0, o.destruct.remaining - delta)
@@ -344,7 +346,7 @@ static func redact(state: Dictionary, role: String) -> void:
  destruct.codes = {role: code} if not role.is_empty() and not code.is_empty() else {}
  destruct.erase("principals")
 
-static func validate(value: Variant) -> String:
+static func validate(value: Variant, legacy: bool = false) -> String:
  if not value is Dictionary: return "Operaciones de nave inválidas."
  var reference = {"ship": {}}
  initialize(reference)
@@ -361,10 +363,11 @@ static func validate(value: Variant) -> String:
   if not number(value.ammo, ammo, 0, 1000, true): return "Munición inválida."
  var coolant = 0.0
  for system in Catalog.SYSTEMS:
+  if legacy and system not in ShipModel.LEGACY_SYSTEMS: continue
   if not number(value.coolant, system, 0, 8): return "Refrigerante inválido."
   coolant += value.coolant[system]
  if coolant > 8: return "Presupuesto de refrigerante excedido."
- if not number(value.jump, "remaining", 0, 5) or not number(value.jump, "distance", 0, 3000): return "Salto inválido."
+ if not number(value.jump, "remaining", 0, 5) or not number(value.jump, "distance", 0, 10000): return "Salto inválido."
  var identifiers = []
  for point in value.waypoints:
   if not point is Dictionary or not point.get("id") is String or point.id in identifiers or not point.get("name") is String or not valid_position(point.get("position")): return "Punto de ruta inválido."

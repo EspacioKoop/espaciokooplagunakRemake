@@ -22,14 +22,14 @@ Lee el objetivo resaltado sobre la vista exterior. Los objetivos se completan po
 | --- | --- | --- |
 | Mando | Alerta y decisiones diplomáticas. | Comunicaciones debe negociar antes de una decisión. |
 | Navegación | Rumbo, impulso, piloto automático, atraque y sobrealimentación. | La potencia y la integridad de motores afectan a la velocidad. |
-| Ingeniería | Distribuye 8 unidades de potencia, dirige refrigeración y gestiona escudos. | Sobrepasar 95 °C daña el sistema. Reduce potencia antes de repartirla. |
+| Ingeniería | Distribuye 20 unidades de potencia, dirige refrigeración y gestiona escudos. | Sobrepasar 95 °C daña el sistema. Reduce potencia antes de repartirla. |
 | Armas | Pulsos de energía y torpedos. | Necesita un hostil identificado por Sensores. |
 | Sensores | Identifica contactos en un radio de 900 m. | Un canal abierto compensa interferencias; una sonda acelera el análisis. |
 | Comunicaciones | Contacta y negocia. | Negociar requiere identificación, canal abierto, escudos bajos y alcance. |
 | Enlace | Sondas, rescate y recuperación de materiales. | Rescatar y recuperar requieren identificación y menos de 300 m. |
 | Control de daños | Repara sistemas y estaciones. | Los drones usan 2 repuestos; reparar una estación usa 5. |
 
-La asistencia consume 15 de energía, devuelve 15 puntos de escudo y refuerza la recarga del reactor durante ocho segundos. El casco puede reforzarse cuatro veces, por 120 créditos cada vez, tras completar una misión y atracar.
+Los retos de asistencia generan propuestas para otro puesto; se explican al final de esta guía. El casco puede reforzarse cuatro veces, por 120 créditos cada vez, tras completar una misión y atracar.
 
 ## Controles
 
@@ -82,3 +82,13 @@ La frecuencia de escudos exige cinco segundos de recalibración con los escudos 
 Pulsa **Asistencia entre puestos** o **Asistencia** en Ingeniería. Elige un destinatario y un reto. La secuencia se muestra durante tres segundos y después se reproduce con cuatro teclas. En el puzle, cada casilla alterna su estado y el de sus vecinas. En precisión hay un único intento; en temporización debes detener el cursor dentro de la franja.
 
 Envía el resultado. Un éxito para Ingeniería o Navegación genera una propuesta que el titular puede aplicar desde su ventana de asistencia durante 120 segundos. No modifica la nave por sí sola y solo se puede usar una vez. Las ayudas a otros puestos quedan como ventajas narrativas en la bitácora. Los retos duran hasta 45 segundos; al restaurar una partida se cancelan las tareas efímeras.
+
+## Nave y física espacial
+
+Ingeniería controla Reactor, Impulso, Maniobra, Warp, Salto, Haces, Misiles, Escudo de proa, Escudo de popa y Sensores. Cada uno tiene potencia, temperatura e integridad independientes. Un sistema sin potencia o destruido pierde su función: por ejemplo, Misiles deja de cargar tubos y Maniobra deja de girar. El reactor averiado deja que se agote la batería. Hay 20 unidades compartidas de potencia y 8 de refrigeración.
+
+El impulso admite valores negativos para retroceder. El rumbo solicitado se alcanza con el ritmo de giro del diseño de nave. Los haces requieren orientar su arco frontal hacia el blanco; los misiles guiados pueden atacarlo desde otras direcciones. Los escudos absorben impactos por proa o por popa y el daño que supera ese sector alcanza el casco.
+
+En **Editor → Diseñar nave** puedes cambiar casco, escudos, motores, salto, arcos, alcances y almacenes. Aplica el diseño y pulsa **Probar misión** para volar con esas capacidades. El astillero importa y exporta archivos `lagunak-ship` JSON; el diseño también se conserva dentro de la misión y participa en Deshacer.
+
+El editor permite colocar asteroides, planetas, agujeros negros, agujeros de gusano y nebulosas. Ajusta radio, gravedad y destino del portal desde el panel del contacto. Las colisiones consideran la trayectoria completa de cada paso, incluso a gran velocidad. La gravedad provoca deriva; el horizonte de un agujero negro destruye la nave. Los portales llevan a la salida configurada y tienen tres segundos de protección contra un retorno inmediato. Dentro o a través de una nebulosa el escaneo se limita a 300 metros.

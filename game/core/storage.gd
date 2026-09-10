@@ -32,7 +32,7 @@ static func validate_state(value: Variant) -> String:
 	for k in ["time", "sequence"]:
 		if not Catalog.finite_number(value[k]) or value[k] < 0: return "Contador inválido."
 	if value.has("operations"):
-		var error = ShipOperations.validate(value.operations)
+		var error = ShipOperations.validate(value.operations, not value.ship.has("design"))
 		if not error.is_empty(): return error
 	if value.has("cooperation"):
 		if not value.cooperation is Dictionary or not ShipOperations.number(value.cooperation, "next_id", 1, 1e9, true): return "Asistencia guardada inválida."
@@ -42,23 +42,34 @@ static func validate_state(value: Variant) -> String:
 	if not ship.position is Array or ship.position.size() != 2: return "Posición inválida."
 	for coordinate in ship.position:
 		if not Catalog.finite_number(coordinate) or absf(coordinate) > 14000: return "Posición fuera de rango."
-	for k in ["heading", "speed", "throttle", "hull", "max_hull", "shield", "energy", "fuel", "torpedoes", "probes", "parts", "boost_until", "weapon_ready"]:
+	for k in ["heading", "hull", "max_hull", "shield", "energy", "fuel", "torpedoes", "probes", "parts", "boost_until", "weapon_ready"]:
 		if not Catalog.finite_number(ship[k]) or ship[k] < 0 or ship[k] > 100000: return "Recurso inválido: " + k
-	if ship.throttle > 1 or ship.max_hull < 1 or ship.hull > ship.max_hull or ship.energy > 100 or ship.fuel > 100 or ship.shield > 100: return "Recurso fuera de rango."
+	if not ShipOperations.number(ship, "speed", -100000, 100000) or not ShipOperations.number(ship, "throttle", -1, 1): return "Velocidad o impulso inválidos."
+	if ship.max_hull < 1 or ship.hull > ship.max_hull or ship.energy > 100 or ship.fuel > 100 or ship.shield > 100.001: return "Recurso fuera de rango."
 	for k in ["autopilot", "docked", "alert", "coolant"]:
 		if not ship[k] is String: return "Identificador inválido."
 	if not ship.shields_enabled is bool or not ship.assist is Dictionary or not ship.systems is Dictionary: return "Sistema inválido."
 	for until in ship.assist.values():
 		if not Catalog.finite_number(until): return "Asistencia inválida."
-	for system in Catalog.SYSTEMS:
+	var systems = Catalog.SYSTEMS if ship.has("design") else ShipModel.LEGACY_SYSTEMS
+	for system in systems:
 		if not ship.systems.get(system) is Dictionary: return "Falta un sistema."
 		for k in ["power", "heat", "health"]:
 			if not Catalog.finite_number(ship.systems[system].get(k)): return "Sistema incompleto."
 		var s: Dictionary = ship.systems[system]
 		if s.power < 0 or s.power > 4 or s.power != floorf(s.power) or s.heat < 0 or s.heat > 120 or s.health < 0 or s.health > 100: return "Sistema fuera de rango."
 	var power = 0
-	for system in Catalog.SYSTEMS: power += int(ship.systems[system].power)
-	if power > 8: return "Presupuesto de potencia excedido."
+	for system in systems: power += int(ship.systems[system].power)
+	if power > (ShipModel.POWER_BUDGET if ship.has("design") else 8): return "Presupuesto de potencia excedido."
+	if ship.has("design"):
+		var error = ShipModel.validate_ship(ship)
+		if not error.is_empty(): return error
+		if value.has("operations"):
+			for ammo in ShipOperations.AMMO:
+				var stored = int(value.operations.ammo[ammo])
+				for tube in value.operations.tubes:
+					if tube.ammo == ammo: stored += 1
+				if stored > ship.design.ammo[ammo]: return "Munición superior a la capacidad de diseño."
 	for task in [value.scan, value.repair]:
 		if not Catalog.finite_number(task.get("remaining")) or task.remaining < 0 or task.remaining > 30: return "Tarea inválida."
 	if not value.scan.get("target") is String or not value.repair.get("system") is String: return "Tarea incompleta."
@@ -76,7 +87,7 @@ static func validate_state(value: Variant) -> String:
 		if c.has("frequency") and not ShipOperations.number(c, "frequency", 0, 20, true): return "Frecuencia de contacto dañada."
 		for k in ["hull", "attack_at", "survivors"]:
 			if not Catalog.finite_number(c.get(k)) or c[k] < 0: return "Recurso de contacto dañado."
-		if c.kind not in ["station", "friendly", "hostile", "derelict", "anomaly", "beacon"]: return "Tipo de contacto dañado."
+		if c.kind not in Catalog.CONTACT_KINDS or not SpacePhysics.validate_contact(c).is_empty(): return "Objeto espacial dañado."
 	for original in value.mission.contacts:
 		if original.id not in ids: return "Contacto de misión ausente."
 	for id in [ship.autopilot, ship.docked, value.scan.target]:
@@ -124,6 +135,7 @@ static func read_state(path: String = "user://campaign.json") -> Dictionary:
 	var state = JSON.parse_string(envelope.payload)
 	var issue = validate_state(state)
 	if issue.is_empty():
+		ShipModel.initialize(state)
 		ShipOperations.initialize(state)
 		Cooperation.initialize(state)
 		# Transient assistance is deliberately cancelled on restore.

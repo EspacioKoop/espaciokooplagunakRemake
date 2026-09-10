@@ -7,14 +7,15 @@ Comprobaciones locales realizadas el 10 de septiembre de 2026 con Godot 4.7.1 es
 | Núcleo | 136 comprobaciones, 0 fallos. Las seis misiones se completan emitiendo órdenes y avanzando la simulación; no se teletransporta la nave para satisfacer los objetivos. |
 | Operaciones ampliadas | 79 comprobaciones, 0 fallos: maniobras, atraque, frecuencias, tubos, equipos, rutas, sondas y autodestrucción. |
 | Asistencia nativa | 59 comprobaciones, 0 fallos: cuatro retos, identidad, caducidad, propuestas acotadas y consumo único. |
+| Nave y física | 46 comprobaciones, 0 fallos: subsistemas independientes, sectores de escudo, arcos, diseños, marcha atrás, colisiones, gravedad, portales y migración de guardados. |
 | Persistencia | Guardado, lectura, integridad, copia anterior, rechazo de estructuras inválidas y progreso sin duplicar recompensas, dentro de la suite del núcleo. |
 | Cooperación | Cinco procesos reales: anfitrión, navegación, ingeniería, clave incorrecta y puesto ocupado. Se verifican rechazo de conexiones, permisos, órdenes, movimiento, límites de presencia y reparto privado de códigos y retos por conexión. |
 | HTTP opcional | 14 comprobaciones HTTP reales, incluyendo autenticación, origen, preflight, límites, método, cursores y filtrado del estado. |
-| Interfaz | 45 comprobaciones, 0 fallos. Botón de piloto automático con efecto real, ocho puestos, límites de las pantallas, colisión del suelo en siete espacios y ciclo de edición/guardado/reapertura de una misión. |
+| Interfaz | 56 comprobaciones, 0 fallos. Astillero aplicado a una misión y botón de piloto automático con efecto real, ocho puestos, límites de las pantallas, colisión del suelo en siete espacios y ciclo de edición/guardado/reapertura de una misión. |
 | Cliente Foundry | 10 pruebas con Node: URL local, autenticación, respuestas, cancelación, escape e importación ordenada sin repetir eventos. |
-| Linux | Exportación y ejecución gráfica del binario autónomo. Diez capturas de 1600 × 900 revisadas visualmente. |
-| Windows | Exportación PE x86_64. El flujo de GitHub añade una comprobación de arranque del ejecutable en Windows Server 2022 antes de dar por verificados los paquetes. El checkpoint `b66de03` pasó la prueba de arranque en Windows y la exportación de ambos sistemas: [ejecución 34463479867](https://github.com/VaroTv7/espaciokooplagunakRemake/actions/runs/34463479867). Cada ampliación necesita volver a pasar el flujo. |
-| Recursos | Fuente Blender editable, veinte GLB comprobados contra SHA-256, diez PNG y ZIP con CRC y SHA-256. |
+| Linux | Exportación y ejecución gráfica del binario autónomo. Once capturas de 1600 × 900 revisadas visualmente. |
+| Windows | Exportación PE x86_64. El flujo de GitHub añade una comprobación de arranque del ejecutable en Windows Server 2022 antes de dar por verificados los paquetes. El checkpoint `60bf2e5` pasó la prueba de arranque en Windows y la exportación de ambos sistemas: [ejecución 34467146178](https://github.com/VaroTv7/espaciokooplagunakRemake/actions/runs/34467146178). Cada ampliación necesita volver a pasar el flujo. |
+| Recursos | Fuente Blender editable, veinte GLB comprobados contra SHA-256, once PNG y ZIP con CRC y SHA-256. |
 
 ## Reproducir
 
@@ -26,6 +27,7 @@ python3 tools/bootstrap.py --templates
 .toolchain/godot --headless --path game --script ../tests/test_core.gd -- --test
 .toolchain/godot --headless --path game --script ../tests/test_operations.gd -- --test
 .toolchain/godot --headless --path game --script ../tests/test_cooperation.gd -- --test
+.toolchain/godot --headless --path game --script ../tests/test_ship_physics.gd -- --test
 python3 tests/run_network.py
 python3 tests/run_telemetry.py
 timeout 60 .toolchain/godot --headless --path game --script ../tests/test_ui.gd -- --test

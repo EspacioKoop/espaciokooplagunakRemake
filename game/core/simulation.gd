@@ -7,7 +7,7 @@ var state: Dictionary = {}
 func start(mission: Dictionary, carry: Dictionary = {}, base_hull: float = 100.0) -> void:
 	assert(Catalog.validate_mission(mission).is_empty())
 	var campaign = carry.get("campaign", {"completed": [], "credits": 0, "reputation": 0, "survivors": 0, "decisions": {}, "upgrades": 0}).duplicate(true)
-	var maximum = base_hull + int(campaign.upgrades) * 15.0
+	var maximum = float(mission.get("ship_design", {}).get("hull", base_hull)) + int(campaign.upgrades) * 15.0
 	state = {"version": 1, "mission": mission.duplicate(true), "campaign": campaign, "time": 0.0, "status": "active", "objective": 0, "facts": {}, "events": [], "sequence": 0,
 		"scan": {"target": "", "remaining": 0.0}, "repair": {"system": "", "remaining": 0.0},
 		"ship": {"position": [0.0, 0.0], "heading": 0.0, "speed": 0.0, "throttle": 0.0, "autopilot": "", "docked": "", "hull": maximum, "max_hull": maximum, "shield": 100.0, "shields_enabled": true,
@@ -19,7 +19,9 @@ func start(mission: Dictionary, carry: Dictionary = {}, base_hull: float = 100.0
 		c.merge({"identified": c.get("known", false), "jammed": false, "known": false, "hull": 100.0, "hailed": false, "negotiated": false, "rescued": false, "salvaged": false, "probed": false, "pacified": false, "attack_at": 0.0, "survivors": 6}, false)
 		c.frequency = int(c.get("frequency", posmod(c.id.hash(), 21)))
 		state.contacts.append(c)
+	ShipModel.initialize(state)
 	ShipOperations.initialize(state)
+	state.ship.torpedoes = state.operations.ammo.homing
 	Cooperation.initialize(state)
 	log_event("Misión iniciada", mission.title)
 
@@ -56,6 +58,7 @@ func command(role: String, operation: String, args: Dictionary = {}, principal: 
 	if operation in ShipOperations.PERMISSIONS.get(role, []) and operation not in ["shields", "alert"]:
 		var extended = ShipOperations.perform(self, role, operation, args, principal)
 		if extended.ok:
+			state.ship.torpedoes = state.operations.ammo.homing
 			log_event(Catalog.role_name(role), extended.message)
 			advance_objectives()
 		return extended
@@ -69,15 +72,16 @@ func command(role: String, operation: String, args: Dictionary = {}, principal: 
 		return reply(false, "Sistema desconocido.")
 	match operation:
 		"helm":
-			if not Catalog.finite_number(args.get("heading")) or not Catalog.finite_number(args.get("throttle")) or float(args.throttle) < 0 or float(args.throttle) > 1 or absf(float(args.heading)) > 36000:
+			if not Catalog.finite_number(args.get("heading")) or not Catalog.finite_number(args.get("throttle")) or float(args.throttle) < -1 or float(args.throttle) > 1 or absf(float(args.heading)) > 36000:
 				return reply(false, "Rumbo o impulso fuera de rango.")
 			if not ship.docked.is_empty(): return reply(false, "Desatraca antes de maniobrar.")
 			state.operations.route = ""
 			state.operations.docking = ""
-			ship.heading = fposmod(float(args.heading), 360.0)
+			ship.target_heading = fposmod(float(args.heading), 360.0)
 			ship.throttle = float(args.throttle)
+			if ship.throttle < 0: state.operations.warp = 0
 			ship.autopilot = ""
-			message = "Rumbo %03d° · impulso %d%%" % [ship.heading, ship.throttle * 100]
+			message = "Rumbo solicitado %03d° · impulso %d%%" % [ship.target_heading, ship.throttle * 100]
 		"autopilot":
 			if not ship.docked.is_empty(): return reply(false, "Desatraca primero.")
 			if c.hull <= 0: return reply(false, "Ese contacto ya no está activo.")
@@ -90,6 +94,7 @@ func command(role: String, operation: String, args: Dictionary = {}, principal: 
 			ship.docked = c.id
 			ship.throttle = 0.0
 			ship.speed = 0.0
+			ship.drift = [0.0, 0.0]
 			ship.autopilot = ""
 			fact("dock", c.id)
 			message = "Atraque confirmado. Servicios de reparación y suministro activos."
@@ -98,7 +103,7 @@ func command(role: String, operation: String, args: Dictionary = {}, principal: 
 			ship.docked = ""
 			message = "Amarras liberadas."
 		"boost":
-			if not ship.docked.is_empty() or ship.energy < 25 or ship.boost_until > state.time or state.operations.maneuver < 30:
+			if not ship.docked.is_empty() or ship.energy < 25 or ship.boost_until > state.time or state.operations.maneuver < 30 or ShipModel.efficiency(ship, "maniobra") <= 0 or ShipModel.efficiency(ship, "motores") <= 0:
 				return reply(false, "Impulso no disponible: necesita 25 de energía, 30% de carga y estar en vuelo.")
 			ship.energy -= 25
 			state.operations.maneuver -= 30
@@ -110,7 +115,7 @@ func command(role: String, operation: String, args: Dictionary = {}, principal: 
 			var total = int(args.value)
 			for other in Catalog.SYSTEMS:
 				if other != system: total += int(ship.systems[other].power)
-			if total > 8: return reply(false, "El reactor dispone de 8 unidades. Reduce otro sistema primero.")
+			if total > ShipModel.POWER_BUDGET: return reply(false, "El circuito dispone de 20 unidades. Reduce otro sistema primero.")
 			ship.systems[system].power = int(args.value)
 			message = "%s: %d unidades de potencia." % [system.capitalize(), args.value]
 		"coolant":
@@ -122,7 +127,7 @@ func command(role: String, operation: String, args: Dictionary = {}, principal: 
 			ship.shields_enabled = args.enabled
 			message = "Escudos activados." if args.enabled else "Escudos bajados."
 		"scan":
-			if sensor_distance(c) > 900 or ship.systems.sensores.power < 1: return reply(false, "Escaneo: alcance 900 m y Sensores con potencia.")
+			if sensor_distance(c) > 900 or ShipModel.efficiency(ship, "sensores") <= 0: return reply(false, "Escaneo: alcance 900 m y Sensores operativos.")
 			if c.jammed and not c.hailed: return reply(false, "Interferencia: Comunicaciones debe abrir un canal.")
 			if not state.scan.target.is_empty(): return reply(false, "Ya hay un escaneo en curso.")
 			state.scan = {"target": c.id, "remaining": 2.5 if c.probed else 5.0}
@@ -171,17 +176,21 @@ func command(role: String, operation: String, args: Dictionary = {}, principal: 
 			message = "Drones reparando " + system + "."
 		"fire", "missile":
 			if not c.identified or c.kind != "hostile" or c.pacified or c.hull <= 0: return reply(false, "Solo se puede disparar a un hostil identificado y activo.")
-			var reach = 900 if operation == "missile" else 600
-			if distance_to(c) > reach or ship.systems.armas.power < 1: return reply(false, "Blanco fuera de alcance o Armas sin potencia.")
+			var reach = minf(900, ship.design.missile_range) if operation == "missile" else ship.design.beam_range
+			var weapon_system = "misiles" if operation == "missile" else "armas"
+			if distance_to(c) > reach or ShipModel.efficiency(ship, weapon_system) <= 0: return reply(false, "Blanco fuera de alcance o sistema de armas inoperativo.")
+			if operation == "fire" and not ShipModel.in_beam_arc(ship, c.position): return reply(false, "Blanco fuera del arco de los haces. Orienta la proa hacia el contacto.")
 			if ship.weapon_ready > state.time: return reply(false, "Armas recargando.")
-			if operation == "missile" and ship.torpedoes < 1: return reply(false, "Sin torpedos.")
+			if operation == "missile" and state.operations.ammo.homing < 1: return reply(false, "Sin torpedos guiados en el almacén.")
 			if operation == "fire" and ship.energy < 12: return reply(false, "El pulso necesita 12 de energía.")
-			if operation == "missile": ship.torpedoes -= 1
+			if operation == "missile":
+				state.operations.ammo.homing -= 1
+				ship.torpedoes = state.operations.ammo.homing
 			else: ship.energy -= 12
-			var efficiency = (0.7 + 0.15 * ship.systems.armas.power) * (1.3 if operation == "fire" and state.operations.beam_frequency == int(c.get("frequency", 0)) else 1.0)
-			c.hull = maxf(0, c.hull - (34.0 if operation == "missile" else 18.0) * efficiency)
-			ship.weapon_ready = state.time + (3.0 if operation == "missile" else 1.0)
-			ship.systems.armas.heat = minf(120, ship.systems.armas.heat + 4)
+			var efficiency = ShipModel.efficiency(ship, weapon_system) * (1.3 if operation == "fire" and state.operations.beam_frequency == int(c.get("frequency", 0)) else 1.0)
+			c.hull = maxf(0, c.hull - (34.0 if operation == "missile" else ship.design.beam_damage) * efficiency)
+			ship.weapon_ready = state.time + (3.0 if operation == "missile" else ship.design.beam_cycle) / maxf(0.1, ShipModel.efficiency(ship, weapon_system))
+			ship.systems[weapon_system].heat = minf(120, ship.systems[weapon_system].heat + 4)
 			if c.hull <= 0: fact("defeat", c.id)
 			message = "Impacto confirmado. Integridad del blanco: %d%%." % c.hull
 		"alert":
@@ -215,21 +224,16 @@ func tick(delta: float) -> void:
 		var s: Dictionary = ship.systems[key]
 		s.heat = clampf(s.heat + ((s.power - 2) * 1.7 - (8.0 if ship.coolant == key else 0.0)) * delta, 0.0, 120.0)
 		if s.heat > 95: s.health = maxf(10, s.health - (s.heat - 95) * 0.08 * delta)
-	var assisted = false
-	for until in ship.assist.values():
-		if float(until) > state.time: assisted = true
-	ship.energy = minf(100, ship.energy + (6.0 if assisted else 3.0) * delta)
-	if ship.shields_enabled and ship.systems.escudos.power > 0:
-		ship.shield = minf(100, ship.shield + ship.systems.escudos.power * 0.8 * delta)
+	ShipModel.maintain(ship, delta)
 	if not ship.docked.is_empty():
 		ship.hull = minf(ship.max_hull, ship.hull + 5 * delta)
 		ship.fuel = minf(100, ship.fuel + 8 * delta)
 		ship.energy = minf(100, ship.energy + 10 * delta)
 		for s in ship.systems.values(): s.health = minf(100, s.health + 3 * delta)
 	else:
-		var speed_limit = (1.0 + state.operations.warp * 3.0) * 160.0 * (0.25 + 0.375 * ship.systems.motores.power) * ship.systems.motores.health / 100.0
+		var speed_limit = ship.design.impulse * ShipModel.efficiency(ship, "motores") + state.operations.warp * ship.design.warp_speed * ShipModel.efficiency(ship, "warp")
 		if ship.boost_until > state.time: speed_limit *= 2.0
-		var desired_speed = speed_limit * ship.throttle
+		var desired_speed = speed_limit * ship.throttle * (ship.design.reverse if ship.throttle < 0 else 1.0)
 		if not ship.autopilot.is_empty():
 			var target = contact(ship.autopilot)
 			if target.is_empty() or target.hull <= 0:
@@ -238,12 +242,14 @@ func tick(delta: float) -> void:
 				desired_speed = 0.0
 			else:
 				var offset = Vector2(target.position[0] - ship.position[0], target.position[1] - ship.position[1])
-				ship.heading = fposmod(rad_to_deg(offset.angle()), 360.0)
-				desired_speed = minf(speed_limit, minf(sqrt(170.0 * maxf(0, offset.length() - 115)), maxf(0, (offset.length() - 115) * 1.5)))
-		if ship.fuel <= 0: desired_speed = minf(desired_speed, 8.0)
-		ship.speed = move_toward(ship.speed, desired_speed, 85 * delta)
+				ship.target_heading = fposmod(rad_to_deg(offset.angle()), 360.0)
+				desired_speed = minf(speed_limit, minf(sqrt(2 * ship.design.acceleration * maxf(0, offset.length() - 115)), maxf(0, (offset.length() - 115) * 1.5)))
+		if not ship.autopilot.is_empty() or not state.operations.route.is_empty(): desired_speed *= maxf(0, cos(deg_to_rad(ShipModel.angle_error(ship, ship.target_heading))))
+		ShipModel.turn(ship, delta)
+		if ship.fuel <= 0: desired_speed = clampf(desired_speed, -8.0, 8.0)
+		ship.speed = move_toward(ship.speed, desired_speed, ship.design.acceleration * delta)
 		var velocity = Vector2.from_angle(deg_to_rad(ship.heading)) * ship.speed * delta
-		ship.position = [clampf(ship.position[0] + velocity.x, -14000, 14000), clampf(ship.position[1] + velocity.y, -14000, 14000)]
+		SpacePhysics.move(self, delta, velocity)
 		ship.fuel = maxf(0, ship.fuel - absf(ship.speed) * delta * 0.00032)
 	for c in state.contacts:
 		if c.hull <= 0: continue
@@ -255,20 +261,15 @@ func tick(delta: float) -> void:
 				c.position = [c.position[0] + direction.x, c.position[1] + direction.y]
 			if distance < 600 and c.attack_at <= state.time:
 				c.attack_at = state.time + 3.0
-				var damage = 9.0 * (0.65 if ship.shields_enabled and state.operations.shield_frequency == int(c.get("frequency", 0)) else 1.0)
-				if ship.shields_enabled:
-					var absorbed = minf(ship.shield, damage)
-					ship.shield -= absorbed
-					damage -= absorbed
-				ship.hull = maxf(0, ship.hull - damage)
-				if damage > 0: ship.systems.motores.health = maxf(10, ship.systems.motores.health - 1.5)
+				var damage = 9.0 * (0.65 if ShipModel.protects(ship, c.position) and state.operations.shield_frequency == int(c.get("frequency", 0)) else 1.0)
+				ShipModel.damage(ship, damage, c.position)
 	if not state.scan.target.is_empty():
 		var target = contact(state.scan.target)
-		if target.is_empty() or sensor_distance(target) > 900 or ship.systems.sensores.power == 0:
+		if target.is_empty() or sensor_distance(target) > 900 or ShipModel.efficiency(ship, "sensores") <= 0:
 			state.scan = {"target": "", "remaining": 0.0}
 			log_event("Sensores", "Escaneo interrumpido: alcance o potencia insuficiente.")
 		else:
-			state.scan.remaining -= delta * (0.5 + 0.25 * ship.systems.sensores.power)
+			state.scan.remaining -= delta * ShipModel.efficiency(ship, "sensores")
 			if state.scan.remaining <= 0:
 				target.identified = true
 				fact("scan", target.id)
@@ -333,6 +334,8 @@ func snapshot(for_role: String = "", principal: String = "") -> Dictionary:
 
 func sensor_distance(c: Dictionary) -> float:
 	var linked = contact(state.operations.science_link)
+	var origin: Array = state.ship.position
 	if not linked.is_empty() and linked.probed:
-		return Vector2(linked.position[0], linked.position[1]).distance_to(Vector2(c.position[0], c.position[1]))
-	return distance_to(c)
+		origin = linked.position
+	var distance = Vector2(origin[0], origin[1]).distance_to(Vector2(c.position[0], c.position[1]))
+	return maxf(distance, 1000.0) if distance > 300 and SpacePhysics.obscured(state.contacts, origin, c.position) else distance

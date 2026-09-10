@@ -3,7 +3,10 @@ extends RefCounted
 
 const ROLES := ["mando", "navegacion", "ingenieria", "armas", "sensores", "comunicaciones", "enlace", "reparaciones"]
 const ROLE_NAMES := ["Mando", "Navegación", "Ingeniería", "Armas", "Sensores", "Comunicaciones", "Enlace", "Control de daños"]
-const SYSTEMS := ["motores", "escudos", "armas", "sensores"]
+const SYSTEMS := ["reactor", "motores", "maniobra", "warp", "salto", "armas", "misiles", "escudos", "escudos_popa", "sensores"]
+const SYSTEM_NAMES := {"reactor": "Reactor", "motores": "Impulso", "maniobra": "Maniobra", "warp": "Warp", "salto": "Salto", "armas": "Haces", "misiles": "Misiles", "escudos": "Escudo proa", "escudos_popa": "Escudo popa", "sensores": "Sensores"}
+const CONTACT_KINDS = ["station", "friendly", "hostile", "derelict", "anomaly", "beacon", "asteroid", "planet", "blackhole", "wormhole", "nebula"]
+const CONTACT_NAMES = ["Estación", "Aliado", "Hostil", "Nave averiada", "Anomalía", "Baliza", "Asteroide", "Planeta", "Agujero negro", "Agujero de gusano", "Nebulosa"]
 const PERMISSIONS := {
 	"mando": ["alert", "mission_choice"],
 	"navegacion": ["helm", "autopilot", "dock", "undock", "boost"],
@@ -17,8 +20,8 @@ const PERMISSIONS := {
 const DESCRIPTIONS := {
 	"mando": "Coordina la alerta, decide el desenlace y consulta los objetivos compartidos.",
 	"navegacion": "Traza el rumbo, regula el impulso y atraca. La energía de motores cambia tu velocidad.",
-	"ingenieria": "Reparte 8 unidades de potencia y la refrigeración. La sobrecarga produce averías reales.",
-	"armas": "Identifica el blanco con Sensores y decide entre pulsos y torpedos. No hay fuego automático.",
+	"ingenieria": "Reparte 20 unidades de potencia entre diez sistemas. Cada avería afecta a su función; la sobrecarga genera calor.",
+	"armas": "Identifica el blanco y orienta la proa para los haces. Controla los tubos y el blanco automático desde Operaciones.",
 	"sensores": "Revela contactos y sus puntos débiles. La interferencia necesita un canal de Comunicaciones.",
 	"comunicaciones": "Abre canales, negocia y despeja la interferencia para que Sensores pueda identificar.",
 	"enlace": "Lanza sondas, recupera materiales y rescata supervivientes tras identificarlos.",
@@ -32,6 +35,9 @@ static func missions() -> Array:
 static func validate_mission(value: Variant) -> String:
 	if not value is Dictionary:
 		return "La misión debe ser un objeto JSON."
+	if value.has("ship_design"):
+		var error = ShipModel.validate_design(value.ship_design)
+		if not error.is_empty(): return error
 	for key in ["id", "title", "sector", "briefing", "contacts", "objectives"]:
 		if not value.has(key):
 			return "Falta el campo: " + key
@@ -62,8 +68,10 @@ static func validate_mission(value: Variant) -> String:
 			return "Identificador de contacto inválido."
 		if not contact.name is String or contact.name.length() > 80:
 			return "Nombre de contacto inválido."
-		if contact.kind not in ["station", "friendly", "hostile", "derelict", "anomaly", "beacon"]:
+		if contact.kind not in CONTACT_KINDS:
 			return "Tipo de contacto desconocido."
+		var physics_error = SpacePhysics.validate_contact(contact)
+		if not physics_error.is_empty(): return physics_error
 		if not contact.position is Array or contact.position.size() != 2:
 			return "Posición inválida."
 		for coordinate in contact.position:

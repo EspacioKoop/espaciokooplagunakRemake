@@ -30,6 +30,8 @@ automático. **F1** abre la ayuda; **F5** guarda; **F11** alterna pantalla compl
 - **Asistencia nativa:** temporización, secuencia, precisión y puzle. Las propuestas caducan y solo las consume el titular del puesto.
 - **Ocho puestos:** mando, navegación, ingeniería, armas, sensores, comunicaciones, enlace y control de daños. Cada orden tiene permisos, requisitos y consecuencias.
 - **Seis misiones nuevas:** exploración, interferencias, rescate, combate, reparación y diplomacia. Recompensas, supervivientes, reputación y refuerzos de casco persisten entre misiones.
+- **Nave configurable:** diez subsistemas independientes, escudos de proa y popa, arcos de tiro y astillero con importación/exportación de diseños.
+- **Física espacial:** marcha atrás, viraje limitado, colisiones por trayectoria, gravedad, portales transitables e interferencia de nebulosas. Los objetos se colocan desde el editor.
 - **Sistemas conectados:** potencia, temperatura, refrigeración, daños, combustible, escudos, energía, sondas, torpedos y repuestos.
 - **Cooperación:** sesiones ENet con clave de acceso, puestos exclusivos, órdenes validadas por el anfitrión y presencia de otros tripulantes en cubierta.
 - **Interiores recorribles:** puente, pasillo central, ingeniería, camarotes, bodega, comedor y enfermería. WASD, ratón, Mayús y E para moverse e interactuar.
@@ -38,7 +40,7 @@ automático. **F1** abre la ayuda; **F5** guarda; **F11** alterna pantalla compl
 
 ## Capturas del juego
 
-Estas diez imágenes se capturaron directamente desde el ejecutable autónomo de Linux a 1600 × 900. Muestran esta implementación en ejecución.
+Estas once imágenes se capturaron directamente desde el ejecutable autónomo de Linux a 1600 × 900. Muestran esta implementación en ejecución.
 
 ### Puente y navegación
 
@@ -69,6 +71,10 @@ Estas diez imágenes se capturaron directamente desde el ejecutable autónomo de
 ![Consola nativa de operaciones de Ingeniería](docs/images/09_operaciones.png)
 
 ![Puzle de asistencia nativo con propuesta para otro puesto](docs/images/10_asistencia.png)
+
+### Astillero
+
+![Editor nativo de capacidades de nave](docs/images/11_astillero.png)
 
 ## Modelos en Blender
 
@@ -103,7 +109,7 @@ python3 tools/package_downloads.py
 
 El bootstrap verifica las descargas oficiales de Godot mediante SHA-512. Los ZIP aparecen en `dist/`. CI ejecuta las pruebas de campaña, guardado, interfaz, cooperación y HTTP, exporta ambos sistemas, captura Linux y comprueba el arranque en Windows y conserva los paquetes de ese commit como artefactos de la ejecución.
 
-Comprobaciones locales: **136 del núcleo, 79 de operaciones, 59 de asistencia, 45 de interfaz, 14 HTTP y 10 del cliente**, más una sesión de red con **cinco procesos reales**. [Comandos y límites](docs/VALIDATION.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md).
+Comprobaciones locales: **136 del núcleo, 79 de operaciones, 59 de asistencia, 46 de nave y física, 56 de interfaz, 14 HTTP y 10 del cliente**, más una sesión de red con **cinco procesos reales**. [Comandos y límites](docs/VALIDATION.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md).
 
 ## Un proyecto independiente
 

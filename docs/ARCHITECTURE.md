@@ -53,6 +53,14 @@ Godot 4.7.1 se descarga desde sus publicaciones oficiales y se comprueba con la 
 
 `ship_operations.gd` implementa las órdenes ampliadas y sus temporizadores. `cooperation.gd` mantiene los cuatro retos y las propuestas. El despachador de `Simulation` conserva la autorización y resuelve el efecto de cada orden; las interfaces no asignan resultados de victoria ni permisos.
 
-El protocolo ENet es ahora **2**: los snapshots se proyectan para cada conexión, de modo que los códigos de autodestrucción y los retos solo llegan al destinatario. Las conexiones con protocolo anterior se rechazan con indicación de actualizar. La telemetría de Foundry usa la proyección sin códigos ni retos privados.
+El protocolo ENet es ahora **3**: los snapshots se proyectan para cada conexión, de modo que los códigos de autodestrucción y los retos solo llegan al destinatario. Las conexiones con protocolo anterior se rechazan con indicación de actualizar. La telemetría de Foundry usa la proyección sin códigos ni retos privados.
 
 El guardado continúa leyendo el formato 1 anterior. Si faltan las nuevas secciones, las inicializa con valores definidos; las operaciones nuevas se validan antes de restaurar. Las asistencias efímeras se cancelan al recuperar la partida.
+
+## Nave y objetos físicos
+
+`ship_model.gd` separa el diseño estructural del estado operativo. Los nueve subsistemas de la referencia tienen potencia, calor e integridad propias, junto con Sensores. El escudo agregado de la interfaz se deriva de proa y popa; el daño se resuelve en el sector orientado hacia el impacto. Los misiles de acceso rápido y los tubos comparten almacén.
+
+`space_physics.gd` resuelve el primer contacto de cada trayectoria con asteroides, planetas, horizontes y portales, aplica atracción gravitatoria y conserva la deriva. Las nebulosas bloquean los análisis a más de 300 m. El anfitrión calcula estos efectos; la interfaz dibuja el estado recibido.
+
+Los guardados con cuatro sistemas se validan contra su contrato anterior antes de añadir los subsistemas nuevos y dividir su porcentaje de escudo entre proa y popa. Un diseño personalizado forma parte de la misión y del guardado; las capacidades se validan en ambos límites. El protocolo 3 exige que anfitrión y clientes conozcan este modelo de nave.
