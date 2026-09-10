@@ -11,7 +11,7 @@ Una aplicación nativa de exploración espacial cooperativa: navega con la Itsas
 
 ## Estado y ejecución
 
-El trabajo recuperado y las ampliaciones de nave, puestos, asistencia y espacios recorribles están conservados en este repositorio. La paridad completa con
+El trabajo recuperado y las ampliaciones de nave, puestos, asistencia, espacios recorribles y mesas de ocio están conservados en este repositorio. La paridad completa con
 el original sigue en implementación; no se considera una entrega final mientras
 queden funciones pendientes en [la matriz de paridad](docs/FEATURE_PARITY.md).
 La autonomía respecto a Foundry es obligatoria para todos los sistemas.
@@ -36,13 +36,14 @@ automático. **F1** abre la ayuda; **F5** guarda; **F11** alterna pantalla compl
 - **Cooperación:** sesiones ENet con clave de acceso, puestos exclusivos, órdenes validadas por el anfitrión y presencia de otros tripulantes en cubierta.
 - **Trece destinos recorribles:** puente, pasillo central, ingeniería, camarotes, bodega, comedor, enfermería, cantina, museo, playa, terraza, estudio y corredor de recuerdos. WASD, ratón, Mayús y E para caminar e interactuar.
 - **Museo:** dieciocho esculturas propias inspiradas en los temas del catálogo de referencia, cinco cuadros geométricos, cartelas y un libro de cinco páginas con apertura y paso de hoja en 3D.
+- **Mesas compartidas:** póker Texas Hold’em, blackjack y dados de faroleo, con NPC, espectadores, manos privadas, fichas entre rondas y recuperación del asiento tras reconectar. Acceso por las mesas de la cantina o desde Cubierta.
 - **Playa y ocio:** paseo continuo de cien metros, dunas, mar animado, reloj, aerogeneradores y cabina de regreso; bancos y sillas utilizables y focos de estudio controlables.
 - **Editor integrado:** coloca contactos sobre el mapa, ordena objetivos, deshaz cambios, guarda JSON y prueba la misión con las reglas reales del juego.
 - **Guardado local:** autoguardado y copia anterior, con comprobaciones de estructura e integridad.
 
 ## Capturas del juego
 
-Estas dieciocho imágenes se capturaron directamente desde el ejecutable autónomo de Linux a 1600 × 900. Muestran esta implementación en ejecución.
+Estas diecinueve imágenes se capturaron directamente desde el ejecutable autónomo de Linux a 1600 × 900. Muestran esta implementación en ejecución.
 
 ### Puente y navegación
 
@@ -98,6 +99,10 @@ Estas dieciocho imágenes se capturaron directamente desde el ejecutable autóno
 
 ![Corredor de recuerdos](docs/images/18_recuerdos.png)
 
+### Mesas de la cantina
+
+![Póker nativo con mano privada, NPC y apuestas validadas](docs/images/19_poker.png)
+
 ## Modelos en Blender
 
 Hay dos fuentes editables en Blender 4.5.3 LTS: [nave, tripulante y salas base](art/blender/lagunak_assets.blend) y [museo, esculturas, playa y ocio](art/blender/leisure_assets.blend). Los veinte GLB base y el paquete de seis espacios adicionales están incluidos y comprobados mediante [SHA-256](game/assets/models/manifest.json). Las esculturas son interpretaciones estilizadas nuevas; no son escaneos ni reconstrucciones arqueológicas fieles.
@@ -132,7 +137,7 @@ python3 tools/package_downloads.py
 
 El bootstrap verifica las descargas oficiales de Godot mediante SHA-512. Los ZIP aparecen en `dist/`. CI ejecuta las pruebas de campaña, guardado, interfaz, cooperación y HTTP, exporta ambos sistemas, captura Linux y comprueba el arranque en Windows y conserva los paquetes de ese commit como artefactos de la ejecución.
 
-Comprobaciones locales: **136 del núcleo, 79 de operaciones, 59 de asistencia, 46 de nave y física, 62 de interfaz, 88 de museo y ocio, 14 HTTP y 10 del cliente**, más una sesión de red con **cinco procesos reales**. [Comandos y límites](docs/VALIDATION.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md).
+Comprobaciones locales: **136 del núcleo, 79 de operaciones, 59 de asistencia, 46 de nave y física, 62 de interfaz, 88 de museo y ocio, 513 de mesas, 14 HTTP y 10 del cliente**, más una sesión de red con **cinco procesos reales** y otras **29 comprobaciones de mesas con tres procesos y reconexión real**. [Comandos y límites](docs/VALIDATION.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md).
 
 ## Un proyecto independiente
 

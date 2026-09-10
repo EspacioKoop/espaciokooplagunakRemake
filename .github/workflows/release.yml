@@ -42,6 +42,10 @@ jobs:
         run: timeout 60 .toolchain/godot --headless --path game --script ../tests/test_ui.gd -- --test
       - name: Walk through museum, beach and social spaces
         run: timeout 60 .toolchain/godot --headless --path game --script ../tests/test_leisure.gd -- --test
+      - name: Play authoritative social tables and test reconnection
+        run: |
+          timeout 90 .toolchain/godot --headless --path game --script ../tests/test_tables.gd -- --test
+          python3 tests/run_table_network.py
       - name: Test optional Foundry client
         run: node --test integrations/foundry/tests/client.test.mjs
       - name: Export both standalone applications

@@ -68,6 +68,22 @@ El ejecutable permite llegar caminando por las puertas o seleccionar cualquiera 
 | Red | Presencia en los nuevos espacios comprobada en una sesión ENet real; protocolo 4 compartido por anfitrión y clientes. |
 | Blender | Segunda fuente editable y exportador que conserva las posiciones de trabajo; seis espacios agrupados en un GLB. |
 
+## Mesas sociales nativas
+
+Las tres mesas de la cantina funcionan en local con NPC o con tripulantes por ENet. Las reglas están reimplementadas en `game/social/`; no dependen de Foundry. `tests/test_tables.gd` comprueba puntuaciones, pagos, botes, identidades y el ciclo real de la ventana. La prueba de tres procesos añade un jugador que desconecta y vuelve al mismo asiento.
+
+| Función | Implementación comprobada |
+|---|---|
+| Póker | Hold’em de dos a seis jugadores, botón rotatorio, ciegas, cuatro calles, igualar/pasar/retirarse/subir/all-in, mejor mano de cinco entre siete, botes secundarios, empates, fichas impares y revelación voluntaria. La subida corta all-in reabre la ronda, como en la simplificación del original. |
+| Blackjack | Uno a seis jugadores, ases blandos, pedir/plantarse/doblar, carta oculta de banca, banca en 17 blando y blackjack 3:2 con redondeo inferior. |
+| Dados | Dos a seis jugadores, cinco dados iniciales, apuestas crecientes, unos comodín configurables, duda, destape, pérdida de dado y eliminación entre rondas. |
+| Mesa y economía | Seis asientos, espectadores, responsable, ajustes de apuestas/ciegas/fichas iniciales, conservación entre manos, jugadores agotados sentados sin recompra y cancelación con devolución del estado anterior. |
+| Automatismos | NPC que deciden desde su propia vista, turnos limitados y resolución de ausencias. No hay acceso del agente a la baraja o a manos ajenas. |
+| Red y privacidad | Autoridad en el anfitrión, vistas individuales, peticiones idempotentes, revisiones de apuestas, entradas simultáneas, reserva de asiento y credencial privada de reconexión durante la misma ejecución. Cambiar de puesto conserva la identidad de mesa. |
+| Interfaz | Ventana nativa con cartas, acciones permitidas y acceso caminando desde la cantina. La proyección animada de cartas/dados y poses sobre la mesa 3D sigue pendiente. |
+
+Las mesas son efímeras y no conceden créditos de campaña. El cierre del anfitrión cancela las manos; no existe migración de un anfitrión ENet a otro ni recuperación de sus secretos tras reiniciar el proceso.
+
 ## Funciones que siguen pendientes o parciales
 
 | Área original | Estado comprobado en el remake | Trabajo necesario para paridad completa |
@@ -77,7 +93,7 @@ El ejecutable permite llegar caminando por las puertas o seleccionar cualquiera 
 | Inteligencia artificial y facciones | Hostiles de combate, aliados y negociación | Facciones, relaciones, órdenes de flota, comercio y comportamientos completos de IA |
 | Sensores | Identificación, sondas, archivo científico, cancelación e interferencia física de nebulosas | Bandas corta/larga con filtrado completo, niveles de análisis, vista remota de sonda y minijuegos nativos de análisis/hackeo |
 | Asistencia de personajes | Cuatro retos y propuestas nativas | Fichas, enfoques de habilidad, probabilidades, conjuros, rasgos y gasto de recursos de personaje |
-| Mesas de ocio | Sin implementar | Póker completo, blackjack, dados de faroleo, NPC automáticos, espectadores, abandono y reconexión |
+| Mesas de ocio | Tres juegos con reglas, apuestas, NPC, espectadores, abandono, vistas privadas y reconexión real | Proyección y lectura 3D de cartas/dados, poses, comportamientos/personalidades equivalentes, todos los ajustes y adaptación completa de coordinación GM/Foundry |
 | Edición de contenido | Misiones visuales, mapas de sector y astillero de capacidades con importación/exportación y prueba jugable | Campañas, personajes, montajes de naves, dependencias, migración de formatos originales y catálogo completo |
 | Atlas | Radar de misión y descubrimientos persistentes | Cosmografía jerárquica, HYG/Spelljammer, importación, conexiones, marcadores, mapas y navegación entre sectores |
 | Dirección de juego | Editor de misiones y pausa local | Tempo del anfitrión, reposición, encuentros, convocatoria, parlamento, iniciativas, consola GM y control de escenas |

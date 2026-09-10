@@ -464,6 +464,7 @@ func _interior() -> void:
 	side.add_child(ConsoleUI.paragraph("Recorre cada sala en primera persona. Las escotillas del pasillo comunican los compartimentos; acércate y pulsa E. También puedes usar el traslado rápido de esta lista.", 15))
 	_refs.deck_station = ConsoleUI.button("Operar puesto de esta sala", func(): Session.select_role(WorldDeck.ZONES[_deck.zone].role); _go("bridge"), true)
 	side.add_child(_refs.deck_station)
+	side.add_child(ConsoleUI.button("Mesas de la cantina", func(): _open_leisure_interaction({"kind": "table", "table": "poker"})))
 	var spacer = Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	side.add_child(spacer)
@@ -474,7 +475,10 @@ func _interior() -> void:
 func _open_leisure_interaction(entry: Dictionary) -> Window:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	var window: Window
-	if entry.kind == "book":
+	if entry.kind == "table":
+		window = LoungeWindow.new()
+		window.selected = entry.table
+	elif entry.kind == "book":
 		window = MuseumReader.new()
 		window.page = int(Session.get_meta("museum_page", 0))
 		var deck = _deck
@@ -1003,7 +1007,15 @@ func _capture(args: PackedStringArray) -> void:
 			_deck.body.position = WorldDeck.ZONES[9].at + Vector3(5, 0.4, 40)
 			_deck.body.look_at(WorldDeck.ZONES[9].at + Vector3(20, 0.4, -5))
 		await _take(path, entry[1])
-	print("LAGUNAK_CAPTURE_OK 18 screenshots")
+	_deck.teleport_zone(7)
+	var table_window = _open_leisure_interaction({"kind": "table", "table": "poker"})
+	table_window.send("join")
+	table_window.send("bot")
+	table_window.send("bot")
+	table_window.send("start")
+	await _take(path, "19_poker.png")
+	table_window.queue_free()
+	print("LAGUNAK_CAPTURE_OK 19 screenshots")
 	_ambient.stop()
 	_effects.stop()
 	_ambient.stream = null

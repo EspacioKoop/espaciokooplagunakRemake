@@ -27,6 +27,9 @@ static func interactions(zone: int) -> Array:
  elif zone in [7, 10]:
   var seats = [Vector3(-5, 0, 1.8), Vector3(5, 0, 1.8), Vector3(-5, 0, 7.8), Vector3(5, 0, 7.8)] if zone == 7 else [Vector3(-6, 0, -4), Vector3(-2, 0, -4), Vector3(3, 0, 3), Vector3(7, 0, 3)]
   for i in seats.size(): result.append({"id": "seat_%d_%d" % [zone, i], "kind": "seat", "title": "Sentarse", "position": seats[i] + Vector3(0, 0, 0.85), "seat": seats[i]})
+  if zone == 7:
+   for i in 3:
+    result.append({"id": "table_" + ["poker", "blackjack", "dados"][i], "kind": "table", "table": ["poker", "blackjack", "dados"][i], "title": ["Jugar al póker", "Jugar al blackjack", "Jugar a los dados"][i], "position": [Vector3(-5, 0, -1.8), Vector3(5, 0, -1.8), Vector3(-5, 0, 4.2)][i]})
   if zone == 10: result.append({"id": "fishing", "kind": "plaque", "title": "Mirador de la caña", "position": Vector3(10, 0, -8), "text": "Un asiento junto al horizonte. El aparejo forma parte del mirador; este punto no concede recursos de la nave."})
  elif zone == 11: result.append({"id": "studio_lights", "kind": "lights", "title": "Cambiar iluminación del estudio", "position": Vector3(0, 0, -1)})
  elif zone == 12:

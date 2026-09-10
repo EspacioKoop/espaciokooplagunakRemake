@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture eighteen real application views using an isolated Xvfb display."""
+"""Capture nineteen real application views using an isolated Xvfb display."""
 import argparse
 import os
 from pathlib import Path
@@ -55,9 +55,9 @@ def main():
             server.terminate()
             try: server.wait(timeout=5)
             except subprocess.TimeoutExpired: server.kill(); server.wait()
-        for filename in ["01_inicio", "02_puente", "03_ingenieria", "04_cubierta", "05_reactor", "06_atlas", "07_campana", "08_editor", "09_operaciones", "10_asistencia", "11_astillero", "12_museo", "13_libro", "14_playa", "15_cantina", "16_terraza", "17_estudio", "18_recuerdos"]:
+        for filename in ["01_inicio", "02_puente", "03_ingenieria", "04_cubierta", "05_reactor", "06_atlas", "07_campana", "08_editor", "09_operaciones", "10_asistencia", "11_astillero", "12_museo", "13_libro", "14_playa", "15_cantina", "16_terraza", "17_estudio", "18_recuerdos", "19_poker"]:
             data = (args.output / (filename + ".png")).read_bytes()
             assert data[:8] == b"\x89PNG\r\n\x1a\n" and struct.unpack(">II", data[16:24]) == (1600, 900), filename
-        print("Verified eighteen real screenshots at 1600×900.")
+        print("Verified nineteen real screenshots at 1600×900.")
 
 if __name__ == "__main__": main()

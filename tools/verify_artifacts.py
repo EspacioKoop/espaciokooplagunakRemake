@@ -19,7 +19,7 @@ assert hashlib.sha256(leisure_source).hexdigest() == leisure["source_sha256"]
 assert len(leisure["submodels"]) == 6
 source = (ROOT / "art/blender/lagunak_assets.blend").read_bytes()
 assert source[:7] == b"BLENDER"
-for filename in ["01_inicio", "02_puente", "03_ingenieria", "04_cubierta", "05_reactor", "06_atlas", "07_campana", "08_editor", "09_operaciones", "10_asistencia", "11_astillero", "12_museo", "13_libro", "14_playa", "15_cantina", "16_terraza", "17_estudio", "18_recuerdos"]:
+for filename in ["01_inicio", "02_puente", "03_ingenieria", "04_cubierta", "05_reactor", "06_atlas", "07_campana", "08_editor", "09_operaciones", "10_asistencia", "11_astillero", "12_museo", "13_libro", "14_playa", "15_cantina", "16_terraza", "17_estudio", "18_recuerdos", "19_poker"]:
     content = (ROOT / "docs/images" / (filename + ".png")).read_bytes()
     assert content[:8] == b"\x89PNG\r\n\x1a\n" and struct.unpack(">II", content[16:24]) == (1600, 900), filename
 for platform, name, signature in [("linux", "EspaciokoopLagunak.x86_64", b"\x7fELF"), ("windows", "EspaciokoopLagunak.exe", b"MZ")]:
@@ -35,4 +35,4 @@ if checksums.exists():
         with zipfile.ZipFile(file) as archive:
             assert archive.testzip() is None
             assert "LICENSE" in archive.namelist()
-print("ARTIFACTS_OK editable Blender source, twenty-one GLBs, eighteen PNGs and available binary archives")
+print("ARTIFACTS_OK editable Blender source, twenty-one GLBs, nineteen PNGs and available binary archives")
