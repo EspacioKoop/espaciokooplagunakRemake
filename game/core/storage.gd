@@ -25,6 +25,11 @@ static func validate_state(value: Variant) -> String:
 		if not value.has(k): return "Falta " + k
 	if value.version != 1 or value.status not in ["active", "won", "lost"]: return "Versión o estado no compatible."
 	if not Catalog.validate_mission(value.mission).is_empty(): return "Misión dañada."
+	if value.has("campaign_document"):
+		var campaign_error = CampaignDocument.validate(value.campaign_document)
+		if not campaign_error.is_empty(): return campaign_error
+		var authored = CampaignDocument.playable_missions(value.campaign_document)
+		if not authored.any(func(mission): return mission == value.mission): return "La misión no pertenece al documento de campaña guardado."
 	for k in ["campaign", "facts", "ship", "scan", "repair"]:
 		if not value[k] is Dictionary: return "Objeto inválido: " + k
 	if not value.contacts is Array or value.contacts.size() != value.mission.contacts.size() or not value.events is Array or value.events.size() > 200: return "Contactos o bitácora inválidos."

@@ -1,30 +1,37 @@
-# Enlace opcional con Foundry
+# Enlace opcional con Foundry 13
 
-Módulo para Foundry VTT 13. El juego funciona de forma independiente; este módulo añade un panel de consulta para la dirección de juego e importación manual de la bitácora a un diario.
+Consulta la nave, tu ficha de tripulación y las órdenes básicas que te conceda el anfitrión de Lagunak. Foundry nunca guarda ni resuelve la campaña: la simulación nativa conserva toda la autoridad.
 
-## Instalación y conexión
+## Instalar y conectar
 
-1. Instala el módulo con la URL de `module.json` publicada en el README principal, o descomprime el ZIP de la publicación en `Data/modules/espaciokoop-lagunak/`.
-2. Actívalo en tu mundo. Abre el panel desde el botón de nave en las herramientas de fichas, con una cuenta de dirección de juego.
-3. Ejecuta Lagunak y abre una campaña. En **Sesión → Enlace con Foundry**, introduce el origen exacto de tu página de Foundry, por ejemplo `http://localhost:30000`, sin ruta ni barra final.
-4. Activa la consulta local, copia el token y pégalo en el panel de Foundry. Pulsa Conectar.
+1. Instala el ZIP del módulo o copia `module.json`, `main.mjs`, `client.mjs`, `style.css`, `README.md` y `LICENSE` a `Data/modules/espaciokoop-lagunak/`. Activa el módulo en tu mundo Foundry 13.
+2. Abre el botón de nave en las herramientas de fichas. Está disponible para GM y jugadores. El panel muestra tu ID de usuario y el origen exacto que debes autorizar.
+3. En el ejecutable Lagunak, inicia una campaña local o una sesión como anfitrión. Abre **Sesión → Enlace con Foundry**, introduce el origen de tu página (por ejemplo `http://localhost:30000`, sin ruta ni barra final) y activa la consulta.
+4. Se abre la ventana nativa **Accesos por usuario**. El anfitrión escribe tu ID de Foundry, selecciona tu tripulante nativo activo y concede lectura de ficha o también órdenes del puesto. Copia el nuevo token y pégalo en Foundry con **Acceso personal** seleccionado.
+5. Para la consulta anterior de nave/bitácora, selecciona **Consulta pública** y utiliza el token de Sesión. Ese token no permite controlar la nave ni leer fichas.
 
-El navegador que muestra Foundry debe estar en el mismo equipo que la instancia de Lagunak a la que consulta. El servidor de Foundry puede estar alojado en otro equipo: la consulta la realiza el navegador hacia `127.0.0.1:27841`. Si el navegador pide autorización de acceso a la red local, debe concederse para esta conexión elegida por el usuario.
+El navegador debe estar en el **mismo equipo que el host de Lagunak**: consulta `127.0.0.1:27841`. El servidor de Foundry puede estar alojado en otra máquina. Un navegador en otro equipo no puede usar ese loopback del host; esta versión no incorpora un relé remoto. El navegador puede solicitar permiso para acceder a la red local.
 
-El panel también puede abrirse con una macro de script:
+También puedes abrir el panel mediante una macro:
 
 ```js
 game.modules.get("espaciokoop-lagunak").api.open();
 ```
 
-## Comportamiento
+## Qué se comparte
 
-El cliente consulta estado y eventos cada dos segundos tras conectarlo. El token se mantiene en memoria, se elimina al desconectar y debe volver a introducirse después de cerrar el panel. No se guarda en ajustes de Foundry ni se añade a una URL.
+La ficha muestra sólo tu nombre, enfoque, habilidades, rasgos, nivel/XP, condición y concentración existentes en el juego. No contiene inventario, hitos narrativos, cartas, dados, fichas de otras personas ni información interna de campaña. Los contactos sin identificar permanecen como ecos.
 
-**Importar nuevos eventos a un diario** crea una entrada por ejecución de misión y añade los eventos todavía no importados. La aplicación conserva los últimos 200 eventos; importa periódicamente si quieres archivar una sesión con muchas órdenes. El texto del juego se escapa antes de incorporarlo al diario. Solo la dirección de juego puede usar el panel.
+El acceso de control ofrece únicamente operaciones básicas del puesto nativo concedido: alerta, rumbo/impulso/autopiloto/atraque, potencia/refrigeración/escudos, haces, escaneo, canal, sonda o reparación. Cada orden la verifica Godot; un rol de Foundry o una edición del formulario no concede autoridad adicional. Los recursos, alcances y requisitos del juego pueden rechazar una orden válida.
 
-La API admite GET `/v1/state` y GET `/v1/events?after=0`, con cabecera `Authorization: Bearer <token>`. No dispone de rutas para controlar la nave. Cambiar de misión durante una importación cancela esa importación para evitar mezclar dos bitácoras.
+Los tokens personales duran una hora, permanecen en memoria y se eliminan al desconectar/cerrar. No se guardan en ajustes, flags, URL ni documentos. Cambiar de misión/puesto/conexión nativa, emitir otro acceso para la misma identidad o desactivar el enlace los revoca. Para reabrir la ventana nativa de accesos, reactiva el enlace; esto también rota y revoca los tokens previos. Nunca compartas un token con otra persona: la credencial es el token, no el ID visible de Foundry.
 
-## Comprobaciones
+El panel sondea cada dos segundos y borra su vista cuando falla la autorización. Las órdenes tienen secuencia y no se reintentan automáticamente tras un timeout; consulta de nuevo el estado antes de repetir una acción.
 
-Las pruebas automatizadas ejercitan el servidor HTTP real de Godot y el cliente JavaScript, incluidas autenticación, origen, límites, abortos y escape de texto. El panel y la escritura de diarios utilizan la API documentada de Foundry 13. No se ha ejecutado una instalación de Foundry VTT en el entorno de construcción; esa comprobación manual queda documentada en `docs/VALIDATION.md`.
+**Importar nuevos eventos a un diario** está disponible sólo para GM. Crea un diario privado por ejecución de misión e incorpora los eventos públicos aún no importados; nunca copia tu ficha. El juego conserva los últimos 200 eventos, así que importa periódicamente si quieres archivarlos. No se modifica ningún Actor ni ficha de personaje de Foundry.
+
+## Alcance comprobado
+
+Hay pruebas de autoridad Godot, servidor HTTP real con tres procesos ENet, cliente Node contra el host y fixtures de los formularios/Journal. No se ha ejecutado una instalación licenciada de Foundry en este entorno. No se declara validación real de su ventana, políticas del navegador o documentos hasta completar la guía reproducible de `docs/FOUNDRY_AUTHORITY.md` en el repositorio.
+
+La API v1 conserva consulta pública; v2 añade GET `/v2/view` y POST `/v2/command` con token personal y cabecera `X-Lagunak-User`. El host decide la identidad nativa y el puesto. Docker, relé remoto, fichas Actor y más sincronización permanecen fuera de este subbloque.

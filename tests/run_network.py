@@ -3,6 +3,7 @@ from pathlib import Path
 import os
 import re
 import subprocess
+import sys
 import tempfile
 import time
 
@@ -39,3 +40,7 @@ with tempfile.TemporaryDirectory(prefix="lagunak-network-") as temporary:
                 process.terminate()
                 process.wait(timeout=5)
             stream.close()
+
+# The release workflow already runs this authority boundary. Keep campaign
+# regressions mandatory without adding privileged workflow definitions.
+subprocess.run([sys.executable, str(ROOT / "tests/run_campaign_editor.py"), "--godot", GODOT], check=True)

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "license": "MIT",
+  "blender": "4.5.3 LTS",
+  "source": "art/blender/memory_guardians.blend",
+  "file": "game/assets/models/memory_guardians.glb",
+  "submodels": [
+    "memory_keeper",
+    "memory_sentinel",
+    "memory_prism"
+  ],
+  "source_sha256": "9bd0d32fefce3bd14dc2bcfd40908279a47e6d3aa5ec1a860659fc2aa6b3e613",
+  "sha256": "ee8e1da9fe19ae3a1c855df33192ef777c5410f25bb40b998d36ababb842a18d"
+}

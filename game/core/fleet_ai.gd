@@ -144,7 +144,9 @@ func _process(delta: float) -> void:
 		_broadcast_clock += delta
 		if _broadcast_clock >= 0.5:
 			_broadcast_clock = 0.0
-			_status.rpc()
+			for peer_id in session.roster:
+				if session._peer_active(int(peer_id)):
+					_status.rpc_id(int(peer_id))
 	updated.emit()
 
 func _update_morale(contact: Dictionary) -> void:

@@ -323,6 +323,8 @@ func log_event(source: String, message: String) -> void:
 func snapshot(for_role: String = "", principal: String = "") -> Dictionary:
 	var safe: Dictionary = state.duplicate(true)
 	if safe.is_empty(): return safe
+	# Authored future missions and unidentified contacts are host-only content.
+	safe.erase("campaign_document")
 	ShipOperations.redact(safe, for_role)
 	Cooperation.redact(safe, principal)
 	safe.mission.erase("contacts")
