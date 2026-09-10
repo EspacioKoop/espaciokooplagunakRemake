@@ -15,6 +15,7 @@ var _mouse: HSlider
 var _pad: HSlider
 var _deadzone: HSlider
 var _invert: CheckBox
+var _value_labels = {}
 
 func _ready() -> void:
 	name = "ControlSettings"
@@ -38,7 +39,7 @@ func _ready() -> void:
 	heading.add_child(space)
 	close_button = ConsoleUI.button("Volver", func(): closed.emit())
 	heading.add_child(close_button)
-	column.add_child(ConsoleUI.paragraph("C / Start controla el personaje. Escape / B libera el ratón. F9 siempre recupera este panel.", 16))
+	column.add_child(ConsoleUI.paragraph("Controlar personaje activa la cámara. Liberar ratón vuelve a menús. F9 siempre recupera este panel.", 16))
 	column.add_child(ConsoleUI.paragraph("Menús: cruceta y A; LB / RB cambia el foco. Los atajos de otras pantallas conservan sus teclas.", 16))
 	_scroll = ScrollContainer.new()
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -107,6 +108,7 @@ func _slider(parent: Node, title: String, low: float, high: float, step_value: f
 	row.add_child(slider)
 	var number = ConsoleUI.label("%.2f" % value, 16)
 	number.custom_minimum_size.x = 50
+	_value_labels[field] = number
 	row.add_child(number)
 	slider.value_changed.connect(func(next):
 		number.text = "%.2f" % next
@@ -118,17 +120,22 @@ func _set_option(field: String, value: Variant) -> void:
 	candidate[field] = value
 	var error: String = controls.commit_profile(candidate)
 	status.text = "Controles guardados." if error.is_empty() else error
+	if not error.is_empty(): _sync_options()
+
+func _sync_options() -> void:
+	_locale.select(0 if controls.profile.locale == "es" else 1)
+	_mouse.set_value_no_signal(controls.profile.mouse_sensitivity)
+	_pad.set_value_no_signal(controls.profile.gamepad_sensitivity)
+	_deadzone.set_value_no_signal(controls.profile.deadzone)
+	_invert.set_pressed_no_signal(controls.profile.invert_y)
+	for field in _value_labels: _value_labels[field].text = "%.2f" % float(controls.profile[field])
 
 func _reset() -> void:
 	_cancel_capture()
 	var error: String = controls.commit_profile(Profile.defaults())
 	status.text = "Controles restaurados." if error.is_empty() else error
 	if error.is_empty():
-		_locale.select(0)
-		_mouse.set_value_no_signal(1.0)
-		_pad.set_value_no_signal(1.0)
-		_deadzone.set_value_no_signal(0.2)
-		_invert.set_pressed_no_signal(false)
+		_sync_options()
 		_update_bindings()
 
 func _begin_capture(action: String, device: String) -> void:
