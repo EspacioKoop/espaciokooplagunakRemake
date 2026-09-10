@@ -36,6 +36,8 @@ jobs:
           .toolchain/godot --headless --path game --script ../tests/test_ship_physics.gd -- --test
       - name: Verify four shield quadrants and dynamic collisions
         run: .toolchain/godot --headless --path game --script ../tests/test_ship_quadrants_collisions.gd -- --test
+      - name: Verify modular mounts turrets arcs and automatic fire
+        run: .toolchain/godot --headless --path game --script ../tests/test_armaments.gd -- --test
       - name: Verify atlas factions crew trade and game direction
         run: .toolchain/godot --headless --path game --script ../tests/test_expedition.gd -- --test
       - name: Verify short long range sensors probe analysis and hacking
