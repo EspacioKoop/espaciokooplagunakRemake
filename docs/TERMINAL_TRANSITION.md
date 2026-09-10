@@ -17,13 +17,13 @@ xvfb-run -a -s '-screen 0 1600x900x24 -nolisten tcp' \
   python3 tests/run_terminal_transition.py --verify-baseline
 ```
 
-En Linux se necesitan Xvfb y Mesa, como instala `.github/workflows/terminal-transition.yml`. La opción de baseline requiere que el historial contenga `8b1dcf27683a00972b03d5203606eab12f31fe2d` (`git fetch --unshallow` en clones superficiales). El blob de `app.gd` se comprueba antes de usarlo. Sólo se sustituye ese archivo en una copia temporal del proyecto: el árbol de trabajo no se altera.
+En Linux se necesitan Xvfb y Mesa, como instala `.github/workflows/terminal-transition.yml`. La opción de baseline requiere que el historial contenga `8b1dcf27683a00972b03d5203606eab12f31fe2d` (`git fetch --unshallow` en clones superficiales). El blob de `app.gd` se comprueba antes de usarlo. El control negativo extrae mediante `git archive` **todo el directorio `game/` de ese commit inmutable** y lo importa en una carpeta temporal independiente. No mezcla la UI antigua con el `WorldDeck` actual: así una corrección paralela del orden de input no invalida artificialmente la reproducción histórica. Se rechazan rutas ajenas al directorio y enlaces al extraer; el árbol de trabajo y los archivos reservados a otros agentes no se alteran.
 
 La suite instancia la escena real `main.tscn`, conserva física, render y enrutamiento de entrada de Godot, y prueba teclado y mando en las seis salas que tienen terminal física en el baseline: puente, ingeniería, camarotes, bodega, comedor y enfermería. La colocación inicial en cada sala es una fixture; **no se presenta como un recorrido físico completo por todos los pasillos**. La proximidad se calcula con la física del juego, no se fuerza la bandera de interacción. También se ejecutan órdenes de navegación/alerta, se abre/cierra Operaciones, se vuelve con el botón público de cubierta y se reabre la terminal. Los casos de vida útil y solicitudes obsoletas son pruebas de integración del receptor, no pruebas de red.
 
 El control negativo debe reproducir el fallo específico de vida del emisor y el acceso a `set_input_as_handled` con la fuente anterior. Un timeout o un error de compilación no cuentan como reproducción. El candidato debe finalizar con un único resultado, al menos 100 comprobaciones, cero fallos y sin diagnósticos del motor no permitidos. Se conservan los mensajes: las únicas excepciones son el aviso gráfico exacto de VSync y, exclusivamente durante importación, el diagnóstico NUL ya acotado por SHA-256 del archivo en `run_character_editor.py`. No se acepta ese diagnóstico durante juego.
 
-`build/terminal-transition/` contiene logs y dos capturas del juego ejecutado desde fuente, junto con los hashes de motor y aplicación. Las 12 comprobaciones de `--self-test` validan el runner con procesos sintéticos: **no son pruebas del juego**.
+`build/terminal-transition/` contiene logs y dos capturas del juego ejecutado desde fuente, junto con el commit efectivo y los hashes de motor y aplicación. Las 12 comprobaciones de `--self-test` validan el runner con procesos sintéticos: **no son pruebas del juego**.
 
 ## Privacidad y límite de cierre
 

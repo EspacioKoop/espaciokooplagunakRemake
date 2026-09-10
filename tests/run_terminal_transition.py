@@ -6,11 +6,12 @@ import argparse
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -76,6 +77,33 @@ def run(command: list[str], env: dict[str, str], log: Path, timeout: float = 240
     return result
 
 
+def immutable_baseline(directory: Path) -> Path:
+    """Materialize the whole pinned game, never mix old UI with current inputs."""
+    archive = directory / "baseline.tar"
+    with archive.open("wb") as output:
+        subprocess.run(["git", "archive", "--format=tar", BASELINE, "game"],
+                       cwd=ROOT, stdout=output, check=True, timeout=60)
+    destination = directory / "baseline-source"
+    with tarfile.open(archive, "r:") as source:
+        for member in source:
+            relative = PurePosixPath(member.name)
+            if (relative.is_absolute() or not relative.parts or relative.parts[0] != "game"
+                    or ".." in relative.parts or not (member.isdir() or member.isfile())):
+                raise RuntimeError("Unsafe path or link in baseline game archive")
+            target = destination.joinpath(*relative.parts)
+            if member.isdir():
+                target.mkdir(parents=True, exist_ok=True)
+            else:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                data = source.extractfile(member)
+                if data is None:
+                    raise RuntimeError("Missing baseline file data")
+                with data, target.open("wb") as output:
+                    shutil.copyfileobj(data, output)
+    archive.unlink()
+    return destination / "game"
+
+
 def self_test() -> None:
     """These are runner fixtures, never claimed as game or graphics tests."""
     valid = "TERMINAL_TRANSITION_RESULT checks=150 failures=0\n"
@@ -121,15 +149,20 @@ def main() -> int:
             return [str(godot), "--path", str(project), "--resolution", "1600x900",
                     "--audio-driver", "Dummy", "--script", script, "--", "--test", *extra]
         evidence: dict[str, object] = {"scope": "real application scene via Godot source runner; not a release binary",
-                                       "godot_sha256": hashlib.sha256(godot.read_bytes()).hexdigest()}
+                                       "godot_sha256": hashlib.sha256(godot.read_bytes()).hexdigest(),
+                                       "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()}
         if args.verify_baseline:
             original = subprocess.check_output(["git", "show", BASELINE + ":game/ui/app.gd"], cwd=ROOT)
             blob = hashlib.sha1(b"blob " + str(len(original)).encode() + b"\0" + original).hexdigest()
             if blob != BASELINE_APP_BLOB:
                 raise RuntimeError("Unexpected baseline application source")
-            baseline_game = directory / "baseline-game"
-            shutil.copytree(ROOT / "game", baseline_game)
-            (baseline_game / "ui/app.gd").write_bytes(original)
+            baseline_game = immutable_baseline(directory)
+            if (baseline_game / "ui/app.gd").read_bytes() != original:
+                raise RuntimeError("Baseline archive differs from the audited application")
+            baseline_import = run([str(godot), "--headless", "--editor", "--path", str(baseline_game), "--quit"],
+                                  isolated_env(directory / "baseline-import"), output / "baseline-import.log", timeout=120)
+            if baseline_import.returncode or diagnostics(baseline_import.stdout, import_source=baseline_game / "core/cosmography_catalog.gd"):
+                raise RuntimeError("Pinned baseline resource import failed")
             baseline = run(command(baseline_game, ["--probe-only"]), isolated_env(directory / "baseline-user"),
                            output / "baseline.log")
             text = ANSI.sub("", baseline.stdout)
@@ -139,7 +172,7 @@ def main() -> int:
                         and "set_input_as_handled" in text and "Parse Error" not in text)
             if not expected:
                 raise RuntimeError("Baseline did not reproduce the specific terminal lifetime failure")
-            evidence["baseline"] = {"commit": BASELINE, "app_blob": blob, "specific_failure_reproduced": True}
+            evidence["baseline"] = {"commit": BASELINE, "app_blob": blob, "game_snapshot": "entire pinned game directory", "specific_failure_reproduced": True}
             print("TERMINAL_BASELINE_REPRODUCED synchronous receiver detaches the input source", flush=True)
         current = run(command(ROOT / "game", ["--evidence-dir", str(output)]),
                       isolated_env(directory / "fixed-user"), output / "fixed.log")
