@@ -4,6 +4,8 @@ signal profile_changed
 
 const Profile = preload("res://input/control_profile.gd")
 const SettingsPanel = preload("res://ui/control_settings.gd")
+const TouchControls = preload("res://input/touch_controls.gd")
+var touch: Control
 var profile: Dictionary = Profile.defaults()
 var profile_path = "user://controls-v1.json"
 var last_device = "keyboard"
@@ -46,12 +48,22 @@ func _create_launcher() -> void:
 	_launcher.offset_bottom = -8
 	_launcher.pressed.connect(open_settings)
 	_layer.add_child(_launcher)
+	touch = TouchControls.new()
+	touch.controls = self
+	_layer.add_child(touch)
 
 func _process(_delta: float) -> void:
 	if _launcher != null:
-		_launcher.visible = Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and not is_settings_open()
+		_launcher.visible = not character_control_active() and not is_settings_open()
 
 func _input(event: InputEvent) -> void:
+	if touch != null and touch.consume(event):
+		get_viewport().set_input_as_handled()
+		return
+	if touch != null and touch.walking and (event.is_action_pressed("release_pointer") or (event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE)):
+		touch.stop_walking()
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
 		if event is InputEventJoypadButton or absf(event.axis_value) > float(profile.deadzone): last_device = "gamepad"
 	elif event is InputEventKey or event is InputEventMouseButton: last_device = "keyboard"
@@ -101,24 +113,31 @@ func gameplay_blocked() -> bool:
 	if get_viewport().get_embedded_subwindows().any(func(window): return window.visible and window.exclusive): return true
 	return false
 
+func character_control_active() -> bool:
+	return Input.mouse_mode == Input.MOUSE_MODE_CAPTURED or (touch != null and touch.enabled and touch.walking)
+
 func movement_vector() -> Vector2:
 	if gameplay_blocked(): return Vector2.ZERO
-	return Input.get_vector("move_left", "move_right", "move_forward", "move_back", float(profile.deadzone))
+	var value = Input.get_vector("move_left", "move_right", "move_forward", "move_back", float(profile.deadzone))
+	if touch != null and touch.walking: value += touch.movement
+	return value.limit_length()
 
 func look_vector() -> Vector2:
 	if gameplay_blocked(): return Vector2.ZERO
 	var value = Input.get_vector("look_left", "look_right", "look_up", "look_down", float(profile.deadzone)) * float(profile.gamepad_sensitivity) * 2.2
+	if touch != null and touch.walking: value += touch.take_look_delta() * 0.0022 * float(profile.mouse_sensitivity) / maxf(get_physics_process_delta_time(), 0.001)
 	if profile.invert_y: value.y = -value.y
 	return value
 
 func mouse_look(relative: Vector2) -> Vector2:
+	if touch != null and touch.walking: return Vector2.ZERO
 	if gameplay_blocked(): return Vector2.ZERO
 	var value = relative * 0.0022 * float(profile.mouse_sensitivity)
 	if profile.invert_y: value.y = -value.y
 	return value
 
 func action_pressed(action: String) -> bool:
-	return not gameplay_blocked() and InputMap.has_action(action) and Input.is_action_pressed(action)
+	return not gameplay_blocked() and InputMap.has_action(action) and (Input.is_action_pressed(action) or (action == "sprint" and touch != null and touch.walking and touch.sprinting))
 
 func binding_label(action: String, device: String = "") -> String:
 	if not profile.bindings.has(action): return ""
@@ -136,6 +155,7 @@ func is_settings_open() -> bool:
 
 func open_settings() -> void:
 	if is_settings_open(): return
+	if touch != null: touch.stop_walking()
 	if _layer == null: _create_launcher()
 	var focus = get_viewport().gui_get_focus_owner()
 	_focus_before = weakref(focus) if focus != null else null

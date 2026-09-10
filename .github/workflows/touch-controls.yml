@@ -1,0 +1,43 @@
+name: Verify standalone touch controls
+
+on:
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tests/test_touch_controls.gd'
+      - 'tests/run_touch_controls.py'
+      - '.github/workflows/touch-controls.yml'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: touch-controls-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  touch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install graphical runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Download verified Godot
+        run: python3 tools/bootstrap.py
+      - name: Import assets
+        run: .toolchain/godot --headless --editor --path game --quit
+      - name: Exercise real touch events, walking, camera, interaction and menus
+        run: python3 tests/run_touch_controls.py --graphical --screenshot build/touch-controls.png
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: touch-controls-screen
+          path: build/touch-controls.png
+          if-no-files-found: warn
+          retention-days: 14
