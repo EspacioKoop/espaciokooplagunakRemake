@@ -166,6 +166,27 @@ static func validate_document(value: Variant) -> Dictionary:
 	if not _same_json(value, result.document): return _fail("La ficha no corresponde a su receta o contiene campos ajenos.")
 	return result
 
+static func decode_bytes(bytes: PackedByteArray) -> Dictionary:
+	if bytes.size() > MAX_BYTES: return _fail("El documento supera 64 KiB.")
+	# Reject malformed UTF-8 before Godot's decoder can emit an engine error.
+	var index = 0
+	while index < bytes.size():
+		var lead = int(bytes[index])
+		if lead <= 0x7f:
+			index += 1
+			continue
+		var count = 2 if lead >= 0xc2 and lead <= 0xdf else 3 if lead >= 0xe0 and lead <= 0xef else 4 if lead >= 0xf0 and lead <= 0xf4 else 0
+		if count == 0 or index + count > bytes.size(): return _fail("El archivo no contiene UTF-8 válido.")
+		var codepoint = lead & (0x7f >> count)
+		for offset in range(1, count):
+			var continuation = int(bytes[index + offset])
+			if (continuation & 0xc0) != 0x80: return _fail("El archivo no contiene UTF-8 válido.")
+			codepoint = (codepoint << 6) | (continuation & 0x3f)
+		if codepoint < [0, 0, 0x80, 0x800, 0x10000][count] or codepoint > 0x10ffff or (codepoint >= 0xd800 and codepoint <= 0xdfff):
+			return _fail("El archivo no contiene UTF-8 válido.")
+		index += count
+	return decode(bytes.get_string_from_utf8())
+
 static func decode(text: String) -> Dictionary:
 	if text.to_utf8_buffer().size() > MAX_BYTES: return _fail("El documento supera 64 KiB.")
 	var parser = JSON.new()
@@ -177,13 +198,13 @@ static func describe(document: Dictionary) -> String:
 	if not valid.ok: return valid.error
 	var npc: Dictionary = valid.document.sheet
 	var lines = PackedStringArray([
-		npc.name, "VD %s · %s · %s · etapa %d (%s)" % [str(npc.challenge), npc.nature, npc.size, npc.stage, npc.stage_name],
+		npc.name, "VD %s · %s · %s · etapa %d (%s)" % [str(npc.challenge), npc.nature, npc["size"], npc.stage, npc.stage_name],
 		"CA %d · PG %d · competencia %+d · velocidad %d m" % [npc.armor_class, npc.hit_points, npc.proficiency, npc.speed_m],
 		"Dados de golpe: %dd%d; CON %+d por dado." % [npc.hit_dice.count, npc.hit_dice.sides, npc.hit_dice.constitution_per_die], "", "CARACTERÍSTICAS"
 	])
 	for ability in ABILITIES: lines.append("%s: %d (%+d)" % [ability.capitalize(), npc.abilities[ability], npc.modifiers[ability]])
 	lines.append("\nAFINIDADES · debil ×2 / neutral ×1 / resiste ×0,5 / nulo / absorbe / repele")
-	for element in ELEMENTS: lines.append("%s (%s): %s" % [element.capitalize(), ELEMENTS[element].damage_type, npc.affinities[element]])
+	for element in ELEMENTS: lines.append("%s (%s): %s · contra naturaleza %s ×2 / %s ×0,5" % [element.capitalize(), ELEMENTS[element].damage_type, npc.affinities[element], ELEMENTS[element].strong, ELEMENTS[element].weak])
 	lines.append("La naturaleza añade ×2/×0,5/×1 antes de la afinidad. Redondea el resultado hacia abajo una vez. Absorber cura; repeler devuelve daño sin bucle de reflexión.")
 	for section in ["action", "bonus", "reaction", "movement"]:
 		lines.append("\n" + {"action": "ACCIÓN", "bonus": "ACCIÓN ADICIONAL", "reaction": "REACCIÓN", "movement": "MOVIMIENTO"}[section])
