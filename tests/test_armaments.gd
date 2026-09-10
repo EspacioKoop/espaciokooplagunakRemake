@@ -68,5 +68,6 @@ func run() -> void:
  check(not armaments.command("fire", {"mount": "torreta_omni", "target": target.id}).ok, "non-weapons station cannot fire modular mounts")
  session.role = "armas"
  check(not armaments.command("template", {"template": "no_existe"}).ok, "unknown ship loadout template is rejected")
+ await preload("res://../tests/test_ship_templates.gd").run(self)
  print("ARMAMENT_TESTS ", checks, " checks; ", failures, " failures")
  quit(1 if failures else 0)
