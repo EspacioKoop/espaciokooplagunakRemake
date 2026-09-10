@@ -98,7 +98,9 @@ func _process(delta: float) -> void:
 	if _clock < 0.5: return
 	_clock = 0
 	_refresh_bound()
-	if _mode == "client" and _pending and _session.connection_status.begins_with("Conectado"):
+	var self_id = multiplayer.get_unique_id()
+	var accepted = _session != null and (_session.roster.has(self_id) or _session.roster.has(str(self_id)))
+	if _mode == "client" and _pending and accepted:
 		_submit.rpc_id(1, JSON.stringify(local_profile).to_utf8_buffer())
 
 @rpc("any_peer", "call_remote", "reliable", 0)

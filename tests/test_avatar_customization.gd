@@ -99,6 +99,11 @@ func run() -> void:
 	var editor = service.editor
 	check(editor != null and editor.visible, "button opens usable editor")
 	check(editor.preview.avatar != null and editor.portrait.avatar != null, "portrait and full preview render crew")
+	editor.size = editor.min_size
+	await settle()
+	for action in editor.find_children("*", "Button", true, false):
+		if action.text in ["Restablecer Itsaso", "Cancelar", "Guardar avatar"]:
+			check(action.get_global_rect().end.y <= editor.size.y, "save and cancel fit minimum window: " + action.text)
 	editor.set_profile(chosen)
 	check(service.local_profile == standard, "preview is a draft until saved")
 	check(editor.preview.avatar.get_meta("avatar_profile") == chosen, "preview reflects selection")
@@ -108,6 +113,9 @@ func run() -> void:
 	editor._save()
 	check(service.local_profile == chosen, "editor saves to own local avatar")
 	check(AvatarProfile.read_profile(TEST_PATH).profile == chosen, "editor save survives file reload")
+	service.storage_path = "user://missing-avatar-directory/avatar.json"
+	check(not service.save_local(standard).ok and service.local_profile == chosen, "write failure keeps active avatar")
+	service.storage_path = TEST_PATH
 	var remote = SpaceView.model("crew")
 	root.add_child(remote)
 	service.profiles[99] = chosen.duplicate(true)
@@ -134,6 +142,7 @@ func run() -> void:
 	app._deck._update_avatars(session)
 	check(app._deck._avatars[99].get_meta("avatar_profile", {}) == changed, "live deck crew receives bound cosmetics")
 	if "--capture-avatar" in OS.get_cmdline_user_args():
+		editor.size = Vector2i(760, 600)
 		await create_timer(0.5).timeout
 		await RenderingServer.frame_post_draw
 		editor.get_texture().get_image().save_png("/tmp/avatar-editor.png")

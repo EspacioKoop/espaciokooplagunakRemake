@@ -10,25 +10,30 @@ var status: Label
 func _ready() -> void:
 	title = "Mi avatar"
 	initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-	size = Vector2i(760, 560)
-	min_size = Vector2i(620, 480)
+	size = Vector2i(760, 600)
+	min_size = Vector2i(620, 520)
 	theme = ConsoleUI.make_theme()
 	close_requested.connect(queue_free)
 	var margin = MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for edge in ["left", "top", "right", "bottom"]: margin.add_theme_constant_override("margin_" + edge, 20)
 	add_child(margin)
-	var column = ConsoleUI.column(margin)
+	var column = ConsoleUI.column(margin, 8)
 	column.add_child(ConsoleUI.label("Tu presencia a bordo", 26))
 	column.add_child(ConsoleUI.paragraph("Elige tu traje, visor y equipo. Se conservan al reiniciar y se comparten con la tripulación conectada.", 15))
 	var row = ConsoleUI.row(column, 20)
 	ConsoleUI.expand(row)
 	preview = AvatarPortrait.new()
 	ConsoleUI.expand(preview)
-	preview.custom_minimum_size = Vector2(220, 250)
+	preview.custom_minimum_size = Vector2(220, 220)
 	row.add_child(preview)
-	var settings = ConsoleUI.column(row, 8)
-	settings.custom_minimum_size.x = 270
+	var scroll = ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.custom_minimum_size.x = 280
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	row.add_child(scroll)
+	var settings = ConsoleUI.column(scroll, 8)
+	settings.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	portrait = AvatarPortrait.new()
 	portrait.portrait = true
 	portrait.custom_minimum_size = Vector2(100, 96)
