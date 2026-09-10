@@ -2,149 +2,242 @@
 
 **Una nave. Ocho puestos. Un mismo destino.**
 
-[![Verificación y descargas](https://github.com/VaroTv7/espaciokooplagunakRemake/actions/workflows/release.yml/badge.svg)](https://github.com/VaroTv7/espaciokooplagunakRemake/actions/workflows/release.yml)
+[![Verificación y empaquetado](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/workflows/release.yml)
 [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-62ddcc)](LICENSE)
 
-Una aplicación nativa de exploración espacial cooperativa: navega con la Itsaso, cuida sus sistemas y completa una campaña de seis misiones. Juega en solitario cambiando de puesto o reúne una tripulación por red. La campaña, el guardado, los interiores y el editor funcionan sin Foundry.
+Juego nativo de exploración espacial cooperativa construido en **Godot**, con gestión de nave, campaña, combate táctico y espacios 3D recorribles. En solitario puedes alternar entre los ocho puestos de la **Itsaso**; en red, cada tripulante se ocupa de su estación y el anfitrión resuelve la simulación.
 
-![Inicio del ejecutable de Linux](docs/images/01_inicio.png)
+**Standalone-first:** jugar, guardar, editar contenido y alojar partidas no requiere Foundry, una cuenta externa ni servicios de nube. Foundry es un adaptador opcional.
 
-## Descargas
+[Descargar](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/latest) · [Primeros pasos](#primeros-pasos) · [Capturas](#capturas-reales) · [Documentación](#documentación) · [Plan de desarrollo](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1)
 
-Los paquetes publicados, las notas y sus sumas SHA-256 están en [GitHub Releases](https://github.com/VaroTv7/espaciokooplagunakRemake/releases). La **0.9** es standalone; la paridad completa se sigue en [el plan de 1.0](https://github.com/VaroTv7/espaciokooplagunakRemake/issues/1).
+![Puente tridimensional de la Itsaso, con puestos de control y espacio recorrible](docs/images/04_cubierta.png)
 
-## Estado y ejecución
+## Estado del proyecto
 
-El trabajo recuperado y las ampliaciones de nave, puestos, asistencia, espacios recorribles y mesas de ocio están conservados en este repositorio. La paridad completa con
-el original sigue en implementación; no se considera una entrega final mientras
-queden funciones pendientes en [la matriz de paridad](docs/FEATURE_PARITY.md).
-La autonomía respecto a Foundry es obligatoria para todos los sistemas.
+**Última publicación comprobada: [v0.9.1](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/tag/v0.9.1), del 10 de septiembre de 2026.** Hay paquetes para Linux y Windows. Es una versión para pruebas de jugadores; **la paridad funcional completa de la 1.0 sigue abierta**.
 
-Abre `game/project.godot` con Godot 4.7.1 y ejecuta el proyecto. El flujo de
-[Actions](https://github.com/VaroTv7/espaciokooplagunakRemake/actions) comprueba el
-código y prepara ejecutables Linux y Windows. Las descargas solo se anuncian
-cuando están publicadas y verificadas.
+La 0.9.1 incorpora la corrección de las conexiones físicas entre compartimentos, controles táctiles, servidor dedicado con Docker/Compose, suministros y artefactos recogibles y un selector de **38 variantes adaptadas de nave**. El alcance y las conversiones de estas variantes se explican en [Plantillas de nave](docs/SHIP_TEMPLATES.md); no equivalen al catálogo original íntegro.
 
-Pulsa **Comenzar expedición**, selecciona Faro Argi en Navegación y activa el piloto
-automático. **F1** abre la ayuda; **F5** guarda; **F11** alterna pantalla completa.
+`main` es la rama de desarrollo y puede contener cambios posteriores a los paquetes publicados. Un PR abierto, una captura o una prueba aislada no convierten una función en parte de una release. Consulta las [notas de publicación](docs/RELEASE_NOTES.md), la [matriz de paridad](docs/FEATURE_PARITY.md) y el [plan maestro](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1) para distinguir entregas, avances y pendientes.
 
-## A bordo de la Itsaso
+> **Incidencia conocida:** sigue abierto el [fallo de interacción con terminales en Linux — #29](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/29). La corrección de pasillos de la 0.9.1 no debe interpretarse como confirmación de que ese crash esté resuelto.
 
-- **Operaciones ampliadas:** warp, salto, maniobra lateral, atraque con cancelación, frecuencias, tubos de cinco tipos, autodestrucción coordinada, rutas y equipos móviles. Acceso desde **Puente → Operaciones**.
-- **Asistencia nativa:** temporización, secuencia, precisión y puzle. Las propuestas caducan y solo las consume el titular del puesto.
-- **Ocho puestos:** mando, navegación, ingeniería, armas, sensores, comunicaciones, enlace y control de daños. Cada orden tiene permisos, requisitos y consecuencias.
-- **Seis misiones nuevas:** exploración, interferencias, rescate, combate, reparación y diplomacia. Recompensas, supervivientes, reputación y refuerzos de casco persisten entre misiones.
-- **Nave configurable:** diez subsistemas independientes, escudos de proa y popa, arcos de tiro y astillero con importación/exportación de diseños.
-- **Física espacial:** marcha atrás, viraje limitado, colisiones por trayectoria, gravedad, portales transitables e interferencia de nebulosas. Los objetos se colocan desde el editor.
-- **Sistemas conectados:** potencia, temperatura, refrigeración, daños, combustible, escudos, energía, sondas, torpedos y repuestos.
-- **Cooperación:** sesiones ENet con clave de acceso, puestos exclusivos, órdenes validadas por el anfitrión y presencia de otros tripulantes en cubierta.
-- **Trece destinos recorribles:** puente, pasillo central, ingeniería, camarotes, bodega, comedor, enfermería, cantina, museo, playa, terraza, estudio y corredor de recuerdos. WASD, ratón, Mayús y E para caminar e interactuar.
-- **Museo:** dieciocho esculturas propias inspiradas en los temas del catálogo de referencia, cinco cuadros geométricos, cartelas y un libro de cinco páginas con apertura y paso de hoja en 3D.
-- **Mesas compartidas:** póker Texas Hold’em, blackjack y dados de faroleo, con NPC, espectadores, manos privadas, fichas entre rondas y recuperación del asiento tras reconectar. Acceso por las mesas de la cantina o desde Cubierta.
-- **Playa y ocio:** paseo continuo de cien metros, dunas, mar animado, reloj, aerogeneradores y cabina de regreso; bancos y sillas utilizables y focos de estudio controlables.
-- **Editor integrado:** coloca contactos sobre el mapa, ordena objetivos, deshaz cambios, guarda JSON y prueba la misión con las reglas reales del juego.
-- **Guardado local:** autoguardado y copia anterior, con comprobaciones de estructura e integridad.
+## Descargar y ejecutar
 
-## Capturas del juego
+Los paquetes incluyen el juego, sus recursos e instrucciones. **No necesitas instalar Godot, Blender ni Node.js para jugar.** Descomprime el ZIP completo antes de ejecutarlo.
 
-Estas diecinueve imágenes se capturaron directamente desde el ejecutable autónomo de Linux a 1600 × 900. Muestran esta implementación en ejecución.
+| Plataforma | Paquete v0.9.1 | Ejecutable |
+| --- | --- | --- |
+| Linux x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.1/EspaciokoopLagunak-0.9.1-linux-x86_64.zip) | `EspaciokoopLagunak.x86_64` |
+| Windows x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.1/EspaciokoopLagunak-0.9.1-windows-x86_64.zip) | `EspaciokoopLagunak.exe` |
 
-### Puente y navegación
+En Linux, si se ha perdido el permiso de ejecución, abre una terminal en la carpeta descomprimida:
 
-![Navegación, radar, objetivo y estado real de la nave](docs/images/02_puente.png)
+```sh
+chmod +x EspaciokoopLagunak.x86_64
+./EspaciokoopLagunak.x86_64
+```
 
-### Ingeniería
+Las sumas de comprobación están en [SHA256SUMS](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.1/SHA256SUMS). En Linux, desde la carpeta que contiene ese archivo y los ZIP descargados:
 
-![Potencia, refrigeración y daño causado por temperatura](docs/images/03_ingenieria.png)
+```sh
+sha256sum --check --ignore-missing SHA256SUMS
+```
 
-### Cubierta y reactor
+Comprueba que cada paquete que vayas a utilizar aparezca como correcto; los archivos no descargados se omiten. **macOS y Android no tienen paquete en esta release**: existen herramientas de exportación y preparación, pero no deben confundirse con una distribución validada en esos dispositivos. [Estado de plataformas](docs/PLATFORM_EXPORTS.md).
 
-![Puente 3D recorrible con consolas](docs/images/04_cubierta.png)
+## Primeros pasos
 
-![Sala de ingeniería modelada en Blender](docs/images/05_reactor.png)
+1. Pulsa **Comenzar expedición**. En **Navegación**, selecciona **Faro Argi** y activa el **Piloto automático**.
+2. Cambia a **Sensores** y analiza el faro cuando estés a menos de 900 metros. Sigue el objetivo resaltado sobre la vista exterior.
+3. En **Comunicaciones**, abre un canal con **Puerto Kaia**. Acércate desde Navegación y atraca a menos de 190 metros y por debajo de 35 m/s.
+4. Desde **Campaña** puedes instalar mejoras y elegir la siguiente misión. **Cubierta** permite recorrer la nave; **Ajustes → Guardar partida ahora** guarda manualmente.
 
-### Atlas y campaña
+### Controles esenciales
 
-![Mapa del sector y contactos identificados](docs/images/06_atlas.png)
+| Entrada predeterminada | Acción |
+| --- | --- |
+| `1`–`8` | Cambiar de puesto en el puente o el atlas, sujeto a los permisos de la sesión. |
+| Clic en la vista de cubierta o `C` | Controlar al personaje. |
+| `WASD` + ratón | Caminar y mirar. |
+| `Mayús` / `E` | Correr / interactuar con escotillas, consolas y asientos. |
+| `Esc` | Liberar el ratón para volver a los menús. |
+| `F1` | Abrir la guía de tripulación. |
+| `F9` | Abrir controles, remapeo, sensibilidad y opciones de mando. |
+| `Alt+A` | Abrir el editor de avatar. |
+| `F11` | Alternar pantalla completa. |
 
-![Las seis misiones y las mejoras de campaña](docs/images/07_campana.png)
+Hay movimiento analógico con mando, navegación de menús y controles táctiles de cubierta. El panel de controles dispone de español e inglés; **esto no supone una traducción completa del juego**. [Guía de la tripulación](docs/PLAYER_GUIDE.md) · [Teclado y mando](docs/INPUT_CONTROLS.md) · [Controles táctiles](docs/TOUCH_CONTROLS.md).
 
-### Taller de misiones
+## Qué puedes hacer
 
-![Editor visual y JSON integrado](docs/images/08_editor.png)
+### Compartir el mando de la Itsaso
 
-### Operaciones y asistencia
+Ocho puestos —mando, navegación, ingeniería, armas, sensores, comunicaciones, enlace y control de daños— operan sobre una misma simulación. Gestiona potencia, calor, refrigeración, combustible, escudos y reparaciones; coordina warp, salto, rutas, atraque y equipos móviles desde **Puente → Operaciones**.
 
-![Consola nativa de operaciones de Ingeniería](docs/images/09_operaciones.png)
+La nave dispone de **cuatro cuadrantes de escudo**, montajes y torretas configurables, distintos tipos de munición y maniobra lateral continua. La física incluye colisiones por trayectoria, gravedad, agujeros de gusano, nebulosas y objetos recogibles. Los retos cooperativos de temporización, secuencia, precisión y puzle generan propuestas de asistencia para otros puestos.
 
-![Puzle de asistencia nativo con propuesta para otro puesto](docs/images/10_asistencia.png)
+### Explorar, combatir y progresar
 
-### Astillero
+La campaña incorporada ofrece **seis misiones propias** de exploración, rescate, combate, reparación y diplomacia. El progreso conserva recompensas, supervivientes, reputación y mejoras. Sensores avanzados, sondas, análisis y hackeo se complementan con facciones, comercio y comportamientos estratégicos de flotas.
 
-![Editor nativo de capacidades de nave](docs/images/11_astillero.png)
+Las fichas de tripulación incorporan habilidades, enfoques, concentración, rasgos y progresión. El combate táctico de personajes cuenta con iniciativa, movimiento, cobertura, armas, asistencia, IA enemiga y cámaras táctica, en tercera persona y subjetiva. La cobertura detallada, incluidas las limitaciones de cada sistema, está en la [matriz de paridad](docs/FEATURE_PARITY.md).
 
-### Museo y libro
+### Recorrer la nave y sus espacios sociales
 
-![Museo recorrible con esculturas originales del remake](docs/images/12_museo.png)
+Los **siete compartimentos principales** —puente, pasillo central, ingeniería, camarotes, bodega, comedor y enfermería— se conectan físicamente mediante corredores y escotillas, sin pantallas de carga al caminar entre ellos. La cubierta dispone de un plano vivo.
 
-![Lectura y navegación del libro del museo](docs/images/13_libro.png)
+Los destinos de ocio incluyen museo, playa, cantina, terraza, estudio y corredor de recuerdos. Hay esculturas propias, cuadros, un libro físico navegable, asientos interactivos, iluminación de estudio y guardianes ligados al progreso de campaña. La playa incorpora paseo, dunas y mar animado.
 
-### Playa
+Las mesas ofrecen **póker Texas Hold’em, blackjack y dados de faroleo**, con NPC, espectadores, manos privadas y recuperación de asientos tras reconectar. El [editor de avatar](docs/AVATAR_CUSTOMIZATION.md) permite personalizar traje, visor y accesorios cosméticos; no concede habilidades ni permisos.
 
-![Paseo, dunas, mar y aerogeneradores en la playa](docs/images/14_playa.png)
+### Crear contenido desde el juego
 
-### Cantina, terraza, estudio y recuerdos
+| Herramienta | Acceso y alcance |
+| --- | --- |
+| Editor de misiones | **Editor**: mapa, contactos, objetivos, deshacer, JSON y prueba de la misión con las reglas del juego. |
+| Taller de campañas | **Campaña → Taller de campañas**: de 1 a 24 misiones, orden, requisitos, importación/exportación y progreso persistente. [Guía](docs/CAMPAIGN_EDITOR.md). |
+| Editor de personajes | Desde la ficha de tripulación: edición e importación/exportación de plantillas sin sustituir la progresión. [Guía](docs/CHARACTER_EDITOR.md). |
+| Astillero y montajes | **Editor → Diseñar nave**: estructura, capacidades, variantes y configuración del armamento. [Montajes](docs/LOADOUT_EDITOR.md) · [Plantillas](docs/SHIP_TEMPLATES.md). |
 
-![Cantina y acceso a los espacios de ocio](docs/images/15_cantina.png)
+Estos editores usan formatos nativos del remake. **No se anuncia compatibilidad general con todos los formatos ni con el catálogo del proyecto original.**
 
-![Terraza con mesas y asientos utilizables](docs/images/16_terraza.png)
+## Capturas reales
 
-![Estudio con escenario y focos de colores](docs/images/17_estudio.png)
+Selección de imágenes ya versionadas del juego y sus herramientas. Se obtuvieron en distintas revisiones durante el desarrollo: **no son renders promocionales ni capturas nuevas de esta actualización documental**. La interfaz, los textos de versión y la distribución pueden diferir de la revisión que estés ejecutando.
 
-![Corredor de recuerdos](docs/images/18_recuerdos.png)
+La galería incorpora ahora las capturas de los editores de campañas, personajes y avatar, además de los guardianes del corredor, que no figuraban en el README anterior. Su contexto se conserva en las guías de cada función.
 
-### Mesas de la cantina
+| Puente y navegación | Ingeniería |
+| --- | --- |
+| ![Consola de navegación con radar, objetivos y estado de la nave](docs/images/02_puente.png) | ![Panel de ingeniería con potencia, refrigeración y temperatura](docs/images/03_ingenieria.png) |
 
-![Póker nativo con mano privada, NPC y apuestas validadas](docs/images/19_poker.png)
+| Museo | Playa |
+| --- | --- |
+| ![Sala del museo con esculturas originales del remake](docs/images/12_museo.png) | ![Paseo de la playa, dunas, mar y aerogeneradores](docs/images/14_playa.png) |
 
-## Modelos en Blender
+| Taller de campañas | Editor de personajes |
+| --- | --- |
+| ![Editor nativo de campañas con organización de misiones](docs/images/campaign-editor.png) | ![Editor nativo de la ficha de tripulación](docs/images/character-editor.png) |
+| [Campañas y dependencias](docs/CAMPAIGN_EDITOR.md) | [Edición e importación de fichas](docs/CHARACTER_EDITOR.md) |
 
-Hay dos fuentes editables en Blender 4.5.3 LTS: [nave, tripulante y salas base](art/blender/lagunak_assets.blend) y [museo, esculturas, playa y ocio](art/blender/leisure_assets.blend). Los veinte GLB base y el paquete de seis espacios adicionales están incluidos y comprobados mediante [SHA-256](game/assets/models/manifest.json). Las esculturas son interpretaciones estilizadas nuevas; no son escaneos ni reconstrucciones arqueológicas fieles.
+| Personalización del avatar | Guardianes y recuerdos |
+| --- | --- |
+| ![Editor de apariencia con retrato tridimensional del tripulante](docs/images/avatar-editor.png) | ![Guardiana y centinelas del corredor de recuerdos](docs/images/memory-guardians.png) |
+| [Apariencia y persistencia](docs/AVATAR_CUSTOMIZATION.md) | [Galería ligada a la campaña](docs/MEMORY_GUARDIANS.md) |
+
+<details>
+<summary>Ver más capturas: reactor, atlas, editores, asistencia y espacios de ocio</summary>
+
+| Reactor | Atlas del sector |
+| --- | --- |
+| ![Interior de la sala de ingeniería y reactor](docs/images/05_reactor.png) | ![Mapa sectorial con contactos](docs/images/06_atlas.png) |
+
+| Campaña incorporada | Editor de misiones |
+| --- | --- |
+| ![Selección de misiones y mejoras de campaña](docs/images/07_campana.png) | ![Editor visual de misión con documento JSON](docs/images/08_editor.png) |
+
+| Operaciones | Asistencia cooperativa |
+| --- | --- |
+| ![Consola de operaciones de ingeniería](docs/images/09_operaciones.png) | ![Puzle nativo de asistencia entre puestos](docs/images/10_asistencia.png) |
+
+| Astillero | Libro del museo |
+| --- | --- |
+| ![Editor de capacidades de nave](docs/images/11_astillero.png) | ![Lectura del libro tridimensional del museo](docs/images/13_libro.png) |
+
+| Cantina | Terraza |
+| --- | --- |
+| ![Cantina y acceso a las zonas sociales](docs/images/15_cantina.png) | ![Terraza con mesas y asientos](docs/images/16_terraza.png) |
+
+| Estudio | Corredor de recuerdos |
+| --- | --- |
+| ![Escenario del estudio con focos de colores](docs/images/17_estudio.png) | ![Recorrido por el corredor de recuerdos](docs/images/18_recuerdos.png) |
+
+| Mesa de póker | Inicio |
+| --- | --- |
+| ![Mesa de póker con mano privada y apuestas](docs/images/19_poker.png) | ![Pantalla inicial del ejecutable standalone](docs/images/01_inicio.png) |
+
+</details>
+
+## Cooperativo, guardado e integración opcional
+
+**Partidas en red.** El anfitrión abre **Sesión → Crear sesión** y comparte dirección, puerto UDP —`27840` por defecto— y clave por un canal privado. Los participantes eligen un puesto libre. La campaña permanece en el equipo anfitrión; no hay migración automática del host. La aplicación autentica la entrada con una clave, pero **ENet no cifra el transporte**: no trates la clave de acceso como una garantía de confidencialidad del tráfico. Para jugar fuera de una red de confianza, utiliza una VPN adecuada. [Guía de red](docs/PLAYER_GUIDE.md).
+
+**Guardado local.** Hay autoguardado de campaña, guardado manual y copia anterior `campaign.json.bak`. Las preferencias y el avatar se mantienen localmente. Para comunicar un fallo, comparte únicamente la información necesaria y revisa capturas y registros antes de publicarlos.
+
+**Servidor dedicado.** El repositorio incluye un anfitrión sin interfaz y despliegue opcional con Docker/Compose, autenticación y almacenamiento persistente. Sigue la [guía de servidor dedicado](docs/DEDICATED_SERVER.md) para configurar la clave fuera del repositorio y el volumen de datos.
+
+**Foundry 13.** El [adaptador opcional](integrations/foundry/README.md) ofrece consulta de nave y bitácora, ficha propia y órdenes básicas según los permisos concedidos por el anfitrión. No sustituye la simulación ni el guardado. El navegador debe ejecutarse en el mismo equipo que el host de Lagunak; no hay un relé remoto incorporado. La validación dentro de una instalación real de Foundry sigue pendiente y se distingue de las pruebas automatizadas de cliente, HTTP y autoridad. [Instalación y límites](integrations/foundry/README.md) · [Contrato de permisos](docs/FOUNDRY_AUTHORITY.md).
+
+## Desarrollar y crear recursos
+
+### Ejecutar desde el código
+
+La versión de herramientas fijada por el proyecto es **Godot 4.7.1**; [export_targets.py](tools/export_targets.py) es la referencia para versiones y destinos. Abre `game/project.godot` con el editor y ejecuta el proyecto. Los recursos necesarios ya están exportados.
+
+En un equipo de desarrollo **Linux x86_64**, con Git y **Python 3.11 o posterior**:
+
+```sh
+git clone https://github.com/EspacioKoop/espaciokooplagunakRemake.git
+cd espaciokooplagunakRemake
+python3 tools/bootstrap.py
+.toolchain/godot --headless --editor --path game --quit
+.toolchain/godot --path game
+```
+
+El bootstrap descarga el editor oficial fijado y comprueba su SHA-512. Para exportar y empaquetar los destinos predeterminados, Linux y Windows:
+
+```sh
+python3 tools/bootstrap.py --templates
+python3 tools/build.py
+python3 tools/package_downloads.py
+python3 tools/verify_artifacts.py
+```
+
+Los paquetes se generan en `dist/`. El bootstrap del editor está orientado a Linux x86_64; los demás destinos y requisitos específicos se describen en [Exportación por plataforma](docs/PLATFORM_EXPORTS.md).
+
+### Modelos editables en Blender
+
+Las fuentes propias están preparadas en **Blender 4.5.3 LTS**. El repositorio incluye tres conjuntos editables: [nave, tripulante y salas base](art/blender/lagunak_assets.blend), [museo, playa y ocio](art/blender/leisure_assets.blend) y [guardianes del corredor](art/blender/memory_guardians.blend). Blender sólo es necesario para modificar o reexportar esos recursos, no para jugar.
 
 ```sh
 blender --background art/blender/lagunak_assets.blend --python art/blender/export_assets.py
 blender --background art/blender/leisure_assets.blend --python art/blender/export_leisure.py
+blender --background art/blender/memory_guardians.blend --python art/blender/export_memory_guardians.py
 ```
 
-[Guía de modelos, sonido y misiones](docs/AUTHORING.md).
+Las esculturas son interpretaciones estilizadas originales, no escaneos ni reconstrucciones arqueológicas fieles. [Autoría de modelos, sonido y misiones](docs/AUTHORING.md) · [Audio reactivo](docs/REACTIVE_AUDIO.md) · [Créditos](CREDITS.md).
 
-## Foundry es un complemento
+### Pruebas y contribución
 
-El [módulo opcional para Foundry 13](integrations/foundry/README.md) permite consultar la nave e importar su bitácora a Journal. Se activa desde Sesión con un origen permitido y un token temporal. No es necesario para jugar y no guarda la campaña.
+El [workflow canónico](.github/workflows/release.yml) comprueba campaña, guardados, operaciones, física, sensores, tripulación, combate, flotas, red con procesos reales, HTTP, interfaz, interiores y mesas. También exporta aplicaciones, captura el ejecutable Linux y comprueba el arranque de Windows. Otros workflows cubren áreas específicas.
 
-[Manifiesto de instalación](https://raw.githubusercontent.com/VaroTv7/espaciokooplagunakRemake/main/integrations/foundry/module.json).
+Los resultados se consultan **por commit** en [Actions](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions); esta página no sustituye los registros de CI ni da por aprobada una revisión nueva. [Comandos y límites de validación](docs/VALIDATION.md).
 
-El servidor HTTP y el cliente tienen pruebas automatizadas; la ventana y la creación de Journal dentro de una instalación real de Foundry 13 requieren esa comprobación adicional. [Alcance de la validación](docs/VALIDATION.md).
+Antes de contribuir, lee [CONTRIBUTING.md](CONTRIBUTING.md) y [AGENTS.md](AGENTS.md). El trabajo paralelo se coordina mediante reservas en [#7](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/7), ramas propias y PR hacia `main`.
 
-## Ejecutar desde el código
+## Documentación
 
-Abre `game/project.godot` en **Godot 4.7.1** y pulsa F6 sobre `main.tscn` o F5 para ejecutar el proyecto. No hacen falta Blender ni Node para jugar: los recursos ya están exportados.
+| Para… | Referencias |
+| --- | --- |
+| Jugar y configurar controles | [Guía de tripulación](docs/PLAYER_GUIDE.md) · [Teclado y mando](docs/INPUT_CONTROLS.md) · [Táctil](docs/TOUCH_CONTROLS.md) |
+| Crear misiones, campañas y naves | [Autoría](docs/AUTHORING.md) · [Campañas](docs/CAMPAIGN_EDITOR.md) · [Montajes](docs/LOADOUT_EDITOR.md) · [Plantillas](docs/SHIP_TEMPLATES.md) |
+| Editar tripulación y apariencia | [Personajes](docs/CHARACTER_EDITOR.md) · [Avatares](docs/AVATAR_CUSTOMIZATION.md) |
+| Alojar o integrar una partida | [Servidor dedicado](docs/DEDICATED_SERVER.md) · [Foundry](integrations/foundry/README.md) |
+| Entender y verificar el proyecto | [Arquitectura](docs/ARCHITECTURE.md) · [Validación](docs/VALIDATION.md) · [Plataformas](docs/PLATFORM_EXPORTS.md) |
+| Seguir las entregas y lo pendiente | [Notas de versión](docs/RELEASE_NOTES.md) · [Paridad](docs/FEATURE_PARITY.md) · [Plan maestro](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1) |
 
-Para compilar en Linux, con Python 3.11 o posterior:
+### Hacia la 1.0
 
-```sh
-python3 tools/bootstrap.py --templates
-.toolchain/godot --headless --editor --path game --quit
-python3 tools/build.py
-python3 tools/package_downloads.py
-```
+Permanecen abiertos bloques de cosmografía y navegación entre sistemas, catálogo y formatos originales, funciones restantes de dirección y personajes, variantes de NPC y arte, integración remota y validación real de Foundry, traducción completa, accesibilidad y validación de plataformas adicionales. El seguimiento técnico vive en [#1](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1), [#32](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/32) y la [matriz de paridad](docs/FEATURE_PARITY.md), no en una promesa de cobertura total.
 
-El bootstrap verifica las descargas oficiales de Godot mediante SHA-512. Los ZIP aparecen en `dist/`. CI ejecuta las pruebas de campaña, guardado, interfaz, cooperación y HTTP, exporta ambos sistemas, captura Linux y comprueba el arranque en Windows y conserva los paquetes de ese commit como artefactos de la ejecución.
+Para [informar de un fallo](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues), indica versión o SHA, sistema operativo, modo local/anfitrión/cliente, pasos de reproducción y resultado esperado y observado. No publiques contraseñas, tokens, partidas completas ni datos personales para un primer diagnóstico.
 
-Comprobaciones locales: **136 del núcleo, 79 de operaciones, 59 de asistencia, 46 de nave y física, 62 de interfaz, 88 de museo y ocio, 513 de mesas, 14 HTTP y 10 del cliente**, más una sesión de red con **cinco procesos reales** y otras **29 comprobaciones de mesas con tres procesos y reconexión real**. [Comandos y límites](docs/VALIDATION.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md).
+## Independencia, licencia y procedencia
 
-## Un proyecto independiente
+Implementación nueva en Godot, con historial, código y recursos propios. **No es un fork de EmptyEpsilon** y no incorpora su código, SeriousProton, escenarios Lua ni recursos heredados. El proyecto original EspacioKoop se estudia como referencia funcional: [análisis y decisiones](docs/SOURCE_REVIEW.md).
 
-Este repositorio tiene su propio historial y una implementación nueva en Godot. No es un fork de EmptyEpsilon y no incorpora su código, SeriousProton, escenarios Lua ni recursos heredados. Se estudió el proyecto EspacioKoop como referencia funcional: [análisis y decisiones](docs/SOURCE_REVIEW.md).
+Código y recursos propios bajo [licencia MIT](LICENSE). Consulta [CREDITS.md](CREDITS.md) para la procedencia y los avisos de terceros incluidos en los paquetes. La independencia técnica no elimina el objetivo de paridad: las capacidades pendientes siguen formando parte del plan de trabajo.
 
-La campaña recuperada aporta seis misiones nuevas. La cobertura de todos los sistemas y del catálogo original es un requisito pendiente, no una exclusión del proyecto. Código y recursos propios bajo [MIT](LICENSE). [Créditos y procedencia](CREDITS.md). Los avisos de Godot y sus componentes se incluyen en `third_party/` y en los paquetes descargables.
+<!-- Revisión documental: 2026-09-10. Fuentes: release v0.9.1 (cddb1d63d3f5022bceec156f183489092019add7), main 8b1dcf27683a00972b03d5203606eab12f31fe2d, AGENTS.md, issues #1/#7/#29, código de app, herramientas y guías enlazadas. Las 23 capturas ya existían en docs/images; esta revisión no genera capturas ni declara nuevas pruebas de ejecución. -->
