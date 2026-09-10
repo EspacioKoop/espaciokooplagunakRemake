@@ -116,7 +116,15 @@ func run_tests() -> void:
 			var socket_name: String = entries[i]["attachment_socket"]
 			var anchor: Node3D = viewer.current_model.find_child(socket_name, true, false)
 			var at_hand: Vector3 = viewer.camera.to_local(anchor.global_position)
-			check(at_hand.distance_to(Vector3(0.19,-0.18,-0.44)) < 0.0001, "hand socket alignment")
+			check(at_hand.distance_to(Vector3(0.19,-0.08,-0.95)) < 0.0001, "hand socket alignment")
+			# Every authored AABB corner must remain inside the equipment inspection view.
+			var low: Array = entries[i]["aabb_min"]
+			var high: Array = entries[i]["aabb_max"]
+			for x: float in [float(low[0]), float(high[0])]:
+				for y: float in [float(low[1]), float(high[1])]:
+					for z: float in [float(low[2]), float(high[2])]:
+						var corner: Vector3 = viewer.current_model.to_global(Vector3(x,y,z))
+						check(viewer.camera.is_position_in_frustum(corner), "equipment framing " + str(i))
 		else:
 			check(not viewer.equipped, "ships cannot be equipped as tools")
 		viewer.reset_camera()

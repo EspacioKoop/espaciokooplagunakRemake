@@ -140,7 +140,7 @@ func select_asset(index: int) -> bool:
 	equipment_button.disabled = str(entry["category"]) == "ships"
 	if equipment_button.disabled:
 		equipped = false
-	info.text = "%s\n\n%s\n\n%s triángulos · %s anclajes\nDimensiones: %.3f × %.3f × %.3f m\nOrigen: %s\nClip: field_cycle" % [entry["id"], entry["description"], entry["triangles"], entry["sockets"].size(), maximum.x-minimum.x, maximum.y-minimum.y, maximum.z-minimum.z, entry["pivot"]]
+	info.text = "%s\n\n%s\n\n%s triángulos · %s anclajes\nDimensiones: %.3f × %.3f × %.3f m\nOrigen: %s\nClip GLB: field_cycle · Godot: field" % [entry["id"], entry["description"], entry["triangles"], entry["sockets"].size(), maximum.x-minimum.x, maximum.y-minimum.y, maximum.z-minimum.z, entry["pivot"]]
 	set_equipped(equipped)
 	set_animating(animating)
 	return true
@@ -190,8 +190,9 @@ func set_equipped(enabled: bool) -> void:
 		var local_anchor := Vector3.ZERO
 		if anchor != null:
 			local_anchor = current_model.to_local(anchor.global_position)
-		# Preserve metre scale; translate the declared socket to a virtual hand.
-		current_model.position = Vector3(0.19, -0.18, -0.44) - local_anchor
+		# Inspection distance leaves room for the hanging medkit and rear stock.
+		# Preserve metre scale and authored pivots; only presentation is translated.
+		current_model.position = Vector3(0.19, -0.08, -0.95) - local_anchor
 	else:
 		reset_camera()
 
