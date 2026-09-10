@@ -20,8 +20,11 @@ func wait_for(condition: Callable, seconds: float = 8.0) -> bool:
 	return bool(condition.call())
 func marker(name: String) -> String: return directory.path_join(name)
 func mark(name: String, text: String = "ready") -> void:
-	var file = FileAccess.open(marker(name), FileAccess.WRITE)
+	var temporary = marker(name) + ".pending"
+	var file = FileAccess.open(temporary, FileAccess.WRITE)
 	file.store_string(text)
+	file.close()
+	DirAccess.rename_absolute(temporary, marker(name))
 func reached(name: String) -> bool: return FileAccess.file_exists(marker(name))
 func phase(name: String) -> void:
 	check(await wait_for(func(): return reached(name)), "phase " + name)
@@ -66,7 +69,8 @@ func host_case(port: int) -> void:
 	check(await wait_for(func(): return reached("player_negative") and reached("rival_negative")), "negative authenticated requests complete")
 	check(seats.occupant("seat_7_0") == 1, "clients cannot release host by requesting stand or changing seat id")
 	mark("zone")
-	check(await wait_for(func(): return seats.occupant("seat_7_1") == 0), "legacy position update to another zone releases seat")
+	check(await wait_for(func(): return reached("player_zone_seen") and reached("rival_zone_seen")), "all clients acknowledge zone release before next phase")
+	check(seats.occupant("seat_7_1") == 0, "legacy position update to another zone releases seat")
 	mark("disconnect")
 	check(await wait_for(func(): return reached("disconnect_reserved")), "client reserves before disconnect")
 	check(await wait_for(func(): return reached("disconnected") and seats.occupant("seat_7_1") == 0), "disconnect releases physical seat")
@@ -121,6 +125,7 @@ func client_case(port: int) -> void:
 			session.update_pose(Vector3(80, 0.2, 80), 0.0)
 			await create_timer(0.1).timeout
 	check(await wait_for(func(): return seats.occupant("seat_7_1") == 0), "zone release reaches all clients")
+	mark(mode + "_zone_seen")
 	await phase("disconnect")
 	if mode == "player":
 		await place("seat_7_1")
