@@ -28,6 +28,16 @@ func run() -> void:
  deck = app._deck
  zones = deck.get_script().get_script_constant_map().ZONES
  check(zones.size() == 13, "ship and six social spaces are real destinations")
+ check(deck._corridors != null and deck._corridors.links.size() == 6, "seven ship compartments have six physical no-load corridor links")
+ check(deck._map != null and deck._map.visible, "live deck map exists while walking aboard ship")
+ var first_gate: Dictionary = deck._corridors.doors[0]
+ check(not first_gate.open and not first_gate.collider.disabled, "physical hatch begins closed with collision")
+ deck._corridors.toggle(0)
+ await settle(3)
+ check(deck._corridors.doors[0].open and deck._corridors.doors[0].collider.disabled, "hatch opens physically without changing zone or teleporting")
+ deck._corridors.toggle(0)
+ await settle(3)
+ check(not deck._corridors.doors[0].open, "hatch can be closed again")
  for zone in range(7, 13):
   deck.teleport_zone(zone)
   await settle()
@@ -92,6 +102,30 @@ func run() -> void:
   await place(zone, Vector3(0, 0, zones[zone].depth * 0.5 - 0.7))
   deck.interact()
   check(deck.zone == 7, "social room return remains accessible: " + str(zone))
+ deck.teleport_zone(7)
+ await settle(3)
+ var displays: Array = []
+ for child in deck._zone_models[7].get_children():
+  if child is SocialTableDisplay: displays.append(child)
+ check(displays.size() == 3, "cantina has native 3D displays for poker blackjack and liar dice")
+ var poker: SocialTableDisplay
+ for display in displays:
+  if display.table_id == "poker": poker = display
+ check(poker != null, "poker table projection is attached to its physical table")
+ var joined = Session.table_order("table_join", {"table": "poker"})
+ check(joined.ok, "local player can sit from the native lounge state")
+ check(Session.table_order("table_bot", {"table": "poker"}).ok, "native poker can add first table NPC")
+ check(Session.table_order("table_bot", {"table": "poker"}).ok, "native poker can add second table NPC")
+ check(Session.table_order("table_start", {"table": "poker"}).ok, "native poker starts while physical table is visible")
+ await settle(5)
+ if poker != null:
+  check(poker._dynamic.get_child_count() > 4, "physical table projects live cards seats and round state")
+ var projected: Dictionary = Session.view.get("lounge", {}).get("tables", {}).get("poker", {}).get("round", {})
+ check(projected.get("private", []).size() == 2, "3D table source contains own private poker hand")
+ var foreign_visible = false
+ for player in projected.get("players", []):
+  if player.id != projected.get("identity", "") and player.get("cards", []).size() >= 2 and not projected.get("showdown", false): foreign_visible = true
+ check(not foreign_visible, "3D projection never receives another hidden poker hand")
  app._ambient.stop()
  app._effects.stop()
  app._ambient.stream = null
