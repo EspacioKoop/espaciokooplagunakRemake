@@ -68,6 +68,12 @@ static func ensure_quadrants(ship: Dictionary) -> void:
    ship.shield_quadrants[quadrant] = aggregate * 0.5
   ship.shield_quadrants[quadrant] = clampf(float(ship.shield_quadrants[quadrant]), 0.0, quadrant_capacity(ship, quadrant))
 
+static func sibling_quadrant(quadrant: String) -> String:
+ return {
+  "front_left": "front_right", "front_right": "front_left",
+  "rear_left": "rear_right", "rear_right": "rear_left"
+ }.get(quadrant, "")
+
 static func sync_shield(ship: Dictionary) -> void:
  if ship.has("shield_quadrants") and ship.shield_quadrants is Dictionary:
   ensure_quadrants(ship)
@@ -96,8 +102,10 @@ static func quadrant_for_source(ship: Dictionary, position: Array) -> String:
 static func protects(ship: Dictionary, position: Array) -> bool:
  ensure_quadrants(ship)
  var quadrant = quadrant_for_source(ship, position)
+ var sibling = sibling_quadrant(quadrant)
  var system = "escudos" if quadrant.begins_with("front") else "escudos_popa"
- return ship.shields_enabled and float(ship.shield_quadrants[quadrant]) > 0 and efficiency(ship, system) > 0
+ var charge = float(ship.shield_quadrants[quadrant]) + float(ship.shield_quadrants.get(sibling, 0.0))
+ return ship.shields_enabled and charge > 0 and efficiency(ship, system) > 0
 
 static func turn(ship: Dictionary, delta: float) -> void:
  var error = angle_error(ship, ship.target_heading)
@@ -120,9 +128,11 @@ static func damage(ship: Dictionary, amount: float, source: Array) -> float:
  var front = quadrant.begins_with("front")
  var system = "escudos" if front else "escudos_popa"
  if ship.shields_enabled and efficiency(ship, system) > 0:
-  var absorbed = minf(float(ship.shield_quadrants[quadrant]), amount)
-  ship.shield_quadrants[quadrant] -= absorbed
-  amount -= absorbed
+  for segment in [quadrant, sibling_quadrant(quadrant)]:
+   if amount <= 0 or segment.is_empty(): break
+   var absorbed = minf(float(ship.shield_quadrants[segment]), amount)
+   ship.shield_quadrants[segment] -= absorbed
+   amount -= absorbed
  ship.hull = maxf(0, ship.hull - amount)
  if amount > 0:
   var damaged = "armas" if front else "motores"
