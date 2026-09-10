@@ -135,7 +135,7 @@ func run() -> void:
 	await settle()
 	deck = app._deck
 	check(gallery.deck == deck and gallery.actors.size() == 7, "returning to deck creates one functional replacement gallery")
-	if "--memory-capture" in OS.get_cmdline_user_args():
+	if "--memory-test-capture" in OS.get_cmdline_user_args():
 		deck.teleport_zone(12)
 		await place(Vector3(0.8, 0, 29))
 		deck.body.look_at(WorldDeck.ZONES[12].at + Vector3(-2.5, 1.0, 21))

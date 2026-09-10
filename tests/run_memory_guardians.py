@@ -58,11 +58,15 @@ def main():
         command += ["--resolution", "1600x900", "--position", "0,0"]
     else:
         command += ["--headless"]
-    command += ["--audio-driver", "Dummy", "--script", str(ROOT / "tests/test_memory_guardians.gd"), "--", "--test"]
-    if args.capture:
-        command += ["--memory-capture"]
+    command += ["--audio-driver", "Dummy"]
+    if args.binary:
+        command += ["--", "--test", "--memory-capture" if args.capture else "--memory-smoke"]
+    else:
+        command += ["--script", str(ROOT / "tests/test_memory_guardians.gd"), "--", "--test"]
+        if args.capture:
+            command += ["--memory-test-capture"]
     output = run(command, env)
-    assert "MEMORY_TESTS" in output and "; 0 failures" in output
+    assert ("MEMORY_EXPORT_TESTS" if args.binary else "MEMORY_TESTS") in output and "; 0 failures" in output
     if args.capture:
         data = args.capture.read_bytes()
         assert data[:8] == b"\x89PNG\r\n\x1a\n" and struct.unpack(">II", data[16:24]) == (1600, 900)

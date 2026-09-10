@@ -120,7 +120,7 @@ ring(prism, "Record frame", (0, 1.43, 0), .27, IVORY)
 crystal(prism, "Record core", (0, 1.43, 0), (.15, .28, .15), GLOW)
 box(prism, "Record plate", (0, .7, .16), (.38, .22, .06), IVORY)
 
-# Source is deliberately uncompressed: straightforward Blender editing, stable export.
+# Preserve the authored object hierarchy in the editable, compressed Blender source.
 source = ROOT / "art/blender/memory_guardians.blend"
 bpy.ops.wm.save_as_mainfile(filepath=str(source), compress=True)
 runpy.run_path(str(ROOT / "art/blender/export_memory_guardians.py"), run_name="__main__")

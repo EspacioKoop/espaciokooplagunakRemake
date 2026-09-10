@@ -23,6 +23,11 @@ func _ready() -> void:
 	get_tree().node_added.connect(_node_added)
 	var session = get_node_or_null("/root/Session")
 	if session != null: session.updated.connect(refresh)
+	var args = OS.get_cmdline_user_args()
+	if "--test" in args and ("--memory-capture" in args or "--memory-smoke" in args):
+		var capture = preload("res://world/memory_capture.gd").new()
+		add_child(capture)
+		capture.call_deferred("run", get_parent(), self)
 
 func _node_added(node: Node) -> void:
 	if node is WorldDeck and get_parent().is_ancestor_of(node):
