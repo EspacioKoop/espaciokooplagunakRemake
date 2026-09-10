@@ -78,7 +78,7 @@ class PlatformExportTests(unittest.TestCase):
             path = self.root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(name)
-        for name in ("module.json", "main.mjs", "client.mjs", "style.css", "README.md"):
+        for name in ("module.json", "main.mjs", "client.mjs", "workspace.mjs", "style.css", "README.md"):
             path = self.root / "integrations/foundry" / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(name)
