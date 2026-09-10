@@ -147,10 +147,9 @@ func client_case() -> void:
 	check(await until(func(): return avatars.profiles.get(self_id, {}) == value), "host accepts saved edit")
 	check(AvatarProfile.read_profile(avatars.storage_path).profile == value, "accepted appearance is locally persistent")
 	await create_timer(0.3).timeout
-	session.close_session()
-	await create_timer(0.6).timeout
-	check(avatars.profiles.is_empty(), "disconnect drops old roster cosmetics")
-	check(session.join_session("127.0.0.1", port, TEST_KEY, case_name, "navegacion").ok, "reconnect authenticated player")
+	# join_session closes and replaces the transport in the same frame.
+	check(session.join_session("127.0.0.1", port, TEST_KEY, case_name, "navegacion").ok, "same-frame reconnect authenticated player")
+	check(avatars.profiles.is_empty(), "transport replacement drops old roster cosmetics")
 	check(await until(func(): return avatars.profiles.get(root.multiplayer.get_unique_id(), {}) == value), "reconnect resubmits persisted appearance")
 	check(root.multiplayer.get_unique_id() != self_id, "reconnect has distinct peer identity")
 	await create_timer(1).timeout

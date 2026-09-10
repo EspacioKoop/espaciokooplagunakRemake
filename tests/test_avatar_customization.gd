@@ -91,6 +91,9 @@ func run() -> void:
 	second.queue_free()
 	await settle()
 	var service = root.get_node("Avatars")
+	for roster in [{}, {1: []}, {1: {}}, {1: {"avatar_protocol": true}}, {1: {"avatar_protocol": "1"}}, {1: {"avatar_protocol": 2}}]:
+		check(not service.supports_host(roster), "missing or malformed capability keeps client silent")
+	check(service.supports_host({"1": {"avatar_protocol": 1.0}}), "JSON public capability enables compatible host")
 	service.storage_path = TEST_PATH
 	service.local_profile = standard.duplicate(true)
 	var app = load("res://main.tscn").instantiate()
@@ -154,6 +157,11 @@ func run() -> void:
 	remote.queue_free()
 	app.queue_free()
 	await settle()
+	service.profiles[123] = chosen
+	service._pending = false
+	root.multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
+	service._sync_session()
+	check(service.profiles.is_empty() and service._pending, "same-mode transport replacement clears stale appearance and requests resubmission")
 	DirAccess.remove_absolute(TEST_PATH)
 	print("AVATAR_RESULT checks=%d failures=%d" % [checks, failures])
 	quit(1 if failures else 0)

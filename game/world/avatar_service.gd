@@ -12,6 +12,7 @@ var _bound: Dictionary = {}
 var _subscribers: Dictionary = {}
 var _rates: Dictionary = {}
 var _mode = ""
+var _transport = 0
 var _pending = true
 var _clock = 0.0
 var _session: Node
@@ -62,6 +63,12 @@ func profile_for(peer_id: int) -> Dictionary:
 	if peer_id == multiplayer.get_unique_id(): return local_profile.duplicate(true)
 	return profiles.get(peer_id, AvatarProfile.defaults()).duplicate(true)
 
+static func supports_host(roster: Dictionary) -> bool:
+	var host_info = roster.get("1", roster.get(1, {}))
+	if not host_info is Dictionary: return false
+	var protocol = host_info.get("avatar_protocol")
+	return (protocol is int or protocol is float) and protocol == 1
+
 func bind_avatar(avatar: Node3D, peer_id: int) -> void:
 	_bound[avatar.get_instance_id()] = {"node": weakref(avatar), "peer": peer_id}
 	AvatarAppearance.apply(avatar, profile_for(peer_id))
@@ -74,8 +81,10 @@ func _refresh_bound() -> void:
 
 func _sync_session() -> void:
 	if _session == null: return
-	if _mode != _session.mode:
+	var transport = multiplayer.multiplayer_peer.get_instance_id()
+	if _mode != _session.mode or _transport != transport:
 		_mode = _session.mode
+		_transport = transport
 		profiles.clear()
 		_subscribers.clear()
 		_rates.clear()
@@ -103,9 +112,7 @@ func _process(delta: float) -> void:
 	_refresh_bound()
 	var self_id = multiplayer.get_unique_id()
 	var accepted = _session != null and (_session.roster.has(self_id) or _session.roster.has(str(self_id)))
-	var host_info: Dictionary = _session.roster.get("1", _session.roster.get(1, {})) if _session != null else {}
-	var protocol = host_info.get("avatar_protocol")
-	var supported = (protocol is int or protocol is float) and protocol == 1
+	var supported = _session != null and supports_host(_session.roster)
 	if _mode == "client" and _pending and accepted and supported:
 		_submit.rpc_id(1, JSON.stringify(local_profile).to_utf8_buffer())
 
@@ -114,7 +121,7 @@ func _submit(data: PackedByteArray) -> void:
 	if _session == null or _session.mode != "host": return
 	var peer_id = multiplayer.get_remote_sender_id()
 	# The RPC has no target/user parameter: only its transport sender may change.
-	if not _session.roster.has(peer_id): return
+	if not _session.roster.has(peer_id) or not _session._peer_active(peer_id): return
 	var now = Time.get_ticks_msec()
 	if now - int(_rates.get(peer_id, -1000)) < 250: return
 	_rates[peer_id] = now
