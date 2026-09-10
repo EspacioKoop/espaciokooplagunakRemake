@@ -12,6 +12,7 @@ config/icon="res://assets/icon.svg"
 [autoload]
 Session="*res://net/session.gd"
 Expedition="*res://core/expedition_systems.gd"
+Sensors="*res://core/advanced_sensors.gd"
 
 [display]
 window/size/viewport_width=1600
