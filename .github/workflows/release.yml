@@ -40,6 +40,8 @@ jobs:
         run: .toolchain/godot --headless --path game --script ../tests/test_advanced_sensors.gd -- --test
       - name: Verify crew skills traits focus progression and abilities
         run: .toolchain/godot --headless --path game --script ../tests/test_crew.gd -- --test
+      - name: Verify tactical ground combat initiative cover weapons and AI
+        run: .toolchain/godot --headless --path game --script ../tests/test_ground_combat.gd -- --test
       - name: Exercise five actual network processes
         run: python3 tests/run_network.py
       - name: Verify actual HTTP boundary
