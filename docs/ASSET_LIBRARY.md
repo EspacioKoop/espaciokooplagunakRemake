@@ -16,7 +16,8 @@ Consulta `AGENTS.md`, #7 y el manifiesto del pack. Reutiliza el recurso existent
 | Museo y ocio | Incluida en `main` al inventariar | [`leisure_assets.blend`](../art/blender/leisure_assets.blend) | [`leisure_bundle.glb`](../game/assets/models/leisure_bundle.glb), seis grupos | [Autoría](AUTHORING.md) |
 | Guardianes del recuerdo | Incluida en `main` al inventariar | [`memory_guardians.blend`](../art/blender/memory_guardians.blend) | [`memory_guardians.glb`](../game/assets/models/memory_guardians.glb), tres grupos; [manifiesto](../game/assets/models/memory_guardians.manifest.json) | [Entrega #17](https://github.com/EspacioKoop/espaciokooplagunakRemake/pull/17) |
 | Frontera | Trabajo independiente registrado en #41; consultar allí su PR/estado actual | Ruta reservada `art/blender/frontier_pack/` | Ruta reservada `game/assets/models/frontier_pack/` | [Issue #41](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/41) |
-| Órbita | Entrega de biblioteca, no integración automática en campaña; evidencia de importación en PR/CI de #52 | [Doce fuentes](../art/blender/orbita_pack/) | [Doce GLB y manifiesto](../game/assets/models/orbita_pack/) | [Catálogo y galería](ORBITA_ASSET_PACK.md), [#52](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/52) |
+| Órbita original | Biblioteca; estado de importación e integración en PR #54 | [Doce fuentes](../art/blender/orbita_pack/) | [Doce GLB y manifiesto](../game/assets/models/orbita_pack/) | [Catálogo](ORBITA_ASSET_PACK.md) |
+| Órbita · equipo y apoyo | Segunda tanda de PR #54; consultar su SHA/CI | [Diez fuentes](../art/blender/orbita_pack/player_batch/) | [Diez GLB y manifiesto propio](../game/assets/models/orbita_pack/player_batch/) | [Catálogo y uso](ORBITA_PLAYER_BATCH.md) |
 
 La referencia del inventario original es `8b1dcf27683a00972b03d5203606eab12f31fe2d`. No se atribuyen los packs nuevos a los binarios publicados de 0.9.1. Un pack que sólo esté en una rama/PR debe consumirse desde esa revisión hasta su integración autorizada.
 
@@ -55,6 +56,18 @@ Todos se localizan como `res://assets/models/<nombre>.glb`. El planeta base util
 
 Estos usos son propuestas para los consumidores, no mecánicas implementadas. Los modelos no incluyen daño, reglas, red, colisiones, LOD, IA ni superficies planetarias caminables. Los robots tienen jerarquía rígida articulada, no rig humano para retargeting ni ciclo de caminar. El visor aislado permite probar los modelos sin modificar la campaña.
 
+### Segunda tanda Órbita: seis herramientas, dos armas y dos naves
+
+**Herramientas:** `orbita/argi_worklight`, `orbita/lagin_sampler`, `orbita/babes_shield`, `orbita/oreka_gravity_tool`, `orbita/izpi_binoculars`, `orbita/arnasa_eva_pack`.
+
+**Armas de ciencia ficción:** `orbita/uhina_arc_emitter`, `orbita/ezpal_coil_dispenser`.
+
+**Naves de apoyo:** `orbita/kimu_survey_ship`, `orbita/balea_rescue_ship`.
+
+Ruta Godot: `res://assets/models/orbita_pack/player_batch/<nombre>.glb`. Fuente editable: `art/blender/orbita_pack/player_batch/<nombre>.blend`. [Contrato, anclajes y comandos](ORBITA_PLAYER_BATCH.md). No se sustituyen las doce fuentes anteriores ni se fusionan sus manifiestos: cada tanda conserva sus hashes.
+
+El visor conjunto `game/asset_lab/orbita_pack/player_batch.tscn` contiene los **22 modelos**. Incluye inspección normalizada y montaje de mano/espalda a escala 1:1 usando el anclaje exportado. La disponibilidad y validación se registran en la [PR #54](https://github.com/EspacioKoop/espaciokooplagunakRemake/pull/54); no equivale a equipamiento integrado en la campaña. Esta tanda es complementaria al trabajo independiente Fieldkit, no una copia de sus herramientas básicas.
+
 ## Registro de una entrega
 
 Cada modelo o revisión debe aportar: ID estable y versión, categoría, imagen real del modelo, `.blend`, GLB/escena, licencia y procedencia, escala/ejes/origen, materiales, puntos de anclaje, animaciones y límites. Su manifiesto guarda hashes y medidas obtenidas de los archivos, no valores estimados a mano.
@@ -82,6 +95,6 @@ La PR referencia `Refs #52`, nunca `Closes #52`. Antes de sustituir un recurso e
 
 ## Conservar el trabajo de Blender
 
-El `.blend` editado es la fuente de verdad. Ejecuta su **exportador**, no su constructor procedural, después de cambios manuales. En Órbita el constructor aborta por defecto si existen fuentes, `--missing-only` sólo crea las ausentes y `--force` reemplaza expresamente el trabajo. El exportador combina piezas estáticas únicamente en memoria para generar el GLB y no guarda sobre la fuente.
+El `.blend` editado es la fuente de verdad. Ejecuta su **exportador**, no su constructor procedural, después de cambios manuales. En Órbita original el constructor aborta por defecto si existen fuentes, `--missing-only` sólo crea las ausentes y `--force` reemplaza expresamente el trabajo. En la segunda tanda `player_batch.py build` sólo crea fuentes ausentes por defecto. Sus exportadores combinan piezas estáticas únicamente en memoria y no guardan sobre la fuente.
 
 Los recursos propios se publican bajo la licencia MIT del repositorio. No incorporar retratos, recuerdos privados, secretos, credenciales ni metadatos personales. No se necesita conexión a un servicio externo para abrir, editar o utilizar los modelos descargados.

@@ -8,69 +8,11 @@
   "purpose": "Documentation index, not a runtime registry or gameplay authority. Each pack manifest owns its metadata and hashes.",
   "guide": "docs/ASSET_LIBRARY.md",
   "packs": [
-    {
-      "id": "base",
-      "availability": "in_inventory_base_commit",
-      "source": "art/blender/lagunak_assets.blend",
-      "exporter": "art/blender/export_assets.py",
-      "manifest": "game/assets/models/manifest.json",
-      "runtime_pattern": "game/assets/models/{name}.glb",
-      "guide": "docs/AUTHORING.md",
-      "models": ["anomaly", "asteroid", "beacon", "bridge_room", "cargo_room", "chair", "console", "crate", "crew", "engineering_room", "hallway", "itsaso", "medbay_room", "mess_room", "planet", "quarters_room", "reactor", "sentinel", "station", "transport"],
-      "license": "MIT",
-      "notes": "The base/ prefix is documentary only; existing names/APIs are unchanged. Planet surface also uses the project shader."
-    },
-    {
-      "id": "leisure",
-      "availability": "in_inventory_base_commit",
-      "source": "art/blender/leisure_assets.blend",
-      "exporter": "art/blender/export_leisure.py",
-      "manifest": "game/assets/models/manifest.json",
-      "runtime": "game/assets/models/leisure_bundle.glb",
-      "guide": "docs/AUTHORING.md",
-      "submodels": ["museum_hall", "cantina", "terrace", "studio", "memories_hall", "beach"],
-      "license": "MIT",
-      "notes": "Single bundle. Preserve root groups and named animated objects."
-    },
-    {
-      "id": "memory",
-      "availability": "in_inventory_base_commit",
-      "source": "art/blender/memory_guardians.blend",
-      "exporter": "art/blender/export_memory_guardians.py",
-      "manifest": "game/assets/models/memory_guardians.manifest.json",
-      "runtime": "game/assets/models/memory_guardians.glb",
-      "pull_request": 17,
-      "submodels": ["memory_keeper", "memory_sentinel", "memory_prism"],
-      "license": "MIT",
-      "notes": "Gallery automata, not combat enemy AI. The memory/ prefix is documentary only."
-    },
-    {
-      "id": "frontier",
-      "availability": "consult_tracking_issue",
-      "tracking_issue": 41,
-      "reserved_source_directory": "art/blender/frontier_pack/",
-      "reserved_runtime_directory": "game/assets/models/frontier_pack/",
-      "reserved_viewer_directory": "game/asset_lab/frontier_pack/",
-      "notes": "Independent agent scope. This index does not assert exported files or validation. Register the delivered manifest and PR in issue 52."
-    },
-    {
-      "id": "orbita",
-      "availability": "delivery_branch_consult_pr_and_ci",
-      "tracking_issue": 52,
-      "branch": "agent/52-orbita-library",
-      "source_directory": "art/blender/orbita_pack/",
-      "source_pattern": "art/blender/orbita_pack/{name}.blend",
-      "builder": "art/blender/orbita_pack/build.py",
-      "exporter": "art/blender/orbita_pack/export.py",
-      "manifest": "game/assets/models/orbita_pack/manifest.json",
-      "runtime_pattern": "game/assets/models/orbita_pack/{name}.glb",
-      "guide": "docs/ORBITA_ASSET_PACK.md",
-      "viewer": "game/asset_lab/orbita_pack/viewer.tscn",
-      "preview": "docs/images/orbita_pack/overview.png",
-      "validation": ["python tests/orbita_pack/validate.py", "python tests/orbita_pack/run.py"],
-      "models": ["karramarro_tug", "erlea_miner", "pulse_turret", "containment_projector", "technician_robot", "medic_robot", "lapa_drone", "aingira_probe", "harri_moon", "eraztun_giant", "docking_collar", "solar_array"],
-      "license": "MIT",
-      "notes": "Asset-only delivery with separate viewer. No automatic gameplay integration, collisions, LOD, deforming skeleton or humanoid retargeting. Planet sizes are display units, not astronomical metres. Exact export metrics and anclages belong to the pack manifest."
-    }
+    {"id":"base","availability":"in_inventory_base_commit","source":"art/blender/lagunak_assets.blend","exporter":"art/blender/export_assets.py","manifest":"game/assets/models/manifest.json","runtime_pattern":"game/assets/models/{name}.glb","guide":"docs/AUTHORING.md","models":["anomaly","asteroid","beacon","bridge_room","cargo_room","chair","console","crate","crew","engineering_room","hallway","itsaso","medbay_room","mess_room","planet","quarters_room","reactor","sentinel","station","transport"],"license":"MIT","notes":"The base/ prefix is documentary only; existing names/APIs are unchanged. Planet surface also uses the project shader."},
+    {"id":"leisure","availability":"in_inventory_base_commit","source":"art/blender/leisure_assets.blend","exporter":"art/blender/export_leisure.py","manifest":"game/assets/models/manifest.json","runtime":"game/assets/models/leisure_bundle.glb","guide":"docs/AUTHORING.md","submodels":["museum_hall","cantina","terrace","studio","memories_hall","beach"],"license":"MIT","notes":"Single bundle. Preserve root groups and named animated objects."},
+    {"id":"memory","availability":"in_inventory_base_commit","source":"art/blender/memory_guardians.blend","exporter":"art/blender/export_memory_guardians.py","manifest":"game/assets/models/memory_guardians.manifest.json","runtime":"game/assets/models/memory_guardians.glb","pull_request":17,"submodels":["memory_keeper","memory_sentinel","memory_prism"],"license":"MIT","notes":"Gallery automata, not combat enemy AI. The memory/ prefix is documentary only."},
+    {"id":"frontier","availability":"consult_tracking_issue","tracking_issue":41,"reserved_source_directory":"art/blender/frontier_pack/","reserved_runtime_directory":"game/assets/models/frontier_pack/","reserved_viewer_directory":"game/asset_lab/frontier_pack/","notes":"Independent agent scope; consult issue 41 for delivered manifest, PR and validation."},
+    {"id":"orbita","availability":"delivery_branch_consult_pr_and_ci","tracking_issue":52,"pull_request":54,"branch":"agent/52-orbita-library","source_directory":"art/blender/orbita_pack/","source_pattern":"art/blender/orbita_pack/{name}.blend","builder":"art/blender/orbita_pack/build.py","exporter":"art/blender/orbita_pack/export.py","manifest":"game/assets/models/orbita_pack/manifest.json","runtime_pattern":"game/assets/models/orbita_pack/{name}.glb","guide":"docs/ORBITA_ASSET_PACK.md","viewer":"game/asset_lab/orbita_pack/viewer.tscn","combined_viewer":"game/asset_lab/orbita_pack/player_batch.tscn","preview":"docs/images/orbita_pack/overview.png","validation":["python tests/orbita_pack/validate.py","python tests/orbita_pack/run.py"],"models":["karramarro_tug","erlea_miner","pulse_turret","containment_projector","technician_robot","medic_robot","lapa_drone","aingira_probe","harri_moon","eraztun_giant","docking_collar","solar_array"],"license":"MIT","notes":"Original twelve-model batch retained separately. No automatic gameplay integration; worlds use display units."},
+    {"id":"orbita_player_support","parent_pack":"orbita","availability":"delivery_branch_consult_pr_and_ci","tracking_issue":52,"pull_request":54,"branch":"agent/52-orbita-library","source_directory":"art/blender/orbita_pack/player_batch/","source_pattern":"art/blender/orbita_pack/player_batch/{name}.blend","builder":"python art/blender/orbita_pack/player_batch.py build","exporter":"python art/blender/orbita_pack/player_batch.py export --render","manifest":"game/assets/models/orbita_pack/player_batch/manifest.json","runtime_pattern":"game/assets/models/orbita_pack/player_batch/{name}.glb","guide":"docs/ORBITA_PLAYER_BATCH.md","viewer":"game/asset_lab/orbita_pack/player_batch.tscn","preview":"docs/images/orbita_pack/player_batch/overview.png","validation":["python tests/orbita_pack/validate_player_batch.py","python tests/orbita_pack/run_player_batch.py"],"models":["argi_worklight","lagin_sampler","babes_shield","oreka_gravity_tool","izpi_binoculars","arnasa_eva_pack","uhina_arc_emitter","ezpal_coil_dispenser","kimu_survey_ship","balea_rescue_ship"],"license":"MIT","notes":"Six tools, two fictional weapons, two support ships. Original geometry, metric attachment sockets and rigid mechanical clips. Reuses first-batch authoring/viewer helpers. No inventory, damage, oxygen, physics or ship interiors added."}
   ]
 }
