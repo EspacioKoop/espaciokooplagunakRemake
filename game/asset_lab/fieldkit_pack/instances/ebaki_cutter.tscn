@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/fieldkit_pack/ebaki_cutter.glb" id="1"]
+
+[node name="ebaki_cutter" type="Node3D"]
+metadata/asset_id = "fieldkit/ebaki_cutter"
+
+[node name="Model" parent="." instance=ExtResource("1")]

@@ -1,0 +1,624 @@
+{
+  "schema": "espaciokoop-asset-pack",
+  "version": 1,
+  "pack": "fieldkit",
+  "issue": 52,
+  "blender": "4.5.3 LTS",
+  "assets": [
+    {
+      "id": "fieldkit/giltza_hack_tool",
+      "version": 1,
+      "title": "Giltza · interfaz de hackeo",
+      "category": "tools",
+      "description": "Brazalete abierto con consola abatible, contactos y microproyector.",
+      "source": "art/blender/fieldkit_pack/giltza_hack_tool.blend",
+      "runtime": "game/assets/models/fieldkit_pack/giltza_hack_tool.glb",
+      "resource": "res://assets/models/fieldkit_pack/giltza_hack_tool.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/giltza_hack_tool.tscn",
+      "sha256": "48b5860aea5dc1481ac54c6b15e973756e6dbf5aa44d4003adcf5ea6b2906542",
+      "source_sha256": "d0a08ffa4e9cdddc17e2731ca98f8b251f68bb794015c4c7e69cd67b8ae0f289",
+      "bytes": 178452,
+      "triangles": 3152,
+      "editable_parts": 22,
+      "mesh_nodes": 2,
+      "materials": [
+        "Fieldkit_amber",
+        "Fieldkit_chalk",
+        "Fieldkit_glass",
+        "Fieldkit_cyan",
+        "Fieldkit_blue",
+        "Fieldkit_graphite",
+        "Fieldkit_brass",
+        "Fieldkit_alloy"
+      ],
+      "sockets": [
+        "socket_screen",
+        "socket_effect",
+        "socket_wrist"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "wrist",
+      "attachment_socket": "socket_wrist",
+      "aabb_min": [
+        -0.08,
+        -0.074,
+        -0.152
+      ],
+      "aabb_max": [
+        0.08,
+        0.135,
+        0.125
+      ],
+      "dimensions": [
+        0.16,
+        0.209,
+        0.277
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/giltza_hack_tool.png"
+    },
+    {
+      "id": "fieldkit/kako_tether",
+      "version": 1,
+      "title": "Kako · gancho magnético",
+      "category": "tools",
+      "description": "Herramienta de mano con carrete y garra magnética articulada.",
+      "source": "art/blender/fieldkit_pack/kako_tether.blend",
+      "runtime": "game/assets/models/fieldkit_pack/kako_tether.glb",
+      "resource": "res://assets/models/fieldkit_pack/kako_tether.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/kako_tether.tscn",
+      "sha256": "d050083f0ce4d40e87dd5d953d70a14bd0f1c36ecb440c959580d709c0ca7d11",
+      "source_sha256": "f15b19e8463c4162dc9303dad67d6ed8ae509546dcadeedeabb46fbfae044e4d",
+      "bytes": 237804,
+      "triangles": 6188,
+      "editable_parts": 29,
+      "mesh_nodes": 4,
+      "materials": [
+        "Fieldkit_amber",
+        "Fieldkit_alloy",
+        "Fieldkit_graphite",
+        "Fieldkit_brass",
+        "Fieldkit_glass",
+        "Fieldkit_cyan"
+      ],
+      "sockets": [
+        "socket_cable_exit",
+        "socket_grip",
+        "socket_hook",
+        "socket_offhand"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "grip",
+      "attachment_socket": "socket_grip",
+      "aabb_min": [
+        -0.13,
+        -0.1142,
+        -0.507156
+      ],
+      "aabb_max": [
+        0.13,
+        0.252,
+        0.148
+      ],
+      "dimensions": [
+        0.26,
+        0.3662,
+        0.655156
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/kako_tether.png"
+    },
+    {
+      "id": "fieldkit/argi_scanner",
+      "version": 1,
+      "title": "Argi · escáner de campo",
+      "category": "tools",
+      "description": "Escáner de mano con pantalla, aro sensor y antenas plegables.",
+      "source": "art/blender/fieldkit_pack/argi_scanner.blend",
+      "runtime": "game/assets/models/fieldkit_pack/argi_scanner.glb",
+      "resource": "res://assets/models/fieldkit_pack/argi_scanner.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/argi_scanner.tscn",
+      "sha256": "d653773e32526ed3fd90f047093ce36c5c8dd5e3c56b25dbd687dcf924d0e2aa",
+      "source_sha256": "3ff4a96ef9e02e54d1245cc061ab83e0b47275b4ddf159305cb1fcb38bc3db69",
+      "bytes": 214712,
+      "triangles": 3204,
+      "editable_parts": 27,
+      "mesh_nodes": 2,
+      "materials": [
+        "Fieldkit_chalk",
+        "Fieldkit_graphite",
+        "Fieldkit_alloy",
+        "Fieldkit_amber",
+        "Fieldkit_blue",
+        "Fieldkit_glass",
+        "Fieldkit_cyan",
+        "Fieldkit_brass"
+      ],
+      "sockets": [
+        "socket_scan_origin",
+        "socket_grip",
+        "socket_offhand",
+        "socket_screen"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "grip",
+      "attachment_socket": "socket_grip",
+      "aabb_min": [
+        -0.118913,
+        -0.0983,
+        -0.2225
+      ],
+      "aabb_max": [
+        0.118913,
+        0.397,
+        0.0655
+      ],
+      "dimensions": [
+        0.237825,
+        0.4953,
+        0.288
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/argi_scanner.png"
+    },
+    {
+      "id": "fieldkit/jostun_repair",
+      "version": 1,
+      "title": "Jostun · reparador",
+      "category": "tools",
+      "description": "Herramienta de reparación ficticia con pinzas y cartucho de servicio.",
+      "source": "art/blender/fieldkit_pack/jostun_repair.blend",
+      "runtime": "game/assets/models/fieldkit_pack/jostun_repair.glb",
+      "resource": "res://assets/models/fieldkit_pack/jostun_repair.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/jostun_repair.tscn",
+      "sha256": "dd029a6ac5b49698ee9120ff204c539d0dbd593f408f038a15c16c9a9252e638",
+      "source_sha256": "b074a4b7cd5ec880245c965ff54f3e8c74c2d0605fcb9c13e9f913cbdf7600e0",
+      "bytes": 154680,
+      "triangles": 2964,
+      "editable_parts": 21,
+      "mesh_nodes": 3,
+      "materials": [
+        "Fieldkit_alloy",
+        "Fieldkit_brass",
+        "Fieldkit_graphite",
+        "Fieldkit_amber",
+        "Fieldkit_chalk",
+        "Fieldkit_blue",
+        "Fieldkit_cyan"
+      ],
+      "sockets": [
+        "socket_contact_left",
+        "socket_contact_right",
+        "socket_effect",
+        "socket_grip",
+        "socket_offhand"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "grip",
+      "attachment_socket": "socket_grip",
+      "aabb_min": [
+        -0.102656,
+        -0.1089,
+        -0.428277
+      ],
+      "aabb_max": [
+        0.102656,
+        0.2185,
+        0.16
+      ],
+      "dimensions": [
+        0.205312,
+        0.3274,
+        0.588277
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/jostun_repair.png"
+    },
+    {
+      "id": "fieldkit/ebaki_cutter",
+      "version": 1,
+      "title": "Ebaki · cortador de campo",
+      "category": "tools",
+      "description": "Cortador industrial ficticio de anillo, resguardo y dos empuñaduras.",
+      "source": "art/blender/fieldkit_pack/ebaki_cutter.blend",
+      "runtime": "game/assets/models/fieldkit_pack/ebaki_cutter.glb",
+      "resource": "res://assets/models/fieldkit_pack/ebaki_cutter.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/ebaki_cutter.tscn",
+      "sha256": "4a422b87e01576612def2336d72d47dff8271cfb20aae994ccb1e4fbd4faaee8",
+      "source_sha256": "32102d25c6e9ddd024d04d53bd52e7763b23f51d5cb6b18f91cb78b39a8a8680",
+      "bytes": 218920,
+      "triangles": 4208,
+      "editable_parts": 34,
+      "mesh_nodes": 2,
+      "materials": [
+        "Fieldkit_brass",
+        "Fieldkit_cyan",
+        "Fieldkit_graphite",
+        "Fieldkit_alloy",
+        "Fieldkit_amber",
+        "Fieldkit_chalk"
+      ],
+      "sockets": [
+        "socket_cut_origin",
+        "socket_grip",
+        "socket_offhand"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "grip",
+      "attachment_socket": "socket_grip",
+      "aabb_min": [
+        -0.144465,
+        -0.1248,
+        -0.553
+      ],
+      "aabb_max": [
+        0.144465,
+        0.277,
+        0.11
+      ],
+      "dimensions": [
+        0.28893,
+        0.4018,
+        0.663
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/ebaki_cutter.png"
+    },
+    {
+      "id": "fieldkit/soros_medkit",
+      "version": 1,
+      "title": "Soros · botiquín de campaña",
+      "category": "tools",
+      "description": "Maletín médico de asa central, tapa abatible y módulos extraíbles.",
+      "source": "art/blender/fieldkit_pack/soros_medkit.blend",
+      "runtime": "game/assets/models/fieldkit_pack/soros_medkit.glb",
+      "resource": "res://assets/models/fieldkit_pack/soros_medkit.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/soros_medkit.tscn",
+      "sha256": "f3b6dc1027b5d94af9462296829f7033fa2673597b0f7694b023179bedd2d9f8",
+      "source_sha256": "0992e0b781578d20d195610831572975fede1ce7a0514c40aa6fbf0513d74f96",
+      "bytes": 184852,
+      "triangles": 4096,
+      "editable_parts": 24,
+      "mesh_nodes": 2,
+      "materials": [
+        "Fieldkit_chalk",
+        "Fieldkit_green",
+        "Fieldkit_amber",
+        "Fieldkit_graphite",
+        "Fieldkit_blue",
+        "Fieldkit_alloy",
+        "Fieldkit_glass"
+      ],
+      "sockets": [
+        "socket_belt",
+        "socket_grip",
+        "socket_offhand",
+        "socket_treatment"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "handle",
+      "attachment_socket": "socket_grip",
+      "aabb_min": [
+        -0.191,
+        -0.3035,
+        -0.1215
+      ],
+      "aabb_max": [
+        0.191,
+        0.027,
+        0.1025
+      ],
+      "dimensions": [
+        0.382,
+        0.3305,
+        0.224
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/soros_medkit.png"
+    },
+    {
+      "id": "fieldkit/tximista_carbine",
+      "version": 1,
+      "title": "Tximista · carabina de pulsos",
+      "category": "weapons",
+      "description": "Carabina ficticia con cámara de energía, culata y visor.",
+      "source": "art/blender/fieldkit_pack/tximista_carbine.blend",
+      "runtime": "game/assets/models/fieldkit_pack/tximista_carbine.glb",
+      "resource": "res://assets/models/fieldkit_pack/tximista_carbine.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/tximista_carbine.tscn",
+      "sha256": "9589ab0f474b233e091aca170b1c6c391e2b0790ea91ec3f51a9d23ddb73536c",
+      "source_sha256": "4d5973910b366c91ebfcea0aae096edbd2fff61050ef05646843c4740a36d01f",
+      "bytes": 252244,
+      "triangles": 5048,
+      "editable_parts": 34,
+      "mesh_nodes": 2,
+      "materials": [
+        "Fieldkit_cyan",
+        "Fieldkit_brass",
+        "Fieldkit_chalk",
+        "Fieldkit_graphite",
+        "Fieldkit_alloy",
+        "Fieldkit_amber",
+        "Fieldkit_blue",
+        "Fieldkit_glass"
+      ],
+      "sockets": [
+        "socket_muzzle",
+        "socket_aim",
+        "socket_grip",
+        "socket_holster",
+        "socket_offhand",
+        "socket_power_cell"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "grip",
+      "attachment_socket": "socket_grip",
+      "aabb_min": [
+        -0.079,
+        -0.1354,
+        -0.72
+      ],
+      "aabb_max": [
+        0.079,
+        0.329,
+        0.498
+      ],
+      "dimensions": [
+        0.158,
+        0.4644,
+        1.218
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/tximista_carbine.png"
+    },
+    {
+      "id": "fieldkit/txinparta_sidearm",
+      "version": 1,
+      "title": "Txinparta · pistola iónica",
+      "category": "weapons",
+      "description": "Arma corta ficticia con bobina visible y corredera mecánica.",
+      "source": "art/blender/fieldkit_pack/txinparta_sidearm.blend",
+      "runtime": "game/assets/models/fieldkit_pack/txinparta_sidearm.glb",
+      "resource": "res://assets/models/fieldkit_pack/txinparta_sidearm.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/txinparta_sidearm.tscn",
+      "sha256": "4f771a8bd3b2b8b5d9d81ca87ce62152614998af2ff6fec7c61ab95a7cb6e15c",
+      "source_sha256": "6fabc1b67b1fe53a31b456d63f52f1b925fc513d288813366613116ffaaf4846",
+      "bytes": 153244,
+      "triangles": 3540,
+      "editable_parts": 19,
+      "mesh_nodes": 2,
+      "materials": [
+        "Fieldkit_brass",
+        "Fieldkit_chalk",
+        "Fieldkit_cyan",
+        "Fieldkit_graphite",
+        "Fieldkit_alloy",
+        "Fieldkit_amber",
+        "Fieldkit_plum"
+      ],
+      "sockets": [
+        "socket_muzzle",
+        "socket_aim",
+        "socket_grip",
+        "socket_holster",
+        "socket_power_cell"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "grip",
+      "attachment_socket": "socket_grip",
+      "aabb_min": [
+        -0.069,
+        -0.1195,
+        -0.345
+      ],
+      "aabb_max": [
+        0.069,
+        0.271,
+        0.14
+      ],
+      "dimensions": [
+        0.138,
+        0.3905,
+        0.485
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/txinparta_sidearm.png"
+    },
+    {
+      "id": "fieldkit/enara_shuttle",
+      "version": 1,
+      "title": "Enara · lanzadera de expedición",
+      "category": "ships",
+      "description": "Lanzadera compacta con alas cortas, tren y rampa posterior articulada.",
+      "source": "art/blender/fieldkit_pack/enara_shuttle.blend",
+      "runtime": "game/assets/models/fieldkit_pack/enara_shuttle.glb",
+      "resource": "res://assets/models/fieldkit_pack/enara_shuttle.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/enara_shuttle.tscn",
+      "sha256": "4e9ea93f65848cb1262ea52022fe1891ba530820cf01f13efef744bae5a08ed8",
+      "source_sha256": "c285f814027780dab2db7f560ee631c585e8340a4ee74ad3e11fc93fa8e44261",
+      "bytes": 276780,
+      "triangles": 6028,
+      "editable_parts": 39,
+      "mesh_nodes": 4,
+      "materials": [
+        "Fieldkit_blue",
+        "Fieldkit_alloy",
+        "Fieldkit_chalk",
+        "Fieldkit_glass",
+        "Fieldkit_graphite",
+        "Fieldkit_cyan",
+        "Fieldkit_amber"
+      ],
+      "sockets": [
+        "socket_cargo",
+        "socket_centre",
+        "socket_copilot",
+        "socket_entry",
+        "socket_exhaust_left",
+        "socket_exhaust_right",
+        "socket_hardpoint_left",
+        "socket_hardpoint_right",
+        "socket_pilot"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "centre",
+      "attachment_socket": "socket_centre",
+      "aabb_min": [
+        -4.8,
+        -1.888105,
+        -5.9
+      ],
+      "aabb_max": [
+        4.8,
+        1.53,
+        4.3125
+      ],
+      "dimensions": [
+        9.6,
+        3.418105,
+        10.2125
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/enara_shuttle.png"
+    },
+    {
+      "id": "fieldkit/hontz_corvette",
+      "version": 1,
+      "title": "Hontz · corbeta de patrulla",
+      "category": "ships",
+      "description": "Corbeta de doble góndola con puente elevado y antena orientable.",
+      "source": "art/blender/fieldkit_pack/hontz_corvette.blend",
+      "runtime": "game/assets/models/fieldkit_pack/hontz_corvette.glb",
+      "resource": "res://assets/models/fieldkit_pack/hontz_corvette.glb",
+      "scene": "game/asset_lab/fieldkit_pack/instances/hontz_corvette.tscn",
+      "sha256": "af5c5ee5e846ab243f5355d511a44e841d1f6faacbfcfe48989c3c22fe22262d",
+      "source_sha256": "06525fc28071ac583693f516840d442fe379e57dfcb5434be9c81e187ae39263",
+      "bytes": 417884,
+      "triangles": 8760,
+      "editable_parts": 59,
+      "mesh_nodes": 8,
+      "materials": [
+        "Fieldkit_glass",
+        "Fieldkit_graphite",
+        "Fieldkit_chalk",
+        "Fieldkit_blue",
+        "Fieldkit_alloy",
+        "Fieldkit_cyan",
+        "Fieldkit_amber",
+        "Fieldkit_brass"
+      ],
+      "sockets": [
+        "socket_hardpoint_left_aft",
+        "socket_hardpoint_left_fore",
+        "socket_hardpoint_right_aft",
+        "socket_hardpoint_right_fore",
+        "socket_bridge",
+        "socket_centre",
+        "socket_dock",
+        "socket_exhaust_port",
+        "socket_exhaust_starboard",
+        "socket_scan_origin"
+      ],
+      "animations": [
+        "field_cycle"
+      ],
+      "units": "metres",
+      "axes": "Godot +X right, +Y up, -Z forward",
+      "pivot": "centre",
+      "attachment_socket": "socket_centre",
+      "aabb_min": [
+        -5.835,
+        -1.4,
+        -13.0
+      ],
+      "aabb_max": [
+        5.835,
+        4.0,
+        10.05
+      ],
+      "dimensions": [
+        11.67,
+        5.4,
+        23.05
+      ],
+      "license": "MIT",
+      "provenance": "Original geometry authored in Blender; no external art",
+      "status": "exported_not_gameplay_integrated",
+      "collision": "not_included",
+      "rig": "rigid_mechanical",
+      "preview": "docs/images/fieldkit_pack/hontz_corvette.png"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/fieldkit_pack/kako_tether.glb" id="1"]
+
+[node name="kako_tether" type="Node3D"]
+metadata/asset_id = "fieldkit/kako_tether"
+
+[node name="Model" parent="." instance=ExtResource("1")]
