@@ -1,0 +1,32 @@
+{
+  "schema": "asset-library-extension",
+  "version": 1,
+  "library_issue": 52,
+  "delivery_issue": 56,
+  "license": "MIT",
+  "packs": [
+    {
+      "id": "bizigai",
+      "category": "habitable_spherical_worlds",
+      "ids": ["bizigai/lurga", "bizigai/elur"],
+      "source_dir": "art/blender/bizigai_pack",
+      "manifest": "game/assets/models/bizigai_pack/manifest.json",
+      "viewer": "game/asset_lab/bizigai_pack/lab.tscn",
+      "guide": "docs/BIZIGAI_PLANETS.md",
+      "photographs": "docs/images/bizigai_pack",
+      "campaign_integration": false
+    },
+    {
+      "id": "egonaldi",
+      "category": "reusable_station_destinations",
+      "ids": ["egonaldi/itun_embassy", "egonaldi/babes_security", "egonaldi/trebe_training", "egonaldi/zeru_observatory", "egonaldi/ur_recycling", "egonaldi/isil_sanctuary"],
+      "source_dir": "art/blender/egonaldi_pack",
+      "manifest": "game/assets/models/egonaldi_pack/manifest.json",
+      "viewer": "game/asset_lab/egonaldi_pack/lab.tscn",
+      "guide": "docs/EGONALDI_DESTINATIONS.md",
+      "photographs": "docs/images/egonaldi_pack",
+      "campaign_integration": false
+    }
+  ],
+  "photograph_policy": "Each model delivery includes real GLB renders or Godot captures in the repository and a visible PR gallery; not concept images."
+}
