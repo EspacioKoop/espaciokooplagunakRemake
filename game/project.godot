@@ -10,6 +10,7 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://assets/icon.svg"
 
 [autoload]
+Controls="*res://input/player_controls.gd"
 Session="*res://net/session.gd"
 Expedition="*res://core/expedition_systems.gd"
 Sensors="*res://core/advanced_sensors.gd"
@@ -40,3 +41,7 @@ common/physics_ticks_per_second=30
 
 [audio]
 driver/enable_input=false
+
+[internationalization]
+locale/translations=PackedStringArray("res://localization/controls.es.translation", "res://localization/controls.en.translation")
+locale/fallback="es"
