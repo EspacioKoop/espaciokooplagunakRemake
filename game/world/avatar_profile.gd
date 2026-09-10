@@ -13,6 +13,11 @@ const VISOR_COLORS = {"aqua": Color(0.025, 0.34, 0.37), "gold": Color("a97322"),
 static func defaults() -> Dictionary:
 	return {"format": "lagunak-avatar", "version": 1, "suit": "classic", "visor": "aqua", "gear": "none"}
 
+static func canonical(value: Dictionary) -> Dictionary:
+	var profile = defaults()
+	for key in ["suit", "visor", "gear"]: profile[key] = value[key]
+	return profile
+
 static func validate(value: Variant) -> String:
 	if not value is Dictionary: return "El avatar debe ser un objeto."
 	if value.size() != 5: return "Campos de avatar no reconocidos."
@@ -33,9 +38,7 @@ static func decode(data: PackedByteArray) -> Dictionary:
 	if json.parse(data.get_string_from_utf8()) != OK: return {"ok": false, "message": "Documento de avatar dañado."}
 	var value = json.data
 	var error = validate(value)
-	var profile = defaults()
-	if error.is_empty():
-		for key in ["suit", "visor", "gear"]: profile[key] = value[key]
+	var profile = canonical(value) if error.is_empty() else defaults()
 	return {"ok": error.is_empty(), "message": error, "profile": profile}
 
 static func read_profile(path: String = PATH) -> Dictionary:
@@ -50,10 +53,11 @@ static func read_profile(path: String = PATH) -> Dictionary:
 static func save_profile(value: Variant, path: String = PATH) -> String:
 	var error = validate(value)
 	if not error.is_empty(): return error
+	var profile = canonical(value)
 	var temporary = path + ".tmp"
 	var file = FileAccess.open(temporary, FileAccess.WRITE)
 	if file == null: return "No se pudo guardar el avatar."
-	file.store_string(JSON.stringify(value))
+	file.store_string(JSON.stringify(profile))
 	file.flush()
 	var status = file.get_error()
 	file.close()
@@ -62,7 +66,7 @@ static func save_profile(value: Variant, path: String = PATH) -> String:
 		return "No se pudo escribir el avatar."
 	# Rename after a complete verified write; invalid input never truncates the old file.
 	var verified = read_profile(temporary)
-	if not verified.ok or verified.profile != value:
+	if not verified.ok or verified.profile != profile:
 		DirAccess.remove_absolute(temporary)
 		return "No se pudo verificar el avatar."
 	if DirAccess.rename_absolute(temporary, path) != OK:

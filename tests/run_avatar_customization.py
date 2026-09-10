@@ -23,43 +23,47 @@ def main():
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as reserve:
             reserve.bind(("127.0.0.1", 0))
             port = reserve.getsockname()[1]
-        processes = []
-        try:
-            for name in ["host", "player", "spectator", "intruder"]:
-                path = temporary / (name + ".log")
-                stream = path.open("w")
-                environment = {**os.environ, "XDG_DATA_HOME": str(temporary / (name + "-data"))}
-                command = [GODOT, "--headless", "--path", str(ROOT / "game"), "--script", str(ROOT / "tests/test_avatar_network.gd"), "--", "--test", "--case", name, "--port", str(port)]
-                process = subprocess.Popen(command, env=environment, stdout=stream, stderr=subprocess.STDOUT)
-                processes.append((name, process, stream, path))
-                if name == "host":
-                    deadline = time.monotonic() + 10
-                    while "AVATAR_NETWORK_READY" not in path.read_text() and time.monotonic() < deadline:
-                        if process.poll() is not None:
-                            break
-                        time.sleep(0.05)
-                    assert "AVATAR_NETWORK_READY" in path.read_text(), path.read_text()
-            failed = []
-            for name, process, stream, path in processes:
-                code = process.wait(timeout=35)
-                stream.close()
-                output = path.read_text()
-                print(output.strip())
-                if code or re.search(r"^(?:SCRIPT ERROR|ERROR):", output, re.M) or not re.search(rf"AVATAR_NETWORK_RESULT {name} checks=\d+ failures=0", output):
-                    failed.append(name)
-            assert not failed, "Avatar network failures: " + ", ".join(failed)
-            print("AVATAR_NETWORK_OK authenticated appearance, malicious inputs and reconnect")
-        except Exception:
-            for name, _, _, path in processes:
-                print(name, path.read_text(), flush=True)
-            raise
-        finally:
-            for _, process, stream, _ in processes:
-                if process.poll() is None:
-                    process.terminate()
-                    process.wait(timeout=5)
-                stream.close()
+        run_network(temporary, port, ["host", "player", "spectator", "intruder"])
+        run_network(temporary, port, ["legacy_host", "legacy_client"])
 
+
+def run_network(temporary, port, cases):
+    processes = []
+    try:
+        for name in cases:
+            path = temporary / (name + ".log")
+            stream = path.open("w")
+            environment = {**os.environ, "XDG_DATA_HOME": str(temporary / (name + "-data"))}
+            command = [GODOT, "--headless", "--path", str(ROOT / "game"), "--script", str(ROOT / "tests/test_avatar_network.gd"), "--", "--test", "--case", name, "--port", str(port)]
+            process = subprocess.Popen(command, env=environment, stdout=stream, stderr=subprocess.STDOUT)
+            processes.append((name, process, stream, path))
+            if name in ["host", "legacy_host"]:
+                deadline = time.monotonic() + 10
+                while "AVATAR_NETWORK_READY" not in path.read_text() and time.monotonic() < deadline:
+                    if process.poll() is not None:
+                        break
+                    time.sleep(0.05)
+                assert "AVATAR_NETWORK_READY" in path.read_text(), path.read_text()
+        failed = []
+        for name, process, stream, path in processes:
+            code = process.wait(timeout=35)
+            stream.close()
+            output = path.read_text()
+            print(output.strip())
+            if code or re.search(r"^(?:SCRIPT ERROR|ERROR):", output, re.M) or not re.search(rf"AVATAR_NETWORK_RESULT {name} checks=\d+ failures=0", output):
+                failed.append(name)
+        assert not failed, "Avatar network failures: " + ", ".join(failed)
+        print("AVATAR_NETWORK_OK " + ",".join(cases))
+    except Exception:
+        for name, _, _, path in processes:
+            print(name, path.read_text(), flush=True)
+        raise
+    finally:
+        for _, process, stream, _ in processes:
+            if process.poll() is None:
+                process.terminate()
+                process.wait(timeout=5)
+            stream.close()
 
 if __name__ == "__main__":
     main()

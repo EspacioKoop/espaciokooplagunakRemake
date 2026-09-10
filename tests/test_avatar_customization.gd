@@ -35,6 +35,10 @@ func run() -> void:
 	chosen.gear = "survey"
 	check(AvatarProfile.save_profile(chosen, TEST_PATH).is_empty(), "save valid appearance")
 	check(AvatarProfile.read_profile(TEST_PATH).profile == chosen, "read persisted appearance")
+	var json_version = chosen.duplicate(true)
+	json_version.version = 1.0
+	check(AvatarProfile.save_profile(json_version, TEST_PATH).is_empty(), "JSON numeric version saves canonically")
+	check(AvatarProfile.read_profile(TEST_PATH).profile == chosen, "JSON numeric version round trips")
 	var previous = FileAccess.get_file_as_bytes(TEST_PATH)
 	check(not AvatarProfile.save_profile({"peer_id": 1}, TEST_PATH).is_empty(), "invalid write rejected")
 	check(FileAccess.get_file_as_bytes(TEST_PATH) == previous, "invalid write preserves bytes")

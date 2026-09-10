@@ -38,8 +38,11 @@ La configuración local se vuelve a enviar al reconectar. Los perfiles de peers
 desconectados se eliminan, sin modificar la campaña ni las poses de `Session`.
 La integración de cubierta llama `Avatars.bind_avatar(avatar, peer_id)` al crear
 un tripulante remoto y actualiza su apariencia aunque el objeto ya exista.
-La extensión cosmética requiere una compilación que incluya `Avatars` en ambos
-extremos; no cambia el formato existente de posición/yaw.
+El host anuncia `avatar_protocol=1` en su entrada pública del roster. El cliente
+espera ese marcador antes de enviar RPC: con anfitriones anteriores sin
+`Avatars` conserva el avatar local y los remotos originales sin enviar mensajes
+a nodos inexistentes. Clientes anteriores ignoran el campo adicional. El
+formato de posición/yaw permanece intacto.
 
 ## Referencia funcional y alcance
 
@@ -65,7 +68,8 @@ python3 tests/run_avatar_customization.py
 
 El runner aísla los datos de usuario y ejecuta formato/persistencia/materiales/UI
 y cuatro procesos ENet reales: anfitrión, dos clientes autenticados y una
-conexión que nunca se autentica. Comprueba entradas dañadas, suplantación,
+conexión que nunca se autentica. Una segunda sesión prueba un host sin nodo
+`Avatars` con un cliente nuevo. Comprueba entradas dañadas, suplantación,
 límites de frecuencia, actualización de geometría, desconexión y reconexión.
 `tests/test_ui.gd` y `tests/test_leisure.gd` cubren las pantallas y recorridos
 existentes. La CI completa canónica sigue siendo necesaria antes de integrar.

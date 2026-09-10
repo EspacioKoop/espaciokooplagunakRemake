@@ -23,3 +23,12 @@ jobs:
         run: .toolchain/godot --headless --editor --path game --quit
       - name: Verify avatar persistence, visible UI, authentication and reconnect
         run: python3 tests/run_avatar_customization.py
+      - name: Install display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Render the avatar editor
+        run: xvfb-run -a .toolchain/godot --path game --script ../tests/test_avatar_customization.gd -- --test --capture-avatar
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: avatar-editor-preview
+          path: /tmp/avatar-editor.png
+          if-no-files-found: error

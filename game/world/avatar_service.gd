@@ -51,7 +51,7 @@ func open_editor() -> Window:
 func save_local(value: Variant) -> Dictionary:
 	var error = AvatarProfile.save_profile(value, storage_path)
 	if not error.is_empty(): return {"ok": false, "message": error}
-	local_profile = value.duplicate(true)
+	local_profile = AvatarProfile.canonical(value)
 	_pending = true
 	_sync_session()
 	_refresh_bound()
@@ -82,6 +82,9 @@ func _sync_session() -> void:
 		_pending = true
 		_refresh_bound()
 	if _mode != "host": return
+	# Public capability piggybacks on the existing authoritative roster. Older
+	# clients ignore this field; new clients stay silent toward an older host.
+	if _session.roster.has(1): _session.roster[1].avatar_protocol = 1
 	var dirty = profiles.get(1, {}) != local_profile
 	profiles[1] = local_profile.duplicate(true)
 	for peer_id in profiles.keys():
@@ -100,7 +103,10 @@ func _process(delta: float) -> void:
 	_refresh_bound()
 	var self_id = multiplayer.get_unique_id()
 	var accepted = _session != null and (_session.roster.has(self_id) or _session.roster.has(str(self_id)))
-	if _mode == "client" and _pending and accepted:
+	var host_info: Dictionary = _session.roster.get("1", _session.roster.get(1, {})) if _session != null else {}
+	var protocol = host_info.get("avatar_protocol")
+	var supported = (protocol is int or protocol is float) and protocol == 1
+	if _mode == "client" and _pending and accepted and supported:
 		_submit.rpc_id(1, JSON.stringify(local_profile).to_utf8_buffer())
 
 @rpc("any_peer", "call_remote", "reliable", 0)

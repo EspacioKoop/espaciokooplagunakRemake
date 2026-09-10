@@ -37,14 +37,37 @@ func run() -> void:
 	avatars = root.get_node("Avatars")
 	avatars.storage_path = "user://network-avatar.json"
 	session.suppress_saves = true
-	if case_name == "host": await host_case()
+	if case_name == "legacy_host":
+		await legacy_host_case()
+	elif case_name == "legacy_client":
+		await legacy_client_case()
+	elif case_name == "host": await host_case()
 	elif case_name == "intruder": await intruder_case()
 	else: await client_case()
 	session.close_session()
 	await create_timer(0.15).timeout
-	check(avatars.profiles.is_empty(), "session close clears remote cosmetics")
+	if is_instance_valid(avatars): check(avatars.profiles.is_empty(), "session close clears remote cosmetics")
 	print("AVATAR_NETWORK_RESULT %s checks=%d failures=%d" % [case_name, checks, failures])
 	quit(1 if failures else 0)
+
+func legacy_host_case() -> void:
+	avatars.queue_free()
+	await process_frame
+	check(root.get_node_or_null("Avatars") == null, "legacy host has no cosmetic RPC node")
+	check(session.host_session(port, TEST_KEY).ok, "legacy host opens session")
+	print("AVATAR_NETWORK_READY")
+	check(await until(func(): return session.roster.size() == 2), "new client joins legacy host")
+	check(not session.roster[1].has("avatar_protocol"), "legacy host has no capability marker")
+	await create_timer(2.5).timeout
+
+func legacy_client_case() -> void:
+	check(avatars.save_local(selected("ember")).ok, "legacy pairing keeps editable local appearance")
+	check(session.join_session("127.0.0.1", port, TEST_KEY, "new-client", "navegacion").ok, "new client joins legacy session")
+	check(await until(func(): return session.roster.size() == 2), "legacy host authenticates client normally")
+	await create_timer(1.5).timeout
+	check(avatars.profiles.is_empty(), "absent capability sends no cosmetic RPC or snapshot")
+	check(avatars.profile_for(1) == AvatarProfile.defaults(), "legacy host uses original crew fallback")
+	check(avatars.local_profile.suit == "ember", "legacy session preserves saved local preference")
 
 func host_case() -> void:
 	check(avatars.save_local(selected("tide")).ok, "host persists its avatar")
