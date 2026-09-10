@@ -33,8 +33,11 @@ def main():
     run('godot-tests',[str(godot),'--headless','--path','game','--script','../tests/orbita_pack/test_import.gd'],'ORBITA_GODOT_PASS assets=12')
     if not shutil.which('xvfb-run'): raise SystemExit('xvfb-run required for the real rendered capture')
     capture=OUT/'godot-viewer.png'
+    # The visual CI runner has no sound device. Keep strict ERROR detection;
+    # explicitly select Godot's null audio backend instead of hiding ALSA errors.
     run('godot-capture',['xvfb-run','-a',str(godot),'--path','game','--rendering-method','gl_compatibility',
-        '--resolution','1600x900','res://asset_lab/orbita_pack/viewer.tscn','--','--orbita-capture='+str(capture)],'ORBITA_CAPTURE_PASS')
+        '--audio-driver','Dummy','--resolution','1600x900','res://asset_lab/orbita_pack/viewer.tscn',
+        '--','--orbita-capture='+str(capture)],'ORBITA_CAPTURE_PASS')
     data=capture.read_bytes()
     if data[:8]!=b'\x89PNG\r\n\x1a\n' or struct.unpack_from('>II',data,16)!=(1600,900):
         raise RuntimeError('Capture missing or wrong dimensions')
