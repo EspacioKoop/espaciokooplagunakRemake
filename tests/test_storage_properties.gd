@@ -210,28 +210,28 @@ func test_invalid_structure() -> void:
 	reject_without_mutation(invalid, "invalid event source")
 
 func test_json_limits() -> void:
-	check(LocalStorage.validate_json("x".repeat(8000)), "string at limit accepted")
-	check(not LocalStorage.validate_json("x".repeat(8001)), "oversized string rejected")
+	check(LocalStorage.validate_json("x".repeat(8000), 0), "string at limit accepted")
+	check(not LocalStorage.validate_json("x".repeat(8001), 0), "oversized string rejected")
 	var items: Array = []
 	items.resize(600)
-	check(LocalStorage.validate_json(items), "array at limit accepted")
+	check(LocalStorage.validate_json(items, 0), "array at limit accepted")
 	items.append(null)
-	check(not LocalStorage.validate_json(items), "oversized array rejected")
+	check(not LocalStorage.validate_json(items, 0), "oversized array rejected")
 	var mapping = {}
 	for i in 600:
 		mapping[str(i)] = i
-	check(LocalStorage.validate_json(mapping), "dictionary at limit accepted")
+	check(LocalStorage.validate_json(mapping, 0), "dictionary at limit accepted")
 	mapping["overflow"] = 601
-	check(not LocalStorage.validate_json(mapping), "oversized dictionary rejected")
-	check(LocalStorage.validate_json({"x".repeat(128): true}), "key at limit accepted")
-	check(not LocalStorage.validate_json({"x".repeat(129): true}), "oversized key rejected")
+	check(not LocalStorage.validate_json(mapping, 0), "oversized dictionary rejected")
+	check(LocalStorage.validate_json({"x".repeat(128): true}, 0), "key at limit accepted")
+	check(not LocalStorage.validate_json({"x".repeat(129): true}, 0), "oversized key rejected")
 	var nested: Variant = 0
 	for i in 18:
 		nested = [nested]
-	check(LocalStorage.validate_json(nested), "depth at limit accepted")
-	check(not LocalStorage.validate_json([nested]), "excessive depth rejected")
+	check(LocalStorage.validate_json(nested, 0), "depth at limit accepted")
+	check(not LocalStorage.validate_json([nested], 0), "excessive depth rejected")
 	for number in [NAN, INF, -INF]:
-		check(not LocalStorage.validate_json(number), "nonfinite JSON number rejected")
+		check(not LocalStorage.validate_json(number, 0), "nonfinite JSON number rejected")
 
 func test_envelope_integrity() -> void:
 	var path = directory + "/integrity.json"
