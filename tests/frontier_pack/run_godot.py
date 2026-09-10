@@ -69,8 +69,11 @@ def main():
         if options.capture:
             image=ROOT/'docs/images/frontier_pack/godot_lab.png'
             image.parent.mkdir(parents=True,exist_ok=True)
+            # This visual-only gallery has no audio. Select the dummy driver
+            # explicitly rather than failing on an absent CI sound device.
             command=[engine,'--path',isolated,'--rendering-method','gl_compatibility',
-                     '--resolution','1280x800','--','--frontier-capture='+str(image)]
+                     '--audio-driver','Dummy','--resolution','1280x800','--',
+                     '--frontier-capture='+str(image)]
             if not environment.get('DISPLAY'):
                 if not shutil.which('xvfb-run'):
                     raise RuntimeError('xvfb-run or a display is required for capture')
