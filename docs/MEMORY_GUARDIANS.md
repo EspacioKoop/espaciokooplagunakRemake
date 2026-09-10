@@ -3,13 +3,20 @@
 Desde **Cubierta → Pasillo de recuerdos**, acércate a la guardiana de cobre de la
 entrada y pulsa **E**. Alterna **Alba → Vigilia → Campaña** y señala el próximo
 recuerdo completado que todavía no has leído en esta visita. Si no quedan
-recuerdos completados sin leer, señala la misión actual de la ruta Itsaso.
+recuerdos completados sin leer, señala la misión actual de la ruta Itsaso o
+vuelve al primer recuerdo conservado cuando la ruta está terminada.
 
 Los seis centinelas miran a quien se acerca. Al interactuar, orientan su mirada
 hacia el prisma de su propio recuerdo, en el lado opuesto del corredor. Las
 señales ámbar indican el recorrido y la cartela de destino. Acércate al prisma y
 pulsa **E** para abrir el lector habitual; **Volver al recorrido** lo cierra.
 La cabina de regreso a la cantina sigue disponible en cualquier estado.
+
+![Guardiana, centinelas y guía hacia la misión actual en el ejecutable Linux](images/memory-guardians.png)
+
+Captura real de Linux a 1600×900, producida por
+[Actions 34503084258](https://github.com/VaroTv7/espaciokooplagunakRemake/actions/runs/34503084258)
+en el commit `b4e9bdf835fe1260d1735a348bc9d5890a492dcf`.
 
 Cada relato se abre por el identificador de su misión completada en la campaña.
 Los títulos se muestran desde el principio; el contenido futuro permanece
@@ -78,7 +85,7 @@ python3 tests/run_memory_guardians.py
 .toolchain/godot --headless --path game --script ../tests/test_core.gd -- --test
 ```
 
-La suite propia verifica entradas inválidas, lecturas cerradas, progreso por ID,
+La suite propia contiene 72 comprobaciones: entradas inválidas, lecturas cerradas, progreso por ID,
 proyección sin mutación, guía, variantes, colisiones, lector, movimiento
 reducido, retorno y recreación de la cubierta. Las regresiones cubren 102
 comprobaciones de ocio, 62 de interfaz y 136 del núcleo.
