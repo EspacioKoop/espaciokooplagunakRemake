@@ -121,5 +121,8 @@ func run() -> void:
 	app._effects.stream = null
 	app.queue_free()
 	await settle()
+	var score_suite = load(get_script().resource_path.get_base_dir().path_join("test_reactive_score.gd"))
+	var score_result: Dictionary = await score_suite.verify(self)
+	check(score_result.failures == 0, "procedural music synthesis, privacy and native controls")
 	print("UI_OK ", checks, " checks; ", failures, " failures")
 	quit(1 if failures else 0)
