@@ -12,6 +12,7 @@ config/icon="res://assets/icon.svg"
 [autoload]
 Controls="*res://input/player_controls.gd"
 Session="*res://net/session.gd"
+SeatPresence="*res://net/seat_presence.gd"
 Expedition="*res://core/expedition_systems.gd"
 Sensors="*res://core/advanced_sensors.gd"
 Crew="*res://core/crew_system.gd"

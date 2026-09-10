@@ -34,6 +34,7 @@ var _avatars: Dictionary = {}
 var _zone_models: Array = []
 var _interactions: Array = []
 var _near_interaction: Dictionary = {}
+var _physical_seats: Dictionary = {}
 var _environment: Environment
 var _sun: DirectionalLight3D
 var _animation_time = 0.0
@@ -42,6 +43,10 @@ var _map: DeckMap
 var reduced_motion = false
 var seated = false
 var _standing_position = Vector3.ZERO
+var _leaving_seat = false
+var _seat_requested = false
+var _seat_notice = ""
+var _seat_notice_until = 0
 var _book_page = 0
 var _page_turn = 0.0
 var _studio_lights: Array = []
@@ -51,7 +56,11 @@ var book_open = false
 func _session() -> Node:
 	return get_tree().root.get_node_or_null("Session")
 
+func _presence() -> Node:
+	return get_tree().root.get_node_or_null("SeatPresence")
+
 func _ready() -> void:
+	_physical_seats = PhysicalSeatCatalog.all_seats()
 	stretch = true
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	viewport_3d = SubViewport.new()
@@ -171,6 +180,12 @@ func _ready() -> void:
 	_map.offset_top = 16
 	_map.offset_bottom = 206
 	add_child(_map)
+	var presence = _presence()
+	if presence != null:
+		presence.bind_body(body)
+		presence.changed.connect(_sync_seat)
+		presence.result_received.connect(_seat_result)
+		presence.request_finished.connect(_seat_finished)
 	teleport_zone(0)
 
 func _add_door(position: Vector3, destination: int, title: String, source: int) -> void:
@@ -243,8 +258,7 @@ func _input(event: InputEvent) -> void:
 		if event is InputEventMouseMotion:
 			var controls = _controls()
 			var look: Vector2 = controls.mouse_look(event.relative) if controls != null else event.relative * 0.0022
-			body.rotation.y -= look.x
-			camera.rotation.x = clampf(camera.rotation.x - look.y, -1.25, 1.25)
+			_apply_look(look)
 		if _input_action(event, "interact", KEY_E):
 			interact()
 			get_viewport().set_input_as_handled()
@@ -255,24 +269,70 @@ func interact() -> void:
 	elif _near_door >= 0: teleport_zone(_near_door)
 	elif not _near_interaction.is_empty():
 		if _near_interaction.kind == "seat":
+			var presence = _presence()
+			if presence == null: return
 			_standing_position = body.position
-			body.position = ZONES[zone].at + _near_interaction.seat + Vector3(0, 0.1, 0)
-			camera.position.y = 1.15
-			body.collision_mask = 0
-			seated = true
+			_leaving_seat = false
+			var session = _session()
+			if session != null: session.update_pose(body.position, body.rotation.y)
+			_seat_requested = true
+			presence.request_sit(_near_interaction.id)
 		elif _near_interaction.kind == "lights":
 			_studio_mode = (_studio_mode + 1) % 4
 			for i in _studio_lights.size(): _studio_lights[i].visible = _studio_mode == 0 or i == _studio_mode - 1
 		else: interaction_requested.emit(_near_interaction.duplicate())
 	elif _near_station: station_requested.emit(ZONES[zone].role)
 
-func stand_up() -> void:
+func _apply_look(look: Vector2) -> void:
+	if seated: camera.rotation.y = clampf(camera.rotation.y - look.x, -1.2, 1.2)
+	else: body.rotation.y -= look.x
+	camera.rotation.x = clampf(camera.rotation.x - look.y, -1.25, 1.25)
+
+func _seat_result(ok: bool, message: String) -> void:
+	if not ok:
+		_seat_notice = message
+		_seat_notice_until = Time.get_ticks_msec() + 2500
+	_sync_seat()
+
+func _seat_finished(operation: String, _ok: bool, _message: String) -> void:
+	if operation == "sit": _seat_requested = false
+	elif operation == "stand": _leaving_seat = false
+	_sync_seat()
+
+func _sync_seat() -> void:
+	if body == null: return
+	var presence = _presence()
+	if presence == null: return
+	var seat: Dictionary = presence.seat_for(presence.local_peer())
+	if seat.is_empty():
+		_restore_standing()
+	elif not _leaving_seat:
+		if not seated:
+			_standing_position = body.position
+			camera.rotation.y = 0
+		seated = true
+		body.position = seat.anchor
+		body.rotation.y = seat.yaw
+		body.velocity = Vector3.ZERO
+		camera.position.y = 1.15
+		body.collision_mask = 0
+
+func _restore_standing() -> void:
 	if not seated or body == null: return
 	seated = false
 	body.position = _standing_position
 	body.velocity = Vector3.ZERO
 	body.collision_mask = 1
 	camera.position.y = 1.65
+	camera.rotation.y = 0
+
+func stand_up() -> void:
+	# Cancel even a pending reservation when leaving the zone or closing the deck.
+	var presence = _presence()
+	var must_release = _seat_requested or seated or (presence != null and not presence.seat_for(presence.local_peer()).is_empty())
+	_leaving_seat = must_release
+	_restore_standing()
+	if presence != null and must_release: presence.request_stand()
 
 func turn_book(page: int) -> void:
 	_book_page = page
@@ -282,14 +342,14 @@ func _physics_process(delta: float) -> void:
 	if body == null: return
 	_animation_time += delta if not reduced_motion else 0.0
 	_animate_decor(delta)
+	_sync_seat()
 	var input = Vector2.ZERO
 	var controls = _controls()
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and not _controls_blocked():
 		if controls != null:
 			input = controls.movement_vector()
 			var look: Vector2 = controls.look_vector() * delta
-			body.rotation.y -= look.x
-			camera.rotation.x = clampf(camera.rotation.x - look.y, -1.25, 1.25)
+			_apply_look(look)
 		else:
 			input.x = float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A))
 			input.y = float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W))
@@ -316,6 +376,7 @@ func _physics_process(delta: float) -> void:
 	var closest = 2.2
 	for entry in _interactions:
 		if entry.zone != zone: continue
+		if entry.kind == "seat" and not PhysicalSeatCatalog.reachable(_physical_seats.get(entry.id, {}), body.position): continue
 		var distance = Vector2(body.position.x - entry.position.x, body.position.z - entry.position.z).length()
 		if distance < closest:
 			closest = distance
@@ -331,6 +392,9 @@ func _physics_process(delta: float) -> void:
 	elif not _near_interaction.is_empty(): prompt = "E · " + _near_interaction.title
 	elif _near_station: prompt = "E · Operar " + Catalog.role_name(ZONES[zone].role)
 	else: prompt = "WASD · Caminar     Mayús · Correr     Esc · Liberar el ratón"
+	if not seated and _near_interaction.get("kind") == "seat" and _presence() != null and _presence().occupant(_near_interaction.id) != 0:
+		prompt = "Asiento ocupado"
+	if Time.get_ticks_msec() < _seat_notice_until: prompt = _seat_notice
 	if controls != null:
 		prompt = prompt.replace("E ·", _binding("interact", "E") + " ·").replace("Mayús ·", _binding("sprint", "Mayús") + " ·").replace("Esc ·", _binding("release_pointer", "Esc") + " ·")
 		prompt = prompt.replace("WASD", "/".join([_binding("move_forward", "W"), _binding("move_left", "A"), _binding("move_back", "S"), _binding("move_right", "D")]))
@@ -375,12 +439,16 @@ func _update_avatars(session: Node) -> void:
 			var avatars = get_tree().root.get_node_or_null("Avatars")
 			if avatars != null: avatars.bind_avatar(avatar, id)
 		var pose: Dictionary = session.poses[key]
-		_avatars[id].position = Vector3(pose.position[0], pose.position[1], pose.position[2])
-		_avatars[id].rotation.y = float(pose.yaw)
+		var presence = _presence()
+		var seat: Dictionary = presence.seat_for(id) if presence != null else {}
+		_avatars[id].position = Vector3(pose.position[0], pose.position[1], pose.position[2]) if seat.is_empty() else seat.anchor + Vector3(0, -0.4, 0)
+		_avatars[id].rotation.y = float(pose.yaw) if seat.is_empty() else seat.yaw
+		PhysicalSeatCatalog.apply_pose(_avatars[id], not seat.is_empty())
 	for id in _avatars.keys():
 		if id not in active:
 			_avatars[id].queue_free()
 			_avatars.erase(id)
 
 func _exit_tree() -> void:
+	stand_up()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

@@ -43,3 +43,7 @@ with tempfile.TemporaryDirectory(prefix="lagunak-network-") as temporary:
                 process.terminate()
                 process.wait(timeout=5)
             stream.close()
+
+# Keep physical-seat authority covered by the canonical social ENet CI step.
+from run_shared_seats import main as verify_physical_seats
+verify_physical_seats()
