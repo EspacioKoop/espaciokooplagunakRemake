@@ -2,16 +2,16 @@ class_name SpacePhysics
 extends RefCounted
 ## Host-side swept collisions, inverse-square attraction and traversable gates.
 
-const KINDS = ["asteroid", "planet", "blackhole", "wormhole", "nebula"]
+const KINDS = ["asteroid", "planet", "blackhole", "wormhole", "nebula", "supplydrop", "artifact"]
 const DYNAMIC_COLLIDERS = ["station", "friendly", "hostile", "derelict"]
 const RADII = {"asteroid": 55.0, "planet": 300.0, "blackhole": 100.0, "wormhole": 80.0, "nebula": 400.0,
- "station": 82.0, "friendly": 28.0, "hostile": 28.0, "derelict": 30.0}
+ "station": 82.0, "friendly": 28.0, "hostile": 28.0, "derelict": 30.0, "supplydrop": 100.0, "artifact": 100.0}
 
 static func validate_contact(c: Dictionary) -> String:
  if c.has("radius") and not ShipOperations.number(c, "radius", 5, 2000): return "Radio del objeto fuera de rango."
  if c.has("gravity") and not ShipOperations.number(c, "gravity", 0, 1e8): return "Gravedad del objeto fuera de rango."
  if c.has("destination") and not ShipOperations.valid_position(c.destination): return "Destino del agujero de gusano inválido."
- return ""
+ return SpacePickups.validate_contact(c)
 
 static func radius(c: Dictionary) -> float:
  return float(c.get("radius", RADII.get(c.kind, 0.0)))
@@ -53,6 +53,8 @@ static func move(sim, delta: float, propulsion: Vector2) -> void:
   if collision < first:
    first = collision
    obstacle = c
+ # Only the travelled segment can trigger pickups, never the path beyond a blocker or portal.
+ SpacePickups.collect_path(sim, start, start.lerp(end, minf(first, 1.0)))
  if not obstacle.is_empty():
   if obstacle.kind == "wormhole":
    var destination: Array = obstacle.get("destination", [clampf(-obstacle.position[0], -14000, 14000), clampf(-obstacle.position[1], -14000, 14000)])
@@ -101,6 +103,10 @@ static func move(sim, delta: float, propulsion: Vector2) -> void:
      sim.log_event("Navegación", "Colisión con %s (%s). Impulso detenido." % [obstacle.name, kind_text])
  ship.position = [clampf(end.x, -14000, 14000), clampf(end.y, -14000, 14000)]
  ship.drift = [drift.x, drift.y]
+ # Arriving through a portal checks the arrival point, not the teleport line.
+ if not obstacle.is_empty() and obstacle.kind == "wormhole":
+  var arrival = Vector2(ship.position[0], ship.position[1])
+  SpacePickups.collect_path(sim, arrival, arrival)
 
 static func obscured(contacts: Array, origin: Array, destination: Array) -> bool:
  var start = Vector2(origin[0], origin[1])

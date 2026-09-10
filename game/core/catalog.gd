@@ -5,8 +5,8 @@ const ROLES := ["mando", "navegacion", "ingenieria", "armas", "sensores", "comun
 const ROLE_NAMES := ["Mando", "Navegación", "Ingeniería", "Armas", "Sensores", "Comunicaciones", "Enlace", "Control de daños"]
 const SYSTEMS := ["reactor", "motores", "maniobra", "warp", "salto", "armas", "misiles", "escudos", "escudos_popa", "sensores"]
 const SYSTEM_NAMES := {"reactor": "Reactor", "motores": "Impulso", "maniobra": "Maniobra", "warp": "Warp", "salto": "Salto", "armas": "Haces", "misiles": "Misiles", "escudos": "Escudo proa", "escudos_popa": "Escudo popa", "sensores": "Sensores"}
-const CONTACT_KINDS = ["station", "friendly", "hostile", "derelict", "anomaly", "beacon", "asteroid", "planet", "blackhole", "wormhole", "nebula"]
-const CONTACT_NAMES = ["Estación", "Aliado", "Hostil", "Nave averiada", "Anomalía", "Baliza", "Asteroide", "Planeta", "Agujero negro", "Agujero de gusano", "Nebulosa"]
+const CONTACT_KINDS = ["station", "friendly", "hostile", "derelict", "anomaly", "beacon", "asteroid", "planet", "blackhole", "wormhole", "nebula", "supplydrop", "artifact"]
+const CONTACT_NAMES = ["Estación", "Aliado", "Hostil", "Nave averiada", "Anomalía", "Baliza", "Asteroide", "Planeta", "Agujero negro", "Agujero de gusano", "Nebulosa", "Suministro", "Artefacto"]
 const PERMISSIONS := {
 	"mando": ["alert", "mission_choice"],
 	"navegacion": ["helm", "autopilot", "dock", "undock", "boost"],
@@ -91,12 +91,13 @@ static func validate_mission(value: Variant) -> String:
 	for objective in value.objectives:
 		if not objective is Dictionary or not objective.get("text") is String or objective.text.is_empty() or objective.text.length() > 500:
 			return "Objetivo sin texto."
-		if objective.get("type") not in ["navigate", "dock", "hail", "scan", "salvage", "rescue", "defeat", "repair_target", "choice", "probe"]:
+		if objective.get("type") not in ["navigate", "dock", "hail", "scan", "salvage", "rescue", "defeat", "repair_target", "choice", "probe", "touch", "pickup"]:
 			return "Tipo de objetivo desconocido."
 		if objective.get("target", "") not in ids:
 			return "Un objetivo referencia un contacto inexistente."
 		var allowed_kinds: Array = {
 			"dock": ["station"], "repair_target": ["station"],
+			"touch": SpacePickups.KINDS, "pickup": SpacePickups.KINDS,
 			"rescue": ["derelict"], "salvage": ["derelict", "anomaly"],
 			"defeat": ["hostile"], "choice": ["friendly", "hostile"]
 		}.get(objective.type, [])
@@ -104,6 +105,8 @@ static func validate_mission(value: Variant) -> String:
 			for contact in value.contacts:
 				if contact.id == objective.target and contact.kind not in allowed_kinds:
 					return "El objetivo no es compatible con ese tipo de contacto."
+				if contact.id == objective.target and objective.type == "pickup" and contact.kind == "artifact" and not contact.get("allow_pickup", false):
+					return "El objetivo requiere un artefacto recogible."
 	return ""
 
 static func finite_number(value: Variant) -> bool:

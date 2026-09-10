@@ -330,6 +330,7 @@ func snapshot(for_role: String = "", principal: String = "") -> Dictionary:
 	safe.mission.erase("contacts")
 	for i in safe.contacts.size():
 		var c: Dictionary = safe.contacts[i]
+		for field in SpacePickups.FIELDS: c.erase(field)
 		if not c.identified:
 			safe.contacts[i] = {"id": c.id, "name": "Eco %02d" % (i + 1), "kind": "unknown", "position": c.position, "identified": false, "hull": 100.0, "hailed": c.hailed, "probed": c.probed, "jammed": c.jammed}
 	return safe

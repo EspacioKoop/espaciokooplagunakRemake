@@ -93,6 +93,8 @@ static func validate_state(value: Variant) -> String:
 		for k in ["hull", "attack_at", "survivors"]:
 			if not Catalog.finite_number(c.get(k)) or c[k] < 0: return "Recurso de contacto dañado."
 		if c.kind not in Catalog.CONTACT_KINDS or not SpacePhysics.validate_contact(c).is_empty(): return "Objeto espacial dañado."
+	var pickup_error = SpacePickups.validate_state(value)
+	if not pickup_error.is_empty(): return pickup_error
 	for original in value.mission.contacts:
 		if original.id not in ids: return "Contacto de misión ausente."
 	for id in [ship.autopilot, ship.docked, value.scan.target]:

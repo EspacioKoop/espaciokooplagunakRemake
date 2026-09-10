@@ -4,8 +4,8 @@ signal play_requested(mission: Dictionary)
 
 const KINDS = Catalog.CONTACT_KINDS
 const KIND_NAMES = Catalog.CONTACT_NAMES
-const GOALS = ["navigate", "dock", "hail", "scan", "salvage", "rescue", "defeat", "repair_target", "choice", "probe"]
-const GOAL_NAMES = ["Llegar", "Atracar", "Contactar", "Escanear", "Recuperar", "Rescatar", "Neutralizar", "Reparar estación", "Decidir", "Lanzar sonda"]
+const GOALS = ["navigate", "dock", "hail", "scan", "salvage", "rescue", "defeat", "repair_target", "choice", "probe", "touch", "pickup"]
+const GOAL_NAMES = ["Llegar", "Atracar", "Contactar", "Escanear", "Recuperar", "Rescatar", "Neutralizar", "Reparar estación", "Decidir", "Lanzar sonda", "Tocar objeto", "Recoger objeto"]
 var mission: Dictionary = {}
 var _undo: Array = []
 var _selected = -1
@@ -287,6 +287,11 @@ func _add_contact(position: Vector2) -> void:
 	_checkpoint()
 	var id = "contact_" + str(Time.get_ticks_usec())
 	mission.contacts.append({"id": id, "name": KIND_NAMES[_kind.selected] + " " + str(mission.contacts.size() + 1), "kind": KINDS[_kind.selected], "position": [snappedf(clampf(position.x, -12000, 12000), 25), snappedf(clampf(position.y, -12000, 12000), 25)], "known": false, "jammed": false})
+	var added: Dictionary = mission.contacts.back()
+	if added.kind == "supplydrop":
+		added.supply_energy = 25.0
+		added.supply_ammo = {"homing": 2}
+	elif added.kind == "artifact": added.allow_pickup = true
 	_selected = mission.contacts.size() - 1
 	_refresh()
 
