@@ -31,7 +31,7 @@ func run() -> void:
 	session = root.get_node("Session")
 	expedition = root.get_node("Expedition")
 	crew = root.get_node("Crew")
-	combat = root.get_node("GroundCombat")
+	combat = root.get_node("Combat")
 	expedition.data = expedition._default_data()
 	session.new_campaign()
 	session.role = "mando"
