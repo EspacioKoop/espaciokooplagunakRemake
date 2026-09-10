@@ -67,8 +67,8 @@ func _input(event: InputEvent) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		get_viewport().set_input_as_handled()
 		return
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and (event is InputEventJoypadButton or event is InputEventJoypadMotion or event.is_action("ui_accept")):
-		# InputMap state still reaches gameplay; captured input must not click a background menu.
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and (event is InputEventJoypadButton or event.is_action("ui_accept")) and not Profile.ACTIONS.any(func(action): return event.is_action(action)):
+		# Forward bound actions to the character; unused UI buttons must not click a background menu.
 		get_viewport().set_input_as_handled()
 		return
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and event is InputEventJoypadButton and event.pressed:

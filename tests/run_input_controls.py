@@ -21,7 +21,7 @@ def main():
             args.screenshot.resolve().parent.mkdir(parents=True, exist_ok=True)
             env['INPUT_CAPTURE_PATH'] = str(args.screenshot.resolve())
         for script in ['test_input_controls.gd', 'test_input_ui.gd']:
-            command = [args.godot, '--headless', '--path', str(ROOT / 'game'), '--script', str(ROOT / 'tests' / script), '--', '--test']
+            command = [args.godot, '--headless', '--audio-driver', 'Dummy', '--path', str(ROOT / 'game'), '--script', str(ROOT / 'tests' / script), '--', '--test']
             if args.graphical and script == 'test_input_ui.gd':
                 command.remove('--headless')
                 command += ['--require-display']

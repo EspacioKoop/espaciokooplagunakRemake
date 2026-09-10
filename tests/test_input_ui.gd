@@ -117,9 +117,10 @@ func run() -> void:
 	start = deck.body.position
 	pad_axis(JOY_AXIS_LEFT_Y, -0.6)
 	await create_timer(0.3).timeout
+	var analog_speed = Vector2(deck.body.velocity.x, deck.body.velocity.z).length()
 	pad_axis(JOY_AXIS_LEFT_Y, 0)
 	var half_distance: float = deck.body.position.distance_to(start)
-	if has_display: check(half_distance > 0.15 and half_distance < 0.8, "analog stick moves character proportionally")
+	if has_display: check(half_distance > 0.05 and absf(analog_speed - 1.55) < 0.12, "analog stick moves character proportionally: distance=%.3f speed=%.3f" % [half_distance, analog_speed])
 	var yaw: float = deck.body.rotation.y
 	pad_axis(JOY_AXIS_RIGHT_X, 0.8)
 	await create_timer(0.2).timeout
