@@ -1,0 +1,2237 @@
+{
+  "format": 1,
+  "reference": "fecd0740545f485d2402c6dfe4b47d5a859cb96c",
+  "templates": [
+    {
+      "id": "ant_615",
+      "name": "ANT 615",
+      "source": "satellites.lua",
+      "line": 1,
+      "parent": "",
+      "hull": 30,
+      "shields": [
+        30
+      ],
+      "speed": [
+        120,
+        30,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 15,
+          "direction": 5,
+          "range": 990.0,
+          "cycle": 4.0,
+          "damage": 2
+        },
+        {
+          "index": 1,
+          "arc": 15,
+          "direction": -5,
+          "range": 1000.0,
+          "cycle": 4.0,
+          "damage": 2
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "adder_mk3",
+      "name": "Adder MK3",
+      "source": "starFighters.lua",
+      "line": 88,
+      "parent": "Adder MK4",
+      "hull": 35,
+      "shields": [
+        15
+      ],
+      "speed": [
+        60,
+        35,
+        20
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 2
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 35,
+          "direction": 0,
+          "range": 800,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 1,
+          "arc": 70,
+          "direction": 30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 2,
+          "arc": 70,
+          "direction": -30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        }
+      ],
+      "unsupported": [
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "adder_mk4",
+      "name": "Adder MK4",
+      "source": "starFighters.lua",
+      "line": 78,
+      "parent": "Adder MK5",
+      "hull": 40,
+      "shields": [
+        20
+      ],
+      "speed": [
+        60,
+        20,
+        20
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 2
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 35,
+          "direction": 0,
+          "range": 800,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 1,
+          "arc": 70,
+          "direction": 30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 2,
+          "arc": 70,
+          "direction": -30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        }
+      ],
+      "unsupported": [
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "adder_mk5",
+      "name": "Adder MK5",
+      "source": "starFighters.lua",
+      "line": 65,
+      "parent": "",
+      "hull": 50,
+      "shields": [
+        30
+      ],
+      "speed": [
+        80,
+        28,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 4
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 35,
+          "direction": 0,
+          "range": 800,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 1,
+          "arc": 70,
+          "direction": 30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 2,
+          "arc": 70,
+          "direction": -30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        }
+      ],
+      "unsupported": [
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "adder_mk6",
+      "name": "Adder MK6",
+      "source": "starFighters.lua",
+      "line": 94,
+      "parent": "Adder MK5",
+      "hull": 50,
+      "shields": [
+        30
+      ],
+      "speed": [
+        80,
+        28,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 8
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 35,
+          "direction": 0,
+          "range": 800,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 1,
+          "arc": 70,
+          "direction": 30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 2,
+          "arc": 70,
+          "direction": -30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 3,
+          "arc": 35,
+          "direction": 180,
+          "range": 600,
+          "cycle": 6.0,
+          "damage": 2.0
+        }
+      ],
+      "unsupported": [
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "adder_mk7",
+      "name": "Adder MK7",
+      "source": "starFighters.lua",
+      "line": 100,
+      "parent": "Adder MK6",
+      "hull": 50,
+      "shields": [
+        40
+      ],
+      "speed": [
+        80,
+        28,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 8
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 30,
+          "direction": 0,
+          "range": 900,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 1,
+          "arc": 70,
+          "direction": 30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 2,
+          "arc": 70,
+          "direction": -30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 3,
+          "arc": 35,
+          "direction": 180,
+          "range": 600,
+          "cycle": 6.0,
+          "damage": 2.0
+        }
+      ],
+      "unsupported": [
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "adder_mk8",
+      "name": "Adder MK8",
+      "source": "starFighters.lua",
+      "line": 106,
+      "parent": "Adder MK5",
+      "hull": 50,
+      "shields": [
+        50
+      ],
+      "speed": [
+        80,
+        30,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 4
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 30,
+          "direction": 0,
+          "range": 900,
+          "cycle": 5.0,
+          "damage": 2.3
+        },
+        {
+          "index": 1,
+          "arc": 70,
+          "direction": 30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 2,
+          "arc": 70,
+          "direction": -30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        }
+      ],
+      "unsupported": [
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "adder_mk9",
+      "name": "Adder MK9",
+      "source": "starFighters.lua",
+      "line": 113,
+      "parent": "Adder MK5",
+      "hull": 50,
+      "shields": [
+        50
+      ],
+      "speed": [
+        80,
+        30,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 4,
+        "nuke": 2
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 30,
+          "direction": 0,
+          "range": 900,
+          "cycle": 4.5,
+          "damage": 2.5
+        },
+        {
+          "index": 1,
+          "arc": 70,
+          "direction": 30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        },
+        {
+          "index": 2,
+          "arc": 70,
+          "direction": -30,
+          "range": 600,
+          "cycle": 5.0,
+          "damage": 2.0
+        }
+      ],
+      "unsupported": [
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "adv_striker",
+      "name": "Adv. Striker",
+      "source": "OLD.lua",
+      "line": 306,
+      "parent": "",
+      "hull": 70,
+      "shields": [
+        50,
+        30
+      ],
+      "speed": [
+        45,
+        12,
+        15
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 50,
+          "direction": -15,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 50,
+          "direction": 15,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": [
+        "setJumpDrive"
+      ]
+    },
+    {
+      "id": "atlantis",
+      "name": "Atlantis",
+      "source": "corvette.lua",
+      "line": 33,
+      "parent": "Atlantis X23",
+      "hull": 250,
+      "shields": [
+        200,
+        200
+      ],
+      "speed": [
+        90,
+        10,
+        20
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 20,
+        "homing": 12,
+        "nuke": 4,
+        "mine": 8,
+        "emp": 6
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 100,
+          "direction": -20,
+          "range": 1500.0,
+          "cycle": 6.0,
+          "damage": 8
+        },
+        {
+          "index": 1,
+          "arc": 100,
+          "direction": 20,
+          "range": 1500.0,
+          "cycle": 6.0,
+          "damage": 8
+        }
+      ],
+      "unsupported": [
+        "addDoor",
+        "addRoom",
+        "addRoomSystem",
+        "setCombatManeuver",
+        "setJumpDrive",
+        "setTubeDirection",
+        "setTubes",
+        "setWeaponTubeExclusiveFor",
+        "weaponTubeDisallowMissle"
+      ]
+    },
+    {
+      "id": "blade",
+      "name": "Blade",
+      "source": "exuari.lua",
+      "line": 89,
+      "parent": "Dagger",
+      "hull": 30,
+      "shields": [
+        30
+      ],
+      "speed": [
+        130,
+        35,
+        30
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 60,
+          "direction": 0,
+          "range": 1000.0,
+          "cycle": 4.0,
+          "damage": 4
+        },
+        {
+          "index": 1,
+          "arc": 60,
+          "direction": 0,
+          "range": 1000.0,
+          "cycle": 4.0,
+          "damage": 4
+        }
+      ],
+      "unsupported": [
+        "setDefaultAI"
+      ]
+    },
+    {
+      "id": "blockade_runner",
+      "name": "Blockade Runner",
+      "source": "OLD.lua",
+      "line": 476,
+      "parent": "",
+      "hull": 70,
+      "shields": [
+        100,
+        150
+      ],
+      "speed": [
+        60,
+        15,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 60,
+          "direction": -15,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 8
+        },
+        {
+          "index": 1,
+          "arc": 60,
+          "direction": 15,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 8
+        },
+        {
+          "index": 2,
+          "arc": 25,
+          "direction": 170,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 8
+        },
+        {
+          "index": 3,
+          "arc": 25,
+          "direction": 190,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 8
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "crucible",
+      "name": "Crucible",
+      "source": "corvette.lua",
+      "line": 101,
+      "parent": "",
+      "hull": 160,
+      "shields": [
+        160,
+        160
+      ],
+      "speed": [
+        80,
+        15,
+        40
+      ],
+      "warp_speed": 750,
+      "ammo": {
+        "hvli": 24,
+        "homing": 8,
+        "emp": 6,
+        "nuke": 4,
+        "mine": 6
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 70,
+          "direction": -30,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 5
+        },
+        {
+          "index": 1,
+          "arc": 70,
+          "direction": 30,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 5
+        }
+      ],
+      "unsupported": [
+        "addDoor",
+        "addRoom",
+        "addRoomSystem",
+        "setCombatManeuver",
+        "setJumpDrive",
+        "setRepairCrewCount",
+        "setTubeDirection",
+        "setTubeSize",
+        "setTubes",
+        "setWeaponTubeExclusiveFor",
+        "weaponTubeDisallowMissle"
+      ]
+    },
+    {
+      "id": "dagger",
+      "name": "Dagger",
+      "source": "exuari.lua",
+      "line": 77,
+      "parent": "",
+      "hull": 30,
+      "shields": [
+        30
+      ],
+      "speed": [
+        120,
+        30,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 60,
+          "direction": 0,
+          "range": 1000.0,
+          "cycle": 4.0,
+          "damage": 4
+        }
+      ],
+      "unsupported": [
+        "setDefaultAI"
+      ]
+    },
+    {
+      "id": "dash",
+      "name": "Dash",
+      "source": "exuari.lua",
+      "line": 153,
+      "parent": "Racer",
+      "hull": 70,
+      "shields": [
+        80,
+        30
+      ],
+      "speed": [
+        70,
+        12,
+        12
+      ],
+      "warp_speed": 200,
+      "ammo": {
+        "hvli": 4
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 40,
+          "direction": -5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 40,
+          "direction": 5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": [
+        "setTubes"
+      ]
+    },
+    {
+      "id": "elara_p2",
+      "name": "Elara P2",
+      "source": "frigates.lua",
+      "line": 28,
+      "parent": "Phobos T3",
+      "hull": 70,
+      "shields": [
+        70,
+        40
+      ],
+      "speed": [
+        60,
+        10,
+        10
+      ],
+      "warp_speed": 800,
+      "ammo": {
+        "hvli": 20,
+        "homing": 6
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 90,
+          "direction": -15,
+          "range": 1200,
+          "cycle": 8,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 90,
+          "direction": 15,
+          "range": 1200,
+          "cycle": 8,
+          "damage": 6
+        }
+      ],
+      "unsupported": [
+        "setTubeDirection",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "flavia_falcon",
+      "name": "Flavia Falcon",
+      "source": "frigates.lua",
+      "line": 319,
+      "parent": "Flavia",
+      "hull": 50,
+      "shields": [
+        50,
+        50
+      ],
+      "speed": [
+        50,
+        8,
+        10
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 40,
+          "direction": 170,
+          "range": 1200.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 40,
+          "direction": 190,
+          "range": 1200.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "flavia_p_falcon",
+      "name": "Flavia P.Falcon",
+      "source": "frigates.lua",
+      "line": 325,
+      "parent": "Flavia Falcon",
+      "hull": 100,
+      "shields": [
+        70,
+        70
+      ],
+      "speed": [
+        60,
+        10,
+        10
+      ],
+      "warp_speed": 500,
+      "ammo": {
+        "hvli": 5,
+        "homing": 3,
+        "mine": 1,
+        "nuke": 1
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 40,
+          "direction": 170,
+          "range": 1200.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 40,
+          "direction": 190,
+          "range": 1200.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": [
+        "addDoor",
+        "addRoom",
+        "addRoomSystem",
+        "setCombatManeuver",
+        "setRepairCrewCount",
+        "setTubeDirection",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "gunner",
+      "name": "Gunner",
+      "source": "exuari.lua",
+      "line": 97,
+      "parent": "",
+      "hull": 40,
+      "shields": [
+        30
+      ],
+      "speed": [
+        70,
+        20,
+        15
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 1
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 60,
+          "direction": 0,
+          "range": 1000.0,
+          "cycle": 4.0,
+          "damage": 4
+        }
+      ],
+      "unsupported": [
+        "setDefaultAI",
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "hathcock",
+      "name": "Hathcock",
+      "source": "frigates.lua",
+      "line": 133,
+      "parent": "",
+      "hull": 120,
+      "shields": [
+        70,
+        70
+      ],
+      "speed": [
+        50,
+        15,
+        8
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 8,
+        "homing": 4,
+        "emp": 2,
+        "nuke": 1
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 4,
+          "direction": 0,
+          "range": 1400.0,
+          "cycle": 6.0,
+          "damage": 4
+        },
+        {
+          "index": 1,
+          "arc": 20,
+          "direction": 0,
+          "range": 1200.0,
+          "cycle": 6.0,
+          "damage": 4
+        },
+        {
+          "index": 2,
+          "arc": 60,
+          "direction": 0,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 4
+        },
+        {
+          "index": 3,
+          "arc": 90,
+          "direction": 0,
+          "range": 800.0,
+          "cycle": 6.0,
+          "damage": 4
+        }
+      ],
+      "unsupported": [
+        "addDoor",
+        "addRoom",
+        "addRoomSystem",
+        "setCombatManeuver",
+        "setJumpDrive",
+        "setRepairCrewCount",
+        "setTubeDirection",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "hunter",
+      "name": "Hunter",
+      "source": "exuari.lua",
+      "line": 136,
+      "parent": "Racer",
+      "hull": 50,
+      "shields": [
+        80,
+        30
+      ],
+      "speed": [
+        70,
+        12,
+        12
+      ],
+      "warp_speed": 400,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 40,
+          "direction": -5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 40,
+          "direction": 5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 2,
+          "arc": 50,
+          "direction": -15,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 3,
+          "arc": 50,
+          "direction": 15,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "jagger",
+      "name": "Jagger",
+      "source": "exuari.lua",
+      "line": 117,
+      "parent": "Gunner",
+      "hull": 40,
+      "shields": [
+        30
+      ],
+      "speed": [
+        70,
+        20,
+        15
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 1
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 60,
+          "direction": 0,
+          "range": 1000.0,
+          "cycle": 4.0,
+          "damage": 4
+        }
+      ],
+      "unsupported": [
+        "setDefaultAI",
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "karnack",
+      "name": "Karnack",
+      "source": "OLD.lua",
+      "line": 239,
+      "parent": "",
+      "hull": 60,
+      "shields": [
+        40,
+        40
+      ],
+      "speed": [
+        60,
+        6,
+        10
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 60,
+          "direction": -15,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 60,
+          "direction": 15,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "mp52_hornet",
+      "name": "MP52 Hornet",
+      "source": "starFighters.lua",
+      "line": 31,
+      "parent": "MU52 Hornet",
+      "hull": 70,
+      "shields": [
+        60
+      ],
+      "speed": [
+        125,
+        32,
+        40
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 30,
+          "direction": 5,
+          "range": 900.0,
+          "cycle": 4.0,
+          "damage": 2.5
+        },
+        {
+          "index": 1,
+          "arc": 30,
+          "direction": -5,
+          "range": 900.0,
+          "cycle": 4.0,
+          "damage": 2.5
+        }
+      ],
+      "unsupported": [
+        "addDoor",
+        "addRoomSystem",
+        "setCombatManeuver",
+        "setDefaultAI",
+        "setEnergyStorage",
+        "setImpulseSoundFile",
+        "setRepairCrewCount"
+      ]
+    },
+    {
+      "id": "mt52_hornet",
+      "name": "MT52 Hornet",
+      "source": "starFighters.lua",
+      "line": 13,
+      "parent": "",
+      "hull": 30,
+      "shields": [
+        20
+      ],
+      "speed": [
+        120,
+        30,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 30,
+          "direction": 0,
+          "range": 700.0,
+          "cycle": 4.0,
+          "damage": 2
+        }
+      ],
+      "unsupported": [
+        "setDefaultAI"
+      ]
+    },
+    {
+      "id": "mu52_hornet",
+      "name": "MU52 Hornet",
+      "source": "starFighters.lua",
+      "line": 23,
+      "parent": "MT52 Hornet",
+      "hull": 35,
+      "shields": [
+        22
+      ],
+      "speed": [
+        125,
+        32,
+        25
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 30,
+          "direction": 0,
+          "range": 900.0,
+          "cycle": 4.0,
+          "damage": 2.5
+        }
+      ],
+      "unsupported": [
+        "setDefaultAI"
+      ]
+    },
+    {
+      "id": "nirvana_r3",
+      "name": "Nirvana R3",
+      "source": "frigates.lua",
+      "line": 106,
+      "parent": "Nirvana R5",
+      "hull": 60,
+      "shields": [
+        40,
+        30
+      ],
+      "speed": [
+        65,
+        12,
+        10
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 90,
+          "direction": -15,
+          "range": 1000.0,
+          "cycle": 3,
+          "damage": 1
+        },
+        {
+          "index": 1,
+          "arc": 90,
+          "direction": 15,
+          "range": 1000.0,
+          "cycle": 3,
+          "damage": 1
+        },
+        {
+          "index": 2,
+          "arc": 90,
+          "direction": -50,
+          "range": 1000.0,
+          "cycle": 3,
+          "damage": 1
+        },
+        {
+          "index": 3,
+          "arc": 90,
+          "direction": 50,
+          "range": 1000.0,
+          "cycle": 3,
+          "damage": 1
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "nirvana_r5",
+      "name": "Nirvana R5",
+      "source": "frigates.lua",
+      "line": 87,
+      "parent": "",
+      "hull": 70,
+      "shields": [
+        50,
+        40
+      ],
+      "speed": [
+        70,
+        12,
+        10
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 90,
+          "direction": -15,
+          "range": 1200,
+          "cycle": 3,
+          "damage": 1
+        },
+        {
+          "index": 1,
+          "arc": 90,
+          "direction": 15,
+          "range": 1200,
+          "cycle": 3,
+          "damage": 1
+        },
+        {
+          "index": 2,
+          "arc": 90,
+          "direction": 50,
+          "range": 1200,
+          "cycle": 3,
+          "damage": 1
+        },
+        {
+          "index": 3,
+          "arc": 90,
+          "direction": -50,
+          "range": 1200,
+          "cycle": 3,
+          "damage": 1
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "nirvana_r5a",
+      "name": "Nirvana R5A",
+      "source": "frigates.lua",
+      "line": 98,
+      "parent": "Nirvana R5",
+      "hull": 70,
+      "shields": [
+        50,
+        40
+      ],
+      "speed": [
+        70,
+        15,
+        10
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 90,
+          "direction": -15,
+          "range": 1200,
+          "cycle": 2.9,
+          "damage": 1
+        },
+        {
+          "index": 1,
+          "arc": 90,
+          "direction": 15,
+          "range": 1200,
+          "cycle": 2.9,
+          "damage": 1
+        },
+        {
+          "index": 2,
+          "arc": 90,
+          "direction": 50,
+          "range": 1200,
+          "cycle": 2.9,
+          "damage": 1
+        },
+        {
+          "index": 3,
+          "arc": 90,
+          "direction": -50,
+          "range": 1200,
+          "cycle": 2.9,
+          "damage": 1
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "phobos_m3",
+      "name": "Phobos M3",
+      "source": "frigates.lua",
+      "line": 33,
+      "parent": "Phobos T3",
+      "hull": 70,
+      "shields": [
+        50,
+        40
+      ],
+      "speed": [
+        55,
+        10,
+        10
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 20,
+        "homing": 6,
+        "mine": 6
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 90,
+          "direction": -15,
+          "range": 1200,
+          "cycle": 8,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 90,
+          "direction": 15,
+          "range": 1200,
+          "cycle": 8,
+          "damage": 6
+        }
+      ],
+      "unsupported": [
+        "setTubeDirection",
+        "setTubes",
+        "setWeaponTubeExclusiveFor",
+        "weaponTubeDisallowMissle"
+      ]
+    },
+    {
+      "id": "phobos_m3p",
+      "name": "Phobos M3P",
+      "source": "frigates.lua",
+      "line": 41,
+      "parent": "Phobos M3",
+      "hull": 200,
+      "shields": [
+        100,
+        100
+      ],
+      "speed": [
+        80,
+        10,
+        20
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 20,
+        "homing": 10,
+        "mine": 4,
+        "nuke": 2,
+        "emp": 3
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 90,
+          "direction": -15,
+          "range": 1200,
+          "cycle": 8,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 90,
+          "direction": 15,
+          "range": 1200,
+          "cycle": 8,
+          "damage": 6
+        }
+      ],
+      "unsupported": [
+        "addDoor",
+        "addRoom",
+        "addRoomSystem",
+        "setCombatManeuver",
+        "setTubeDirection",
+        "setTubes",
+        "setWeaponTubeExclusiveFor",
+        "weaponTubeDisallowMissle"
+      ]
+    },
+    {
+      "id": "phobos_t3",
+      "name": "Phobos T3",
+      "source": "frigates.lua",
+      "line": 14,
+      "parent": "",
+      "hull": 70,
+      "shields": [
+        50,
+        40
+      ],
+      "speed": [
+        60,
+        10,
+        10
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 20,
+        "homing": 6
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 90,
+          "direction": -15,
+          "range": 1200,
+          "cycle": 8,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 90,
+          "direction": 15,
+          "range": 1200,
+          "cycle": 8,
+          "damage": 6
+        }
+      ],
+      "unsupported": [
+        "setTubeDirection",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "racer",
+      "name": "Racer",
+      "source": "exuari.lua",
+      "line": 124,
+      "parent": "",
+      "hull": 50,
+      "shields": [
+        50,
+        30
+      ],
+      "speed": [
+        70,
+        12,
+        12
+      ],
+      "warp_speed": 600,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 40,
+          "direction": -5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 40,
+          "direction": 5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "shooter",
+      "name": "Shooter",
+      "source": "exuari.lua",
+      "line": 111,
+      "parent": "Gunner",
+      "hull": 40,
+      "shields": [
+        30
+      ],
+      "speed": [
+        70,
+        20,
+        15
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 2
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 60,
+          "direction": 0,
+          "range": 1000.0,
+          "cycle": 4.0,
+          "damage": 4
+        }
+      ],
+      "unsupported": [
+        "setDefaultAI",
+        "setTubeSize",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "stalker_q5",
+      "name": "Stalker Q5",
+      "source": "frigates.lua",
+      "line": 282,
+      "parent": "Stalker Q7",
+      "hull": 45,
+      "shields": [
+        50,
+        50
+      ],
+      "speed": [
+        70,
+        15,
+        12
+      ],
+      "warp_speed": 700,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 40,
+          "direction": -5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 40,
+          "direction": 5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": []
+    },
+    {
+      "id": "stalker_r7",
+      "name": "Stalker R7",
+      "source": "frigates.lua",
+      "line": 288,
+      "parent": "Stalker Q7",
+      "hull": 45,
+      "shields": [
+        50,
+        50
+      ],
+      "speed": [
+        70,
+        15,
+        12
+      ],
+      "warp_speed": 0,
+      "ammo": {},
+      "beams": [
+        {
+          "index": 0,
+          "arc": 40,
+          "direction": -5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 40,
+          "direction": 5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": [
+        "setJumpDrive"
+      ]
+    },
+    {
+      "id": "storm",
+      "name": "Storm",
+      "source": "frigates.lua",
+      "line": 116,
+      "parent": "",
+      "hull": 50,
+      "shields": [
+        30,
+        30
+      ],
+      "speed": [
+        40,
+        6,
+        8
+      ],
+      "warp_speed": 0,
+      "ammo": {
+        "hvli": 15,
+        "homing": 15
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 60,
+          "direction": 0,
+          "range": 1200,
+          "cycle": 3,
+          "damage": 2
+        }
+      ],
+      "unsupported": [
+        "setDefaultAI",
+        "setTubeDirection",
+        "setTubes"
+      ]
+    },
+    {
+      "id": "strike",
+      "name": "Strike",
+      "source": "exuari.lua",
+      "line": 145,
+      "parent": "Racer",
+      "hull": 50,
+      "shields": [
+        50,
+        30
+      ],
+      "speed": [
+        70,
+        12,
+        12
+      ],
+      "warp_speed": 300,
+      "ammo": {
+        "emp": 1,
+        "hvli": 2
+      },
+      "beams": [
+        {
+          "index": 0,
+          "arc": 40,
+          "direction": -5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        },
+        {
+          "index": 1,
+          "arc": 40,
+          "direction": 5,
+          "range": 1000.0,
+          "cycle": 6.0,
+          "damage": 6
+        }
+      ],
+      "unsupported": [
+        "setTubes"
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "name": "Player Cruiser",
+      "file": "OLD.lua",
+      "line": 6,
+      "reasons": [
+        "oculta en el original"
+      ]
+    },
+    {
+      "name": "Player Missile Cr.",
+      "file": "OLD.lua",
+      "line": 63,
+      "reasons": [
+        "oculta en el original",
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Player Fighter",
+      "file": "OLD.lua",
+      "line": 118,
+      "reasons": [
+        "oculta en el original"
+      ]
+    },
+    {
+      "name": "Tug",
+      "file": "OLD.lua",
+      "line": 159,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Nautilus",
+      "file": "OLD.lua",
+      "line": 176,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Fighter",
+      "file": "OLD.lua",
+      "line": 223,
+      "reasons": [
+        "oculta en el original"
+      ]
+    },
+    {
+      "name": "Cruiser",
+      "file": "OLD.lua",
+      "line": 252,
+      "reasons": [
+        "oculta en el original"
+      ]
+    },
+    {
+      "name": "Missile Cruiser",
+      "file": "OLD.lua",
+      "line": 265,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Gunship",
+      "file": "OLD.lua",
+      "line": 276,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Adv. Gunship",
+      "file": "OLD.lua",
+      "line": 289,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Strikeship",
+      "file": "OLD.lua",
+      "line": 294,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Striker",
+      "file": "OLD.lua",
+      "line": 317,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Dreadnought",
+      "file": "OLD.lua",
+      "line": 353,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Battlestation",
+      "file": "OLD.lua",
+      "line": 368,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Ender",
+      "file": "OLD.lua",
+      "line": 391,
+      "reasons": [
+        "sin haces o más de ocho montajes",
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Weapons platform",
+      "file": "OLD.lua",
+      "line": 461,
+      "reasons": [
+        "más de dos sectores de escudo",
+        "prestaciones fuera del modelo actual",
+        "movimiento fuera del modelo actual"
+      ]
+    },
+    {
+      "name": "Atlantis X23",
+      "file": "corvette.lua",
+      "line": 14,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Starhammer II",
+      "file": "corvette.lua",
+      "line": 83,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Maverick",
+      "file": "corvette.lua",
+      "line": 157,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Defense platform",
+      "file": "corvette.lua",
+      "line": 217,
+      "reasons": [
+        "más de dos sectores de escudo",
+        "prestaciones fuera del modelo actual",
+        "movimiento fuera del modelo actual"
+      ]
+    },
+    {
+      "name": "Jump Carrier",
+      "file": "corvette.lua",
+      "line": 301,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Benedict",
+      "file": "corvette.lua",
+      "line": 315,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Kiriya",
+      "file": "corvette.lua",
+      "line": 349,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Saipan",
+      "file": "corvette.lua",
+      "line": 360,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Odin",
+      "file": "dreadnaught.lua",
+      "line": 9,
+      "reasons": [
+        "más de dos sectores de escudo",
+        "sin haces o más de ocho montajes",
+        "movimiento fuera del modelo actual"
+      ]
+    },
+    {
+      "name": "Guard",
+      "file": "exuari.lua",
+      "line": 166,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Sentinel",
+      "file": "exuari.lua",
+      "line": 185,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Warden",
+      "file": "exuari.lua",
+      "line": 201,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Flash",
+      "file": "exuari.lua",
+      "line": 221,
+      "reasons": [
+        "más de dos sectores de escudo",
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Ranger",
+      "file": "exuari.lua",
+      "line": 233,
+      "reasons": [
+        "más de dos sectores de escudo",
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Buster",
+      "file": "exuari.lua",
+      "line": 241,
+      "reasons": [
+        "más de dos sectores de escudo",
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Ryder",
+      "file": "exuari.lua",
+      "line": 250,
+      "reasons": [
+        "sin haces o más de ocho montajes",
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Fortress",
+      "file": "exuari.lua",
+      "line": 276,
+      "reasons": [
+        "sin haces o más de ocho montajes",
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Piranha F12",
+      "file": "frigates.lua",
+      "line": 179,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Piranha F12.M",
+      "file": "frigates.lua",
+      "line": 201,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Piranha F8",
+      "file": "frigates.lua",
+      "line": 207,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Piranha",
+      "file": "frigates.lua",
+      "line": 216,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Stalker Q7",
+      "file": "frigates.lua",
+      "line": 272,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Stalker R5",
+      "file": "frigates.lua",
+      "line": 293,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Ranus U",
+      "file": "frigates.lua",
+      "line": 299,
+      "reasons": [
+        "más de dos sectores de escudo",
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Flavia",
+      "file": "frigates.lua",
+      "line": 312,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Repulse",
+      "file": "frigates.lua",
+      "line": 369,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Fiend G3",
+      "file": "frigates.lua",
+      "line": 414,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Fiend G4",
+      "file": "frigates.lua",
+      "line": 428,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Fiend G6",
+      "file": "frigates.lua",
+      "line": 433,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Fiend G5",
+      "file": "frigates.lua",
+      "line": 437,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Ktlitan Fighter",
+      "file": "ktlitan.lua",
+      "line": 2,
+      "reasons": [
+        "capacidades base no explícitas"
+      ]
+    },
+    {
+      "name": "Ktlitan Breaker",
+      "file": "ktlitan.lua",
+      "line": 9,
+      "reasons": [
+        "capacidades base no explícitas"
+      ]
+    },
+    {
+      "name": "Ktlitan Worker",
+      "file": "ktlitan.lua",
+      "line": 19,
+      "reasons": [
+        "capacidades base no explícitas"
+      ]
+    },
+    {
+      "name": "Ktlitan Drone",
+      "file": "ktlitan.lua",
+      "line": 26,
+      "reasons": [
+        "capacidades base no explícitas"
+      ]
+    },
+    {
+      "name": "Ktlitan Feeder",
+      "file": "ktlitan.lua",
+      "line": 32,
+      "reasons": [
+        "capacidades base no explícitas"
+      ]
+    },
+    {
+      "name": "Ktlitan Scout",
+      "file": "ktlitan.lua",
+      "line": 42,
+      "reasons": [
+        "capacidades base no explícitas"
+      ]
+    },
+    {
+      "name": "Ktlitan Destroyer",
+      "file": "ktlitan.lua",
+      "line": 48,
+      "reasons": [
+        "más de dos sectores de escudo"
+      ]
+    },
+    {
+      "name": "Ktlitan Queen",
+      "file": "ktlitan.lua",
+      "line": 59,
+      "reasons": [
+        "capacidades base no explícitas",
+        "más de dos sectores de escudo",
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "WX-Lindworm",
+      "file": "starFighters.lua",
+      "line": 121,
+      "reasons": [
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "ZX-Lindworm",
+      "file": "starFighters.lua",
+      "line": 136,
+      "reasons": [
+        "torreta con giro independiente"
+      ]
+    },
+    {
+      "name": "Small Station",
+      "file": "stations.lua",
+      "line": 5,
+      "reasons": [
+        "capacidades base no explícitas",
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Medium Station",
+      "file": "stations.lua",
+      "line": 11,
+      "reasons": [
+        "capacidades base no explícitas",
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Large Station",
+      "file": "stations.lua",
+      "line": 17,
+      "reasons": [
+        "capacidades base no explícitas",
+        "más de dos sectores de escudo",
+        "sin haces o más de ocho montajes"
+      ]
+    },
+    {
+      "name": "Huge Station",
+      "file": "stations.lua",
+      "line": 23,
+      "reasons": [
+        "capacidades base no explícitas",
+        "más de dos sectores de escudo",
+        "sin haces o más de ocho montajes"
+      ]
+    }
+  ]
+}
