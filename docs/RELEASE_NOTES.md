@@ -1,15 +1,27 @@
-# Estado del remake
+# Espaciokoop Lagunak 0.9
 
-Trabajo recuperado y ampliado; paridad completa con el original todavía pendiente.
+Primera release pública del remake standalone. La paridad completa con el original continúa hacia 1.0; el seguimiento está en el [plan maestro](https://github.com/VaroTv7/espaciokooplagunakRemake/issues/1).
 
-Aplicación nativa Godot, ocho puestos, seis misiones, campaña persistente, cooperación por red, trece espacios recorribles, dos fuentes de Blender y editor de misiones.
+## Descargas
 
-La ampliación añade operaciones de puestos y cuatro minijuegos de asistencia con propuestas consumibles. El README incluye diecinueve capturas reales del ejecutable. Las pruebas de núcleo, operaciones y asistencia suman 320 comprobaciones; también se prueban interfaz, HTTP y cinco procesos de red.
+- **Linux x86_64:** descomprimir y ejecutar `EspaciokoopLagunak.x86_64` (dar permiso de ejecución si el descompresor lo pierde).
+- **Windows x86_64:** descomprimir y ejecutar `EspaciokoopLagunak.exe`.
+- **Foundry opcional:** `espaciokoop-lagunak-foundry.zip`; no hace falta para jugar ni alojar partidas.
+- `SHA256SUMS` permite comprobar la integridad de los paquetes: `sha256sum -c SHA256SUMS` desde su carpeta.
 
-Los paquetes de Actions permiten ejecutar el estado de ese commit. No equivalen a una versión final con paridad total. Consulte `docs/FEATURE_PARITY.md` y `docs/VALIDATION.md`.
+Ambos ejecutables contienen los recursos y no necesitan instalar Godot. Cada paquete incluye instrucciones y licencias. La publicación requiere CI canónica completa verde, incluida ejecución Linux, pruebas de red, exportaciones y arranque automatizado Windows.
 
-Ampliación de nave: diez sistemas independientes, escudos direccionales, astillero nativo, capacidades configurables, marcha atrás y giro gradual, colisiones barridas, gravedad, portales y nebulosas. Los guardados de cuatro sistemas se migran; la red pasa al protocolo 3.
+## Incluye
 
-Museo y ocio: dieciocho esculturas nuevas y cartelas, cinco cuadros, libro de cinco páginas, playa con paseo continuo, reloj y aerogeneradores animados, cabina de regreso, cantina, terraza con asientos locales, estudio con focos y corredor de recuerdos. La red pasa al protocolo 4 para admitir la presencia en los nuevos destinos.
+- Campaña y partidas locales; ocho puestos cooperativos con autoridad del anfitrión y privacidad por jugador.
+- Nave recorrible sin cargas entre compartimentos, escotillas, museo, playa, cantina, terraza, estudio y galería de recuerdos.
+- Física espacial, cuatro cuadrantes de escudo, armas modulares, maniobra lateral, sensores y combate táctico.
+- Póker, blackjack y dados de faroleo compartidos; asientos humanos exclusivos y poses sincronizadas.
+- Editores nativos de misiones, campañas, montajes de nave y fichas de personajes.
+- Editor de avatar, retratos, variantes persistentes, guardianes interactivos y música procedural reactiva.
+- Remapeo de controles, mando, ajustes de sensibilidad y panel de configuración ES/EN.
+- Adaptador Foundry opcional con permisos por usuario y puesto.
 
-Mesas standalone: póker con botes secundarios, blackjack con pagos 3:2 y dados de faroleo; NPC, espectadores, apuestas, partidas sucesivas sin recompras y cancelación. El protocolo 5 incorpora recuperación privada de asiento y mano al reconectar durante la misma ejecución. El README añade una captura real del póker. La representación animada de cartas/dados sobre las mesas 3D sigue pendiente.
+## Límites de 0.9
+
+El catálogo y varias funciones del original siguen pendientes; esta release no se presenta como paridad total. Android, controles táctiles, despliegue Docker, catálogo completo, funciones restantes de NPC/avatar, traducción completa y validación con Foundry real tienen seguimiento separado. macOS tiene exportador disponible, pero esta release distribuye únicamente los ejecutables Linux y Windows verificados por la CI canónica. No incluye cambios de formato incompatibles deliberados en partidas existentes.

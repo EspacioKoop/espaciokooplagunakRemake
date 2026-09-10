@@ -23,6 +23,8 @@ jobs:
           persist-credentials: false
       - name: Install display runtime
         run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Validate release package publishing
+        run: python3 -m unittest discover -s tests -p test_publish_release.py
       - name: Download verified Godot toolchain
         run: python3 tools/bootstrap.py --templates
       - name: Import resources
@@ -92,7 +94,9 @@ jobs:
       - name: Start the exported Windows application
         shell: pwsh
         run: |
-          Expand-Archive dist/EspaciokoopLagunak-1.0.0-windows-x86_64.zip -DestinationPath game
+          $packages = @(Get-ChildItem dist/EspaciokoopLagunak-*-windows-x86_64.zip)
+          if ($packages.Count -ne 1) { throw "Expected exactly one Windows package" }
+          Expand-Archive $packages[0].FullName -DestinationPath game
           $application = (Resolve-Path game/EspaciokoopLagunak.exe).Path
           $result = Start-Process -FilePath $application -ArgumentList '--headless','--audio-driver','Dummy','--quit-after','60','--','--test' -Wait -PassThru -RedirectStandardOutput stdout.txt -RedirectStandardError stderr.txt
           Get-Content stdout.txt,stderr.txt
