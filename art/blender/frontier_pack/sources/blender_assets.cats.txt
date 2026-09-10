@@ -1,0 +1,9 @@
+# Blender Asset Catalog Definition
+VERSION 1
+
+7e0cd8f3-cf98-5653-80e0-8e78ffe8ef3d:Frontera/ships:ships
+45425564-5d96-5f8d-84ef-39df80b6d32d:Frontera/weapons:weapons
+11371f47-cd3d-55a1-9fca-df4cd2a54173:Frontera/avatars:avatars
+d1771d05-e16d-5691-9148-ee37d9ffb92c:Frontera/enemies:enemies
+5f73656b-8c53-5572-8bbf-079903f7a61a:Frontera/worlds:worlds
+a64f4529-94fd-5e92-bba9-97f4a437cbed:Frontera/props:props

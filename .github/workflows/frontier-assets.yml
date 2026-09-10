@@ -1,0 +1,158 @@
+name: Frontier Blender asset library
+
+on:
+  push:
+    branches: [agent/41-frontier-assets]
+    paths:
+      - 'art/blender/frontier_pack/**/*.py'
+      - 'art/blender/frontier_pack/*.py'
+      - 'game/asset_lab/frontier_pack/**'
+      - 'tests/frontier_pack/**'
+      - '.github/workflows/frontier-assets.yml'
+  pull_request:
+    paths:
+      - 'art/blender/frontier_pack/**'
+      - 'game/assets/models/frontier_pack/**'
+      - 'game/asset_lab/frontier_pack/**'
+      - 'tests/frontier_pack/**'
+      - '.github/workflows/frontier-assets.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: frontier-assets-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Blender and display runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libegl1 libgl1 libxi6 libxrender1 libxfixes3 libxxf86vm1 libxkbcommon0 libsm6 libice6 fonts-dejavu-core xvfb libgl1-mesa-dri
+          python -m pip install --disable-pip-version-check bpy==4.5.3 Pillow==11.3.0
+      - name: Reject false-positive runner evidence
+        run: python -m unittest discover -s tests/frontier_pack -p 'test_runner.py' -v
+      - name: Recover already-generated assets during initial branch preparation
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/41-frontier-assets' && hashFiles('game/assets/models/frontier_pack/preparation.sha256') == ''
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: frontier-assets-and-evidence
+          run-id: 34536993528
+          github-token: ${{ github.token }}
+          path: .frontier-recovery
+      - name: Reuse only matching generated geometry, never cached source code
+        run: |
+          set -euo pipefail
+          cache=.frontier-recovery
+          models=game/assets/models/frontier_pack
+          if [ -f "$cache/$models/preparation.sha256" ] && sha256sum --check --status "$cache/$models/generator.sha256" && sha256sum --check --status "$cache/$models/preparation.sha256"; then
+            mkdir -p art/blender/frontier_pack/sources "$models" docs/images/frontier_pack
+            cp -a "$cache/art/blender/frontier_pack/sources/." art/blender/frontier_pack/sources/
+            cp -a "$cache/$models/." "$models/"
+            cp -a "$cache/docs/images/frontier_pack/." docs/images/frontier_pack/
+            rm -f "$models/godot_validation.json" "$models/godot_import.log" "$models/tested_sources.sha256"
+          fi
+          rm -rf -- "$cache"
+      - name: Generate or prepare changed sources
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          models=game/assets/models/frontier_pack
+          if [ ! -f "$models/manifest.json" ]; then
+            python art/blender/frontier_pack/build_pack.py --rebuild
+          elif [ "$EVENT_NAME" = push ] && ! sha256sum --check --status "$models/generator.sha256"; then
+            python art/blender/frontier_pack/build_pack.py --rebuild
+            rm -f "$models/preparation.sha256"
+          fi
+          if [ ! -f "$models/preparation.sha256" ] || { [ "$EVENT_NAME" = push ] && ! sha256sum --check --status "$models/preparation.sha256"; }; then
+            python art/blender/frontier_pack/tools/prepare_library.py --write-sources --render
+          fi
+          sha256sum art/blender/frontier_pack/build_pack.py > "$models/generator.sha256"
+          sha256sum art/blender/frontier_pack/tools/prepare_library.py > "$models/preparation.sha256"
+      - name: Validate all models and reject corrupt inputs
+        run: |
+          python tests/frontier_pack/validate_pack.py
+          python -m unittest discover -s tests/frontier_pack -p 'test_validator.py' -v
+      - name: Reopen all Blender sources and verify non-destructive export
+        run: python tests/frontier_pack/roundtrip.py
+      - name: Download verified project Godot version
+        run: python3 tools/bootstrap.py
+      - name: Import, exercise animations and capture real Godot gallery
+        run: python tests/frontier_pack/run_godot.py --capture
+      - name: Record tested source provenance
+        run: |
+          find art/blender/frontier_pack tests/frontier_pack game/asset_lab/frontier_pack -type f \( -name '*.py' -o -name '*.gd' -o -name '*.tscn' \) -print0 | sort -z | xargs -0 sha256sum > game/assets/models/frontier_pack/tested_sources.sha256
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: frontier-assets-and-evidence
+          path: |
+            art/blender/frontier_pack/
+            game/assets/models/frontier_pack/
+            game/asset_lab/frontier_pack/
+            tests/frontier_pack/
+            docs/images/frontier_pack/
+            docs/FRONTIER_ASSET_PACK.md
+            LICENSE
+            !**/__pycache__/**
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && hashFiles('.toolchain/godot') != ''
+        with:
+          name: frontier-godot-toolchain
+          path: .toolchain/godot
+          include-hidden-files: true
+          retention-days: 3
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: frontier-generated
+          path: |
+            art/blender/frontier_pack/sources/
+            game/assets/models/frontier_pack/
+            docs/images/frontier_pack/
+          retention-days: 7
+          if-no-files-found: error
+
+  preserve-on-asset-branch:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/agent/41-frontier-assets'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: agent/41-frontier-assets
+      - uses: actions/download-artifact@v4
+        with:
+          name: frontier-generated
+          path: .
+      - name: Preserve verified assets without modifying main
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = 'agent/41-frontier-assets'
+          sha256sum --check game/assets/models/frontier_pack/tested_sources.sha256
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/blender/frontier_pack/sources game/assets/models/frontier_pack docs/images/frontier_pack
+          if ! git diff --cached --quiet; then
+            git commit -m 'build(assets): preserve prepared Blender sources and verified Godot evidence'
+            git push origin HEAD:refs/heads/agent/41-frontier-assets
+          fi
