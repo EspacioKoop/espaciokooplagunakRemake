@@ -1,0 +1,926 @@
+{
+  "schema": "espaciokoop-asset-pack",
+  "version": 1,
+  "pack": "orbita_player_support",
+  "issue": 52,
+  "parent_pack": "orbita",
+  "batch": "player_support_01",
+  "blender": "4.5.3 LTS",
+  "assets": [
+    {
+      "id": "orbita/argi_worklight",
+      "name": "argi_worklight",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Argi · lámpara magnética",
+      "category": "tools",
+      "description": "Lámpara portátil con base magnética, asa y cabezal orientable.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/argi_worklight.glb",
+      "source": "art/blender/orbita_pack/player_batch/argi_worklight.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/argi_worklight.glb",
+      "preview": "docs/images/orbita_pack/player_batch/argi_worklight.png",
+      "sha256": "64175ea2ca2ce6bfa5e41bbc11972ca46adf8d705a37c24f813d35c03c7ddc4c",
+      "source_sha256": "fc4eb3ea9708a1c769006ba6c76e58959589eaeb6b0c7578ba5cd40cd4d25f56",
+      "bytes": 130592,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        0.288,
+        0.376,
+        0.1965
+      ],
+      "aabb_min": [
+        -0.144,
+        -0.0,
+        -0.095
+      ],
+      "aabb_max": [
+        0.144,
+        0.376,
+        0.1015
+      ],
+      "triangles": 1848,
+      "editable_parts": 22,
+      "mesh_nodes": 2,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_alloy",
+        "Orbita_amber",
+        "Orbita_glass",
+        "Orbita_cyan"
+      ],
+      "sockets": [
+        {
+          "name": "socket_light",
+          "path": "argi_worklight/Lamp_pitch/socket_light"
+        },
+        {
+          "name": "socket_battery",
+          "path": "argi_worklight/socket_battery"
+        },
+        {
+          "name": "socket_grip",
+          "path": "argi_worklight/socket_grip"
+        },
+        {
+          "name": "socket_mount",
+          "path": "argi_worklight/socket_mount"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "socket_grip",
+      "attachment_kind": "hand",
+      "required_sockets": [
+        "socket_grip",
+        "socket_mount",
+        "socket_light",
+        "socket_battery"
+      ],
+      "animated_nodes": [
+        "Lamp_pitch"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/lagin_sampler",
+      "name": "lagin_sampler",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Lagin · recolector geológico",
+      "category": "tools",
+      "description": "Herramienta de muestreo con sonda extensible y carrusel de recipientes sellados.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/lagin_sampler.glb",
+      "source": "art/blender/orbita_pack/player_batch/lagin_sampler.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/lagin_sampler.glb",
+      "preview": "docs/images/orbita_pack/player_batch/lagin_sampler.png",
+      "sha256": "22f406a2c144585cd0dc93b5cb976618b0b476006a0c324b20f4eae0268e12ab",
+      "source_sha256": "c7b1b093a0a131d52c87a33a5e9c0188a74b02b02d4b1ed5403ff7e601719806",
+      "bytes": 184164,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        0.257,
+        0.3205,
+        0.537
+      ],
+      "aabb_min": [
+        -0.075,
+        -0.1625,
+        -0.457
+      ],
+      "aabb_max": [
+        0.182,
+        0.158,
+        0.08
+      ],
+      "triangles": 2492,
+      "editable_parts": 24,
+      "mesh_nodes": 3,
+      "materials": [
+        "Orbita_amber",
+        "Orbita_graphite",
+        "Orbita_alloy",
+        "Orbita_ceramic",
+        "Orbita_teal",
+        "Orbita_cyan",
+        "Orbita_glass",
+        "Orbita_gold"
+      ],
+      "sockets": [
+        {
+          "name": "socket_sample_tip",
+          "path": "lagin_sampler/Probe_extension/socket_sample_tip"
+        },
+        {
+          "name": "socket_belt",
+          "path": "lagin_sampler/socket_belt"
+        },
+        {
+          "name": "socket_canister",
+          "path": "lagin_sampler/socket_canister"
+        },
+        {
+          "name": "socket_grip",
+          "path": "lagin_sampler/socket_grip"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "socket_grip",
+      "attachment_kind": "hand",
+      "required_sockets": [
+        "socket_grip",
+        "socket_sample_tip",
+        "socket_canister",
+        "socket_belt"
+      ],
+      "animated_nodes": [
+        "Probe_extension",
+        "Sample_carousel"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/babes_shield",
+      "name": "babes_shield",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Babes · escudo desplegable",
+      "category": "tools",
+      "description": "Emisor portátil ficticio con pétalos articulados, batería y apoyos. No incluye lógica de escudo.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/babes_shield.glb",
+      "source": "art/blender/orbita_pack/player_batch/babes_shield.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/babes_shield.glb",
+      "preview": "docs/images/orbita_pack/player_batch/babes_shield.png",
+      "sha256": "0030e4d3cdc8ad0f4fc575022efe13fb034053418a79d181126f206d454775c7",
+      "source_sha256": "a0138c846cde0db994181635c3ead6816d6587a752b69e44e8c7a471dc9735f0",
+      "bytes": 173856,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        0.628183,
+        0.416,
+        0.37725
+      ],
+      "aabb_min": [
+        -0.314092,
+        0.0,
+        -0.23
+      ],
+      "aabb_max": [
+        0.314092,
+        0.416,
+        0.14725
+      ],
+      "triangles": 2312,
+      "editable_parts": 16,
+      "mesh_nodes": 3,
+      "materials": [
+        "Orbita_amber",
+        "Orbita_graphite",
+        "Orbita_alloy",
+        "Orbita_teal",
+        "Orbita_cyan",
+        "Orbita_ceramic"
+      ],
+      "sockets": [
+        {
+          "name": "socket_field",
+          "path": "babes_shield/socket_field"
+        },
+        {
+          "name": "socket_grip",
+          "path": "babes_shield/socket_grip"
+        },
+        {
+          "name": "socket_mount",
+          "path": "babes_shield/socket_mount"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "socket_grip",
+      "attachment_kind": "hand",
+      "required_sockets": [
+        "socket_grip",
+        "socket_mount",
+        "socket_field"
+      ],
+      "animated_nodes": [
+        "Shield_petal_left",
+        "Shield_petal_right"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/oreka_gravity_tool",
+      "name": "oreka_gravity_tool",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Oreka · manipulador gravitatorio",
+      "category": "tools",
+      "description": "Herramienta ficticia de dos horquillas móviles alrededor de un núcleo de campo.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/oreka_gravity_tool.glb",
+      "source": "art/blender/orbita_pack/player_batch/oreka_gravity_tool.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/oreka_gravity_tool.glb",
+      "preview": "docs/images/orbita_pack/player_batch/oreka_gravity_tool.png",
+      "sha256": "79e6bdf4ca1ab8d8ef621f01031e9b136ef12adb731eac0d527e6a20b1cd8ec9",
+      "source_sha256": "f7fe16b5a26ffa5fe068b8b92a5e210f8b878ccbcddb3207f43300c3b6d9d7f6",
+      "bytes": 211492,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        0.283041,
+        0.3405,
+        0.476
+      ],
+      "aabb_min": [
+        -0.141521,
+        -0.1625,
+        -0.404
+      ],
+      "aabb_max": [
+        0.141521,
+        0.178,
+        0.072
+      ],
+      "triangles": 2732,
+      "editable_parts": 19,
+      "mesh_nodes": 3,
+      "materials": [
+        "Orbita_amber",
+        "Orbita_ceramic",
+        "Orbita_cyan",
+        "Orbita_graphite",
+        "Orbita_alloy",
+        "Orbita_teal"
+      ],
+      "sockets": [
+        {
+          "name": "socket_battery",
+          "path": "oreka_gravity_tool/socket_battery"
+        },
+        {
+          "name": "socket_belt",
+          "path": "oreka_gravity_tool/socket_belt"
+        },
+        {
+          "name": "socket_effect",
+          "path": "oreka_gravity_tool/socket_effect"
+        },
+        {
+          "name": "socket_grip",
+          "path": "oreka_gravity_tool/socket_grip"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "socket_grip",
+      "attachment_kind": "hand",
+      "required_sockets": [
+        "socket_grip",
+        "socket_effect",
+        "socket_battery",
+        "socket_belt"
+      ],
+      "animated_nodes": [
+        "Clamp_left",
+        "Clamp_right"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/izpi_binoculars",
+      "name": "izpi_binoculars",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Izpi · prismáticos multiespectrales",
+      "category": "tools",
+      "description": "Óptica portátil de dos objetivos extensibles, rueda de enfoque y correa.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/izpi_binoculars.glb",
+      "source": "art/blender/orbita_pack/player_batch/izpi_binoculars.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/izpi_binoculars.glb",
+      "preview": "docs/images/orbita_pack/player_batch/izpi_binoculars.png",
+      "sha256": "81e4e078cc2f0aa9cf137f5920656ccb4331b8255e76a6bce1b7705d35eef712",
+      "source_sha256": "4b29e94c3ab8d4608f5c89ddb85abc932fe2217936ec625c7a6cd086c2c66f39",
+      "bytes": 458176,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        0.315682,
+        0.186,
+        0.304
+      ],
+      "aabb_min": [
+        -0.157841,
+        -0.072,
+        -0.198
+      ],
+      "aabb_max": [
+        0.157841,
+        0.114,
+        0.106
+      ],
+      "triangles": 6312,
+      "editable_parts": 24,
+      "mesh_nodes": 3,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_teal",
+        "Orbita_ceramic",
+        "Orbita_glass",
+        "Orbita_amber",
+        "Orbita_alloy",
+        "Orbita_cyan"
+      ],
+      "sockets": [
+        {
+          "name": "socket_optic_left",
+          "path": "izpi_binoculars/Lens_left/socket_optic_left"
+        },
+        {
+          "name": "socket_optic_right",
+          "path": "izpi_binoculars/Lens_right/socket_optic_right"
+        },
+        {
+          "name": "socket_belt",
+          "path": "izpi_binoculars/socket_belt"
+        },
+        {
+          "name": "socket_eyes",
+          "path": "izpi_binoculars/socket_eyes"
+        },
+        {
+          "name": "socket_grip",
+          "path": "izpi_binoculars/socket_grip"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "socket_grip",
+      "attachment_kind": "hand",
+      "required_sockets": [
+        "socket_grip",
+        "socket_eyes",
+        "socket_optic_left",
+        "socket_optic_right",
+        "socket_belt"
+      ],
+      "animated_nodes": [
+        "Lens_left",
+        "Lens_right"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/arnasa_eva_pack",
+      "name": "arnasa_eva_pack",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Arnasa · mochila de soporte EVA",
+      "category": "tools",
+      "description": "Mochila espacial de doble depósito, arnés, manguera, máscara acoplada y filtro articulado.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/arnasa_eva_pack.glb",
+      "source": "art/blender/orbita_pack/player_batch/arnasa_eva_pack.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/arnasa_eva_pack.glb",
+      "preview": "docs/images/orbita_pack/player_batch/arnasa_eva_pack.png",
+      "sha256": "2e0579c9e7b578f228885c12a976541c7ea2b583bf81fe93607f6839c02e016a",
+      "source_sha256": "ce3367a95da1d84c5de594a12f9e97d5c706adce85602cc0252a319f777ed65c",
+      "bytes": 434876,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        0.532619,
+        0.588,
+        0.430529
+      ],
+      "aabb_min": [
+        -0.235,
+        0.03,
+        -0.148529
+      ],
+      "aabb_max": [
+        0.297619,
+        0.618,
+        0.282
+      ],
+      "triangles": 5944,
+      "editable_parts": 42,
+      "mesh_nodes": 2,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_ceramic",
+        "Orbita_teal",
+        "Orbita_alloy",
+        "Orbita_amber",
+        "Orbita_glass",
+        "Orbita_cyan"
+      ],
+      "sockets": [
+        {
+          "name": "socket_back",
+          "path": "arnasa_eva_pack/socket_back"
+        },
+        {
+          "name": "socket_grip",
+          "path": "arnasa_eva_pack/socket_grip"
+        },
+        {
+          "name": "socket_hose",
+          "path": "arnasa_eva_pack/socket_hose"
+        },
+        {
+          "name": "socket_supply",
+          "path": "arnasa_eva_pack/socket_supply"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "socket_back",
+      "attachment_kind": "back",
+      "required_sockets": [
+        "socket_back",
+        "socket_hose",
+        "socket_supply",
+        "socket_grip"
+      ],
+      "animated_nodes": [
+        "Filter_fan"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/uhina_arc_emitter",
+      "name": "uhina_arc_emitter",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Uhina · emisor de arco",
+      "category": "weapons",
+      "description": "Arma de ciencia ficción con raíles abiertos, celda extraíble y dos agarres; sólo recurso visual.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/uhina_arc_emitter.glb",
+      "source": "art/blender/orbita_pack/player_batch/uhina_arc_emitter.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/uhina_arc_emitter.glb",
+      "preview": "docs/images/orbita_pack/player_batch/uhina_arc_emitter.png",
+      "sha256": "76e1e9da10f338bd6dd9bb86f841bae6939e88920f121535830c5302febded82",
+      "source_sha256": "a20a70a204670bae3a4addfa4fa0bed2cc0e0a4998ca5e22811a092f9d202a82",
+      "bytes": 263544,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        0.224,
+        0.396,
+        1.042799
+      ],
+      "aabb_min": [
+        -0.112,
+        -0.1625,
+        -0.637299
+      ],
+      "aabb_max": [
+        0.112,
+        0.2335,
+        0.4055
+      ],
+      "triangles": 3552,
+      "editable_parts": 27,
+      "mesh_nodes": 4,
+      "materials": [
+        "Orbita_ceramic",
+        "Orbita_cyan",
+        "Orbita_amber",
+        "Orbita_graphite",
+        "Orbita_teal",
+        "Orbita_alloy",
+        "Orbita_glass"
+      ],
+      "sockets": [
+        {
+          "name": "socket_cell",
+          "path": "uhina_arc_emitter/socket_cell"
+        },
+        {
+          "name": "socket_grip",
+          "path": "uhina_arc_emitter/socket_grip"
+        },
+        {
+          "name": "socket_muzzle",
+          "path": "uhina_arc_emitter/socket_muzzle"
+        },
+        {
+          "name": "socket_sight",
+          "path": "uhina_arc_emitter/socket_sight"
+        },
+        {
+          "name": "socket_stock",
+          "path": "uhina_arc_emitter/socket_stock"
+        },
+        {
+          "name": "socket_support_grip",
+          "path": "uhina_arc_emitter/socket_support_grip"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "socket_grip",
+      "attachment_kind": "hand",
+      "required_sockets": [
+        "socket_grip",
+        "socket_muzzle",
+        "socket_support_grip",
+        "socket_stock",
+        "socket_cell",
+        "socket_sight"
+      ],
+      "animated_nodes": [
+        "Arc_rail_left",
+        "Arc_rail_right",
+        "Power_cell"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/ezpal_coil_dispenser",
+      "name": "ezpal_coil_dispenser",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Ezpal · dispersor de bobinas",
+      "category": "weapons",
+      "description": "Arma ficticia de tres emisores en carrusel, carcasa compacta y agarre auxiliar; sólo recurso visual.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/ezpal_coil_dispenser.glb",
+      "source": "art/blender/orbita_pack/player_batch/ezpal_coil_dispenser.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/ezpal_coil_dispenser.glb",
+      "preview": "docs/images/orbita_pack/player_batch/ezpal_coil_dispenser.png",
+      "sha256": "d1fa05a937830822cfd920a05474c5a5fe87a4aec9f7380072b689b7bdc2c418",
+      "source_sha256": "0674af828aa2adedfb0c9809424d3e45a2e8fd2d856339825e22bf8281ef1c7f",
+      "bytes": 679668,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        0.209,
+        0.3415,
+        0.474
+      ],
+      "aabb_min": [
+        -0.1045,
+        -0.1625,
+        -0.391
+      ],
+      "aabb_max": [
+        0.1045,
+        0.179,
+        0.083
+      ],
+      "triangles": 9632,
+      "editable_parts": 37,
+      "mesh_nodes": 2,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_alloy",
+        "Orbita_gold",
+        "Orbita_cyan",
+        "Orbita_plum",
+        "Orbita_ceramic"
+      ],
+      "sockets": [
+        {
+          "name": "socket_muzzle",
+          "path": "ezpal_coil_dispenser/Coil_carousel/socket_muzzle"
+        },
+        {
+          "name": "socket_cell",
+          "path": "ezpal_coil_dispenser/socket_cell"
+        },
+        {
+          "name": "socket_grip",
+          "path": "ezpal_coil_dispenser/socket_grip"
+        },
+        {
+          "name": "socket_sling",
+          "path": "ezpal_coil_dispenser/socket_sling"
+        },
+        {
+          "name": "socket_support_grip",
+          "path": "ezpal_coil_dispenser/socket_support_grip"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "socket_grip",
+      "attachment_kind": "hand",
+      "required_sockets": [
+        "socket_grip",
+        "socket_muzzle",
+        "socket_support_grip",
+        "socket_cell",
+        "socket_sling"
+      ],
+      "animated_nodes": [
+        "Coil_carousel"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/kimu_survey_ship",
+      "name": "kimu_survey_ship",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Kimu · exploradora cartográfica",
+      "category": "ships",
+      "description": "Nave de exploración de alas barridas, antena orientable, dos motores y soportes de carga científica.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/kimu_survey_ship.glb",
+      "source": "art/blender/orbita_pack/player_batch/kimu_survey_ship.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/kimu_survey_ship.glb",
+      "preview": "docs/images/orbita_pack/player_batch/kimu_survey_ship.png",
+      "sha256": "76f238258e14bbe2c47f214b1c0f7f9768d179cf0c29ce968045390d88e9ce04",
+      "source_sha256": "fdf9864647577251106cefa59fa7d8be613aab27ece59f25828277e53c0334e5",
+      "bytes": 427812,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        8.88307,
+        3.035,
+        8.700001
+      ],
+      "aabb_min": [
+        -4.441535,
+        -1.01,
+        -5.2
+      ],
+      "aabb_max": [
+        4.441535,
+        2.025,
+        3.5
+      ],
+      "triangles": 6028,
+      "editable_parts": 47,
+      "mesh_nodes": 2,
+      "materials": [
+        "Orbita_alloy",
+        "Orbita_graphite",
+        "Orbita_ceramic",
+        "Orbita_glass",
+        "Orbita_teal",
+        "Orbita_cyan",
+        "Orbita_gold",
+        "Orbita_amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_cockpit",
+          "path": "kimu_survey_ship/socket_cockpit"
+        },
+        {
+          "name": "socket_dock",
+          "path": "kimu_survey_ship/socket_dock"
+        },
+        {
+          "name": "socket_exhaust_2_3",
+          "path": "kimu_survey_ship/socket_exhaust_2_3"
+        },
+        {
+          "name": "socket_exhaust_m2_3",
+          "path": "kimu_survey_ship/socket_exhaust_m2_3"
+        },
+        {
+          "name": "socket_origin",
+          "path": "kimu_survey_ship/socket_origin"
+        },
+        {
+          "name": "socket_payload_left",
+          "path": "kimu_survey_ship/socket_payload_left"
+        },
+        {
+          "name": "socket_payload_right",
+          "path": "kimu_survey_ship/socket_payload_right"
+        },
+        {
+          "name": "socket_survey",
+          "path": "kimu_survey_ship/Survey_antenna/socket_survey"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "",
+      "attachment_kind": "none",
+      "required_sockets": [
+        "socket_survey",
+        "socket_cockpit",
+        "socket_dock",
+        "socket_origin",
+        "socket_payload_left",
+        "socket_payload_right"
+      ],
+      "animated_nodes": [
+        "Survey_antenna"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/balea_rescue_ship",
+      "name": "balea_rescue_ship",
+      "version": 1,
+      "batch": "player_support_01",
+      "title": "Balea · nave de evacuación",
+      "category": "ships",
+      "description": "Nave de apoyo con seis cápsulas de evacuación, brazos de recuperación, puente y atraque dorsal.",
+      "runtime": "game/assets/models/orbita_pack/player_batch/balea_rescue_ship.glb",
+      "source": "art/blender/orbita_pack/player_batch/balea_rescue_ship.blend",
+      "resource": "res://assets/models/orbita_pack/player_batch/balea_rescue_ship.glb",
+      "preview": "docs/images/orbita_pack/player_batch/balea_rescue_ship.png",
+      "sha256": "cf9853aae5e2266d39bfd03dac47b4cab093c25e9ec4dfe2c4c6be841566b6ad",
+      "source_sha256": "effcdb6f4cd80044cd93c428258802fb66cc35f6bfce1b175100c8d0e661340c",
+      "bytes": 909660,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        6.78,
+        2.8,
+        12.9
+      ],
+      "aabb_min": [
+        -3.39,
+        -1.3,
+        -7.4
+      ],
+      "aabb_max": [
+        3.39,
+        1.5,
+        5.5
+      ],
+      "triangles": 12484,
+      "editable_parts": 72,
+      "mesh_nodes": 3,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_ceramic",
+        "Orbita_teal",
+        "Orbita_glass",
+        "Orbita_amber",
+        "Orbita_alloy",
+        "Orbita_cyan"
+      ],
+      "sockets": [
+        {
+          "name": "socket_rescue_left",
+          "path": "balea_rescue_ship/Rescue_arm_left/socket_rescue_left"
+        },
+        {
+          "name": "socket_rescue_right",
+          "path": "balea_rescue_ship/Rescue_arm_right/socket_rescue_right"
+        },
+        {
+          "name": "socket_cargo",
+          "path": "balea_rescue_ship/socket_cargo"
+        },
+        {
+          "name": "socket_cockpit",
+          "path": "balea_rescue_ship/socket_cockpit"
+        },
+        {
+          "name": "socket_dock",
+          "path": "balea_rescue_ship/socket_dock"
+        },
+        {
+          "name": "socket_evac_left_1",
+          "path": "balea_rescue_ship/socket_evac_left_1"
+        },
+        {
+          "name": "socket_evac_left_2",
+          "path": "balea_rescue_ship/socket_evac_left_2"
+        },
+        {
+          "name": "socket_evac_left_3",
+          "path": "balea_rescue_ship/socket_evac_left_3"
+        },
+        {
+          "name": "socket_evac_right_1",
+          "path": "balea_rescue_ship/socket_evac_right_1"
+        },
+        {
+          "name": "socket_evac_right_2",
+          "path": "balea_rescue_ship/socket_evac_right_2"
+        },
+        {
+          "name": "socket_evac_right_3",
+          "path": "balea_rescue_ship/socket_evac_right_3"
+        },
+        {
+          "name": "socket_exhaust_2_48",
+          "path": "balea_rescue_ship/socket_exhaust_2_48"
+        },
+        {
+          "name": "socket_exhaust_m2_48",
+          "path": "balea_rescue_ship/socket_exhaust_m2_48"
+        },
+        {
+          "name": "socket_origin",
+          "path": "balea_rescue_ship/socket_origin"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "attachment_socket": "",
+      "attachment_kind": "none",
+      "required_sockets": [
+        "socket_cockpit",
+        "socket_dock",
+        "socket_cargo",
+        "socket_origin",
+        "socket_rescue_left",
+        "socket_rescue_right",
+        "socket_evac_left_1",
+        "socket_evac_left_2",
+        "socket_evac_left_3",
+        "socket_evac_right_1",
+        "socket_evac_right_2",
+        "socket_evac_right_3"
+      ],
+      "animated_nodes": [
+        "Rescue_arm_left",
+        "Rescue_arm_right"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    }
+  ]
+}
