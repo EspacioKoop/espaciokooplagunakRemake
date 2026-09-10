@@ -1,6 +1,7 @@
 extends SceneTree
 ## Real Session RPCs; shared files synchronise phases, never carry game state.
 const CREW = ["navegacion", "ingenieria", "armas", "sensores", "comunicaciones", "enlace", "reparaciones"]
+const AUTHORIZED_ROLES = ["mando", "enlace"]
 const TEST_KEY = "alert-regression-synthetic-key"
 const WAIT_SECONDS = 18.0
 var session: Node
@@ -69,20 +70,23 @@ func connect_client() -> bool:
 	if not check(result.ok, "ENet connection starts"): return false
 	return await wait_for(func(): return accepted and not session.view.is_empty(), "authenticated snapshot")
 
-func reject_order(args: Dictionary, level: String) -> bool:
+func send_alert(args: Dictionary, expected_ok: bool, level: String) -> bool:
 	responses.clear()
 	session.order("alert", args)
-	if not await wait_for(func(): return not responses.is_empty(), "authoritative rejection"): return false
-	check(not responses[0].ok, "non-captain alert order rejected by host")
+	if not await wait_for(func(): return not responses.is_empty(), "authoritative response"): return false
+	check(responses[0].ok == expected_ok, "server response matches station authority and input validity")
 	# Wait for a subsequent server view, not just the pre-order local value.
 	var previous_time = float(session.view.get("time", -1.0))
-	if not await wait_for(func(): return float(session.view.get("time", -1.0)) > previous_time, "post-rejection snapshot"): return false
-	check(alert_is(level), "rejected order did not change shared alert")
+	if not await wait_for(func(): return float(session.view.get("time", -1.0)) > previous_time, "post-command snapshot"): return false
+	check(alert_is(level), "post-command shared alert " + level)
 	return true
 
 func run_host() -> void:
 	if not check(session.host_session(port, TEST_KEY).ok, "host starts"): return
 	check(session.role == "mando", "captain remains authoritative")
+	for crew_role in Catalog.ROLES:
+		var permitted = "alert" in Catalog.PERMISSIONS.get(crew_role, []) or "alert" in ShipOperations.PERMISSIONS.get(crew_role, [])
+		check(permitted == (crew_role in AUTHORIZED_ROLES), "explicit alert permission contract: " + crew_role)
 	check(session.order("alert", {"level": "roja"}).ok, "captain sets red before anyone joins")
 	check(session.view.ship.alert == "roja", "captain view is red")
 	var before = session.sim.state.duplicate(true)
@@ -91,11 +95,12 @@ func run_host() -> void:
 	print("ALERT_HOST_READY roja")
 	if not await wait_for(func(): return all_marked("red"), "all seven late stations see red"): return
 	check(session.roster.size() == 8, "all eight stations authenticated")
-	check(session.sim.state.ship.alert == "roja", "seven peers cannot override captain")
+	check(session.sim.state.ship.alert == "roja", "unauthorized attempts leave red unchanged")
 	mark("disconnect")
 	if not await wait_for(func(): return marked("left.navegacion") and not has_role("navegacion"), "navigation removed from host roster"): return
-	check(session.order("alert", {"level": "ambar"}).ok, "captain changes alert while navigator is offline")
-	check(session.view.ship.alert == "ambar", "captain sees amber")
+	mark("enlace_amber")
+	if not await wait_for(func(): return session.sim.state.ship.alert == "ambar", "authorized remote Enlace changes alert"): return
+	check(session.view.ship.alert == "ambar", "captain sees remote Enlace amber")
 	mark("reconnect")
 	if not await wait_for(func(): return all_marked("amber"), "live peers and reconnected navigator see amber"): return
 	check(session.roster.size() == 8, "reconnected navigator has one reserved station")
@@ -111,8 +116,12 @@ func run_client() -> void:
 	if not await connect_client(): return
 	# The first accepted snapshot must already contain red, not a later replay.
 	assert_view("roja")
-	if not await reject_order({"level": "verde"}, "roja"): return
-	if not await reject_order({"level": "verde", "role": "mando", "principal": "1"}, "roja"): return
+	if mode == "enlace":
+		if not await send_alert({"level": "roja"}, true, "roja"): return
+		if not await send_alert({"level": "not-a-level"}, false, "roja"): return
+	else:
+		if not await send_alert({"level": "verde"}, false, "roja"): return
+		if not await send_alert({"level": "verde", "role": "mando", "principal": "1"}, false, "roja"): return
 	mark("red." + mode)
 	if mode == "navegacion":
 		if not await wait_for(func(): return marked("disconnect"), "host requests one reconnection"): return
@@ -121,6 +130,10 @@ func run_client() -> void:
 		mark("left.navegacion")
 		if not await wait_for(func(): return marked("reconnect"), "host changed alert while disconnected"): return
 		if not await connect_client(): return
+		assert_view("ambar")
+	elif mode == "enlace":
+		if not await wait_for(func(): return marked("enlace_amber"), "navigator offline before amber command"): return
+		if not await send_alert({"level": "ambar"}, true, "ambar"): return
 		assert_view("ambar")
 	else:
 		if not await wait_for(func(): return alert_is("ambar"), "live amber snapshot"): return
