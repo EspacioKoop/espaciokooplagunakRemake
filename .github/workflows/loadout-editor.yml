@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          timeout 90 xvfb-run -a .toolchain/godot --path game --script ../tests/test_loadout_editor.gd -- --test 2>&1 | tee loadout-tests.log
+          timeout 90 xvfb-run -a .toolchain/godot --audio-driver Dummy --path game --script ../tests/test_loadout_editor.gd -- --test 2>&1 | tee loadout-tests.log
           if grep -E '^(SCRIPT ERROR|ERROR):' loadout-tests.log; then exit 1; fi
       - name: Verify affected existing systems
         run: |
