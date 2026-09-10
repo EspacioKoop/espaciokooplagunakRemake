@@ -1,6 +1,9 @@
 extends Control
 signal closed
 const Profile = preload("res://input/control_profile.gd")
+const ReadabilitySettings = preload("res://ui/readability_settings.gd")
+var _readability_window: Window
+var _readability_button: Button
 var controls: Node
 var status: Label
 var close_button: Button
@@ -43,11 +46,14 @@ func _ready() -> void:
 	column.add_child(ConsoleUI.paragraph("Menús: cruceta y A; LB / RB cambia el foco. Los atajos de otras pantallas conservan sus teclas.", 16))
 	_scroll = ScrollContainer.new()
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	_scroll.follow_focus = true
 	column.add_child(_scroll)
 	var body = ConsoleUI.column(_scroll, 10)
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_readability_button = ConsoleUI.button("Tamaño del texto", _open_readability)
+	_readability_button.name = "ReadabilityLauncher"
+	body.add_child(_readability_button)
 	var options = GridContainer.new()
 	options.columns = 2
 	options.add_theme_constant_override("h_separation", 20)
@@ -164,6 +170,8 @@ func _process(delta: float) -> void:
 		if _capture_clock <= 0: _cancel_capture()
 
 func capture_event(event: InputEvent) -> bool:
+	# The embedded exclusive window owns its input; do not close this parent.
+	if is_instance_valid(_readability_window) and _readability_window.visible: return false
 	if not waiting_action.is_empty():
 		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 			_cancel_capture()
@@ -195,3 +203,16 @@ func _update_bindings() -> void:
 	for action in Profile.ACTIONS:
 		for device in ["keyboard", "gamepad"]:
 			binding_buttons[action + ":" + device].text = controls.binding_label(action, device)
+
+func _open_readability() -> void:
+	_cancel_capture()
+	if not is_instance_valid(_readability_window):
+		_readability_window = ReadabilitySettings.new()
+		_readability_window.service = controls.readability
+		add_child(_readability_window)
+		_readability_window.tree_exited.connect(_readability_closed)
+	_readability_window.popup_centered_clamped(Vector2i(720, 560), 0.9)
+
+func _readability_closed() -> void:
+	if is_instance_valid(_readability_button) and _readability_button.is_inside_tree() and not is_queued_for_deletion():
+		_readability_button.call_deferred("grab_focus")

@@ -447,7 +447,8 @@ func _interior() -> void:
 	_deck = WorldDeck.new()
 	_deck.reduced_motion = _preferences.motion
 	viewport_panel.add_child(_deck)
-	_deck.station_requested.connect(func(role): Session.select_role(role); _go("bridge"))
+	# Keep the emitting deck alive until its input callback has returned.
+	_deck.station_requested.connect(_open_deck_station.bind(_deck.get_instance_id()), CONNECT_DEFERRED)
 	_deck.interaction_requested.connect(_open_leisure_interaction)
 	_deck.zone_changed.connect(func(name):
 		if _refs.has("deck_zone"): _refs.deck_zone.text = name
@@ -472,6 +473,17 @@ func _interior() -> void:
 	side.add_child(ConsoleUI.paragraph("WASD · caminar\nMayús · correr\nRatón · mirar\nE · escotilla / consola\nEsc · liberar ratón", 15))
 	_refs.deck_prompt = ConsoleUI.label("", 15, ConsoleUI.TEAL)
 	_content.add_child(_refs.deck_prompt)
+
+func _open_deck_station(role: String, source_id: int) -> void:
+	# A queued request may outlive a page change, disconnect or another request.
+	# Bind an ID, not a Node reference that may already have been freed.
+	if not is_inside_tree() or is_queued_for_deletion(): return
+	if _page != "deck" or not is_instance_valid(_deck): return
+	if _deck.get_instance_id() != source_id: return
+	if not _deck.is_inside_tree() or _deck.is_queued_for_deletion(): return
+	if role not in Catalog.ROLES: return
+	Session.select_role(role)
+	_go("bridge")
 
 func _open_leisure_interaction(entry: Dictionary) -> Window:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

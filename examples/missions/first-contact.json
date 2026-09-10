@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schemas/mission-v1.schema.json",
+  "id": "custom_primer_contacto",
+  "title": "Primer contacto con Itsasargi",
+  "sector": "Itsasargi",
+  "briefing": "La Itsaso llega a un sector tranquilo. Acércate a la baliza Izar, analiza su señal y atraca en Kaia. Navegación marca el rumbo y Sensores confirma la señal; no hacen falta armas ni Foundry.",
+  "reward": 100,
+  "contacts": [
+    {"id": "izar", "name": "Baliza Izar", "kind": "beacon", "position": [650, 0], "known": true},
+    {"id": "kaia", "name": "Puerto Kaia", "kind": "station", "position": [1150, 300], "known": true}
+  ],
+  "objectives": [
+    {"type": "navigate", "target": "izar", "text": "Acerca la nave a la baliza Izar."},
+    {"type": "scan", "target": "izar", "text": "Analiza la señal de Izar desde Sensores."},
+    {"type": "dock", "target": "kaia", "text": "Atraca en Kaia desde Navegación."}
+  ]
+}
