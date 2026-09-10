@@ -265,7 +265,7 @@ class PlatformExportTests(unittest.TestCase):
                     exports.validate_artifact("android", path)
 
     def test_archive_paths_and_duplicates_rejected(self):
-        for names in (("../escape",), ("/absolute",), ("a\\b",), ("duplicate", "duplicate")):
+        for names in (("../escape",), ("/absolute",), ("C:/escape",), ("a\\b",), ("duplicate", "duplicate")):
             with self.subTest(names=names):
                 path = self.root / "invalid.zip"
                 with warnings.catch_warnings():

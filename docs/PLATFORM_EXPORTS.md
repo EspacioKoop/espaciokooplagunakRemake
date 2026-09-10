@@ -16,9 +16,11 @@ python3 tools/package_downloads.py --targets linux windows macos
 `GODOT=/ruta/al/editor` permite usar otro binario de la misma versión. El bootstrap
 verifica SHA-512 oficial y extrae sólo las plantillas seleccionadas. Con
 `--templates-only` conserva el editor existente. `build.py --check --targets macos`
-comprueba configuración y toolchain sin descargar ni exportar. Un fallo no publica
-un nuevo ejecutable ni sustituye el último paquete válido. El código de salida es
-no cero si Godot informa errores, falta un requisito o el artefacto es inválido.
+comprueba configuración y toolchain sin descargar ni exportar. Cada exportación
+se valida antes de sustituir su archivo final; si falla se conserva ese archivo
+anterior, aunque otros destinos del mismo comando hayan terminado. El código de
+salida es no cero si Godot informa errores, falta un requisito o el artefacto es
+inválido. El empaquetador valida todos los destinos elegidos antes de publicar ZIPs.
 
 | Destino | Exportación en `build/` | ZIP descargable en `dist/` |
 |---|---|---|

@@ -102,7 +102,7 @@ def checked_zip(path):
             raise ValueError("Archive contains duplicate entries")
         for name in names:
             member = PurePosixPath(name)
-            if member.is_absolute() or ".." in member.parts or "\\" in name:
+            if member.is_absolute() or ".." in member.parts or "\\" in name or ":" in member.parts[0]:
                 raise ValueError(f"Unsafe archive member: {name}")
         if archive.testzip() is not None:
             raise ValueError("Archive CRC validation failed")
