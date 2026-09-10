@@ -38,6 +38,10 @@ static func validate_mission(value: Variant) -> String:
 	for key in ["id", "title", "sector", "briefing"]:
 		if not value[key] is String or value[key].is_empty() or value[key].length() > 4000:
 			return "Texto inválido: " + key
+	var identifier = RegEx.new()
+	identifier.compile("^[a-zA-Z0-9_-]{1,64}$")
+	if identifier.search(value.id) == null:
+		return "El identificador solo admite letras, cifras, guion y guion bajo."
 	if value.has("reward") and (not finite_number(value.reward) or float(value.reward) < 0 or float(value.reward) > 10000):
 		return "La recompensa debe estar entre 0 y 10000."
 	if not value.contacts is Array or value.contacts.size() > 48:
@@ -54,6 +58,8 @@ static func validate_mission(value: Variant) -> String:
 		if not contact.id is String or contact.id.is_empty() or contact.id.length() > 64 or contact.id in ids:
 			return "Los identificadores de contacto deben ser únicos."
 		ids.append(contact.id)
+		if identifier.search(contact.id) == null:
+			return "Identificador de contacto inválido."
 		if not contact.name is String or contact.name.length() > 80:
 			return "Nombre de contacto inválido."
 		if contact.kind not in ["station", "friendly", "hostile", "derelict", "anomaly", "beacon"]:
@@ -66,17 +72,20 @@ static func validate_mission(value: Variant) -> String:
 		for flag in ["jammed", "known"]:
 			if contact.has(flag) and not contact[flag] is bool:
 				return "Indicador inválido: " + flag
+		for resource in ["hull", "survivors"]:
+			if contact.has(resource) and (not finite_number(contact[resource]) or contact[resource] < 0 or contact[resource] > 100):
+				return "Recurso de contacto fuera de rango: " + resource
 	for objective in value.objectives:
-		if not objective is Dictionary or not objective.get("text") is String:
+		if not objective is Dictionary or not objective.get("text") is String or objective.text.is_empty() or objective.text.length() > 500:
 			return "Objetivo sin texto."
 		if objective.get("type") not in ["navigate", "dock", "hail", "scan", "salvage", "rescue", "defeat", "repair_target", "choice", "probe"]:
 			return "Tipo de objetivo desconocido."
-		if objective.get("target", "") not in ids and objective.type != "choice":
+		if objective.get("target", "") not in ids:
 			return "Un objetivo referencia un contacto inexistente."
 		var allowed_kinds: Array = {
 			"dock": ["station"], "repair_target": ["station"],
 			"rescue": ["derelict"], "salvage": ["derelict", "anomaly"],
-			"defeat": ["hostile"]
+			"defeat": ["hostile"], "choice": ["friendly", "hostile"]
 		}.get(objective.type, [])
 		if not allowed_kinds.is_empty():
 			for contact in value.contacts:

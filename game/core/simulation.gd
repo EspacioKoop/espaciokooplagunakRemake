@@ -116,7 +116,7 @@ func command(role: String, operation: String, args: Dictionary = {}) -> Dictiona
 			fact("hail", c.id)
 			message = "Canal abierto. Interferencia compensada para este contacto."
 		"negotiate":
-			if distance_to(c) > 900 or not c.identified or not c.hailed or ship.shields_enabled:
+			if c.kind not in ["friendly", "hostile"] or distance_to(c) > 900 or not c.identified or not c.hailed or ship.shields_enabled:
 				return reply(false, "Negociación: contacto identificado, canal abierto, escudos bajos y alcance 900 m.")
 			c.negotiated = true
 			c.pacified = true
@@ -172,11 +172,12 @@ func command(role: String, operation: String, args: Dictionary = {}) -> Dictiona
 			ship.alert = args.level
 			message = "Alerta " + args.level + "."
 		"mission_choice":
-			var envoy = contact("haize")
+			var goal: Dictionary = state.mission.objectives[mini(int(state.objective), state.mission.objectives.size() - 1)]
+			var envoy = contact(str(goal.get("target", "")))
 			if args.get("choice") not in ["compartir", "reservar"] or envoy.is_empty() or not envoy.negotiated: return reply(false, "Primero acuerda el paso con Haize desde Comunicaciones.")
-			if state.facts.has("choice:haize"): return reply(false, "La decisión ya está registrada.")
-			state.campaign.decisions.haize = args.choice
-			fact("choice", "haize")
+			if goal.type != "choice" or state.facts.has("choice:" + envoy.id): return reply(false, "No hay una decisión pendiente.")
+			state.campaign.decisions[envoy.id] = args.choice
+			fact("choice", envoy.id)
 			message = "Decisión registrada: " + args.choice + "."
 		"assist":
 			if ship.energy < 15 or ship.assist.get(role, 0.0) > state.time: return reply(false, "Asistencia requiere 15 de energía y no puede acumularse.")

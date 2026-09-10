@@ -54,8 +54,10 @@ func start_mission(index: int, custom: Dictionary = {}) -> Dictionary:
 	else:
 		var error = Catalog.validate_mission(custom)
 		if not error.is_empty(): return {"ok": false, "message": error}
-		mission = custom
+		mission = custom.duplicate(true)
+		if not mission.id.begins_with("custom_"): mission.id = "custom_" + mission.id.left(57)
 	sim.start(mission, sim.state)
+	sim.state.run_id = Crypto.new().generate_random_bytes(12).hex_encode()
 	paused = false
 	_refresh_view()
 	save_game()

@@ -8,7 +8,7 @@ Una nave. Ocho puestos. Un mismo destino.
 
 La aplicación se está reconstruyendo a partir de los modelos y recursos conservados. Ya están implementados el núcleo de simulación, las seis misiones, el guardado local y los servicios de red. Las pruebas del núcleo completan las seis misiones mediante órdenes de juego: **136 comprobaciones, 0 fallos** con Godot 4.7.1.
 
-La interfaz y los paquetes ejecutables siguen en preparación. Esta rama todavía no es una entrega jugable. Las imágenes que aparecen abajo pertenecen a la ejecución anterior y se sustituirán por capturas de la nueva compilación.
+La interfaz nativa, los interiores y el editor ya están implementados. El proyecto puede abrirse en Godot 4.7.1 desde `game/project.godot`. Los paquetes ejecutables y las comprobaciones finales de red siguen en preparación. Las imágenes que aparecen abajo pertenecen a la ejecución anterior y se sustituirán por capturas de la nueva compilación.
 
 ## Modelos en Blender
 
