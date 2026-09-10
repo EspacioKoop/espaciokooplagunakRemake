@@ -10,13 +10,21 @@ var links: Array = []
 func setup(owner: Node) -> void:
 	deck = owner
 	var zones: Array = deck.get_script().get_script_constant_map().ZONES
+	# Authored rooms have their opening on local +Z. Face that opening inward;
+	# diagonal connectors otherwise run into the rooms' intact side walls.
+	var facing = {0: 0.0, 2: PI * 0.5, 3: -PI * 0.5, 4: PI * 0.5, 5: -PI * 0.5, 6: PI}
+	var entries = {}
+	for index in facing:
+		deck._zone_models[index].rotation.y = facing[index]
+		entries[index] = zones[index].at + Vector3(0, 0, zones[index].depth * 0.5 - 0.6).rotated(Vector3.UP, facing[index])
+	# Side exits lie between the hallway pillars at Z multiples of four.
 	var specs = [
-		[Vector3(0, 0, -19), 1, zones[0].at + Vector3(0, 0, zones[0].depth * 0.5 - 0.6), 0, "PUENTE", "PASILLO CENTRAL"],
-		[Vector3(-2, 0, -12), 1, zones[2].at + Vector3(0, 0, zones[2].depth * 0.5 - 0.6), 2, "INGENIERÍA", "PASILLO CENTRAL"],
-		[Vector3(2, 0, -12), 1, zones[3].at + Vector3(0, 0, zones[3].depth * 0.5 - 0.6), 3, "CAMAROTES", "PASILLO CENTRAL"],
-		[Vector3(-2, 0, 12), 1, zones[4].at + Vector3(0, 0, zones[4].depth * 0.5 - 0.6), 4, "BODEGA", "PASILLO CENTRAL"],
-		[Vector3(2, 0, 12), 1, zones[5].at + Vector3(0, 0, zones[5].depth * 0.5 - 0.6), 5, "COMEDOR", "PASILLO CENTRAL"],
-		[Vector3(0, 0, 19), 1, zones[6].at + Vector3(0, 0, zones[6].depth * 0.5 - 0.6), 6, "ENFERMERÍA", "PASILLO CENTRAL"]
+		[Vector3(0, 0, -19), 1, entries[0], 0, "PUENTE", "PASILLO CENTRAL"],
+		[Vector3(-2, 0, -10), 1, entries[2], 2, "INGENIERÍA", "PASILLO CENTRAL"],
+		[Vector3(2, 0, -10), 1, entries[3], 3, "CAMAROTES", "PASILLO CENTRAL"],
+		[Vector3(-2, 0, 10), 1, entries[4], 4, "BODEGA", "PASILLO CENTRAL"],
+		[Vector3(2, 0, 10), 1, entries[5], 5, "COMEDOR", "PASILLO CENTRAL"],
+		[Vector3(0, 0, 19), 1, entries[6], 6, "ENFERMERÍA", "PASILLO CENTRAL"]
 	]
 	for spec in specs:
 		_add_link(spec[0], spec[1], spec[2], spec[3], spec[4], spec[5])
