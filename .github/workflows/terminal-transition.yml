@@ -1,0 +1,91 @@
+name: Terminal transition regression
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: terminal-transition-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Temporary object-only preparation: never changes a ref, branch, or PR.
+  # Remove this job after the source object has been reviewed and committed.
+  prepare-reviewed-blob:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/29-terminal-transition' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Prepare exact terminal-only source blob from audited baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess, urllib.request
+          original = subprocess.check_output(['git', 'show', '8b1dcf27683a00972b03d5203606eab12f31fe2d:game/ui/app.gd'])
+          assert hashlib.sha1(b'blob ' + str(len(original)).encode() + b'\0' + original).hexdigest() == 'e5de540c1b317d69b4126dc895d42074fbaf9eb3'
+          source = original.decode('utf-8')
+          old = '\t_deck.station_requested.connect(func(role): Session.select_role(role); _go("bridge"))'
+          new = '\t# Keep the emitting deck alive until its input callback has returned.\n\t_deck.station_requested.connect(_open_deck_station.bind(_deck.get_instance_id()), CONNECT_DEFERRED)'
+          assert source.count(old) == 1
+          source = source.replace(old, new)
+          anchor = 'func _open_leisure_interaction(entry: Dictionary) -> Window:'
+          method = '''func _open_deck_station(role: String, source_id: int) -> void:
+          \t# A queued request may outlive a page change, disconnect or another request.
+          \t# Bind an ID, not a Node reference that may already have been freed.
+          \tif not is_inside_tree() or is_queued_for_deletion(): return
+          \tif _page != "deck" or not is_instance_valid(_deck): return
+          \tif _deck.get_instance_id() != source_id: return
+          \tif not _deck.is_inside_tree() or _deck.is_queued_for_deletion(): return
+          \tif role not in Catalog.ROLES: return
+          \tSession.select_role(role)
+          \t_go("bridge")
+
+          '''
+          assert source.count(anchor) == 1
+          source = source.replace(anchor, method + anchor)
+          body = json.dumps({'content': source, 'encoding': 'utf-8'}).encode()
+          url = 'https://api.github.com/repos/' + os.environ['REPOSITORY'] + '/git/blobs'
+          request = urllib.request.Request(url, data=body, method='POST', headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'})
+          with urllib.request.urlopen(request, timeout=30) as response:
+              result = json.load(response)
+          expected = hashlib.sha1(b'blob ' + str(len(source.encode())).encode() + b'\0' + source.encode()).hexdigest()
+          assert result['sha'] == expected
+          print('TERMINAL_REVIEWED_APP_BLOB=' + expected)
+          PY
+
+  linux-graphics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install graphical runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Verify runner rejects false positives
+        run: python3 tests/run_terminal_transition.py --self-test
+      - name: Download verified Godot
+        run: python3 tools/bootstrap.py
+      - name: Reproduce original and verify fixed terminals with actual graphics
+        run: xvfb-run -a -s '-screen 0 1600x900x24 -nolisten tcp' python3 tests/run_terminal_transition.py --verify-baseline
+      - name: Preserve synthetic test evidence only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: terminal-transition-evidence
+          path: build/terminal-transition/
+          if-no-files-found: warn
+          retention-days: 14
