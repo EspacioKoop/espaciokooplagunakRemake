@@ -14,6 +14,24 @@ func check(value: bool, label: String) -> void:
 		failures += 1
 		push_error("SESSION_REPORT_FAIL " + label)
 
+func same_json_value(expected: Variant, actual: Variant) -> bool:
+	# JSON has one number type. Godot's parsed numbers may be floats even when
+	# the projected document uses ints. Compare every field, not Dictionary's
+	# strict recursive Variant equality; never equate false/null/string with 0.
+	if expected is Dictionary:
+		if not actual is Dictionary or expected.size() != actual.size(): return false
+		for key in expected:
+			if not actual.has(key) or not same_json_value(expected[key], actual[key]): return false
+		return true
+	if expected is Array:
+		if not actual is Array or expected.size() != actual.size(): return false
+		for i in expected.size():
+			if not same_json_value(expected[i], actual[i]): return false
+		return true
+	if expected is int or expected is float:
+		return (actual is int or actual is float) and is_finite(float(actual)) and float(expected) == float(actual)
+	return typeof(expected) == typeof(actual) and expected == actual
+
 func settle() -> void:
 	for _i in 4:
 		await process_frame
@@ -33,6 +51,9 @@ func history() -> Dictionary:
 		"chronicle": [{"time": 1789074000.0, "sector": "Argi", "source": "Dirección", "text": "Encuentro registrado."}]}
 
 func projection_tests() -> void:
+	check(same_json_value({"a": [1, 2.5, null, false]}, {"a": [1.0, 2.5, null, false]}), "JSON comparator allows only numeric int/float equivalence")
+	for wrong in [{"a": [1.0, 2.5, 0, false]}, {"a": [1.0, 2.5, null, 0]}, {"a": ["1", 2.5, null, false]}, {"a": [2, 2.5, null, false]}, {"a": [1, 2.5, null]}, {"b": [1, 2.5, null, false]}]:
+		check(not same_json_value({"a": [1, 2.5, null, false]}, wrong), "JSON comparator detects value, type, shape and key changes")
 	var view = fixture()
 	var expedition = history()
 	var before = view.duplicate(true)
@@ -43,7 +64,7 @@ func projection_tests() -> void:
 		return
 	var doc: Dictionary = report.document
 	check(doc.format == "lagunak-session-report" and doc.version == 1, "explicit independent report format")
-	check(JSON.parse_string(report.json) == doc, "JSON round trip")
+	check(same_json_value(doc, JSON.parse_string(report.json)), "JSON round trip preserves every value")
 	check(SessionReport.capture(view, expedition, STAMP) == report, "deterministic at fixed timestamp")
 	check(doc.generated_at_utc == STAMP, "UTC capture timestamp")
 	check(doc.mission.title == view.mission.title, "Unicode title retained")
