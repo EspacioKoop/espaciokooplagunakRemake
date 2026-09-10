@@ -25,10 +25,13 @@ func setup(owner: Node) -> void:
 
 func _install_social_tables() -> void:
 	if deck._zone_models.size() <= 7: return
+	var session = deck.get_tree().root.get_node_or_null("Session")
+	if session == null: return
 	var cantina: Node3D = deck._zone_models[7]
 	for spec in [["poker", Vector3(-5, 1.08, 0)], ["blackjack", Vector3(5, 1.08, 0)], ["dados", Vector3(-5, 1.08, 6)]]:
 		var display = SocialTableDisplay.new()
 		display.table_id = spec[0]
+		display.session = session
 		display.position = spec[1]
 		cantina.add_child(display)
 
