@@ -27,6 +27,7 @@ var body: CharacterBody3D
 var camera: Camera3D
 var _doors: Array = []
 var _near_door = -1
+var _near_corridor_door = -1
 var _near_station = false
 var _pose_clock = 0.0
 var _avatars: Dictionary = {}
@@ -36,6 +37,8 @@ var _near_interaction: Dictionary = {}
 var _environment: Environment
 var _sun: DirectionalLight3D
 var _animation_time = 0.0
+var _corridors: ShipCorridors
+var _map: DeckMap
 var reduced_motion = false
 var seated = false
 var _standing_position = Vector3.ZERO
@@ -91,19 +94,9 @@ func _ready() -> void:
 			light.light_energy = 1.8
 			light.light_color = Color("bbe9e5") if sign_x == 1 else Color("f4c98a")
 			world.add_child(light)
-	for i in 7:
-		if i == 1: continue
-		var destination = ZONES[i]
-		var location: Vector3
-		match i:
-			0: location = Vector3(0, 0, -19)
-			2: location = Vector3(-2, 0, -12)
-			3: location = Vector3(2, 0, -12)
-			4: location = Vector3(-2, 0, 12)
-			5: location = Vector3(2, 0, 12)
-			_: location = Vector3(0, 0, 19)
-		_add_door(location, i, "ESCOTILLA · " + destination.name.to_upper(), 1)
-		_add_door(destination.at + Vector3(0, 0, destination.depth * 0.5 - 0.6), 1, "PASILLO CENTRAL", i)
+	_corridors = ShipCorridors.new()
+	world.add_child(_corridors)
+	_corridors.setup(self)
 	_add_door(Vector3(2, 0, 0), 7, "CANTINA", 1)
 	_add_door(ZONES[7].at + Vector3(0, 0, 10.5), 1, "VOLVER A LA NAVE", 7)
 	var connections = [Vector3(-10, 0, -7), Vector3(-10, 0, 1), Vector3(10, 0, -7), Vector3(10, 0, 1), Vector3(0, 0, -10.5)]
@@ -166,6 +159,15 @@ func _ready() -> void:
 	camera.current = true
 	gui_input.connect(func(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed: Input.mouse_mode = Input.MOUSE_MODE_CAPTURED)
+	_map = DeckMap.new()
+	_map.deck = self
+	_map.anchor_left = 1.0
+	_map.anchor_right = 1.0
+	_map.offset_left = -286
+	_map.offset_right = -16
+	_map.offset_top = 16
+	_map.offset_bottom = 206
+	add_child(_map)
 	teleport_zone(0)
 
 func _add_door(position: Vector3, destination: int, title: String, source: int) -> void:
@@ -190,8 +192,7 @@ func teleport_zone(index: int) -> void:
 	body.rotation.y = 0
 	if zone != 1: body.look_at(ZONES[zone].at + Vector3(0, 0.4, 0))
 	camera.rotation.x = -0.06
-	for i in _zone_models.size(): _zone_models[i].visible = i == zone
-	for door in _doors: door.label.visible = door.source == zone
+	_apply_zone_visibility()
 	_sun.visible = true
 	_sun.light_energy = 0.55 if zone in [9, 10] else 0.7
 	_sun.rotation_degrees = Vector3(-18, -70, 0) if zone in [9, 10] else Vector3(-40, -25, 0)
@@ -200,6 +201,15 @@ func teleport_zone(index: int) -> void:
 	_environment.ambient_light_energy = 0.22 if zone in [9, 10] else 0.25
 	zone_changed.emit(ZONES[zone].name)
 	Session.update_pose(body.position, body.rotation.y)
+
+func _apply_zone_visibility() -> void:
+	var on_ship = zone < 7
+	for i in _zone_models.size(): _zone_models[i].visible = (on_ship and i < 7) or (not on_ship and i == zone)
+	for door in _doors: door.label.visible = door.source == zone
+	if _corridors != null:
+		_corridors.visible = on_ship
+		_corridors.update_labels(zone)
+	if _map != null: _map.visible = on_ship
 
 func _input(event: InputEvent) -> void:
 	if not is_visible_in_tree(): return
@@ -216,6 +226,7 @@ func _input(event: InputEvent) -> void:
 
 func interact() -> void:
 	if seated: stand_up()
+	elif _near_corridor_door >= 0: _corridors.toggle(_near_corridor_door)
 	elif _near_door >= 0: teleport_zone(_near_door)
 	elif not _near_interaction.is_empty():
 		if _near_interaction.kind == "seat":
@@ -259,7 +270,14 @@ func _physics_process(delta: float) -> void:
 	if not seated: body.move_and_slide()
 	else: body.velocity = Vector3.ZERO
 	if body.position.y < -5: teleport_zone(zone)
+	if zone < 7:
+		var detected = _corridors.zone_for(body.position, zone)
+		if detected != zone:
+			zone = detected
+			_apply_zone_visibility()
+			zone_changed.emit(ZONES[zone].name)
 	_near_door = -1
+	_near_corridor_door = _corridors.near_door(body.position, zone) if zone < 7 else -1
 	_near_station = false
 	_near_interaction = {}
 	var closest = 2.2
@@ -275,6 +293,7 @@ func _physics_process(delta: float) -> void:
 	_near_station = zone < 7 and zone != 1 and Vector2(body.position.x - center.x, body.position.z - center.z).length() < 4.0
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED: prompt = "Pulsa en la vista · WASD para caminar · Ratón para mirar"
 	elif seated: prompt = "E · Levantarse     Ratón · Mirar alrededor"
+	elif _near_corridor_door >= 0: prompt = _corridors.prompt_for(_near_corridor_door)
 	elif _near_door >= 0: prompt = "E · Acceder a " + ZONES[_near_door].name
 	elif not _near_interaction.is_empty(): prompt = "E · " + _near_interaction.title
 	elif _near_station: prompt = "E · Operar " + Catalog.role_name(ZONES[zone].role)
