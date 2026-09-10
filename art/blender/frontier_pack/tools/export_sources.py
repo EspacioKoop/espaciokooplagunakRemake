@@ -27,13 +27,19 @@ def export_one(entry,output):
     if len(roots)!=1:
         raise ValueError('Expected exactly one identified asset root')
     pack.ROOT_OBJECT=roots[0]
-    for o in pack.OBJECTS:
-        if o.type=='ARMATURE':
-            o.data.pose_position='REST'
+    # The manifest describes the neutral pose, not whichever NLA frame happens
+    # to be active when the file opens (notably the turret's Scan rotation).
+    # Freeze only the in-memory scene, then restore tracks for animation export.
+    tracks=[(track,track.mute) for obj in pack.OBJECTS if obj.animation_data
+            for track in obj.animation_data.nla_tracks]
+    pack.freeze_for_preview()
     low,high,_=pack.bounds()
-    for o in pack.OBJECTS:
-        if o.type=='ARMATURE':
-            o.data.pose_position='POSE'
+    for track,muted in tracks:
+        track.mute=muted
+    for obj in pack.OBJECTS:
+        if obj.type=='ARMATURE':
+            obj.data.pose_position='POSE'
+    bpy.context.view_layer.update()
     sockets=[o.name for o in pack.OBJECTS if o.get('socket')]
     pack.optimize_export()
     # Exclude studio objects or unrelated objects a modeller added outside the asset collection.
