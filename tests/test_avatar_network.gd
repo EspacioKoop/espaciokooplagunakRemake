@@ -41,6 +41,10 @@ func run() -> void:
 		await legacy_host_case()
 	elif case_name == "legacy_client":
 		await legacy_client_case()
+	elif case_name == "retired_host":
+		await retired_host_case()
+	elif case_name in ["closing_client", "live_client"]:
+		await retired_client_case()
 	elif case_name == "host": await host_case()
 	elif case_name == "intruder": await intruder_case()
 	else: await client_case()
@@ -49,6 +53,33 @@ func run() -> void:
 	if is_instance_valid(avatars): check(avatars.profiles.is_empty(), "session close clears remote cosmetics")
 	print("AVATAR_NETWORK_RESULT %s checks=%d failures=%d" % [case_name, checks, failures])
 	quit(1 if failures else 0)
+
+func retired_host_case() -> void:
+	check(session.host_session(port, TEST_KEY).ok, "retirement host opens real ENet session")
+	print("AVATAR_NETWORK_READY")
+	check(await until(func(): return avatars.profiles.size() == 3), "both real clients subscribe to cosmetic updates")
+	var closing_id = 0
+	for key in session.roster:
+		if session.roster[key].name == "closing_client": closing_id = int(key)
+	check(closing_id > 1 and avatars._subscribers.has(closing_id), "closing client is authenticated and subscribed")
+	var packet: ENetPacketPeer = session.multiplayer.multiplayer_peer.get_peer(closing_id)
+	packet.peer_disconnect_now()
+	check(packet.get_state() == ENetPacketPeer.STATE_DISCONNECTED and not packet.is_active(), "real ENet transport has been retired")
+	check(session.roster.has(closing_id) and closing_id in session.multiplayer.get_peers(), "roster and peer list have not yet drained")
+	check(not session._peer_active(closing_id), "Session rejects the retired recipient")
+	# No await: exercise the teardown window before Godot drains its peer list.
+	check(avatars.save_local(selected("ember")).ok, "publish skips retired transport while updating live subscribers")
+	session._peer_disconnected(closing_id)
+	await create_timer(1).timeout
+
+func retired_client_case() -> void:
+	var role = "navegacion" if case_name == "closing_client" else "ingenieria"
+	check(session.join_session("127.0.0.1", port, TEST_KEY, case_name, role).ok, "retirement fixture client joins normally")
+	if case_name == "closing_client":
+		check(await until(func(): return session.mode == "offline"), "retired client observes real disconnection")
+	else:
+		check(await until(func(): return avatars.profile_for(1).suit == "ember"), "live client receives new avatar while another transport retires")
+		check(session.mode == "client", "live subscriber remains connected")
 
 func legacy_host_case() -> void:
 	avatars.queue_free()
