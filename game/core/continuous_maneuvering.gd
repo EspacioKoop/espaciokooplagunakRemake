@@ -118,7 +118,9 @@ func _process(delta: float) -> void:
  _sync_clock += delta
  if session.mode == "host" and _sync_clock >= 0.2:
   _sync_clock = 0.0
-  _sync.rpc(axis)
+  for peer_id in session.roster:
+   if session._peer_active(int(peer_id)):
+    _sync.rpc_id(int(peer_id), axis)
  updated.emit()
 
 func _unhandled_key_input(event: InputEvent) -> void:

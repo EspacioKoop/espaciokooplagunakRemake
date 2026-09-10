@@ -10,6 +10,7 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://assets/icon.svg"
 
 [autoload]
+Controls="*res://input/player_controls.gd"
 Session="*res://net/session.gd"
 Expedition="*res://core/expedition_systems.gd"
 Sensors="*res://core/advanced_sensors.gd"
@@ -18,6 +19,7 @@ Combat="*res://core/ground_combat.gd"
 Fleet="*res://core/fleet_ai.gd"
 Armaments="*res://core/ship_armaments.gd"
 Thrusters="*res://core/continuous_maneuvering.gd"
+Avatars="*res://world/avatar_service.gd"
 
 [display]
 window/size/viewport_width=1600
@@ -29,6 +31,7 @@ window/size/min_height=600
 window/stretch/mode="canvas_items"
 
 [rendering]
+textures/vram_compression/import_etc2_astc=true
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/default_filters/use_nearest_mipmap_filter=false
@@ -39,3 +42,7 @@ common/physics_ticks_per_second=30
 
 [audio]
 driver/enable_input=false
+
+[internationalization]
+locale/translations=PackedStringArray("res://localization/controls.es.translation", "res://localization/controls.en.translation")
+locale/fallback="es"

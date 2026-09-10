@@ -14,3 +14,9 @@
 .lagunak-ship div { background: #152a36; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; }
 .lagunak-events { display: grid; gap: 10px; }
 .lagunak-events p { padding: 8px 0; border-top: 1px solid #294652; }
+.lagunak-content select { color: #deeceb; background: #112331; padding: 8px; min-height: 36px; }
+.lagunak-orders { display: grid; gap: 12px; }
+.lagunak-order { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; border-top: 1px solid #294652; padding-top: 12px; }
+.lagunak-order label { flex: 1; min-width: 130px; }
+.lagunak-order button { flex: 1; }
+.lagunak-crew { display: grid; gap: 8px; }

@@ -52,20 +52,48 @@ func new_campaign() -> void:
 	sim.state = {}
 	start_mission(0)
 
+func start_campaign(document: Dictionary) -> Dictionary:
+	if mode == "client": return {"ok": false, "message": "El anfitrión selecciona la campaña."}
+	var error = CampaignDocument.validate(document)
+	if not error.is_empty(): return {"ok": false, "message": error}
+	# New authored campaigns never inherit rewards or unlocks from another run.
+	sim.state = {"campaign_document": document.duplicate(true)}
+	return start_mission(0)
+
+func campaign_missions() -> Array:
+	# Clients do not have the host's authoring document or future contacts.
+	if mode == "client": return [view.mission.duplicate(true)] if view.has("mission") else []
+	var document: Dictionary = sim.state.get("campaign_document", {})
+	return Catalog.missions() if document.is_empty() else CampaignDocument.playable_missions(document)
+
+func mission_unlocked(index: int) -> bool:
+	if mode == "client": return false
+	var completed: Array = sim.state.get("campaign", {}).get("completed", [])
+	var document: Dictionary = sim.state.get("campaign_document", {})
+	if not document.is_empty(): return CampaignDocument.unlocked(document, index, completed)
+	var missions = Catalog.missions()
+	return index >= 0 and index < missions.size() and (index == 0 or missions[index - 1].id in completed)
+
 func start_mission(index: int, custom: Dictionary = {}) -> Dictionary:
 	if mode == "client": return {"ok": false, "message": "El anfitrión selecciona la misión."}
-	var missions = Catalog.missions()
+	var missions = campaign_missions()
+	var document: Dictionary = sim.state.get("campaign_document", {}).duplicate(true)
+	var carry: Dictionary = sim.state
 	var mission: Dictionary
 	if custom.is_empty():
 		if index < 0 or index >= missions.size(): return {"ok": false, "message": "Misión inexistente."}
-		if index > 0 and missions[index-1].id not in sim.state.get("campaign", {}).get("completed", []): return {"ok": false, "message": "Completa la misión anterior."}
+		if not mission_unlocked(index): return {"ok": false, "message": "Completa las misiones requeridas."}
 		mission = missions[index]
 	else:
 		var error = Catalog.validate_mission(custom)
 		if not error.is_empty(): return {"ok": false, "message": error}
 		mission = custom.duplicate(true)
 		if not mission.id.begins_with("custom_"): mission.id = "custom_" + mission.id.left(57)
-	sim.start(mission, sim.state)
+		# A mission-editor preview is not a campaign stage or a reward shortcut.
+		if not document.is_empty(): carry = {}
+		document = {}
+	sim.start(mission, carry)
+	if not document.is_empty(): sim.state.campaign_document = document
 	sim.state.run_id = Crypto.new().generate_random_bytes(12).hex_encode()
 	paused = false
 	_refresh_view()

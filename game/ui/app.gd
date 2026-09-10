@@ -9,6 +9,7 @@ var _space: SpaceView
 var _deck: WorldDeck
 var _radar: Radar
 var _editor: MissionEditor
+var _campaign_window: CampaignEditor
 var _draft: Dictionary = {}
 var _refs: Dictionary = {}
 var _action_refs: Dictionary = {}
@@ -546,12 +547,21 @@ func _campaign() -> void:
 			Session.sim.state = saved.state
 			Session._refresh_view()
 	var data = Session.view.get("campaign", {"completed": [], "credits": 0, "reputation": 0, "survivors": 0, "upgrades": 0, "decisions": {}})
+	var missions = Session.campaign_missions()
+	var authored: Dictionary = Session.sim.state.get("campaign_document", {}) if Session.mode != "client" else {}
+	var completed_count = missions.filter(func(mission): return mission.id in data.completed).size()
 	var header = ConsoleUI.row(_content)
 	var heading = ConsoleUI.column(header, 4)
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	heading.add_child(ConsoleUI.label("La ruta compartida", 32))
-	heading.add_child(ConsoleUI.label("SEIS TRAVESÍAS. UNA TRIPULACIÓN.", 13, ConsoleUI.TEAL))
-	header.add_child(ConsoleUI.label("%d / 6\nmisiones cumplidas" % mini(data.completed.filter(func(id): return not str(id).begins_with("custom_")).size(), 6), 20, ConsoleUI.TEAL))
+	var campaign_title = ConsoleUI.paragraph(authored.get("title", "La ruta compartida"), 32, ConsoleUI.TEXT)
+	campaign_title.max_lines_visible = 2
+	campaign_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	campaign_title.tooltip_text = campaign_title.text
+	heading.add_child(campaign_title)
+	heading.add_child(ConsoleUI.label("EL ANFITRIÓN SELECCIONA LA SIGUIENTE MISIÓN." if Session.mode == "client" else "%d TRAVESÍAS. UNA TRIPULACIÓN." % missions.size(), 13, ConsoleUI.TEAL))
+	if Session.mode != "client":
+		header.add_child(ConsoleUI.button("Taller de campañas", _open_campaign_editor))
+		header.add_child(ConsoleUI.label("%d / %d\nmisiones cumplidas" % [completed_count, missions.size()], 20, ConsoleUI.TEAL))
 	var stats = ConsoleUI.row(_content, 16)
 	for stat in [["CRÉDITOS", str(data.credits)], ["SUPERVIVIENTES", str(data.survivors)], ["REPUTACIÓN", str(data.reputation)], ["REFUERZOS DE CASCO", "%d / 4" % data.upgrades]]:
 		var panel = ConsoleUI.card(stats)
@@ -568,23 +578,26 @@ func _campaign() -> void:
 	grid.add_theme_constant_override("h_separation", 16)
 	grid.add_theme_constant_override("v_separation", 16)
 	scroll.add_child(grid)
-	var missions = Catalog.missions()
 	for i in missions.size():
 		var mission: Dictionary = missions[i]
-		var unlocked = i == 0 or missions[i - 1].id in data.completed
+		var unlocked = Session.mission_unlocked(i)
 		var won = mission.id in data.completed
 		var card = ConsoleUI.card(grid)
 		card.get_parent().size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		card.get_parent().custom_minimum_size = Vector2(430, 225)
 		card.add_child(ConsoleUI.label("COMPLETADA" if won else ("DISPONIBLE" if unlocked else "RUTA BLOQUEADA"), 12, ConsoleUI.TEAL if unlocked else ConsoleUI.MUTED))
-		card.add_child(ConsoleUI.label(mission.title, 25))
+		var mission_title = ConsoleUI.paragraph(mission.title, 25, ConsoleUI.TEXT)
+		mission_title.max_lines_visible = 2
+		mission_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		mission_title.tooltip_text = mission.title
+		card.add_child(mission_title)
 		var briefing = ConsoleUI.paragraph(mission.briefing, 15)
 		briefing.max_lines_visible = 3
 		briefing.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		briefing.tooltip_text = mission.briefing
 		card.add_child(briefing)
 		var row = ConsoleUI.row(card)
-		var reward = ConsoleUI.label("%d créditos · %d objetivos" % [mission.reward, mission.objectives.size()], 13, ConsoleUI.MUTED)
+		var reward = ConsoleUI.label("%d créditos · %d objetivos" % [mission.get("reward", 0), mission.objectives.size()], 13, ConsoleUI.MUTED)
 		reward.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(reward)
 		var start = ConsoleUI.button("Repetir" if won else "Embarcar", _begin_mission.bind(i), unlocked and not won)
@@ -595,6 +608,56 @@ func _campaign() -> void:
 	bottom.add_child(ConsoleUI.paragraph("Las mejoras se instalan tras completar una misión y atracar. Cada refuerzo añade 15 puntos de integridad máxima. Repetir una misión no duplica sus recompensas.", 15))
 	if data.decisions.has("haize"):
 		_content.add_child(ConsoleUI.paragraph("Epílogo · Compartiste las cartas con Haize. La ruta hacia Egunsenti queda en manos de una comunidad de navegantes." if data.decisions.haize == "compartir" else "Epílogo · Conservaste las cartas. Haize respeta el acuerdo de paso, aunque la responsabilidad del próximo viaje sigue siendo vuestra.", 16, ConsoleUI.AMBER))
+
+func _open_campaign_editor() -> CampaignEditor:
+	if Session.mode == "client":
+		_notice("El anfitrión edita y selecciona las campañas.", false)
+		return null
+	if is_instance_valid(_campaign_window):
+		_campaign_window.popup_centered()
+		if is_instance_valid(_campaign_window.mission_window): _campaign_window.mission_window.popup_centered()
+		return _campaign_window
+	var editor = CampaignEditor.new()
+	_campaign_window = editor
+	editor.document = Session.sim.state.get("campaign_document", {}).duplicate(true)
+	editor.campaign_requested.connect(func(document):
+		var confirm = ConfirmationDialog.new()
+		confirm.title = "Comenzar campaña"
+		confirm.dialog_text = "Se iniciará una expedición nueva y sustituirá la partida actual. Guarda o exporta los cambios del taller antes de continuar."
+		confirm.confirmed.connect(func():
+			var result = Session.start_campaign(document)
+			_notice(result.message, result.ok)
+			if result.ok:
+				editor.queue_free()
+				_target = ""
+				Session.select_role("navegacion")
+				_go("bridge")
+			else: confirm.queue_free())
+		confirm.canceled.connect(confirm.queue_free)
+		editor.add_child(confirm)
+		confirm.popup_centered(Vector2i(590, 190)))
+	editor.mission_preview_requested.connect(func(mission):
+		# Preview goes through the same host gate and never unlocks campaign stages.
+		var confirm = ConfirmationDialog.new()
+		confirm.dialog_text = "¿Probar esta misión como partida independiente? Sustituirá la partida actual; el taller seguirá abierto para conservar tus cambios."
+		confirm.confirmed.connect(func():
+			var result = Session.start_mission(0, mission)
+			_notice(result.message, result.ok)
+			if result.ok:
+				editor.mission_window.hide()
+				editor.hide()
+				_target = ""
+				_go("bridge")
+				# Closing the preview returns to the still-live authored draft.
+				var return_button = ConsoleUI.button("Volver al taller de campañas", _open_campaign_editor)
+				_content.add_child(return_button)
+			confirm.queue_free())
+		confirm.canceled.connect(confirm.queue_free)
+		editor.mission_window.add_child(confirm)
+		confirm.popup_centered(Vector2i(590, 190)))
+	add_child(editor)
+	editor.popup_centered()
+	return editor
 
 func _begin_mission(index: int) -> void:
 	var result = Session.start_mission(index)
@@ -1015,6 +1078,24 @@ func _capture(args: PackedStringArray) -> void:
 	table_window.send("start")
 	await _take(path, "19_poker.png")
 	table_window.queue_free()
+	if "--capture-campaign-editor" in args:
+		# queue_free is deferred; release the table's exclusive modal first.
+		await get_tree().process_frame
+		_go("campaign")
+		var editor = _open_campaign_editor()
+		editor.fields.title.text = "Expedición de los tres faros"
+		editor._add_mission()
+		editor._add_mission()
+		editor.linear.button_pressed = false
+		for field in editor.dependency_fields.values(): field.button_pressed = true
+		editor._apply_dependencies()
+		if editor.document.missions.size() != 3 or not CampaignDocument.validate(editor.document).is_empty():
+			push_error("El taller de campañas no produjo contenido válido.")
+			get_tree().quit(1)
+			return
+		await _take(path, "campaign-editor.png")
+		editor.queue_free()
+		print("LAGUNAK_CAMPAIGN_CAPTURE_OK")
 	print("LAGUNAK_CAPTURE_OK 19 screenshots")
 	_ambient.stop()
 	_effects.stop()

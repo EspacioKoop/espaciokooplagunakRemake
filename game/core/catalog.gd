@@ -38,6 +38,9 @@ static func validate_mission(value: Variant) -> String:
 	if value.has("ship_design"):
 		var error = ShipModel.validate_design(value.ship_design)
 		if not error.is_empty(): return error
+	if value.has("ship_loadout"):
+		var error = LoadoutDocument.validate_loadout(value.ship_loadout)
+		if not error.is_empty(): return error
 	for key in ["id", "title", "sector", "briefing", "contacts", "objectives"]:
 		if not value.has(key):
 			return "Falta el campo: " + key

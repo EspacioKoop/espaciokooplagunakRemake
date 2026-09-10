@@ -1,0 +1,39 @@
+name: Verify standalone loadout editor
+
+on:
+  pull_request:
+  push:
+    branches: [main, agent/2-loadout-editor]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: loadout-editor-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  loadout-editor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: python3 tools/bootstrap.py
+      - name: Install display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Import resources
+        run: .toolchain/godot --headless --editor --path game --quit
+      - name: Validate authored mounts, native editor and playable round trip
+        shell: bash
+        run: |
+          set -o pipefail
+          timeout 90 xvfb-run -a .toolchain/godot --audio-driver Dummy --path game --script ../tests/test_loadout_editor.gd -- --test 2>&1 | tee loadout-tests.log
+          if grep -E '^(SCRIPT ERROR|ERROR):' loadout-tests.log; then exit 1; fi
+      - name: Verify affected existing systems
+        run: |
+          .toolchain/godot --headless --path game --script ../tests/test_armaments.gd -- --test
+          .toolchain/godot --headless --path game --script ../tests/test_ship_physics.gd -- --test
+          .toolchain/godot --headless --path game --script ../tests/test_core.gd -- --test
