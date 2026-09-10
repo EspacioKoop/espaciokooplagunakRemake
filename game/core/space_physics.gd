@@ -68,23 +68,37 @@ static func move(sim, delta: float, propulsion: Vector2) -> void:
    var hit_point = start.lerp(end, first)
    var normal = (hit_point - center).normalized()
    if normal.length_squared() < 0.01: normal = -Vector2.from_angle(deg_to_rad(ship.heading))
-   end = center + normal * (radius(obstacle) + ship.design.radius + 0.1)
-   var speed = (propulsion / delta + drift).length()
-   var impact = minf(60, speed * (0.105 if obstacle.kind in DYNAMIC_COLLIDERS else 0.08))
-   ShipModel.damage(ship, impact, obstacle.position)
-   if obstacle.kind in ["friendly", "hostile", "derelict"]:
-    obstacle.hull = maxf(0.0, float(obstacle.hull) - impact * 0.55)
-    if obstacle.hull <= 0: sim.fact("defeat", obstacle.id)
-   if obstacle.kind == "blackhole": ship.hull = 0
-   drift = drift.slide(normal) * (0.25 if obstacle.kind in DYNAMIC_COLLIDERS else 1.0)
-   ship.speed = 0.0
-   ship.throttle = 0.0
-   ship.autopilot = ""
-   sim.state.operations.warp = 0
-   sim.state.operations.route = ""
-   if speed > 1:
-    var kind_text = "otra nave" if obstacle.kind in ["friendly", "hostile", "derelict"] else ("estación" if obstacle.kind == "station" else "objeto espacial")
-    sim.log_event("Navegación", "Colisión con %s (%s). Impulso detenido." % [obstacle.name, kind_text])
+   var reach = radius(obstacle) + ship.design.radius
+   var avoiding = obstacle.kind in DYNAMIC_COLLIDERS and not ship.autopilot.is_empty() and obstacle.id != ship.autopilot
+   if avoiding:
+    var destination = sim.contact(ship.autopilot)
+    var toward_goal = Vector2(destination.position[0] - center.x, destination.position[1] - center.y).normalized() if not destination.is_empty() else Vector2.from_angle(deg_to_rad(ship.heading))
+    var tangent = Vector2(-normal.y, normal.x)
+    if tangent.dot(toward_goal) < 0: tangent = -tangent
+    var escape = (normal + tangent * 1.35).normalized()
+    end = center + escape * (reach + 8.0)
+    drift = tangent * minf(22.0, maxf(8.0, ship.speed * 0.18))
+    ship.speed = minf(ship.speed, 32.0)
+    ship.throttle = minf(ship.throttle, 0.45)
+    sim.log_event("Navegación", "Piloto automático: evasión de " + obstacle.name + ".")
+   else:
+    end = center + normal * (reach + 0.1)
+    var speed = (propulsion / delta + drift).length()
+    var impact = minf(60, speed * (0.105 if obstacle.kind in DYNAMIC_COLLIDERS else 0.08))
+    ShipModel.damage(ship, impact, obstacle.position)
+    if obstacle.kind in ["friendly", "hostile", "derelict"]:
+     obstacle.hull = maxf(0.0, float(obstacle.hull) - impact * 0.55)
+     if obstacle.hull <= 0: sim.fact("defeat", obstacle.id)
+    if obstacle.kind == "blackhole": ship.hull = 0
+    drift = drift.slide(normal) * (0.25 if obstacle.kind in DYNAMIC_COLLIDERS else 1.0)
+    ship.speed = 0.0
+    ship.throttle = 0.0
+    ship.autopilot = ""
+    sim.state.operations.warp = 0
+    sim.state.operations.route = ""
+    if speed > 1:
+     var kind_text = "otra nave" if obstacle.kind in ["friendly", "hostile", "derelict"] else ("estación" if obstacle.kind == "station" else "objeto espacial")
+     sim.log_event("Navegación", "Colisión con %s (%s). Impulso detenido." % [obstacle.name, kind_text])
  ship.position = [clampf(end.x, -14000, 14000), clampf(end.y, -14000, 14000)]
  ship.drift = [drift.x, drift.y]
 
