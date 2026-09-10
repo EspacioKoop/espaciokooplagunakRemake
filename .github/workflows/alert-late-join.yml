@@ -1,0 +1,51 @@
+name: Shared alert late join and reconnect
+
+on:
+  push:
+    branches: [main, agent/32-alert-regression-b17]
+    paths:
+      - 'game/**'
+      - 'tools/bootstrap.py'
+      - 'tests/test_alert_late_join.gd'
+      - 'tests/run_alert_late_join.py'
+      - 'tests/test_alert_late_join_runner.py'
+      - '.github/workflows/alert-late-join.yml'
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tools/bootstrap.py'
+      - 'tests/test_alert_late_join.gd'
+      - 'tests/run_alert_late_join.py'
+      - 'tests/test_alert_late_join_runner.py'
+      - '.github/workflows/alert-late-join.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: shared-alert-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  alert-network:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check runner isolation and failure detection
+        run: python3 -m unittest discover -s tests -p test_alert_late_join_runner.py -v
+      - name: Download verified Godot toolchain
+        run: python3 tools/bootstrap.py
+      - name: Exercise all eight stations over ENet
+        run: python3 tests/run_alert_late_join.py --output dist/alert-late-join
+      - name: Preserve synthetic regression evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: alert-late-join-evidence
+          path: dist/alert-late-join/
+          if-no-files-found: warn
+          retention-days: 7
