@@ -101,7 +101,7 @@ func _ready() -> void:
 	for i in range(8, ZONES.size()):
 		_add_door(ZONES[7].at + connections[i - 8], i, ZONES[i].name.to_upper(), 7)
 		var exit_position = Vector3(-7, 0, 49.2) if i == 9 else Vector3(0, 0, ZONES[i].depth * 0.5 - 0.7)
-		_add_door(ZONES[7].at + Vector3.ZERO if false else ZONES[i].at + exit_position, 7, "CABINA · VOLVER A CANTINA" if i == 9 else "VOLVER A CANTINA", i)
+		_add_door(ZONES[i].at + exit_position, 7, "CABINA · VOLVER A CANTINA" if i == 9 else "VOLVER A CANTINA", i)
 		for entry in LeisurePlaces.interactions(i):
 			entry.zone = i
 			entry.position += ZONES[i].at
@@ -242,10 +242,13 @@ func _input(event: InputEvent) -> void:
 	if not is_inside_tree() or is_queued_for_deletion() or not is_visible_in_tree() or not is_instance_valid(body) or _controls_blocked(): return
 	if _input_action(event, "release_pointer", KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		if _map != null and _map.has_focus():
+			_map.select_destination(-1)
+			_map.release_focus()
 		get_viewport().set_input_as_handled()
 		return
 	if _input_action(event, "capture_pointer", MOUSE_BUTTON_LEFT):
-		if _map != null and _map.get_global_rect().has_point(get_global_mouse_position()): return
+		if _map != null and _map.is_visible_in_tree() and _map.get_global_rect().has_point(get_global_mouse_position()): return
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if _character_control_active():
 		if event is InputEventMouseMotion:
