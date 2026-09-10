@@ -133,7 +133,7 @@ func _receive_command(operation: String, args: Dictionary) -> void:
 func _response(text: String, ok: bool) -> void:
 	notice.emit(text, ok)
 
-@rpc("authority", "call_remote", "reliable", 4)
+@rpc("authority", "call_remote", "reliable", 3)
 func _snapshot(incoming: Dictionary) -> void:
 	var session = _session()
 	if session == null or session.mode != "client": return
@@ -141,6 +141,13 @@ func _snapshot(incoming: Dictionary) -> void:
 	if JSON.stringify(incoming).length() > 196000: return
 	data = incoming.duplicate(true)
 	updated.emit()
+
+func _view_for(actor: String) -> Dictionary:
+	var safe = data.duplicate(true)
+	var own = safe.inventory.get(actor, {})
+	safe.inventory = {}
+	if not own.is_empty(): safe.inventory[actor] = own
+	return safe
 
 func _perform(operation: String, args: Dictionary, actor: String, role: String) -> Dictionary:
 	var session = _session()
@@ -243,7 +250,10 @@ func _process(delta: float) -> void:
 				_auto_encounter(session)
 		if _broadcast_clock >= 0.5 and session.mode == "host":
 			_broadcast_clock = 0.0
-			for peer_id in multiplayer.get_peers(): _snapshot.rpc_id(peer_id, data)
+			for key in session.roster:
+				var peer_id = int(key)
+				if peer_id == 1 or peer_id not in multiplayer.get_peers(): continue
+				_snapshot.rpc_id(peer_id, _view_for(str(peer_id)))
 		if _save_clock >= 30.0:
 			_save_clock = 0.0
 			save()
