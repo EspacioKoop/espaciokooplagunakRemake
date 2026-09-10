@@ -11,7 +11,7 @@ Una aplicación nativa de exploración espacial cooperativa: navega con la Itsas
 
 ## Estado y ejecución
 
-El trabajo recuperado y la ampliación de puestos y asistencia están conservados en este repositorio. La paridad completa con
+El trabajo recuperado y las ampliaciones de nave, puestos, asistencia y espacios recorribles están conservados en este repositorio. La paridad completa con
 el original sigue en implementación; no se considera una entrega final mientras
 queden funciones pendientes en [la matriz de paridad](docs/FEATURE_PARITY.md).
 La autonomía respecto a Foundry es obligatoria para todos los sistemas.
@@ -34,13 +34,15 @@ automático. **F1** abre la ayuda; **F5** guarda; **F11** alterna pantalla compl
 - **Física espacial:** marcha atrás, viraje limitado, colisiones por trayectoria, gravedad, portales transitables e interferencia de nebulosas. Los objetos se colocan desde el editor.
 - **Sistemas conectados:** potencia, temperatura, refrigeración, daños, combustible, escudos, energía, sondas, torpedos y repuestos.
 - **Cooperación:** sesiones ENet con clave de acceso, puestos exclusivos, órdenes validadas por el anfitrión y presencia de otros tripulantes en cubierta.
-- **Interiores recorribles:** puente, pasillo central, ingeniería, camarotes, bodega, comedor y enfermería. WASD, ratón, Mayús y E para moverse e interactuar.
+- **Trece destinos recorribles:** puente, pasillo central, ingeniería, camarotes, bodega, comedor, enfermería, cantina, museo, playa, terraza, estudio y corredor de recuerdos. WASD, ratón, Mayús y E para caminar e interactuar.
+- **Museo:** dieciocho esculturas propias inspiradas en los temas del catálogo de referencia, cinco cuadros geométricos, cartelas y un libro de cinco páginas con apertura y paso de hoja en 3D.
+- **Playa y ocio:** paseo continuo de cien metros, dunas, mar animado, reloj, aerogeneradores y cabina de regreso; bancos y sillas utilizables y focos de estudio controlables.
 - **Editor integrado:** coloca contactos sobre el mapa, ordena objetivos, deshaz cambios, guarda JSON y prueba la misión con las reglas reales del juego.
 - **Guardado local:** autoguardado y copia anterior, con comprobaciones de estructura e integridad.
 
 ## Capturas del juego
 
-Estas once imágenes se capturaron directamente desde el ejecutable autónomo de Linux a 1600 × 900. Muestran esta implementación en ejecución.
+Estas dieciocho imágenes se capturaron directamente desde el ejecutable autónomo de Linux a 1600 × 900. Muestran esta implementación en ejecución.
 
 ### Puente y navegación
 
@@ -76,12 +78,33 @@ Estas once imágenes se capturaron directamente desde el ejecutable autónomo de
 
 ![Editor nativo de capacidades de nave](docs/images/11_astillero.png)
 
+### Museo y libro
+
+![Museo recorrible con esculturas originales del remake](docs/images/12_museo.png)
+
+![Lectura y navegación del libro del museo](docs/images/13_libro.png)
+
+### Playa
+
+![Paseo, dunas, mar y aerogeneradores en la playa](docs/images/14_playa.png)
+
+### Cantina, terraza, estudio y recuerdos
+
+![Cantina y acceso a los espacios de ocio](docs/images/15_cantina.png)
+
+![Terraza con mesas y asientos utilizables](docs/images/16_terraza.png)
+
+![Estudio con escenario y focos de colores](docs/images/17_estudio.png)
+
+![Corredor de recuerdos](docs/images/18_recuerdos.png)
+
 ## Modelos en Blender
 
-Los **20 modelos** tienen [fuente editable en Blender](art/blender/lagunak_assets.blend), exportaciones GLB incluidas y [manifiesto SHA-256](game/assets/models/manifest.json). El archivo se trabaja con Blender 4.5.3 LTS. Incluye Itsaso, estación, otras naves, tripulante, mobiliario, reactor, salas y objetos del sector.
+Hay dos fuentes editables en Blender 4.5.3 LTS: [nave, tripulante y salas base](art/blender/lagunak_assets.blend) y [museo, esculturas, playa y ocio](art/blender/leisure_assets.blend). Los veinte GLB base y el paquete de seis espacios adicionales están incluidos y comprobados mediante [SHA-256](game/assets/models/manifest.json). Las esculturas son interpretaciones estilizadas nuevas; no son escaneos ni reconstrucciones arqueológicas fieles.
 
 ```sh
 blender --background art/blender/lagunak_assets.blend --python art/blender/export_assets.py
+blender --background art/blender/leisure_assets.blend --python art/blender/export_leisure.py
 ```
 
 [Guía de modelos, sonido y misiones](docs/AUTHORING.md).
@@ -109,7 +132,7 @@ python3 tools/package_downloads.py
 
 El bootstrap verifica las descargas oficiales de Godot mediante SHA-512. Los ZIP aparecen en `dist/`. CI ejecuta las pruebas de campaña, guardado, interfaz, cooperación y HTTP, exporta ambos sistemas, captura Linux y comprueba el arranque en Windows y conserva los paquetes de ese commit como artefactos de la ejecución.
 
-Comprobaciones locales: **136 del núcleo, 79 de operaciones, 59 de asistencia, 46 de nave y física, 56 de interfaz, 14 HTTP y 10 del cliente**, más una sesión de red con **cinco procesos reales**. [Comandos y límites](docs/VALIDATION.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md).
+Comprobaciones locales: **136 del núcleo, 79 de operaciones, 59 de asistencia, 46 de nave y física, 62 de interfaz, 88 de museo y ocio, 14 HTTP y 10 del cliente**, más una sesión de red con **cinco procesos reales**. [Comandos y límites](docs/VALIDATION.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md).
 
 ## Un proyecto independiente
 

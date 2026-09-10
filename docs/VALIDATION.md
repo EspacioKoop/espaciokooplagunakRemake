@@ -11,11 +11,12 @@ Comprobaciones locales realizadas el 10 de septiembre de 2026 con Godot 4.7.1 es
 | Persistencia | Guardado, lectura, integridad, copia anterior, rechazo de estructuras inválidas y progreso sin duplicar recompensas, dentro de la suite del núcleo. |
 | Cooperación | Cinco procesos reales: anfitrión, navegación, ingeniería, clave incorrecta y puesto ocupado. Se verifican rechazo de conexiones, permisos, órdenes, movimiento, límites de presencia y reparto privado de códigos y retos por conexión. |
 | HTTP opcional | 14 comprobaciones HTTP reales, incluyendo autenticación, origen, preflight, límites, método, cursores y filtrado del estado. |
-| Interfaz | 56 comprobaciones, 0 fallos. Astillero aplicado a una misión y botón de piloto automático con efecto real, ocho puestos, límites de las pantallas, colisión del suelo en siete espacios y ciclo de edición/guardado/reapertura de una misión. |
+| Interfaz | 62 comprobaciones, 0 fallos. Astillero aplicado a una misión y botón de piloto automático con efecto real, ocho puestos, límites de las pantallas, colisión del suelo en trece espacios y ciclo de edición/guardado/reapertura de una misión. |
+| Museo y ocio | 88 comprobaciones, 0 fallos: acceso físico a dieciocho esculturas, cinco cuadros y el libro, lectura/páginas, recorrido y límite del mar, reloj animado y movimiento reducido, asientos, focos y retornos a cantina. |
 | Cliente Foundry | 10 pruebas con Node: URL local, autenticación, respuestas, cancelación, escape e importación ordenada sin repetir eventos. |
-| Linux | Exportación y ejecución gráfica del binario autónomo. Once capturas de 1600 × 900 revisadas visualmente. |
-| Windows | Exportación PE x86_64. El flujo de GitHub añade una comprobación de arranque del ejecutable en Windows Server 2022 antes de dar por verificados los paquetes. El checkpoint `60bf2e5` pasó la prueba de arranque en Windows y la exportación de ambos sistemas: [ejecución 34467146178](https://github.com/VaroTv7/espaciokooplagunakRemake/actions/runs/34467146178). Cada ampliación necesita volver a pasar el flujo. |
-| Recursos | Fuente Blender editable, veinte GLB comprobados contra SHA-256, once PNG y ZIP con CRC y SHA-256. |
+| Linux | Exportación y ejecución gráfica del binario autónomo. Dieciocho capturas de 1600 × 900 revisadas visualmente. |
+| Windows | Exportación PE x86_64. El flujo de GitHub añade una comprobación de arranque del ejecutable en Windows Server 2022 antes de dar por verificados los paquetes. El checkpoint `9cd0441` pasó la prueba de arranque en Windows y la exportación de ambos sistemas: [ejecución 34469280923](https://github.com/VaroTv7/espaciokooplagunakRemake/actions/runs/34469280923). Cada ampliación necesita volver a pasar el flujo. |
+| Recursos | Dos fuentes Blender editables, veintiún GLB comprobados contra SHA-256, dieciocho PNG y ZIP con CRC y SHA-256. |
 
 ## Reproducir
 
@@ -31,6 +32,7 @@ python3 tools/bootstrap.py --templates
 python3 tests/run_network.py
 python3 tests/run_telemetry.py
 timeout 60 .toolchain/godot --headless --path game --script ../tests/test_ui.gd -- --test
+timeout 60 .toolchain/godot --headless --path game --script ../tests/test_leisure.gd -- --test
 node --test integrations/foundry/tests/client.test.mjs
 python3 tools/build.py
 python3 tools/capture.py --binary "$PWD/build/linux/EspaciokoopLagunak.x86_64"

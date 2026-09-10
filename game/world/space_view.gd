@@ -15,6 +15,13 @@ var _clock = 0.0
 var _beam: MeshInstance3D
 
 static func model(name: String) -> Node3D:
+	if name in LeisurePlaces.MODELS:
+		var bundle = load("res://assets/models/leisure_bundle.glb") as PackedScene
+		var temporary = bundle.instantiate()
+		var instance = temporary.get_node(NodePath(name)) as Node3D
+		temporary.remove_child(instance)
+		temporary.free()
+		return instance
 	var path = "res://assets/models/" + name + ".glb"
 	var packed = load(path) as PackedScene
 	assert(packed != null, "Missing model: " + path)

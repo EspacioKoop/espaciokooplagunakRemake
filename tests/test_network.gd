@@ -71,9 +71,14 @@ func run() -> void:
 					await delay(0.1)
 					if session.poses.has(id): break
 				check(session.poses.has(id), "crew position replicated")
+				for attempt in 15:
+					session.update_pose(Vector3(5, 1, 240), 0.5)
+					await delay(0.1)
+					if session.poses.has(id) and session.poses[id].position[2] == 240: break
+				check(session.poses.has(id) and session.poses[id].position[2] == 240, "crew presence reaches the standalone beach")
 				session.update_pose(Vector3(500, 1, 1), 0)
 				await delay(0.3)
-				if session.poses.has(id): check(session.poses[id].position[0] == 1, "out-of-range position rejected")
+				if session.poses.has(id): check(session.poses[id].position[0] == 5, "out-of-range position rejected")
 			else:
 				session.order("power", {"system": "sensores", "value": 0})
 				await delay(0.3)

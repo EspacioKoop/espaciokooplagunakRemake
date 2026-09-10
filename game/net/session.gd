@@ -6,7 +6,7 @@ signal joined
 signal disconnected
 
 const DEFAULT_PORT = 27840
-const PROTOCOL = 3
+const PROTOCOL = 4
 var sim = Simulation.new()
 var view: Dictionary = {}
 var mode = "offline"
@@ -263,7 +263,7 @@ func _receive_pose(position: Array, yaw: float) -> void:
 	var id = multiplayer.get_remote_sender_id()
 	if not roster.has(id) or position.size() != 3 or not is_finite(yaw): return
 	for coordinate in position:
-		if not Catalog.finite_number(coordinate) or absf(coordinate) > 100: return
+		if not Catalog.finite_number(coordinate) or absf(coordinate) > 400: return
 	poses[id] = {"position": position, "yaw": fposmod(yaw, TAU)}
 
 func _peer_disconnected(id: int) -> void:

@@ -220,6 +220,21 @@
         1.78
       ],
       "sha256": "f3b79e925a013f93ec257d76b79ff259ad355c6bbb78c070a2ab11fbe32869fe"
+    },
+    {
+      "name": "leisure_bundle",
+      "file": "leisure_bundle.glb",
+      "source": "art/blender/leisure_assets.blend",
+      "submodels": [
+        "museum_hall",
+        "cantina",
+        "terrace",
+        "studio",
+        "memories_hall",
+        "beach"
+      ],
+      "source_sha256": "b62831d7aa11722f8069ee0d2536df253a298ab6d168bd9d47a3dc3348b9198d",
+      "sha256": "6e7d8442c9253d7eb8bc2269db997fa90acea3270f2d5bcd4c2238f5afedfcae"
     }
   ]
 }

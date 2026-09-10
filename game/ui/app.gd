@@ -444,10 +444,13 @@ func _interior() -> void:
 	ConsoleUI.expand(viewport_panel)
 	body.add_child(viewport_panel)
 	_deck = WorldDeck.new()
+	_deck.reduced_motion = _preferences.motion
 	viewport_panel.add_child(_deck)
 	_deck.station_requested.connect(func(role): Session.select_role(role); _go("bridge"))
+	_deck.interaction_requested.connect(_open_leisure_interaction)
 	_deck.zone_changed.connect(func(name):
-		if _refs.has("deck_zone"): _refs.deck_zone.text = name)
+		if _refs.has("deck_zone"): _refs.deck_zone.text = name
+		if _refs.has("deck_station"): _refs.deck_station.disabled = WorldDeck.ZONES[_deck.zone].role.is_empty())
 	var scroll = ScrollContainer.new()
 	scroll.custom_minimum_size.x = 290
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -459,13 +462,50 @@ func _interior() -> void:
 	for i in WorldDeck.ZONES.size():
 		side.add_child(ConsoleUI.button("%02d  %s" % [i + 1, WorldDeck.ZONES[i].name], func(): _deck.teleport_zone(i)))
 	side.add_child(ConsoleUI.paragraph("Recorre cada sala en primera persona. Las escotillas del pasillo comunican los compartimentos; acércate y pulsa E. También puedes usar el traslado rápido de esta lista.", 15))
-	side.add_child(ConsoleUI.button("Operar puesto de esta sala", func(): Session.select_role(WorldDeck.ZONES[_deck.zone].role); _go("bridge"), true))
+	_refs.deck_station = ConsoleUI.button("Operar puesto de esta sala", func(): Session.select_role(WorldDeck.ZONES[_deck.zone].role); _go("bridge"), true)
+	side.add_child(_refs.deck_station)
 	var spacer = Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	side.add_child(spacer)
 	side.add_child(ConsoleUI.paragraph("WASD · caminar\nMayús · correr\nRatón · mirar\nE · escotilla / consola\nEsc · liberar ratón", 15))
 	_refs.deck_prompt = ConsoleUI.label("", 15, ConsoleUI.TEAL)
 	_content.add_child(_refs.deck_prompt)
+
+func _open_leisure_interaction(entry: Dictionary) -> Window:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var window: Window
+	if entry.kind == "book":
+		window = MuseumReader.new()
+		window.page = int(Session.get_meta("museum_page", 0))
+		var deck = _deck
+		deck.book_open = true
+		window.page_changed.connect(func(page):
+			Session.set_meta("museum_page", page)
+			if is_instance_valid(deck): deck.turn_book(page))
+		window.tree_exiting.connect(func():
+			if is_instance_valid(deck): deck.book_open = false)
+	else:
+		window = Window.new()
+		window.title = entry.title
+		window.size = Vector2i(730, 420)
+		var margin = MarginContainer.new()
+		margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		for edge in ["left", "top", "right", "bottom"]: margin.add_theme_constant_override("margin_" + edge, 28)
+		window.add_child(margin)
+		var root = ConsoleUI.column(margin, 22)
+		root.add_child(ConsoleUI.paragraph(entry.title, 26, ConsoleUI.TEAL))
+		var scroll = ScrollContainer.new()
+		ConsoleUI.expand(scroll)
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		root.add_child(scroll)
+		scroll.add_child(ConsoleUI.paragraph(entry.text, 19, ConsoleUI.TEXT))
+		root.add_child(ConsoleUI.button("Volver al recorrido", window.queue_free, true))
+		window.close_requested.connect(window.queue_free)
+	window.transient = true
+	window.exclusive = true
+	add_child(window)
+	window.popup_centered()
+	return window
 
 func _atlas() -> void:
 	_content.add_child(ConsoleUI.label("Atlas del sector", 28))
@@ -945,7 +985,25 @@ func _capture(args: PackedStringArray) -> void:
 	_go("editor")
 	_editor._open_ship_design()
 	await _take(path, "11_astillero.png")
-	print("LAGUNAK_CAPTURE_OK 11 screenshots")
+	for child in _editor.get_children():
+		if child is ShipDesignEditor: child.queue_free()
+	await get_tree().process_frame
+	_go("deck")
+	_deck.teleport_zone(8)
+	_deck.body.position = WorldDeck.ZONES[8].at + Vector3(14, 0.4, 24)
+	_deck.body.look_at(WorldDeck.ZONES[8].at + Vector3(0, 0.4, -5))
+	await _take(path, "12_museo.png")
+	var book = _open_leisure_interaction({"kind": "book"})
+	await _take(path, "13_libro.png")
+	book.queue_free()
+	await get_tree().process_frame
+	for entry in [[9, "14_playa.png"], [7, "15_cantina.png"], [10, "16_terraza.png"], [11, "17_estudio.png"], [12, "18_recuerdos.png"]]:
+		_deck.teleport_zone(entry[0])
+		if entry[0] == 9:
+			_deck.body.position = WorldDeck.ZONES[9].at + Vector3(5, 0.4, 40)
+			_deck.body.look_at(WorldDeck.ZONES[9].at + Vector3(20, 0.4, -5))
+		await _take(path, entry[1])
+	print("LAGUNAK_CAPTURE_OK 18 screenshots")
 	_ambient.stop()
 	_effects.stop()
 	_ambient.stream = null

@@ -12,7 +12,7 @@ El ejecutable contiene simulación, contenido, interfaz, recursos 3D, audio y gu
 | `game/ui/` | Interfaz nativa, radar y editor visual. |
 | `game/world/` | Vista exterior e interiores recorribles con colisiones. |
 | `game/data/campaign.json` | Las seis misiones de campaña. |
-| `art/blender/` | Fuente editable y exportador de los veinte modelos. |
+| `art/blender/` | Dos fuentes editables y exportadores de los modelos base y espacios de ocio. |
 | `integrations/foundry/` | Cliente de consulta, panel de dirección e importación manual al diario. |
 
 ## Simulación y contenido
@@ -53,7 +53,7 @@ Godot 4.7.1 se descarga desde sus publicaciones oficiales y se comprueba con la 
 
 `ship_operations.gd` implementa las órdenes ampliadas y sus temporizadores. `cooperation.gd` mantiene los cuatro retos y las propuestas. El despachador de `Simulation` conserva la autorización y resuelve el efecto de cada orden; las interfaces no asignan resultados de victoria ni permisos.
 
-El protocolo ENet es ahora **3**: los snapshots se proyectan para cada conexión, de modo que los códigos de autodestrucción y los retos solo llegan al destinatario. Las conexiones con protocolo anterior se rechazan con indicación de actualizar. La telemetría de Foundry usa la proyección sin códigos ni retos privados.
+El protocolo ENet es ahora **4**: los snapshots se proyectan para cada conexión, de modo que los códigos de autodestrucción y los retos solo llegan al destinatario. Las conexiones con protocolo anterior se rechazan con indicación de actualizar. La telemetría de Foundry usa la proyección sin códigos ni retos privados.
 
 El guardado continúa leyendo el formato 1 anterior. Si faltan las nuevas secciones, las inicializa con valores definidos; las operaciones nuevas se validan antes de restaurar. Las asistencias efímeras se cancelan al recuperar la partida.
 
@@ -63,4 +63,8 @@ El guardado continúa leyendo el formato 1 anterior. Si faltan las nuevas seccio
 
 `space_physics.gd` resuelve el primer contacto de cada trayectoria con asteroides, planetas, horizontes y portales, aplica atracción gravitatoria y conserva la deriva. Las nebulosas bloquean los análisis a más de 300 m. El anfitrión calcula estos efectos; la interfaz dibuja el estado recibido.
 
-Los guardados con cuatro sistemas se validan contra su contrato anterior antes de añadir los subsistemas nuevos y dividir su porcentaje de escudo entre proa y popa. Un diseño personalizado forma parte de la misión y del guardado; las capacidades se validan en ambos límites. El protocolo 3 exige que anfitrión y clientes conozcan este modelo de nave.
+Los guardados con cuatro sistemas se validan contra su contrato anterior antes de añadir los subsistemas nuevos y dividir su porcentaje de escudo entre proa y popa. Un diseño personalizado forma parte de la misión y del guardado; las capacidades se validan en ambos límites. El protocolo 4 exige que anfitrión y clientes conozcan este modelo de nave.
+
+## Espacios recorribles
+
+`WorldDeck` construye trece destinos con colisiones derivadas de las mallas Blender y selecciona el grupo visible. `LeisurePlaces` aporta puntos de interacción y textos. El lector del museo presenta cinco páginas y sincroniza la animación local del libro; asientos y focos son locales por ahora. El mar usa un shader propio y la preferencia de movimiento reducido inmoviliza el agua y los elementos decorativos. La presencia ENet admite coordenadas de hasta 400 metros por eje, necesarias para los nuevos destinos.

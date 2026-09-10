@@ -60,6 +60,16 @@ También puede utilizarse el módulo oficial `bpy` 4.5.3 con Python 3.11. El exp
 
 La fuente Blender se conserva intacta durante la exportación. La combinación de mallas se hace sobre copias temporales para reducir el número de nodos del juego. La geometría del planeta procede de Blender; su superficie se representa con el shader del proyecto.
 
+### Museo y espacios de ocio
+
+Abre `art/blender/leisure_assets.blend` para editar el segundo conjunto. Conserva los grupos raíz `museum_hall`, `cantina`, `terrace`, `studio`, `memories_hall` y `beach` y los nombres de los objetos animados. La exposición está separada en una cuadrícula de 200 × 460 unidades. El exportador centra los seis grupos para el juego y restaura después su posición de trabajo, sin guardar sobre la fuente.
+
+```sh
+blender --background art/blender/leisure_assets.blend --python art/blender/export_leisure.py
+```
+
+`build_leisure.py` es el generador original de esa geometría: ejecutarlo **reemplaza** la fuente con la construcción procedural inicial. Para conservar cambios manuales usa `export_leisure.py`. Los dos exportadores mantienen la entrada del otro conjunto en el manifiesto. El catálogo y las cartelas están en `game/data/museum.json`; las interacciones y páginas en `game/world/leisure.gd`. Los nombres de las esculturas identifican sus temas, no atribuyen estas geometrías nuevas a los autores históricos.
+
 ## Sonido
 
 `python tools/generate_audio.py` regenera los efectos originales de pulso, torpedo y escaneo. Los sonidos de confirmación, llegada y ambiente se conservan como WAV originales del proyecto. El juego utiliza los recursos incluidos y no descarga audio durante la partida.

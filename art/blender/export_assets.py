@@ -50,5 +50,9 @@ for collection in collections:
     bpy.context.window.scene = original_scene
     bpy.data.scenes.remove(temporary_scene)
     print("EXPORTED", collection.name, dimensions, flush=True)
-(OUTPUT / "manifest.json").write_text(json.dumps({"blender": bpy.app.version_string, "models": manifest}, indent=2) + "\n")
 assert len(manifest) == 20, f"Expected 20 models, got {len(manifest)}"
+manifest_path = OUTPUT / "manifest.json"
+if manifest_path.exists():
+    manifest += [entry for entry in json.loads(manifest_path.read_text())["models"]
+                 if entry.get("source") == "art/blender/leisure_assets.blend"]
+manifest_path.write_text(json.dumps({"blender": bpy.app.version_string, "models": manifest}, indent=2) + "\n")

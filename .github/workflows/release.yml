@@ -40,6 +40,8 @@ jobs:
         run: python3 tests/run_telemetry.py
       - name: Exercise native UI and room collisions
         run: timeout 60 .toolchain/godot --headless --path game --script ../tests/test_ui.gd -- --test
+      - name: Walk through museum, beach and social spaces
+        run: timeout 60 .toolchain/godot --headless --path game --script ../tests/test_leisure.gd -- --test
       - name: Test optional Foundry client
         run: node --test integrations/foundry/tests/client.test.mjs
       - name: Export both standalone applications

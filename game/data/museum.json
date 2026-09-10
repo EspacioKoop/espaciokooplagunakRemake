@@ -1,0 +1,222 @@
+{
+  "format": "lagunak-museum",
+  "version": 1,
+  "exhibits": [
+    {
+      "id": "venus-de-milo",
+      "title": "Afrodita de Melos",
+      "position": [
+        -10,
+        0,
+        -19.75
+      ],
+      "zone": 8,
+      "node": "exhibit_venus-de-milo",
+      "text": "Estudio escultórico estilizado inspirado en Afrodita de Melos. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "farao-amasis",
+      "title": "Amasis II",
+      "position": [
+        0,
+        0,
+        -19.75
+      ],
+      "zone": 8,
+      "node": "exhibit_farao-amasis",
+      "text": "Estudio escultórico estilizado inspirado en Amasis II. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "leon-al-lat",
+      "title": "León de Al-Lāt",
+      "position": [
+        10,
+        0,
+        -19.75
+      ],
+      "zone": 8,
+      "node": "exhibit_leon-al-lat",
+      "text": "Estudio escultórico estilizado inspirado en León de Al-Lāt. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "caballo-marco-aurelio",
+      "title": "Caballo de Marco Aurelio",
+      "position": [
+        -10,
+        0,
+        -11.75
+      ],
+      "zone": 8,
+      "node": "exhibit_caballo-marco-aurelio",
+      "text": "Estudio escultórico estilizado inspirado en Caballo de Marco Aurelio. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "david-cabeza",
+      "title": "Cabeza del David",
+      "position": [
+        0,
+        0,
+        -11.75
+      ],
+      "zone": 8,
+      "node": "exhibit_david-cabeza",
+      "text": "Estudio escultórico estilizado inspirado en Cabeza del David. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "doriforo",
+      "title": "Doríforo",
+      "position": [
+        10,
+        0,
+        -11.75
+      ],
+      "zone": 8,
+      "node": "exhibit_doriforo",
+      "text": "Estudio escultórico estilizado inspirado en Doríforo. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "herakles-farnese",
+      "title": "Heracles Farnesio",
+      "position": [
+        -10,
+        0,
+        -3.75
+      ],
+      "zone": 8,
+      "node": "exhibit_herakles-farnese",
+      "text": "Estudio escultórico estilizado inspirado en Heracles Farnesio. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "homero",
+      "title": "Homero",
+      "position": [
+        0,
+        0,
+        -3.75
+      ],
+      "zone": 8,
+      "node": "exhibit_homero",
+      "text": "Estudio escultórico estilizado inspirado en Homero. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "jabali",
+      "title": "Jabalí sentado",
+      "position": [
+        10,
+        0,
+        -3.75
+      ],
+      "zone": 8,
+      "node": "exhibit_jabali",
+      "text": "Estudio escultórico estilizado inspirado en Jabalí sentado. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "julio-cesar",
+      "title": "Julio César",
+      "position": [
+        -10,
+        0,
+        4.25
+      ],
+      "zone": 8,
+      "node": "exhibit_julio-cesar",
+      "text": "Estudio escultórico estilizado inspirado en Julio César. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "kore-chiton",
+      "title": "Koré con quitón",
+      "position": [
+        0,
+        0,
+        4.25
+      ],
+      "zone": 8,
+      "node": "exhibit_kore-chiton",
+      "text": "Estudio escultórico estilizado inspirado en Koré con quitón. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "laocoonte",
+      "title": "Laocoonte",
+      "position": [
+        10,
+        0,
+        4.25
+      ],
+      "zone": 8,
+      "node": "exhibit_laocoonte",
+      "text": "Estudio escultórico estilizado inspirado en Laocoonte. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "loba-capitolina",
+      "title": "Loba capitolina",
+      "position": [
+        -10,
+        0,
+        12.25
+      ],
+      "zone": 8,
+      "node": "exhibit_loba-capitolina",
+      "text": "Estudio escultórico estilizado inspirado en Loba capitolina. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "marco-aurelio",
+      "title": "Marco Aurelio",
+      "position": [
+        0,
+        0,
+        12.25
+      ],
+      "zone": 8,
+      "node": "exhibit_marco-aurelio",
+      "text": "Estudio escultórico estilizado inspirado en Marco Aurelio. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "penelope",
+      "title": "Penélope",
+      "position": [
+        10,
+        0,
+        12.25
+      ],
+      "zone": 8,
+      "node": "exhibit_penelope",
+      "text": "Estudio escultórico estilizado inspirado en Penélope. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "poseidon-artemision",
+      "title": "Poseidón de Artemisión",
+      "position": [
+        -10,
+        0,
+        20.25
+      ],
+      "zone": 8,
+      "node": "exhibit_poseidon-artemision",
+      "text": "Estudio escultórico estilizado inspirado en Poseidón de Artemisión. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "prinsesse-amarna",
+      "title": "Princesa de Amarna",
+      "position": [
+        0,
+        0,
+        20.25
+      ],
+      "zone": 8,
+      "node": "exhibit_prinsesse-amarna",
+      "text": "Estudio escultórico estilizado inspirado en Princesa de Amarna. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    },
+    {
+      "id": "venus-capitolina",
+      "title": "Venus capitolina",
+      "position": [
+        10,
+        0,
+        20.25
+      ],
+      "zone": 8,
+      "node": "exhibit_venus-capitolina",
+      "text": "Estudio escultórico estilizado inspirado en Venus capitolina. Modelado nuevo con geometría editable de Blender. Esta interpretación de juego no es un escaneo, un vaciado ni una reconstrucción arqueológica del original."
+    }
+  ]
+}

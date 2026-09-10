@@ -53,6 +53,21 @@ Las reglas, escalas y recursos son de esta implementación nueva. Esta tabla no 
 
 Fuentes contrastadas: `src/content/shipDocument.h`, `src/systems/impulse.cpp`, `src/systems/shieldsystem.cpp` y componentes de haces y escudos del original. La física y las escalas son nuevas; no se afirma equivalencia de todas las variantes de objeto.
 
+## Museo, playa y espacios de ocio
+
+El ejecutable permite llegar caminando por las puertas o seleccionar cualquiera de los trece destinos desde Cubierta. La cantina conecta los espacios de ocio. `tests/test_leisure.gd` comprueba 88 condiciones con la escena real: suelo, accesibilidad de cartelas, lectura, asientos, colisiones y salidas.
+
+| Función | Implementación y límite comprobado |
+|---|---|
+| Museo | Dieciocho esculturas propias correspondientes a los temas del catálogo, cinco cuadros propios y sus cartelas. Son interpretaciones estilizadas, no los escaneos de la referencia. |
+| Libro | Cinco páginas originales, ventana legible, siguiente/anterior, apertura y paso de hoja 3D; recuerda la página durante la ejecución. |
+| Playa | Recorrido continuo de cien metros, dunas, pasarela, farolas, león, reloj de tres agujas, aerogeneradores, mar animado y cabina de retorno. La orilla limita el paso al agua. |
+| Cantina y terraza | Mesas, bancos y sillas; sentarse y levantarse cambia el punto de vista y restaura las colisiones. La reserva compartida de asientos sigue pendiente. |
+| Estudio | Escenario y tres focos con selección de iluminación. |
+| Recuerdos | Corredor recorrible y seis textos originales; aún faltan las esculturas, guardianes y variantes del original. |
+| Red | Presencia en los nuevos espacios comprobada en una sesión ENet real; protocolo 4 compartido por anfitrión y clientes. |
+| Blender | Segunda fuente editable y exportador que conserva las posiciones de trabajo; seis espacios agrupados en un GLB. |
+
 ## Funciones que siguen pendientes o parciales
 
 | Área original | Estado comprobado en el remake | Trabajo necesario para paridad completa |
@@ -66,11 +81,11 @@ Fuentes contrastadas: `src/content/shipDocument.h`, `src/systems/impulse.cpp`, `
 | Edición de contenido | Misiones visuales, mapas de sector y astillero de capacidades con importación/exportación y prueba jugable | Campañas, personajes, montajes de naves, dependencias, migración de formatos originales y catálogo completo |
 | Atlas | Radar de misión y descubrimientos persistentes | Cosmografía jerárquica, HYG/Spelljammer, importación, conexiones, marcadores, mapas y navegación entre sectores |
 | Dirección de juego | Editor de misiones y pausa local | Tempo del anfitrión, reposición, encuentros, convocatoria, parlamento, iniciativas, consola GM y control de escenas |
-| Interiores | Siete salas recorribles, colisiones, escotillas y presencia | Geografía del original, minimapa interior, asientos, mobiliario y terminales, museo, playa, cantina, terraza, estudio y pasillo de recuerdos |
+| Interiores | Trece destinos, museo, libro, playa, cantina, terraza, estudio, recuerdos, colisiones y presencia | Geografía y minimapa completos, reserva y poses compartidas de asientos, más mobiliario/terminales, guardianes de recuerdos, variantes ambientales y equivalencia del catálogo artístico |
 | Avatar y animación | Modelo de tripulante visible en red | Editor/asignación de avatar, retratos, poses, retargeting, mirada y progresión visual |
 | Combate de personajes | Sin implementar | Arena, combate por rejilla, armas, iniciativas y cámaras POV/tercera persona/táctica |
 | Campaña y contenido | Seis misiones nuevas, reputación, supervivientes, decisiones y casco | Todos los escenarios y capacidades del catálogo original, bestiario, inventario, libros, hitos y cronista |
-| Arte y sonido | Veinte modelos Blender y seis sonidos propios | Recursos equivalentes del contenido pendiente, estilos de representación, registro musical procedural y gestión de audio |
+| Arte y sonido | Dos fuentes Blender, veinte GLB base, paquete de seis espacios/esculturas y seis sonidos propios | Recursos equivalentes del contenido pendiente, estilos de representación, registro musical procedural y gestión de audio |
 | Foundry opcional | Lectura HTTP y Journal | Control por puestos, autoridad por usuario, fichas y sincronización de las demás funciones; prueba en Foundry real |
 | Distribución | Linux ejecutado; Windows comprobado por CI en el primer checkpoint | macOS, Android, controles adicionales, servidor Docker y herramientas periféricas equivalentes |
 | Herramientas externas | No son necesarias para la campaña nueva | Funciones del bot de Discord, netboot, gestión de packs y demás herramientas presentes en la referencia |

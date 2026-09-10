@@ -2,6 +2,7 @@ class_name WorldDeck
 extends SubViewportContainer
 signal station_requested(role: String)
 signal zone_changed(name: String)
+signal interaction_requested(entry: Dictionary)
 
 const ZONES = [
 	{"name": "Puente", "model": "bridge_room", "at": Vector3(0, 0, -42), "role": "navegacion", "depth": 20.0},
@@ -10,7 +11,13 @@ const ZONES = [
 	{"name": "Camarotes", "model": "quarters_room", "at": Vector3(24, 0, -12), "role": "comunicaciones", "depth": 14.0},
 	{"name": "Bodega", "model": "cargo_room", "at": Vector3(-24, 0, 12), "role": "enlace", "depth": 14.0},
 	{"name": "Comedor", "model": "mess_room", "at": Vector3(24, 0, 12), "role": "mando", "depth": 14.0},
-	{"name": "Enfermería", "model": "medbay_room", "at": Vector3(0, 0, 42), "role": "reparaciones", "depth": 14.0}
+	{"name": "Enfermería", "model": "medbay_room", "at": Vector3(0, 0, 42), "role": "reparaciones", "depth": 14.0},
+	{"name": "Cantina", "model": "cantina", "at": Vector3(80, 0, 0), "role": "", "depth": 24.0},
+	{"name": "Museo", "model": "museum_hall", "at": Vector3(150, 0, 0), "role": "", "depth": 58.0},
+	{"name": "Playa", "model": "beach", "at": Vector3(0, 0, 200), "role": "", "depth": 112.0},
+	{"name": "Terraza", "model": "terrace", "at": Vector3(80, 0, 80), "role": "", "depth": 24.0},
+	{"name": "Estudio", "model": "studio", "at": Vector3(150, 0, 80), "role": "", "depth": 24.0},
+	{"name": "Pasillo de recuerdos", "model": "memories_hall", "at": Vector3(80, 0, -80), "role": "", "depth": 64.0}
 ]
 var zone = 0
 var prompt = "Pulsa sobre la vista para mirar y caminar."
@@ -23,6 +30,20 @@ var _near_door = -1
 var _near_station = false
 var _pose_clock = 0.0
 var _avatars: Dictionary = {}
+var _zone_models: Array = []
+var _interactions: Array = []
+var _near_interaction: Dictionary = {}
+var _environment: Environment
+var _sun: DirectionalLight3D
+var _animation_time = 0.0
+var reduced_motion = false
+var seated = false
+var _standing_position = Vector3.ZERO
+var _book_page = 0
+var _page_turn = 0.0
+var _studio_lights: Array = []
+var _studio_mode = 0
+var book_open = false
 
 func _ready() -> void:
 	stretch = true
@@ -36,6 +57,7 @@ func _ready() -> void:
 	viewport_3d.add_child(world)
 	var env_node = WorldEnvironment.new()
 	var env = Environment.new()
+	_environment = env
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = Color("091b31")
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
@@ -44,11 +66,24 @@ func _ready() -> void:
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env_node.environment = env
 	world.add_child(env_node)
+	_sun = DirectionalLight3D.new()
+	_sun.rotation_degrees = Vector3(-18, -70, 0)
+	_sun.light_color = Color("ffdbab")
+	_sun.light_energy = 0.6
+	_sun.shadow_enabled = true
+	world.add_child(_sun)
 	for area in ZONES:
 		var model = SpaceView.model(area.model)
 		model.position = area.at
 		world.add_child(model)
-		for mesh in model.find_children("*", "MeshInstance3D", true, false): mesh.create_trimesh_collision()
+		_zone_models.append(model)
+		for mesh in model.find_children("*", "MeshInstance3D", true, false):
+			if not mesh.name.begins_with("Decor_"): mesh.create_trimesh_collision()
+			if mesh.name.begins_with("Decor_Water"):
+				var water = ShaderMaterial.new()
+				water.shader = load("res://world/sea.gdshader")
+				water.set_shader_parameter("movement", 0.0 if reduced_motion else 1.0)
+				mesh.material_override = water
 		for sign_x in [-1, 1]:
 			var light = OmniLight3D.new()
 			light.position = area.at + Vector3(sign_x * 3.5, 3.5, 1)
@@ -56,7 +91,7 @@ func _ready() -> void:
 			light.light_energy = 1.8
 			light.light_color = Color("bbe9e5") if sign_x == 1 else Color("f4c98a")
 			world.add_child(light)
-	for i in ZONES.size():
+	for i in 7:
 		if i == 1: continue
 		var destination = ZONES[i]
 		var location: Vector3
@@ -69,6 +104,50 @@ func _ready() -> void:
 			_: location = Vector3(0, 0, 19)
 		_add_door(location, i, "ESCOTILLA · " + destination.name.to_upper(), 1)
 		_add_door(destination.at + Vector3(0, 0, destination.depth * 0.5 - 0.6), 1, "PASILLO CENTRAL", i)
+	_add_door(Vector3(2, 0, 0), 7, "CANTINA", 1)
+	_add_door(ZONES[7].at + Vector3(0, 0, 10.5), 1, "VOLVER A LA NAVE", 7)
+	var connections = [Vector3(-10, 0, -7), Vector3(-10, 0, 1), Vector3(10, 0, -7), Vector3(10, 0, 1), Vector3(0, 0, -10.5)]
+	for i in range(8, ZONES.size()):
+		_add_door(ZONES[7].at + connections[i - 8], i, ZONES[i].name.to_upper(), 7)
+		var exit_position = Vector3(-7, 0, 49.2) if i == 9 else Vector3(0, 0, ZONES[i].depth * 0.5 - 0.7)
+		_add_door(ZONES[i].at + exit_position, 7, "CABINA · VOLVER A CANTINA" if i == 9 else "VOLVER A CANTINA", i)
+		for entry in LeisurePlaces.interactions(i):
+			entry.zone = i
+			entry.position += ZONES[i].at
+			_interactions.append(entry)
+	for entry in LeisurePlaces.interactions(7):
+		entry.zone = 7
+		entry.position += ZONES[7].at
+		_interactions.append(entry)
+	for entry in _interactions:
+		if entry.kind == "seat": continue
+		var sign = Label3D.new()
+		sign.text = entry.title + "\nE · " + ("LEER" if entry.kind in ["plaque", "book"] else "INTERACTUAR")
+		sign.position = entry.position - ZONES[entry.zone].at + Vector3(0, 1.45, 0)
+		sign.font_size = 32
+		sign.pixel_size = 0.006
+		sign.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		sign.modulate = ConsoleUI.AMBER
+		_zone_models[entry.zone].add_child(sign)
+	for i in 3:
+		var light = SpotLight3D.new()
+		light.position = Vector3(-5 + i * 5, 4.5, -2)
+		light.light_color = [Color("ffbd7d"), Color("83cee8"), Color("d5a7ff")][i]
+		light.light_energy = 5
+		light.spot_range = 18
+		light.spot_angle = 40
+		_zone_models[11].add_child(light)
+		light.look_at(ZONES[11].at + Vector3(0, 1, -6))
+		_studio_lights.append(light)
+	for boundary in [[Vector3(12.1, 1.5, 0), Vector3(0.25, 3, 112)], [Vector3(-20, 2, 0), Vector3(0.25, 4, 112)], [Vector3(-4, 2, -56), Vector3(32, 4, 0.25)], [Vector3(-4, 2, 56), Vector3(32, 4, 0.25)]]:
+		var wall = StaticBody3D.new()
+		var collider = CollisionShape3D.new()
+		var barrier = BoxShape3D.new()
+		barrier.size = boundary[1]
+		collider.shape = barrier
+		wall.add_child(collider)
+		wall.position = boundary[0]
+		_zone_models[9].add_child(wall)
 	body = CharacterBody3D.new()
 	body.safe_margin = 0.025
 	var shape = CollisionShape3D.new()
@@ -99,8 +178,10 @@ func _add_door(position: Vector3, destination: int, title: String, source: int) 
 	label.modulate = ConsoleUI.AMBER
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	world.add_child(label)
+	_doors.back().label = label
 
 func teleport_zone(index: int) -> void:
+	stand_up()
 	zone = clampi(index, 0, ZONES.size() - 1)
 	if body == null: return
 	var entry_x = 0.0 if zone == 1 else (-3.0 if zone == 2 else 4.8)
@@ -109,6 +190,14 @@ func teleport_zone(index: int) -> void:
 	body.rotation.y = 0
 	if zone != 1: body.look_at(ZONES[zone].at + Vector3(0, 0.4, 0))
 	camera.rotation.x = -0.06
+	for i in _zone_models.size(): _zone_models[i].visible = i == zone
+	for door in _doors: door.label.visible = door.source == zone
+	_sun.visible = true
+	_sun.light_energy = 0.55 if zone in [9, 10] else 0.7
+	_sun.rotation_degrees = Vector3(-18, -70, 0) if zone in [9, 10] else Vector3(-40, -25, 0)
+	_environment.background_color = Color("719aab") if zone in [9, 10] else Color("091b31")
+	_environment.ambient_light_color = Color("b7d7ef") if zone in [9, 10] else Color("a9c5d3")
+	_environment.ambient_light_energy = 0.22 if zone in [9, 10] else 0.25
 	zone_changed.emit(ZONES[zone].name)
 	Session.update_pose(body.position, body.rotation.y)
 
@@ -123,11 +212,40 @@ func _input(event: InputEvent) -> void:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 				get_viewport().set_input_as_handled()
 			elif event.keycode == KEY_E:
-				if _near_door >= 0: teleport_zone(_near_door)
-				elif _near_station: station_requested.emit(ZONES[zone].role)
+				interact()
+
+func interact() -> void:
+	if seated: stand_up()
+	elif _near_door >= 0: teleport_zone(_near_door)
+	elif not _near_interaction.is_empty():
+		if _near_interaction.kind == "seat":
+			_standing_position = body.position
+			body.position = ZONES[zone].at + _near_interaction.seat + Vector3(0, 0.1, 0)
+			camera.position.y = 1.15
+			body.collision_mask = 0
+			seated = true
+		elif _near_interaction.kind == "lights":
+			_studio_mode = (_studio_mode + 1) % 4
+			for i in _studio_lights.size(): _studio_lights[i].visible = _studio_mode == 0 or i == _studio_mode - 1
+		else: interaction_requested.emit(_near_interaction.duplicate())
+	elif _near_station: station_requested.emit(ZONES[zone].role)
+
+func stand_up() -> void:
+	if not seated or body == null: return
+	seated = false
+	body.position = _standing_position
+	body.velocity = Vector3.ZERO
+	body.collision_mask = 1
+	camera.position.y = 1.65
+
+func turn_book(page: int) -> void:
+	_book_page = page
+	_page_turn = 1.0
 
 func _physics_process(delta: float) -> void:
 	if body == null: return
+	_animation_time += delta if not reduced_motion else 0.0
+	_animate_decor(delta)
 	var input = Vector2.ZERO
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		input.x = float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A))
@@ -138,16 +256,27 @@ func _physics_process(delta: float) -> void:
 	body.velocity.z = direction.z * speed
 	if not body.is_on_floor(): body.velocity.y -= 9.8 * delta
 	else: body.velocity.y = 0
-	body.move_and_slide()
+	if not seated: body.move_and_slide()
+	else: body.velocity = Vector3.ZERO
 	if body.position.y < -5: teleport_zone(zone)
 	_near_door = -1
 	_near_station = false
+	_near_interaction = {}
+	var closest = 2.2
+	for entry in _interactions:
+		if entry.zone != zone: continue
+		var distance = Vector2(body.position.x - entry.position.x, body.position.z - entry.position.z).length()
+		if distance < closest:
+			closest = distance
+			_near_interaction = entry
 	for door in _doors:
 		if door.source == zone and Vector2(body.position.x - door.position.x, body.position.z - door.position.z).length() < 2.4: _near_door = door.target
 	var center: Vector3 = ZONES[zone].at
-	_near_station = zone != 1 and Vector2(body.position.x - center.x, body.position.z - center.z).length() < 4.0
+	_near_station = zone < 7 and zone != 1 and Vector2(body.position.x - center.x, body.position.z - center.z).length() < 4.0
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED: prompt = "Pulsa en la vista · WASD para caminar · Ratón para mirar"
+	elif seated: prompt = "E · Levantarse     Ratón · Mirar alrededor"
 	elif _near_door >= 0: prompt = "E · Acceder a " + ZONES[_near_door].name
+	elif not _near_interaction.is_empty(): prompt = "E · " + _near_interaction.title
 	elif _near_station: prompt = "E · Operar " + Catalog.role_name(ZONES[zone].role)
 	else: prompt = "WASD · Caminar     Mayús · Correr     Esc · Liberar el ratón"
 	_pose_clock += delta
@@ -155,6 +284,26 @@ func _physics_process(delta: float) -> void:
 		_pose_clock = 0.0
 		Session.update_pose(body.position, body.rotation.y)
 		_update_avatars()
+
+func _animate_decor(delta: float) -> void:
+	if _zone_models.size() < 13: return
+	if zone == 9:
+		for node in _zone_models[9].find_children("*", "Node3D", true, false):
+			if node.name.begins_with("wind_rotor_"): node.rotation = Vector3(0, PI / 2, _animation_time * 0.35)
+			elif node.name == "second_hand": node.rotation.z = -_animation_time * TAU / 60
+			elif node.name == "minute_hand": node.rotation.z = -_animation_time * TAU / 3600
+			elif node.name == "hour_hand": node.rotation.z = -_animation_time * TAU / 43200
+	if zone == 8:
+		_page_turn = maxf(0, _page_turn - delta * 1.5)
+		var page_node = _zone_models[8].find_child("turning_page", true, false) as Node3D
+		if page_node != null:
+			page_node.visible = book_open
+			page_node.rotation.z = -sin(_page_turn * PI) * PI * 0.8
+		for cover_name in ["cover_left", "cover_right"]:
+			var cover = _zone_models[8].find_child(cover_name, true, false) as Node3D
+			if cover != null: cover.rotation.z = move_toward(cover.rotation.z, 0.0 if book_open else (-PI / 2 if cover_name == "cover_left" else PI / 2), delta * 3)
+		var pages = _zone_models[8].find_child("Pages", true, false) as Node3D
+		if pages != null: pages.visible = book_open
 
 func _update_avatars() -> void:
 	var active: Array = []
