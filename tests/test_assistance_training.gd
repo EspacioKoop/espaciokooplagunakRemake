@@ -126,12 +126,13 @@ func find_button(node: Node, text: String) -> Button:
  return null
 
 func test_ui() -> void:
- Session.new_campaign()
- Session.paused = true
- Session.set_process(false)
- Session.order("assist_begin", {"recipient": "ingenieria", "mode": "precision"})
- var real_before: Dictionary = Session.sim.state.duplicate(true)
- var view_before: Dictionary = Session.view.duplicate(true)
+ var session = root.get_node("Session")
+ session.new_campaign()
+ session.paused = true
+ session.set_process(false)
+ session.order("assist_begin", {"recipient": "ingenieria", "mode": "precision"})
+ var real_before: Dictionary = session.sim.state.duplicate(true)
+ var view_before: Dictionary = session.view.duplicate(true)
  var live = AssistanceConsole.new()
  live.size = Vector2(1000, 800)
  root.add_child(live)
@@ -153,7 +154,7 @@ func test_ui() -> void:
  check(practice.training != null, "practice model installed before ready")
  check(practice.recipient.disabled and practice.chooser.item_count == 4, "guided recipient and four modes")
  var text_before = practice.status.text
- Session.notice.emit("Aviso de la partida real", false)
+ session.notice.emit("Aviso de la partida real", false)
  check(practice.status.text == text_before and live.status.text == "Aviso de la partida real", "training does not subscribe to live notices")
  var index = Cooperation.MODES.find("precision")
  practice.chooser.select(index)
@@ -174,8 +175,8 @@ func test_ui() -> void:
  check(practice.training.phase == "proposal" and not practice.consume_button.disabled, "UI proposal step")
  practice.consume_button.pressed.emit()
  check(practice.training.phase == "complete", "UI recipient acceptance")
- check(Session.sim.state == real_before and Session.view == view_before, "live active challenge, campaign and view untouched")
- check(Session.role == "mando" and Session.mode == "offline" and Session.paused, "live identity and pause untouched")
+ check(session.sim.state == real_before and session.view == view_before, "live active challenge, campaign and view untouched")
+ check(session.role == "mando" and session.mode == "offline" and session.paused, "live identity and pause untouched")
  window.restart()
  check(practice.training.phase == "ready" and practice.controls.get_child_count() == 0, "restart clears stale controls")
  var initial_seed = practice.training.practice_seed
@@ -207,7 +208,7 @@ func test_ui() -> void:
  reopened._unhandled_key_input(escape)
  await process_frame
  check(live.get_node_or_null("AssistanceTraining") == null, "escape closes window")
- check(Session.sim.state == real_before, "closing practice preserves live challenge")
+ check(session.sim.state == real_before, "closing practice preserves live challenge")
  live.queue_free()
  await process_frame
 
