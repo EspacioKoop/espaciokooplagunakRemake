@@ -48,6 +48,9 @@ var _studio_lights: Array = []
 var _studio_mode = 0
 var book_open = false
 
+func _session() -> Node:
+	return get_tree().root.get_node_or_null("Session")
+
 func _ready() -> void:
 	stretch = true
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -200,7 +203,8 @@ func teleport_zone(index: int) -> void:
 	_environment.ambient_light_color = Color("b7d7ef") if zone in [9, 10] else Color("a9c5d3")
 	_environment.ambient_light_energy = 0.22 if zone in [9, 10] else 0.25
 	zone_changed.emit(ZONES[zone].name)
-	Session.update_pose(body.position, body.rotation.y)
+	var session = _session()
+	if session != null: session.update_pose(body.position, body.rotation.y)
 
 func _apply_zone_visibility() -> void:
 	var on_ship = zone < 7
@@ -301,8 +305,10 @@ func _physics_process(delta: float) -> void:
 	_pose_clock += delta
 	if _pose_clock > 0.1:
 		_pose_clock = 0.0
-		Session.update_pose(body.position, body.rotation.y)
-		_update_avatars()
+		var session = _session()
+		if session != null:
+			session.update_pose(body.position, body.rotation.y)
+			_update_avatars(session)
 
 func _animate_decor(delta: float) -> void:
 	if _zone_models.size() < 13: return
@@ -324,9 +330,9 @@ func _animate_decor(delta: float) -> void:
 		var pages = _zone_models[8].find_child("Pages", true, false) as Node3D
 		if pages != null: pages.visible = book_open
 
-func _update_avatars() -> void:
+func _update_avatars(session: Node) -> void:
 	var active: Array = []
-	for key in Session.poses:
+	for key in session.poses:
 		var id = int(key)
 		if id == multiplayer.get_unique_id(): continue
 		active.append(id)
@@ -334,7 +340,7 @@ func _update_avatars() -> void:
 			var avatar = SpaceView.model("crew")
 			world.add_child(avatar)
 			_avatars[id] = avatar
-		var pose: Dictionary = Session.poses[key]
+		var pose: Dictionary = session.poses[key]
 		_avatars[id].position = Vector3(pose.position[0], pose.position[1], pose.position[2])
 		_avatars[id].rotation.y = float(pose.yaw)
 	for id in _avatars.keys():
