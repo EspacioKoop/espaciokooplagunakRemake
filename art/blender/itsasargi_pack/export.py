@@ -21,6 +21,22 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def clean_mesh(mesh):
+    """Remove collapsed bevel slivers after float32 pivot transforms, in memory.
+
+    Joining widely separated props can quantise tiny bevel vertices to the same
+    position. Cleaning only before the join missed these zero-area triangles.
+    The 1 micrometre weld does not alter metre-scale terrain patch boundaries.
+    """
+    bm=bmesh.new();bm.from_mesh(mesh)
+    bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=1e-6)
+    bmesh.ops.triangulate(bm,faces=list(bm.faces))
+    small=[f for f in bm.faces if f.calc_area()<1e-10]
+    if small:bmesh.ops.delete(bm,geom=small,context='FACES')
+    bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces))
+    bm.to_mesh(mesh);bm.free();mesh.update()
+
+
 def optimise(root):
     groups={}
     for ob in list(root.children_recursive):
@@ -28,13 +44,7 @@ def optimise(root):
         bpy.ops.object.select_all(action='DESELECT')
         ob.select_set(True);bpy.context.view_layer.objects.active=ob
         for mod in list(ob.modifiers):bpy.ops.object.modifier_apply(modifier=mod.name)
-        bm=bmesh.new();bm.from_mesh(ob.data)
-        bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces))
-        bmesh.ops.triangulate(bm,faces=list(bm.faces))
-        # Small bevel artefacts must never become degenerate exported triangles.
-        small=[f for f in bm.faces if f.calc_area()<1e-12]
-        if small:bmesh.ops.delete(bm,geom=small,context='FACES')
-        bm.to_mesh(ob.data);bm.free();ob.data.update()
+        clean_mesh(ob.data)
         if not ob.animation_data and not ob.children and not ob.get('keep_separate',False):
             groups.setdefault(ob.parent,[]).append(ob)
     for parent,parts in groups.items():
@@ -43,6 +53,8 @@ def optimise(root):
         for ob in parts:ob.select_set(True)
         bpy.context.view_layer.objects.active=parts[0]
         bpy.ops.object.join();parts[0].name=parent.name+'_mesh'
+    for ob in root.children_recursive:
+        if ob.type=='MESH':clean_mesh(ob.data)
 
 
 def glb_json(path):
