@@ -23,7 +23,7 @@ SPECS = [
     ('pulse_disc', 'Uhin · proyector de discos', 'weapons', 'Arma de ciencia ficción con rotor emisor', 'grip'),
     ('ion_carbine', 'Trumoi · carabina iónica', 'weapons', 'Arma de ciencia ficción con celda y disipador móvil', 'grip'),
     ('enara_courier', 'Enara · nave mensajera', 'ships', 'Mensajera de ala barrida, dos motores y tren articulado', 'centre'),
-    ('balea_rescue', 'Balea · nave de rescate', 'ships', 'Transporte volumétrico con rampa y cápsulas laterales', 'centre'),
+    ('dortoka_freighter', 'Dortoka · transporte logístico', 'ships', 'Transporte logístico con rampa y módulos de carga laterales', 'centre'),
 ]
 M = {}
 
@@ -123,7 +123,7 @@ def box(name, pos, size, mat, parent, bevel=.007, rot=None):
 
 def cylinder(name, pos, radius, depth, mat, parent, axis=(0, 0, 1), sides=32, bevel=.003):
     bpy.ops.mesh.primitive_cylinder_add(vertices=sides, radius=radius, depth=depth)
-    ob = finish(bpy.context.object, name, pos, mat, parent, bevel, True)
+    ob = finish(bpy.context.object, name, pos, mat, parent, min(bevel, radius * .2, depth * .2), True)
     ob.rotation_euler = Vector(axis).to_track_quat('Z', 'Y').to_euler()
     return ob
 
@@ -536,7 +536,7 @@ def enara_courier(r):
     socket('sensor', r, (0, 4.27, 0))
 
 
-def balea_rescue(r):
+def dortoka_freighter(r):
     loft('Rescue_hull', [(-5.1, 1.6, 1.03, .03), (-4.05, 2.08, 1.37, .1),
                         (1.4, 2.08, 1.35, .1), (3.9, 1.48, .98, .12),
                         (5.05, .55, .53, -.03)], 'white', r, .095)
@@ -563,7 +563,7 @@ def balea_rescue(r):
             vents(r, (sign * .61, y - .28, 1.58), 5, .13, .41)
         gear(r, 'gear_rear_' + s, (sign * 1.36, -3.52, -.96), 1.15)
         gear(r, 'gear_front_' + s, (sign * 1.16, 2.13, -.96), 1.15)
-        socket('rescue_pod_' + s, r, (sign * 2.13, -.75, .32))
+        socket('cargo_pod_' + s, r, (sign * 2.13, -.75, .32))
         socket('docking_' + s, r, (sign * 2.67, .8, .3))
     # Rear sill and side rails leave the moving cargo ramp readable from outside.
     for x in (-1.46, 1.46):

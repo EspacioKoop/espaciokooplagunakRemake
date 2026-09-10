@@ -43,6 +43,12 @@ def optimise(root):
             bpy.ops.object.modifier_apply(modifier=mod.name)
         bm = bmesh.new()
         bm.from_mesh(ob.data)
+        bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=1e-7)
+        bmesh.ops.dissolve_degenerate(bm, edges=list(bm.edges), dist=1e-7)
+        bmesh.ops.triangulate(bm, faces=list(bm.faces))
+        degenerate = [f for f in bm.faces if f.calc_area() <= 1e-12]
+        if degenerate:
+            bmesh.ops.delete(bm, geom=degenerate, context="FACES_ONLY")
         bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
         bm.to_mesh(ob.data)
         bm.free()

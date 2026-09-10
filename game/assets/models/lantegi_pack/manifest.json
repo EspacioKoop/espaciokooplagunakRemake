@@ -1,0 +1,792 @@
+{
+  "schema": "espaciokoop-asset-pack",
+  "schema_version": 1,
+  "pack": "lantegi",
+  "blender_version": "4.5.3 LTS",
+  "assets": [
+    {
+      "id": "lantegi/torque_wrench",
+      "slug": "torque_wrench",
+      "version": 1,
+      "title": "Giltza · llave dinamométrica",
+      "category": "tools",
+      "description": "Mordaza articulada y ajuste de par",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "grip",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/torque_wrench.blend",
+      "runtime": "game/assets/models/lantegi_pack/torque_wrench.glb",
+      "source_sha256": "4bd82696367ebec370d4b5f2a24591095b3f935ee847144a312b29711dc48eb0",
+      "runtime_sha256": "3d7d219d8ed90b620b93cc39bcf5400d31d62a035dc772c1d2ef9c9efaae7917",
+      "bytes": 315788,
+      "triangles": 4660,
+      "editable_parts": 32,
+      "aabb_min": [
+        -0.0793122872710228,
+        -0.18900004029273987,
+        -0.4000000059604645
+      ],
+      "aabb_max": [
+        0.08752929419279099,
+        0.23775000870227814,
+        0.06138429045677185
+      ],
+      "dimensions": [
+        0.16684158146381378,
+        0.426750048995018,
+        0.46138429641723633
+      ],
+      "sockets": [
+        {
+          "name": "socket_grip",
+          "node_index": 2,
+          "gltf_path": "torque_wrench/socket_grip"
+        },
+        {
+          "name": "socket_holster",
+          "node_index": 3,
+          "gltf_path": "torque_wrench/socket_holster"
+        },
+        {
+          "name": "socket_tool_tip",
+          "node_index": 4,
+          "gltf_path": "torque_wrench/socket_tool_tip"
+        }
+      ],
+      "materials": [
+        "LT_machined_titanium",
+        "LT_deep_teal",
+        "LT_copper",
+        "LT_graphite",
+        "LT_rubber",
+        "LT_ceramic",
+        "LT_opaque_optical_glass",
+        "LT_cyan_emitter"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/torque_wrench.png"
+    },
+    {
+      "id": "lantegi/sample_drill",
+      "slug": "sample_drill",
+      "version": 1,
+      "title": "Zunda · taladro de muestras",
+      "category": "tools",
+      "description": "Corona de muestreo, cartucho y empuñadura auxiliar",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "grip",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/sample_drill.blend",
+      "runtime": "game/assets/models/lantegi_pack/sample_drill.glb",
+      "source_sha256": "24f3c296e0ce243db51fcb81db79e2ac57099616e66ac9137118f97faed57eeb",
+      "runtime_sha256": "cc85aacad05adc81baf3ba5f45c5c6daedd6c42704ae76451f4303ba274ff9cd",
+      "bytes": 417616,
+      "triangles": 7676,
+      "editable_parts": 38,
+      "aabb_min": [
+        -0.11672503501176834,
+        -0.1850000023841858,
+        -0.5529999732971191
+      ],
+      "aabb_max": [
+        0.20700004696846008,
+        0.2549999952316284,
+        0.1600000262260437
+      ],
+      "dimensions": [
+        0.3237250819802284,
+        0.4399999976158142,
+        0.7129999995231628
+      ],
+      "sockets": [
+        {
+          "name": "socket_sample",
+          "node_index": 2,
+          "gltf_path": "sample_drill/Sample_spindle/socket_sample"
+        },
+        {
+          "name": "socket_grip",
+          "node_index": 4,
+          "gltf_path": "sample_drill/socket_grip"
+        },
+        {
+          "name": "socket_support_hand",
+          "node_index": 5,
+          "gltf_path": "sample_drill/socket_support_hand"
+        },
+        {
+          "name": "socket_tool_tip",
+          "node_index": 6,
+          "gltf_path": "sample_drill/socket_tool_tip"
+        }
+      ],
+      "materials": [
+        "LT_rubber",
+        "LT_graphite",
+        "LT_deep_teal",
+        "LT_rescue_orange",
+        "LT_ceramic",
+        "LT_machined_titanium",
+        "LT_copper"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/sample_drill.png"
+    },
+    {
+      "id": "lantegi/hull_patcher",
+      "slug": "hull_patcher",
+      "version": 1,
+      "title": "Jostura · aplicador de parches",
+      "category": "tools",
+      "description": "Cabezal de sellado y cartucho de polímero ficticio",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "grip",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/hull_patcher.blend",
+      "runtime": "game/assets/models/lantegi_pack/hull_patcher.glb",
+      "source_sha256": "f007ac3d8bfaac82362e0c558e4ab3a1edd1c5aa4096bcd1dad1f364829d731d",
+      "runtime_sha256": "f36de43987d47d8fe0fc9f577c39256131d198eac2b4fe6adb13544523ec2db6",
+      "bytes": 294960,
+      "triangles": 5120,
+      "editable_parts": 26,
+      "aabb_min": [
+        -0.13300000131130219,
+        -0.12400002777576447,
+        -0.33400002121925354
+      ],
+      "aabb_max": [
+        0.14181183278560638,
+        0.24100002646446228,
+        0.27150002121925354
+      ],
+      "dimensions": [
+        0.27481183409690857,
+        0.36500005424022675,
+        0.6055000424385071
+      ],
+      "sockets": [
+        {
+          "name": "socket_application",
+          "node_index": 2,
+          "gltf_path": "hull_patcher/Seal_head/socket_application"
+        },
+        {
+          "name": "socket_cartridge",
+          "node_index": 4,
+          "gltf_path": "hull_patcher/socket_cartridge"
+        },
+        {
+          "name": "socket_grip",
+          "node_index": 5,
+          "gltf_path": "hull_patcher/socket_grip"
+        }
+      ],
+      "materials": [
+        "LT_machined_titanium",
+        "LT_graphite",
+        "LT_rubber",
+        "LT_deep_teal",
+        "LT_ceramic",
+        "LT_rescue_orange",
+        "LT_opaque_optical_glass",
+        "LT_cyan_emitter",
+        "LT_amber_emitter"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/hull_patcher.png"
+    },
+    {
+      "id": "lantegi/foam_extinguisher",
+      "slug": "foam_extinguisher",
+      "version": 1,
+      "title": "Apar · extintor de espuma",
+      "category": "tools",
+      "description": "Depósito, manguera y palanca de servicio",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "floor",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/foam_extinguisher.blend",
+      "runtime": "game/assets/models/lantegi_pack/foam_extinguisher.glb",
+      "source_sha256": "42d607377f5b32585616927e64995caf316c25e4f37506d71a92423966fa2b11",
+      "runtime_sha256": "ff673540eb78f7f43b164bf64dbc4fd8d28a976262feb868a32b749894b98393",
+      "bytes": 276384,
+      "triangles": 5932,
+      "editable_parts": 20,
+      "aabb_min": [
+        -0.12999999523162842,
+        0.01499999687075615,
+        -0.3400000035762787
+      ],
+      "aabb_max": [
+        0.24100089073181152,
+        0.6639999747276306,
+        0.14350000023841858
+      ],
+      "dimensions": [
+        0.37100088596343994,
+        0.6489999778568745,
+        0.48350000381469727
+      ],
+      "sockets": [
+        {
+          "name": "socket_grip",
+          "node_index": 1,
+          "gltf_path": "foam_extinguisher/socket_grip"
+        },
+        {
+          "name": "socket_nozzle",
+          "node_index": 2,
+          "gltf_path": "foam_extinguisher/socket_nozzle"
+        },
+        {
+          "name": "socket_wall_mount",
+          "node_index": 3,
+          "gltf_path": "foam_extinguisher/socket_wall_mount"
+        }
+      ],
+      "materials": [
+        "LT_rubber",
+        "LT_safety_red",
+        "LT_machined_titanium",
+        "LT_ceramic",
+        "LT_porcelain",
+        "LT_graphite",
+        "LT_opaque_optical_glass",
+        "LT_amber_emitter",
+        "LT_rescue_orange"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/foam_extinguisher.png"
+    },
+    {
+      "id": "lantegi/power_bridge",
+      "slug": "power_bridge",
+      "version": 1,
+      "title": "Zubi · batería puente",
+      "category": "tools",
+      "description": "Batería portátil con pinzas y conectores",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "floor",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/power_bridge.blend",
+      "runtime": "game/assets/models/lantegi_pack/power_bridge.glb",
+      "source_sha256": "b6b519069055b29a39d84b8ed74e7ceb812575d9c0194f1b4806b7832f1f07e3",
+      "runtime_sha256": "e0b534d039d749e094569ece0dd29be6a1e9eb3aaf60147438072efdc7b58f47",
+      "bytes": 359328,
+      "triangles": 5892,
+      "editable_parts": 35,
+      "aabb_min": [
+        -0.3274487257003784,
+        0.0,
+        -0.17999999225139618
+      ],
+      "aabb_max": [
+        0.3274487257003784,
+        0.4724999964237213,
+        0.24147221446037292
+      ],
+      "dimensions": [
+        0.6548974514007568,
+        0.4724999964237213,
+        0.4214722067117691
+      ],
+      "sockets": [
+        {
+          "name": "socket_grip",
+          "node_index": 5,
+          "gltf_path": "power_bridge/socket_grip"
+        },
+        {
+          "name": "socket_mount",
+          "node_index": 6,
+          "gltf_path": "power_bridge/socket_mount"
+        },
+        {
+          "name": "socket_output_left",
+          "node_index": 7,
+          "gltf_path": "power_bridge/socket_output_left"
+        },
+        {
+          "name": "socket_output_right",
+          "node_index": 8,
+          "gltf_path": "power_bridge/socket_output_right"
+        }
+      ],
+      "materials": [
+        "LT_copper",
+        "LT_rescue_orange",
+        "LT_cyan_emitter",
+        "LT_deep_teal",
+        "LT_rubber",
+        "LT_ceramic",
+        "LT_machined_titanium",
+        "LT_graphite",
+        "LT_opaque_optical_glass"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/power_bridge.png"
+    },
+    {
+      "id": "lantegi/folding_floodlight",
+      "slug": "folding_floodlight",
+      "version": 1,
+      "title": "Argi · foco plegable",
+      "category": "tools",
+      "description": "Trípode, cabezal basculante y asa",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "floor",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/folding_floodlight.blend",
+      "runtime": "game/assets/models/lantegi_pack/folding_floodlight.glb",
+      "source_sha256": "e26a1083c63f2daf2eab5e47d56e0d1f070bb64c8a18d6d01aeb62ad6cacecd1",
+      "runtime_sha256": "35c96bfcf27056089ccd38e5d67340c69e8f9bbacdc065b2704677f1655d6437",
+      "bytes": 383416,
+      "triangles": 5080,
+      "editable_parts": 38,
+      "aabb_min": [
+        -0.18479999899864197,
+        0.013000000268220901,
+        -0.28927838802337646
+      ],
+      "aabb_max": [
+        0.31850001215934753,
+        0.9149999618530273,
+        0.28927838802337646
+      ],
+      "dimensions": [
+        0.5033000111579895,
+        0.9019999615848064,
+        0.5785567760467529
+      ],
+      "sockets": [
+        {
+          "name": "socket_grip",
+          "node_index": 2,
+          "gltf_path": "folding_floodlight/Light_head/socket_grip"
+        },
+        {
+          "name": "socket_light",
+          "node_index": 3,
+          "gltf_path": "folding_floodlight/Light_head/socket_light"
+        },
+        {
+          "name": "socket_floor",
+          "node_index": 5,
+          "gltf_path": "folding_floodlight/socket_floor"
+        }
+      ],
+      "materials": [
+        "LT_rubber",
+        "LT_graphite",
+        "LT_machined_titanium",
+        "LT_rescue_orange",
+        "LT_deep_teal",
+        "LT_porcelain",
+        "LT_cyan_emitter"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/folding_floodlight.png"
+    },
+    {
+      "id": "lantegi/pulse_disc",
+      "slug": "pulse_disc",
+      "version": 1,
+      "title": "Uhin · proyector de discos",
+      "category": "weapons",
+      "description": "Arma de ciencia ficción con rotor emisor",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "grip",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/pulse_disc.blend",
+      "runtime": "game/assets/models/lantegi_pack/pulse_disc.glb",
+      "source_sha256": "e1fd60afe79b3b41487d949a093da79d83c84f1e39271e6cbcb1605488a4b44f",
+      "runtime_sha256": "1d348cc8f6c25a28c5c64ddcabec11767fa1689d62320fa0e91614f4e661a524",
+      "bytes": 315404,
+      "triangles": 5472,
+      "editable_parts": 30,
+      "aabb_min": [
+        -0.11850002408027649,
+        -0.1185000091791153,
+        -0.3085000216960907
+      ],
+      "aabb_max": [
+        0.11850001662969589,
+        0.2680000066757202,
+        0.0989999994635582
+      ],
+      "dimensions": [
+        0.23700004070997238,
+        0.3865000158548355,
+        0.4075000211596489
+      ],
+      "sockets": [
+        {
+          "name": "socket_emitter",
+          "node_index": 3,
+          "gltf_path": "pulse_disc/socket_emitter"
+        },
+        {
+          "name": "socket_grip",
+          "node_index": 4,
+          "gltf_path": "pulse_disc/socket_grip"
+        },
+        {
+          "name": "socket_holster",
+          "node_index": 5,
+          "gltf_path": "pulse_disc/socket_holster"
+        }
+      ],
+      "materials": [
+        "LT_graphite",
+        "LT_rubber",
+        "LT_deep_teal",
+        "LT_ceramic",
+        "LT_machined_titanium",
+        "LT_rescue_orange",
+        "LT_cyan_emitter",
+        "LT_opaque_optical_glass"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/pulse_disc.png"
+    },
+    {
+      "id": "lantegi/ion_carbine",
+      "slug": "ion_carbine",
+      "version": 1,
+      "title": "Trumoi · carabina iónica",
+      "category": "weapons",
+      "description": "Arma de ciencia ficción con celda y disipador móvil",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "grip",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/ion_carbine.blend",
+      "runtime": "game/assets/models/lantegi_pack/ion_carbine.glb",
+      "source_sha256": "7934106c4f1f5462f0f6c00f87e01e99e50b3827fdf844c164928a5833fb6d5a",
+      "runtime_sha256": "f07874d51a75ada1efb45bd2a728980ef6bb12680cc0dadff1e6844a30936432",
+      "bytes": 433968,
+      "triangles": 7716,
+      "editable_parts": 40,
+      "aabb_min": [
+        -0.08445000648498535,
+        -0.1185000017285347,
+        -0.5130000114440918
+      ],
+      "aabb_max": [
+        0.08445000648498535,
+        0.32349997758865356,
+        0.5024999976158142
+      ],
+      "dimensions": [
+        0.1689000129699707,
+        0.44199997931718826,
+        1.015500009059906
+      ],
+      "sockets": [
+        {
+          "name": "socket_emitter",
+          "node_index": 3,
+          "gltf_path": "ion_carbine/socket_emitter"
+        },
+        {
+          "name": "socket_grip",
+          "node_index": 4,
+          "gltf_path": "ion_carbine/socket_grip"
+        },
+        {
+          "name": "socket_shoulder",
+          "node_index": 5,
+          "gltf_path": "ion_carbine/socket_shoulder"
+        },
+        {
+          "name": "socket_sight",
+          "node_index": 6,
+          "gltf_path": "ion_carbine/socket_sight"
+        },
+        {
+          "name": "socket_support_hand",
+          "node_index": 7,
+          "gltf_path": "ion_carbine/socket_support_hand"
+        }
+      ],
+      "materials": [
+        "LT_deep_teal",
+        "LT_graphite",
+        "LT_rubber",
+        "LT_ceramic",
+        "LT_machined_titanium",
+        "LT_ion_emitter",
+        "LT_cyan_emitter",
+        "LT_opaque_optical_glass"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/ion_carbine.png"
+    },
+    {
+      "id": "lantegi/enara_courier",
+      "slug": "enara_courier",
+      "version": 1,
+      "title": "Enara · nave mensajera",
+      "category": "ships",
+      "description": "Mensajera de ala barrida, dos motores y tren articulado",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "centre",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/enara_courier.blend",
+      "runtime": "game/assets/models/lantegi_pack/enara_courier.glb",
+      "source_sha256": "e432b98a9870b5da719d5fc0bc1ab22c7df038c024b7561f4720547863ecc9da",
+      "runtime_sha256": "7e20107346c05fbe862353488513903537779f818a5774e8fe65122f71691b6f",
+      "bytes": 770804,
+      "triangles": 13764,
+      "editable_parts": 60,
+      "aabb_min": [
+        -3.6291279792785645,
+        -1.3527299165725708,
+        -4.25
+      ],
+      "aabb_max": [
+        3.6291279792785645,
+        0.996353268623352,
+        3.78997802734375
+      ],
+      "dimensions": [
+        7.258255958557129,
+        2.349083185195923,
+        8.03997802734375
+      ],
+      "sockets": [
+        {
+          "name": "socket_exhaust_left",
+          "node_index": 2,
+          "gltf_path": "enara_courier/Engine_left/socket_exhaust_left"
+        },
+        {
+          "name": "socket_exhaust_right",
+          "node_index": 5,
+          "gltf_path": "enara_courier/Engine_right/socket_exhaust_right"
+        },
+        {
+          "name": "socket_gear_front_contact",
+          "node_index": 8,
+          "gltf_path": "enara_courier/gear_front/socket_gear_front_contact"
+        },
+        {
+          "name": "socket_gear_left_contact",
+          "node_index": 11,
+          "gltf_path": "enara_courier/gear_left/socket_gear_left_contact"
+        },
+        {
+          "name": "socket_gear_right_contact",
+          "node_index": 14,
+          "gltf_path": "enara_courier/gear_right/socket_gear_right_contact"
+        },
+        {
+          "name": "socket_cargo",
+          "node_index": 16,
+          "gltf_path": "enara_courier/socket_cargo"
+        },
+        {
+          "name": "socket_docking",
+          "node_index": 17,
+          "gltf_path": "enara_courier/socket_docking"
+        },
+        {
+          "name": "socket_pilot",
+          "node_index": 18,
+          "gltf_path": "enara_courier/socket_pilot"
+        },
+        {
+          "name": "socket_sensor",
+          "node_index": 19,
+          "gltf_path": "enara_courier/socket_sensor"
+        },
+        {
+          "name": "socket_wing_left",
+          "node_index": 20,
+          "gltf_path": "enara_courier/socket_wing_left"
+        },
+        {
+          "name": "socket_wing_right",
+          "node_index": 21,
+          "gltf_path": "enara_courier/socket_wing_right"
+        }
+      ],
+      "materials": [
+        "LT_opaque_optical_glass",
+        "LT_ceramic",
+        "LT_graphite",
+        "LT_deep_teal",
+        "LT_rescue_orange",
+        "LT_machined_titanium",
+        "LT_safety_red",
+        "LT_cyan_emitter",
+        "LT_rubber"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/enara_courier.png"
+    },
+    {
+      "id": "lantegi/dortoka_freighter",
+      "slug": "dortoka_freighter",
+      "version": 1,
+      "title": "Dortoka · transporte logístico",
+      "category": "ships",
+      "description": "Transporte logístico con rampa y módulos de carga laterales",
+      "units": "metres",
+      "axes": "+Y up; -Z forward",
+      "pivot": "centre",
+      "license": "MIT",
+      "source": "art/blender/lantegi_pack/dortoka_freighter.blend",
+      "runtime": "game/assets/models/lantegi_pack/dortoka_freighter.glb",
+      "source_sha256": "b0d13848b09d3658c7ad6c39fffeb0f9666312fd8569ac598acf8e8225fafb36",
+      "runtime_sha256": "fc6a544b15cd41548a6fe8c892e6eef2a7d00ed3ce6eb62f559b914e12a13300",
+      "bytes": 1336256,
+      "triangles": 19776,
+      "editable_parts": 118,
+      "aabb_min": [
+        -4.055504322052002,
+        -2.210422992706299,
+        -5.050000190734863
+      ],
+      "aabb_max": [
+        4.055504322052002,
+        1.6299999952316284,
+        5.322999954223633
+      ],
+      "dimensions": [
+        8.111008644104004,
+        3.8404229879379272,
+        10.373000144958496
+      ],
+      "sockets": [
+        {
+          "name": "socket_ramp_tip",
+          "node_index": 1,
+          "gltf_path": "dortoka_freighter/Cargo_ramp/socket_ramp_tip"
+        },
+        {
+          "name": "socket_gear_front_left_contact",
+          "node_index": 5,
+          "gltf_path": "dortoka_freighter/gear_front_left/socket_gear_front_left_contact"
+        },
+        {
+          "name": "socket_gear_front_right_contact",
+          "node_index": 8,
+          "gltf_path": "dortoka_freighter/gear_front_right/socket_gear_front_right_contact"
+        },
+        {
+          "name": "socket_gear_rear_left_contact",
+          "node_index": 11,
+          "gltf_path": "dortoka_freighter/gear_rear_left/socket_gear_rear_left_contact"
+        },
+        {
+          "name": "socket_gear_rear_right_contact",
+          "node_index": 14,
+          "gltf_path": "dortoka_freighter/gear_rear_right/socket_gear_rear_right_contact"
+        },
+        {
+          "name": "socket_exhaust_left",
+          "node_index": 17,
+          "gltf_path": "dortoka_freighter/Rescue_engine_left/socket_exhaust_left"
+        },
+        {
+          "name": "socket_exhaust_right",
+          "node_index": 20,
+          "gltf_path": "dortoka_freighter/Rescue_engine_right/socket_exhaust_right"
+        },
+        {
+          "name": "socket_cargo",
+          "node_index": 22,
+          "gltf_path": "dortoka_freighter/socket_cargo"
+        },
+        {
+          "name": "socket_cargo_pod_left",
+          "node_index": 23,
+          "gltf_path": "dortoka_freighter/socket_cargo_pod_left"
+        },
+        {
+          "name": "socket_cargo_pod_right",
+          "node_index": 24,
+          "gltf_path": "dortoka_freighter/socket_cargo_pod_right"
+        },
+        {
+          "name": "socket_copilot",
+          "node_index": 25,
+          "gltf_path": "dortoka_freighter/socket_copilot"
+        },
+        {
+          "name": "socket_docking_left",
+          "node_index": 26,
+          "gltf_path": "dortoka_freighter/socket_docking_left"
+        },
+        {
+          "name": "socket_docking_right",
+          "node_index": 27,
+          "gltf_path": "dortoka_freighter/socket_docking_right"
+        },
+        {
+          "name": "socket_nose_sensor",
+          "node_index": 28,
+          "gltf_path": "dortoka_freighter/socket_nose_sensor"
+        },
+        {
+          "name": "socket_pilot",
+          "node_index": 29,
+          "gltf_path": "dortoka_freighter/socket_pilot"
+        }
+      ],
+      "materials": [
+        "LT_deep_teal",
+        "LT_graphite",
+        "LT_machined_titanium",
+        "LT_rescue_orange",
+        "LT_porcelain",
+        "LT_opaque_optical_glass",
+        "LT_ceramic",
+        "LT_rubber",
+        "LT_cyan_emitter"
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "status": "exported",
+      "preview": "docs/images/lantegi_pack/dortoka_freighter.png"
+    }
+  ],
+  "limits": "Rigid mechanical animation only. No game rules, collision, humanoid rig or automatic campaign integration."
+}
