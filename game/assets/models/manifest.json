@@ -1,0 +1,225 @@
+{
+  "blender": "4.5.3 LTS",
+  "models": [
+    {
+      "name": "anomaly",
+      "file": "anomaly.glb",
+      "editable_parts": 4,
+      "dimensions_blender_xyz": [
+        8.5552,
+        8.4035,
+        8.0315
+      ],
+      "sha256": "ff1485bc1b713760661d3cbdf821d38f0b3ca41411184b37701da874be0a38e4"
+    },
+    {
+      "name": "asteroid",
+      "file": "asteroid.glb",
+      "editable_parts": 1,
+      "dimensions_blender_xyz": [
+        2.2195,
+        1.7325,
+        1.9556
+      ],
+      "sha256": "b8ce9831eb4f792d835b3ceda9e6b0520b19de8acef1d3df983bc0e539d0de47"
+    },
+    {
+      "name": "beacon",
+      "file": "beacon.glb",
+      "editable_parts": 6,
+      "dimensions_blender_xyz": [
+        9.5,
+        3.58,
+        4.2
+      ],
+      "sha256": "12ebcf941385237220343c074b603bf6351d00ca8b550b868d22c7ff468fdd45"
+    },
+    {
+      "name": "bridge_room",
+      "file": "bridge_room.glb",
+      "editable_parts": 344,
+      "dimensions_blender_xyz": [
+        18.3,
+        20.89,
+        4.82
+      ],
+      "sha256": "2a52d8f4dd4f5752835409dacbc2e3e8929216b6c84c3b3094dfa06bc2995cf3"
+    },
+    {
+      "name": "cargo_room",
+      "file": "cargo_room.glb",
+      "editable_parts": 262,
+      "dimensions_blender_xyz": [
+        14.3,
+        14.89,
+        4.82
+      ],
+      "sha256": "360d0e91484c20b0a512483723d3d1e0533f9c0cb367715a7358d11eeffdab58"
+    },
+    {
+      "name": "chair",
+      "file": "chair.glb",
+      "editable_parts": 7,
+      "dimensions_blender_xyz": [
+        1.08,
+        0.845,
+        1.56
+      ],
+      "sha256": "9fdbe940753ce68d6e2aa78ed5315a418c3d209d029ddc67e3eb194a730f65c4"
+    },
+    {
+      "name": "console",
+      "file": "console.glb",
+      "editable_parts": 14,
+      "dimensions_blender_xyz": [
+        1.85,
+        0.92,
+        1.5605
+      ],
+      "sha256": "3e26cbae687110b1fe6a00323501f4812e043907fa6ee6dad48c74e865efdf9d"
+    },
+    {
+      "name": "crate",
+      "file": "crate.glb",
+      "editable_parts": 6,
+      "dimensions_blender_xyz": [
+        1.12,
+        1.161,
+        1.12
+      ],
+      "sha256": "48fd9ab13c1814e369ce375e1ddab24f0315c887b4eae16a2cca00ad41adb3bd"
+    },
+    {
+      "name": "crew",
+      "file": "crew.glb",
+      "editable_parts": 10,
+      "dimensions_blender_xyz": [
+        0.919,
+        0.485,
+        1.89
+      ],
+      "sha256": "35a3faa4e012cfc90c76987c42fadee70951e47432f38fbdfa26428f54cf539d"
+    },
+    {
+      "name": "engineering_room",
+      "file": "engineering_room.glb",
+      "editable_parts": 149,
+      "dimensions_blender_xyz": [
+        14.3,
+        14.89,
+        4.82
+      ],
+      "sha256": "f1c0d32dd4095a7d310d79abe0bd85509d5ded614723d36fffaae1981baa85a2"
+    },
+    {
+      "name": "hallway",
+      "file": "hallway.glb",
+      "editable_parts": 69,
+      "dimensions_blender_xyz": [
+        6.0,
+        42.0,
+        4.64
+      ],
+      "sha256": "28158f3b17ee919a84497969d4902da049801a0a7f395da81e0f228bcf94c6e4"
+    },
+    {
+      "name": "itsaso",
+      "file": "itsaso.glb",
+      "editable_parts": 43,
+      "dimensions_blender_xyz": [
+        9.85,
+        20.0,
+        4.3
+      ],
+      "sha256": "a257bee97a82e8348df1e26fced20ab943730dc0a27d3ff108a6dc183bf2280d"
+    },
+    {
+      "name": "medbay_room",
+      "file": "medbay_room.glb",
+      "editable_parts": 138,
+      "dimensions_blender_xyz": [
+        14.3,
+        14.89,
+        4.82
+      ],
+      "sha256": "6dd83b246fd66d8eb90e20aaa502c37eb63546a6b1c692bd3c8a74159033141e"
+    },
+    {
+      "name": "mess_room",
+      "file": "mess_room.glb",
+      "editable_parts": 206,
+      "dimensions_blender_xyz": [
+        14.3,
+        14.89,
+        4.82
+      ],
+      "sha256": "affa82439ae2e13416de76aebc48dad31f6ddd249f7cee6636215ee718a7e300"
+    },
+    {
+      "name": "planet",
+      "file": "planet.glb",
+      "editable_parts": 1,
+      "dimensions_blender_xyz": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "sha256": "9a150d2178678ae9282a5d1f936c98b1128783d3960a98b13df6f9627444b9c0"
+    },
+    {
+      "name": "quarters_room",
+      "file": "quarters_room.glb",
+      "editable_parts": 141,
+      "dimensions_blender_xyz": [
+        14.3,
+        14.89,
+        4.82
+      ],
+      "sha256": "cca3d548f3782cc50739a2053f17813a356b003fcbb35e552f9411b5999fdcba"
+    },
+    {
+      "name": "reactor",
+      "file": "reactor.glb",
+      "editable_parts": 11,
+      "dimensions_blender_xyz": [
+        3.4,
+        3.4,
+        4.35
+      ],
+      "sha256": "8c979d52c686fecd06e785d13f5ee951d4fdf7ecbd7f639205e1146cf6615b68"
+    },
+    {
+      "name": "sentinel",
+      "file": "sentinel.glb",
+      "editable_parts": 10,
+      "dimensions_blender_xyz": [
+        9.483,
+        9.07,
+        1.925
+      ],
+      "sha256": "e328be7fe0c8ac004dc204a087f975908933dd9da5c36a9de38f34665b4c8054"
+    },
+    {
+      "name": "station",
+      "file": "station.glb",
+      "editable_parts": 34,
+      "dimensions_blender_xyz": [
+        34.38,
+        34.0,
+        13.0
+      ],
+      "sha256": "2d558112a5312d2b0749419587053b45307d433d12fa1e24dc2d5a36aabe110a"
+    },
+    {
+      "name": "transport",
+      "file": "transport.glb",
+      "editable_parts": 9,
+      "dimensions_blender_xyz": [
+        5.4,
+        8.15,
+        1.78
+      ],
+      "sha256": "f3b79e925a013f93ec257d76b79ff259ad355c6bbb78c070a2ab11fbe32869fe"
+    }
+  ]
+}

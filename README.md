@@ -4,15 +4,11 @@ Una nave. Ocho puestos. Un mismo destino.
 
 ![Pantalla inicial de la aplicación construida](docs/images/01_inicio.png)
 
-## Estado de la publicación
+## Estado de la reconstrucción
 
-**Recuperación parcial: esta rama todavía no contiene una aplicación ejecutable.**
+La aplicación se está reconstruyendo a partir de los modelos y recursos conservados. Ya están implementados el núcleo de simulación, las seis misiones, el guardado local y los servicios de red. Las pruebas del núcleo completan las seis misiones mediante órdenes de juego: **136 comprobaciones, 0 fallos** con Godot 4.7.1.
 
-Se conservan el proyecto editable de Blender, siete capturas reales, tres archivos de audio y cuatro archivos de código y configuración de Godot rescatados de los registros de desarrollo. Estos últimos están en [`recovery/source`](recovery/source).
-
-Faltan el núcleo de la simulación, la interfaz, la red, la campaña, el complemento de Foundry y los ejecutables. La copia completa del proyecto no se ha recuperado. El [inventario de recuperación](recovery/README.md) detalla los archivos disponibles y sus comprobaciones.
-
-Las capturas muestran la aplicación que se ejecutó durante el desarrollo. No se presentan como prueba de que el código y los binarios estén disponibles en esta rama.
+La interfaz y los paquetes ejecutables siguen en preparación. Esta rama todavía no es una entrega jugable. Las imágenes que aparecen abajo pertenecen a la ejecución anterior y se sustituirán por capturas de la nueva compilación.
 
 ## Modelos en Blender
 

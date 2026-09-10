@@ -1,0 +1,377 @@
+{
+  "version": 1,
+  "title": "Itsaso · La ruta compartida",
+  "missions": [
+    {
+      "id": "itsasoratu",
+      "title": "01 · Itsasoratu",
+      "sector": "Itsasargi / Cinturón interior",
+      "briefing": "La Itsaso vuelve a navegar. El faro Argi ha quedado aislado tras una tormenta solar. Comprueba sus coordenadas, identifica la señal y confirma con Kaia que el corredor de regreso es seguro. Cambia de puesto cuando haga falta: toda la tripulación comparte una sola nave.",
+      "reward": 160,
+      "contacts": [
+        {
+          "id": "argi",
+          "name": "Faro Argi",
+          "kind": "beacon",
+          "position": [
+            650,
+            0
+          ],
+          "known": true
+        },
+        {
+          "id": "kaia",
+          "name": "Puerto Kaia",
+          "kind": "station",
+          "position": [
+            650,
+            700
+          ],
+          "known": true
+        },
+        {
+          "id": "izpi",
+          "name": "Nube Izpi",
+          "kind": "anomaly",
+          "position": [
+            -600,
+            450
+          ]
+        },
+        {
+          "id": "zaindari",
+          "name": "Patrulla Zaindari",
+          "kind": "hostile",
+          "position": [
+            7000,
+            7000
+          ]
+        }
+      ],
+      "objectives": [
+        {
+          "type": "navigate",
+          "target": "argi",
+          "text": "Navegación: llega a menos de 250 m del faro Argi."
+        },
+        {
+          "type": "scan",
+          "target": "argi",
+          "text": "Sensores: completa el análisis del faro."
+        },
+        {
+          "type": "hail",
+          "target": "kaia",
+          "text": "Comunicaciones: abre un canal con el puerto Kaia a menos de 900 m."
+        },
+        {
+          "type": "dock",
+          "target": "kaia",
+          "text": "Navegación: atraca en Kaia a menos de 190 m y 35 m/s."
+        }
+      ]
+    },
+    {
+      "id": "oihartzuna",
+      "title": "02 · Oihartzuna",
+      "sector": "Laino / Mar de interferencias",
+      "briefing": "Un eco repite mensajes que nadie recuerda haber enviado. Despliega una sonda antes de entrar en la niebla. Comunicaciones debe fijar un canal para que Sensores pueda resolver la interferencia. Recupera el núcleo de datos y llévalo al observatorio.",
+      "reward": 190,
+      "contacts": [
+        {
+          "id": "echo1",
+          "name": "Núcleo Oihartzun",
+          "kind": "anomaly",
+          "position": [
+            650,
+            0
+          ],
+          "jammed": true
+        },
+        {
+          "id": "kaia",
+          "name": "Observatorio Laino",
+          "kind": "station",
+          "position": [
+            1250,
+            350
+          ],
+          "known": true
+        },
+        {
+          "id": "argi",
+          "name": "Baliza Mendebal",
+          "kind": "beacon",
+          "position": [
+            -450,
+            -250
+          ],
+          "known": true
+        }
+      ],
+      "objectives": [
+        {
+          "type": "probe",
+          "target": "echo1",
+          "text": "Enlace: despliega una sonda sobre el eco a menos de 2500 m."
+        },
+        {
+          "type": "hail",
+          "target": "echo1",
+          "text": "Comunicaciones: abre un canal con el eco para compensar la interferencia."
+        },
+        {
+          "type": "scan",
+          "target": "echo1",
+          "text": "Sensores: identifica el eco manteniéndote a menos de 900 m."
+        },
+        {
+          "type": "salvage",
+          "target": "echo1",
+          "text": "Enlace: recupera el núcleo a menos de 300 m."
+        },
+        {
+          "type": "dock",
+          "target": "kaia",
+          "text": "Entrega el núcleo atracando en el observatorio Laino."
+        }
+      ]
+    },
+    {
+      "id": "aterpe",
+      "title": "03 · Aterpe",
+      "sector": "Hodei / Ruta de los refugiados",
+      "briefing": "La Lorea ha perdido propulsión con seis personas a bordo. Sus reservas de aire se mantienen, pero no puede alcanzar el refugio. Identifica el transporte antes de enviar un equipo de rescate. La prioridad es llevar a todas las personas a puerto.",
+      "reward": 220,
+      "contacts": [
+        {
+          "id": "lorea",
+          "name": "Transporte Lorea",
+          "kind": "derelict",
+          "position": [
+            850,
+            200
+          ]
+        },
+        {
+          "id": "kaia",
+          "name": "Refugio Aterpe",
+          "kind": "station",
+          "position": [
+            1500,
+            500
+          ],
+          "known": true
+        },
+        {
+          "id": "argi",
+          "name": "Baliza Hodei",
+          "kind": "beacon",
+          "position": [
+            350,
+            -400
+          ],
+          "known": true
+        }
+      ],
+      "objectives": [
+        {
+          "type": "scan",
+          "target": "lorea",
+          "text": "Sensores: identifica el transporte averiado Lorea."
+        },
+        {
+          "type": "rescue",
+          "target": "lorea",
+          "text": "Enlace: rescata a seis supervivientes a menos de 300 m."
+        },
+        {
+          "type": "dock",
+          "target": "kaia",
+          "text": "Atraca en Aterpe para desembarcar a las personas rescatadas."
+        }
+      ]
+    },
+    {
+      "id": "zaindari",
+      "title": "04 · Zaindari",
+      "sector": "Harria / Frontera exterior",
+      "briefing": "Una fragata autónoma bloquea la ruta de suministros. No responde a las claves civiles y ha abierto fuego contra los cargueros. Sensores debe identificarla antes de autorizar el uso de armas. Mantén los escudos, vigila la temperatura y busca el alcance de los torpedos.",
+      "reward": 250,
+      "contacts": [
+        {
+          "id": "zaindari",
+          "name": "Fragata Zaindari",
+          "kind": "hostile",
+          "position": [
+            1000,
+            -100
+          ]
+        },
+        {
+          "id": "kaia",
+          "name": "Dársena Harria",
+          "kind": "station",
+          "position": [
+            1650,
+            350
+          ],
+          "known": true
+        },
+        {
+          "id": "argi",
+          "name": "Baliza Mugarria",
+          "kind": "beacon",
+          "position": [
+            -500,
+            -300
+          ],
+          "known": true
+        }
+      ],
+      "objectives": [
+        {
+          "type": "scan",
+          "target": "zaindari",
+          "text": "Sensores: identifica la fragata que bloquea la ruta."
+        },
+        {
+          "type": "defeat",
+          "target": "zaindari",
+          "text": "Armas: neutraliza la fragata identificada. Pulsos: 600 m; torpedos: 900 m."
+        },
+        {
+          "type": "dock",
+          "target": "kaia",
+          "text": "Atraca en Harria para completar la escolta de suministros."
+        }
+      ]
+    },
+    {
+      "id": "berpiztu",
+      "title": "05 · Berpiztu",
+      "sector": "Gorri / Estación sin luz",
+      "briefing": "La estación Zubi ha perdido su reactor auxiliar y un remolcador espera asistencia en la órbita cercana. Llevas repuestos suficientes para restablecer el suministro. Coordina reparación exterior y rescate; los seis tripulantes del remolcador necesitan un puerto con energía.",
+      "reward": 280,
+      "contacts": [
+        {
+          "id": "zubi",
+          "name": "Estación Zubi",
+          "kind": "station",
+          "position": [
+            650,
+            0
+          ],
+          "known": true,
+          "hull": 45
+        },
+        {
+          "id": "gorri",
+          "name": "Remolcador Gorri",
+          "kind": "derelict",
+          "position": [
+            1100,
+            -400
+          ]
+        },
+        {
+          "id": "argi",
+          "name": "Señal Erreka",
+          "kind": "beacon",
+          "position": [
+            -300,
+            500
+          ],
+          "known": true
+        }
+      ],
+      "objectives": [
+        {
+          "type": "hail",
+          "target": "zubi",
+          "text": "Comunicaciones: contacta con la estación Zubi."
+        },
+        {
+          "type": "repair_target",
+          "target": "zubi",
+          "text": "Control de daños: usa 5 repuestos para reparar Zubi a menos de 300 m."
+        },
+        {
+          "type": "scan",
+          "target": "gorri",
+          "text": "Sensores: identifica el remolcador Gorri."
+        },
+        {
+          "type": "rescue",
+          "target": "gorri",
+          "text": "Enlace: rescata a sus seis tripulantes a menos de 300 m."
+        },
+        {
+          "type": "dock",
+          "target": "zubi",
+          "text": "Regresa a Zubi y atraca en la estación reparada."
+        }
+      ]
+    },
+    {
+      "id": "elkarlana",
+      "title": "06 · Elkarlana",
+      "sector": "Egunsenti / Un horizonte común",
+      "briefing": "El convoy Haize ofrece compartir sus cartas del corredor exterior. Su capitana pide una señal de confianza: canal abierto, contacto identificado y escudos bajos. Negocia el paso y decide qué hacer con los datos recuperados. La última palabra pertenece a Mando.",
+      "reward": 320,
+      "contacts": [
+        {
+          "id": "haize",
+          "name": "Convoy Haize",
+          "kind": "friendly",
+          "position": [
+            700,
+            0
+          ]
+        },
+        {
+          "id": "kaia",
+          "name": "Puerto Egunsenti",
+          "kind": "station",
+          "position": [
+            1350,
+            450
+          ],
+          "known": true
+        },
+        {
+          "id": "argi",
+          "name": "Faro Biharamun",
+          "kind": "beacon",
+          "position": [
+            -450,
+            -550
+          ],
+          "known": true
+        }
+      ],
+      "objectives": [
+        {
+          "type": "hail",
+          "target": "haize",
+          "text": "Comunicaciones: abre un canal con el convoy Haize."
+        },
+        {
+          "type": "scan",
+          "target": "haize",
+          "text": "Sensores: verifica la identidad del convoy."
+        },
+        {
+          "type": "choice",
+          "target": "haize",
+          "text": "Ingeniería: baja los escudos. Comunicaciones: negocia. Mando: decide compartir o reservar las cartas."
+        },
+        {
+          "type": "dock",
+          "target": "kaia",
+          "text": "Atraca en Egunsenti para concluir la campaña."
+        }
+      ]
+    }
+  ]
+}
