@@ -54,7 +54,8 @@ func run() -> void:
 	check(solve(), "host validates complete hacking sequence")
 	check(hostile.attack_at >= before + 22.0 and sensors.state.hacks.has(hostile.id), "successful hack inhibits hostile attack window")
 	check(not hostile.jammed and sensors.state.hacks[hostile.id].frequency == 7, "hack exposes frequency and clears sensor jamming")
-	check(sensors.command("analysis_begin", {"target": far_target.id}).ok, "analysis can be started for cancellation test")
+	check(sensors.command("band", {"band": "long"}).ok, "operator restores long range for distant cancellation target")
+	check(sensors.command("analysis_begin", {"target": far_target.id}).ok, "analysis can be started for cancellation test within selected range")
 	check(sensors.command("cancel", {}).ok and sensors.operator().task.is_empty(), "active sensor puzzle can be cancelled")
 	session.role = "mando"
 	check(not sensors.command("band", {"band": "long"}).ok, "another station cannot operate advanced sensors")
