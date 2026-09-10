@@ -93,7 +93,11 @@ func _role_for(peer_id: int) -> String:
 func profile(actor: String = "") -> Dictionary:
 	var id = actor if not actor.is_empty() else actor_id()
 	if not data.profiles.has(id):
-		data.profiles[id] = {"name": "Tripulante", "approach": "ingenio", "focus": 3, "skills": {"pilotaje": 1, "ciencia": 1, "ingenieria": 1, "negociacion": 1, "combate": 1}}
+		data.profiles[id] = {
+			"name": "Tripulante", "approach": "ingenio", "focus": 3,
+			"skills": {"pilotaje": 1, "ciencia": 1, "ingenieria": 1, "negociacion": 1, "combate": 1},
+			"traits": [], "level": 1, "xp": 0, "condition": 100, "milestones": []
+		}
 	return data.profiles[id]
 
 func inventory(actor: String = "") -> Dictionary:
@@ -166,8 +170,16 @@ func _perform(operation: String, args: Dictionary, actor: String, role: String) 
 				total += int(value)
 			if total > 12: return _result(false, "La ficha admite un máximo de 12 puntos de habilidad.")
 			var previous = profile(actor)
-			data.profiles[actor] = {"name": name, "approach": approach, "focus": int(previous.get("focus", 3)), "skills": skills}
-			return _result(true, "Ficha de tripulación actualizada.")
+			previous.name = name
+			previous.approach = approach
+			previous.skills = skills
+			if not previous.has("focus"): previous.focus = 3
+			if not previous.has("traits"): previous.traits = []
+			if not previous.has("level"): previous.level = 1
+			if not previous.has("xp"): previous.xp = 0
+			if not previous.has("condition"): previous.condition = 100
+			if not previous.has("milestones"): previous.milestones = []
+			return _result(true, "Ficha de tripulación actualizada sin perder progresión.")
 		"focus_restore":
 			if role != "mando": return _result(false, "Solo Mando puede ordenar descanso de la tripulación.")
 			for id in data.profiles:
