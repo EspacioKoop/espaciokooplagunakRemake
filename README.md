@@ -6,9 +6,11 @@ Una nave. Ocho puestos. Un mismo destino.
 
 ## Estado de la publicación
 
-**Esta subida conserva los recursos recuperados; todavía no contiene una aplicación ejecutable.**
+**Recuperación parcial: esta rama todavía no contiene una aplicación ejecutable.**
 
-Durante la transferencia, la copia local del proyecto dejó de estar disponible al cambiar el entorno de trabajo. Se han publicado los archivos que GitHub ya había recibido: el proyecto editable de Blender, siete capturas reales y tres archivos de audio. El código de Godot, los demás recursos y los ejecutables siguen pendientes de recuperación y publicación.
+Se conservan el proyecto editable de Blender, siete capturas reales, tres archivos de audio y cuatro archivos de código y configuración de Godot rescatados de los registros de desarrollo. Estos últimos están en [`recovery/source`](recovery/source).
+
+Faltan el núcleo de la simulación, la interfaz, la red, la campaña, el complemento de Foundry y los ejecutables. La copia completa del proyecto no se ha recuperado. El [inventario de recuperación](recovery/README.md) detalla los archivos disponibles y sus comprobaciones.
 
 Las capturas muestran la aplicación que se ejecutó durante el desarrollo. No se presentan como prueba de que el código y los binarios estén disponibles en esta rama.
 

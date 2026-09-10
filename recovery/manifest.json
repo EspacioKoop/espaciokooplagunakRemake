@@ -1,0 +1,129 @@
+{
+  "format_version": 1,
+  "checked_on": "2026-09-10",
+  "complete_application_recovered": false,
+  "runnable": false,
+  "source_identity_note": "Recovered source files match their published copies. The complete original project is unavailable for comparison.",
+  "files": [
+    {
+      "path": "art/blender/lagunak_assets.blend",
+      "original_path": "art/blender/lagunak_assets.blend",
+      "bytes": 10470421,
+      "sha256": "e79d82361515b1d19a93ec0557e6c983f286a97b4c1e7553e1269b882821a2c0",
+      "git_blob_sha1": "483c4750df1906c13adf052f90c380d484ad86c2",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "docs/images/01_inicio.png",
+      "original_path": "docs/images/01_inicio.png",
+      "bytes": 334021,
+      "sha256": "c83485164e0bf37ba41be8583b2efc6660251c567b9e7137d3e6f5e4e4c696bf",
+      "git_blob_sha1": "de6153f56bb0e069333ac327ef9591b394a0a11a",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "docs/images/02_puente.png",
+      "original_path": "docs/images/02_puente.png",
+      "bytes": 252102,
+      "sha256": "a09c84940748c10f2579b4b4f4e59cd091fb3d95024341cd3ef91301c2989948",
+      "git_blob_sha1": "db90bbc1ec4e864086c17850db86889a3822ae14",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "docs/images/03_ingenieria.png",
+      "original_path": "docs/images/03_ingenieria.png",
+      "bytes": 243532,
+      "sha256": "cd50d2319dd57ced605bed68a0d36b312446f5dd0e4824754693a5e4661d3f4e",
+      "git_blob_sha1": "49f690109226c887400b2507680d8e455e5bf655",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "docs/images/05_reactor.png",
+      "original_path": "docs/images/05_reactor.png",
+      "bytes": 343454,
+      "sha256": "c1d94999c8d5a317ab5f92e5684f94c950461d5889e21a8e85edb495abc25348",
+      "git_blob_sha1": "811e569aa5f640053007455880a788d29c44a120",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "docs/images/06_atlas.png",
+      "original_path": "docs/images/06_atlas.png",
+      "bytes": 109837,
+      "sha256": "040940123d8d0fe358690d593a8742b32d7a2862af79423b2364f118ae48400e",
+      "git_blob_sha1": "32ba499a02b6bd98e668a642423051c5421b79ff",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "docs/images/07_campana.png",
+      "original_path": "docs/images/07_campana.png",
+      "bytes": 157645,
+      "sha256": "8ee7dacaa0595f297127cbae88e0e933b966810ed9af115b44825042e7980407",
+      "git_blob_sha1": "34ab9f56e08f62a198cfdf566ad349c1922d6f28",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "docs/images/08_editor.png",
+      "original_path": "docs/images/08_editor.png",
+      "bytes": 160886,
+      "sha256": "f8710c5dec8aa9d83901fc4bf7ff1bc876d1fc21da4b3248b3d97d123223174c",
+      "git_blob_sha1": "bad119c122e59e9c82fc27128303d10cd5323acf",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "game/assets/audio/arrival.wav",
+      "original_path": "game/assets/audio/arrival.wav",
+      "bytes": 79424,
+      "sha256": "cd7d1fec1716467fe3e71075772ae8ffdc7e1909d680e61dd1dfbb87c4d8a0ab",
+      "git_blob_sha1": "1badc9994e785952baaad3e5a4ba4f26448cf81e",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "game/assets/audio/confirm.wav",
+      "original_path": "game/assets/audio/confirm.wav",
+      "bytes": 8422,
+      "sha256": "91bf8be4a46a7ba132ed1426519aff8a21dfb10181af3906cbe0a9eb99c24ae7",
+      "git_blob_sha1": "a94d93fef9bb7ae4112fd5d916fa063e6f0123a8",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "game/assets/audio/itsaso_ambient.wav",
+      "original_path": "game/assets/audio/itsaso_ambient.wav",
+      "bytes": 5644844,
+      "sha256": "878acf1ac556b57b45709b4ad34ebae8ff9b017123ba09e59c25aaf55481e6e9",
+      "git_blob_sha1": "2c62eac43d7414edfebc68e167f6606f108db549",
+      "provenance": "previously_uploaded_git_blob"
+    },
+    {
+      "path": "recovery/source/game/core/catalog.gd",
+      "original_path": "game/core/catalog.gd",
+      "bytes": 4891,
+      "sha256": "77526c3d5dc8279f847a5972bc2ba70a7f836bc4affb20faa0c3b37b36f869ff",
+      "git_blob_sha1": "9c4fce159bdeb7e65089baeda7444df0aedfa850",
+      "provenance": "development_record_recovery"
+    },
+    {
+      "path": "recovery/source/game/export_presets.cfg",
+      "original_path": "game/export_presets.cfg",
+      "bytes": 1350,
+      "sha256": "f922f7d5160a5115ff22098f8d497dbac0246c5438b6ffa385f30a89d3842f04",
+      "git_blob_sha1": "de9560083e40177d72c1e5d4ddd56018a1dfea3f",
+      "provenance": "development_record_recovery"
+    },
+    {
+      "path": "recovery/source/game/project.godot",
+      "original_path": "game/project.godot",
+      "bytes": 946,
+      "sha256": "04c52141b1e2fd057af38521034ccece7253c93b5912609e3a3a045396dd7a67",
+      "git_blob_sha1": "27ef2a2bfc2c36bf2dfaefd3005bd20ca43716fd",
+      "provenance": "development_record_recovery"
+    },
+    {
+      "path": "recovery/source/tests/test_core.gd",
+      "original_path": "tests/test_core.gd",
+      "bytes": 5707,
+      "sha256": "3919648ee08ef6cf9ac41fc0cd716381aaeb07cfc5c28b27a96b6f740e19d98d",
+      "git_blob_sha1": "c4c8d7781909845d08efa73ac8abc3ec8af8e46d",
+      "provenance": "development_record_recovery"
+    }
+  ]
+}
