@@ -48,7 +48,12 @@ func campaign_tests() -> void:
 				if not output.ok: continue
 				check(output.text.to_utf8_buffer().size() <= MissionBriefing.MAX_OUTPUT_BYTES, "bounded document")
 				if extension == "json":
-					check(JSON.parse_string(output.text) == created.document, "JSON round-trip of real campaign briefing")
+					# Godot parses JSON numbers as floats. Compare the complete
+					# structure against that representation, not Variant int types.
+					var expected: Dictionary = created.document.duplicate(true)
+					expected.version = float(expected.version)
+					for objective in expected.objectives: objective.number = float(objective.number)
+					check(JSON.parse_string(output.text) == expected, "JSON round-trip of real campaign briefing")
 			check(var_to_bytes(view) == copy, "recipient view unchanged")
 		check(var_to_bytes(sim.state) == before, "authoritative simulation unchanged")
 
@@ -84,7 +89,7 @@ func privacy_and_format_tests() -> void:
 	check("default-src 'none'" in html.text and "form-action 'none'" in html.text, "HTML denies network resources and forms")
 	check("@page{size:A4" in html.text and "@media print" in html.text, "HTML contains printable layout")
 	var markdown = MissionBriefing.render(authored, "sensores", "md")
-	check(markdown.ok and "![foto](" not in markdown.text and "<img " not in markdown.text, "Markdown images and raw HTML escaped")
+	check(markdown.ok and "\\!\\[foto\\]\\(" in markdown.text and "\\<img " in markdown.text, "Markdown image and raw HTML delimiters backslash-escaped")
 	check("\n# falso" not in markdown.text, "authored newline cannot inject document heading")
 	var parsed = JSON.parse_string(MissionBriefing.render(authored, "sensores", "json").text)
 	check(parsed.mission.briefing == injection and parsed.mission.title == injection, "Unicode and markup preserved as JSON data")
