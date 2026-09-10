@@ -141,6 +141,10 @@ func _update_camera() -> void:
 	camera.position = base.rotated(Vector3.UP, _angle) * _zoom
 	camera.look_at(Vector3(0, 1, 0))
 
+func _session_view() -> Dictionary:
+	var session = get_tree().root.get_node_or_null("Session")
+	return session.view if session != null else {}
+
 func _process(delta: float) -> void:
 	if vessel == null: return
 	_clock += delta
@@ -148,7 +152,7 @@ func _process(delta: float) -> void:
 		vessel.rotation.y = -0.35 + (sin(_clock * 0.10) * 0.12 if not reduced_motion else 0.0)
 		vessel.position.y = sin(_clock * 0.4) * 0.2 if not reduced_motion else 0.0
 		return
-	var data: Dictionary = Session.view
+	var data: Dictionary = _session_view()
 	if data.is_empty(): return
 	vessel.rotation.y = -deg_to_rad(data.ship.heading) - PI / 2
 	var active: Array = []
