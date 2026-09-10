@@ -13,6 +13,8 @@ var _rates: Dictionary = {}
 var _revision = 0
 var _received_revision = -1
 var _request_sequence = 0
+var _hello_sent = false
+var _negotiated = false
 var _transport = 0
 var _mode = ""
 var _local_body: Node3D
@@ -50,8 +52,10 @@ func request_stand() -> Dictionary:
 func _request(operation: String, seat_id: String) -> Dictionary:
 	_sync_transport()
 	if _session.mode == "client":
-		if multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-			return {"ok": false, "message": "Espera a conectar con el anfitrión."}
+		if not _negotiated or multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+			var result = {"ok": false, "message": "Este anfitrión aún no ofrece asientos compartidos."}
+			result_received.emit(result.ok, result.message)
+			return result
 		_request_sequence += 1
 		_receive_request.rpc_id(1, VERSION, _request_sequence, operation, seat_id)
 		return {"ok": true, "pending": true, "message": "Esperando al anfitrión…"}
@@ -104,10 +108,16 @@ func _sync_transport() -> void:
 	_revision = 0
 	_received_revision = -1
 	_request_sequence = 0
+	_hello_sent = false
+	_negotiated = false
 	changed.emit()
 
 func _session_changed() -> void:
 	_sync_transport()
+	# Only this optional capability key belongs to this component. Session keeps
+	# ownership of names, roles, authentication and the position/yaw channel.
+	if _session.mode == "host" and _session.roster.has(1): _session.roster[1].seat_protocol = VERSION
+	elif _session.mode == "client": _hello_host()
 	_cleanup()
 
 func _physics_process(_delta: float) -> void:
@@ -141,7 +151,12 @@ func _allow(peer: int) -> bool:
 
 func _hello_host() -> void:
 	_sync_transport()
-	if _session.mode == "client": _hello.rpc_id(1, VERSION)
+	if _session.mode != "client" or _hello_sent: return
+	var host: Dictionary = _session.roster.get("1", _session.roster.get(1, {}))
+	var version = host.get("seat_protocol", 0)
+	if not Catalog.finite_number(version) or float(version) != float(VERSION): return
+	_hello_sent = true
+	_hello.rpc_id(1, VERSION)
 
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _hello(version: int) -> void:
@@ -181,9 +196,14 @@ func _receive_snapshot(version: int, revision: int, occupants: Dictionary) -> vo
 		if not id is String or not _seats.has(id) or not occupants[id] is int or occupants[id] <= 0 or occupants[id] in owners: return
 		owners.append(occupants[id])
 	_received_revision = revision
+	_negotiated = true
 	_occupants = occupants.duplicate()
 	changed.emit()
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _response(ok: bool, message: String) -> void:
 	if _session.mode == "client": result_received.emit(ok, message.left(160))
+
+func _exit_tree() -> void:
+	if is_instance_valid(_session) and _session.mode == "host" and _session.roster.has(1):
+		_session.roster[1].erase("seat_protocol")
