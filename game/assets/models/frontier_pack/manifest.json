@@ -1,0 +1,814 @@
+{
+  "format": "lagunak-frontier-library",
+  "version": 1,
+  "blender": "4.5.3 LTS",
+  "license": "MIT",
+  "asset_count": 24,
+  "source_reference": "EspacioKoop/espaciokooplagunakRemake",
+  "coordinate_system": "glTF: Y up, -Z forward; Blender: Z up, +Y forward",
+  "scope": "Additional development assets. No gameplay or network registration.",
+  "assets": [
+    {
+      "id": "haizea_scout",
+      "title": "Haizea / exploradora",
+      "category": "ships",
+      "description": "Reconocimiento, doble motor y sensores de proa.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/haizea_scout.blend",
+      "glb": "res://assets/models/frontier_pack/haizea_scout.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        8.99171,
+        2.24581,
+        15.0
+      ],
+      "sockets": [
+        "Engine",
+        "Engine.001",
+        "Cockpit",
+        "Dock",
+        "Forward"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "9193e19126e51852b6b99949bd901d283ff5a5e4728af5d64a826de6d067406f",
+      "triangles": 4396,
+      "mesh_nodes": 1,
+      "materials": 7,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 204624,
+      "sha256": "5885368cfcc5c98fe7e65e14f824822c4febc94c7838caf325b22da401d6857a"
+    },
+    {
+      "id": "basajaun_hauler",
+      "title": "Basajaun / carguera",
+      "category": "ships",
+      "description": "Transporte industrial con seis contenedores externos.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/basajaun_hauler.blend",
+      "glb": "res://assets/models/frontier_pack/basajaun_hauler.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        9.23,
+        3.51178,
+        24.4495
+      ],
+      "sockets": [
+        "Cargo_mount",
+        "Cargo_mount.001",
+        "Cargo_mount.002",
+        "Engine",
+        "Cargo_mount.003",
+        "Cargo_mount.004",
+        "Cargo_mount.005",
+        "Engine.001",
+        "Dock",
+        "Cockpit",
+        "Forward"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "fb984acd90505223a99a38fd9eed7f73b07dad47a760c0d8d3c9e52195a68d6a",
+      "triangles": 8664,
+      "mesh_nodes": 1,
+      "materials": 8,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 552892,
+      "sha256": "24cbce7f43d28c7abfefd6386025bda3da8cd69824c58bdd6daa2ca73a31bfbd"
+    },
+    {
+      "id": "izar_science",
+      "title": "Izar / científica",
+      "category": "ships",
+      "description": "Laboratorio de largo alcance con anillos instrumentales.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/izar_science.blend",
+      "glb": "res://assets/models/frontier_pack/izar_science.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        8.35,
+        8.35,
+        18.878
+      ],
+      "sockets": [
+        "Engine",
+        "Engine.001",
+        "Science_array",
+        "Dock",
+        "Cockpit",
+        "Forward"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "eb773f8ff55682fa90b0133a928093c0a6258b63f396a7d0b383e64a99c3acc0",
+      "triangles": 7000,
+      "mesh_nodes": 1,
+      "materials": 8,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 314996,
+      "sha256": "822a82cc594fdaec202621b7374a1caef28b600d63af94160e56f75cf8eb19eb"
+    },
+    {
+      "id": "ekaitz_interceptor",
+      "title": "Ekaitz / interceptora",
+      "category": "ships",
+      "description": "Silueta hostil con alas barridas y emisores gemelos.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/ekaitz_interceptor.blend",
+      "glb": "res://assets/models/frontier_pack/ekaitz_interceptor.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        12.77063,
+        3.1,
+        16.0845
+      ],
+      "sockets": [
+        "Engine",
+        "Weapon_mount",
+        "Engine.001",
+        "Weapon_mount.001",
+        "Cockpit",
+        "Dock",
+        "Forward"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "05b60cacb34e4dcb1ad6392967c1cc899678d5e35a6633e3eb77616d1a4cc819",
+      "triangles": 2856,
+      "mesh_nodes": 1,
+      "materials": 4,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 140152,
+      "sha256": "237ba5d6b841bfe533bc23cb94954eefa67435c533506424f00e0a367e2ef033"
+    },
+    {
+      "id": "argi_sidearm",
+      "title": "Argi / pistola de pulso",
+      "category": "weapons",
+      "description": "Equipo ficticio compacto con celda extraíble y emisor.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/argi_sidearm.blend",
+      "glb": "res://assets/models/frontier_pack/argi_sidearm.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        0.22,
+        0.51733,
+        0.60217
+      ],
+      "sockets": [
+        "Grip.001",
+        "Muzzle",
+        "Sight_line"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "e67cb3161657e9cac237507139f606719c4e765a60b58ea5379a6f1616209b02",
+      "triangles": 2164,
+      "mesh_nodes": 1,
+      "materials": 6,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 126716,
+      "sha256": "289a68ffe6bfb991b140614e19cbdcccbdf8ed502f771fe5889e78f84bce596b"
+    },
+    {
+      "id": "tximista_carbine",
+      "title": "Tximista / carabina",
+      "category": "weapons",
+      "description": "Arma ficticia de inducción con culata, visor y bobinas.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/tximista_carbine.blend",
+      "glb": "res://assets/models/frontier_pack/tximista_carbine.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        0.26,
+        0.51733,
+        1.4805
+      ],
+      "sockets": [
+        "Offhand",
+        "Grip.001",
+        "Muzzle",
+        "Sight_line"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "74df52ee07e12f8007c80298d45221c40a4f8d370da00e6cf1e64370bfa958aa",
+      "triangles": 4408,
+      "mesh_nodes": 1,
+      "materials": 6,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 197248,
+      "sha256": "9e3600f49e44c20d7040c802f023bb66d5798365a9e6a9c8d68989cd78a236f4"
+    },
+    {
+      "id": "sugar_lance",
+      "title": "Sugar / lanza de plasma",
+      "category": "weapons",
+      "description": "Equipo ficticio pesado de doble horquilla energética.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/sugar_lance.blend",
+      "glb": "res://assets/models/frontier_pack/sugar_lance.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        0.42,
+        0.44933,
+        1.3975
+      ],
+      "sockets": [
+        "Offhand",
+        "Grip.001",
+        "Muzzle",
+        "Sight_line"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "a816f3d88ccb2baa142d63e9a6ef2908183881bdfecaa3410cf9f648295c3b07",
+      "triangles": 2168,
+      "mesh_nodes": 1,
+      "materials": 6,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 149180,
+      "sha256": "4a36dd5a88831dd49511083d6c0ec23ba86967f67ec3d291992290ca848f3634"
+    },
+    {
+      "id": "orbain_turret",
+      "title": "Orbain / torreta",
+      "category": "weapons",
+      "description": "Montaje externo con pivote de giro y dos bocas.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/orbain_turret.blend",
+      "glb": "res://assets/models/frontier_pack/orbain_turret.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        1.6983,
+        1.075,
+        1.82064
+      ],
+      "sockets": [
+        "Muzzle_L",
+        "Muzzle_R",
+        "Mount"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "a09195e60a9b5ecd40796e4b495f2c86e3e8b9a3f5f37cb8fbf8b0bad65a8c1e",
+      "triangles": 5056,
+      "mesh_nodes": 2,
+      "materials": 6,
+      "animations": [
+        "Scan"
+      ],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 152996,
+      "sha256": "2ff799bb48baf7a61894b20dc316982e9621629bee30db0eb12f6cb1f04258ad"
+    },
+    {
+      "id": "crew_navigator",
+      "title": "Navegante",
+      "category": "avatars",
+      "description": "Traje naval ligero, casco y arnés de navegación.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/crew_navigator.blend",
+      "glb": "res://assets/models/frontier_pack/crew_navigator.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        1.04844,
+        1.9365,
+        0.51
+      ],
+      "sockets": [
+        "Hand_L",
+        "Hand_R",
+        "Back",
+        "Head_top",
+        "Feet"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "b4054498df823ac9c4622b43d60409f92bcb0dbe439b692ee52d05d65db10ce5",
+      "triangles": 10216,
+      "mesh_nodes": 1,
+      "materials": 8,
+      "animations": [
+        "Idle",
+        "Walk",
+        "Wave"
+      ],
+      "skins": 1,
+      "joints": 18,
+      "bytes": 714392,
+      "sha256": "5a977544d8f042a93d8e98b392c5b724c910e1729bea0f4dc6cb004d2ce53add"
+    },
+    {
+      "id": "crew_engineer",
+      "title": "Ingeniera de cubierta",
+      "category": "avatars",
+      "description": "Traje de mantenimiento, hombreras y mochila técnica.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/crew_engineer.blend",
+      "glb": "res://assets/models/frontier_pack/crew_engineer.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        1.04844,
+        1.9365,
+        0.65
+      ],
+      "sockets": [
+        "Hand_L",
+        "Hand_R",
+        "Back",
+        "Head_top",
+        "Feet"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "60734c33c3a701ac07b48096ec4a83b8a9b318b16a8509fe01454277317a472a",
+      "triangles": 10304,
+      "mesh_nodes": 1,
+      "materials": 8,
+      "animations": [
+        "Idle",
+        "Walk",
+        "Wave"
+      ],
+      "skins": 1,
+      "joints": 18,
+      "bytes": 722392,
+      "sha256": "6207381632f5759afa932b154ed67a205a76012fb4e03fa99e14e0de741ef097"
+    },
+    {
+      "id": "crew_synthetic",
+      "title": "Tripulante sintético",
+      "category": "avatars",
+      "description": "Androide segmentado, ópticas y núcleo torácico.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/crew_synthetic.blend",
+      "glb": "res://assets/models/frontier_pack/crew_synthetic.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        1.04844,
+        1.8745,
+        0.4525
+      ],
+      "sockets": [
+        "Hand_L",
+        "Hand_R",
+        "Back",
+        "Head_top",
+        "Feet"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "aea8b14b24319427112a4acf314204b6f23adc4640c0467ab55d427a0b7508ab",
+      "triangles": 9688,
+      "mesh_nodes": 1,
+      "materials": 5,
+      "animations": [
+        "Idle",
+        "Walk",
+        "Wave"
+      ],
+      "skins": 1,
+      "joints": 18,
+      "bytes": 690668,
+      "sha256": "52a737395860f5aeede809259b20258522506dc30ab3600f97c663cc7785035c"
+    },
+    {
+      "id": "enemy_watcher",
+      "title": "Vigía / dron",
+      "category": "enemies",
+      "description": "Explorador flotante con óptica central y estabilizadores.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/enemy_watcher.blend",
+      "glb": "res://assets/models/frontier_pack/enemy_watcher.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        1.63638,
+        0.975,
+        1.09027
+      ],
+      "sockets": [
+        "Sensor"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "3ca5825f80f1f3218edc9e5bf393eb8d73b490d2c3494d08bf1dd5eeebe0cfbd",
+      "triangles": 2828,
+      "mesh_nodes": 1,
+      "materials": 6,
+      "animations": [
+        "Hover"
+      ],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 94464,
+      "sha256": "37bec85411a08569e7940996b05cf155dda2347355e7ff45152735031fbde874"
+    },
+    {
+      "id": "enemy_crawler",
+      "title": "Armiarma / caminante",
+      "category": "enemies",
+      "description": "Autómata cuadrúpedo con patas articuladas y núcleo.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/enemy_crawler.blend",
+      "glb": "res://assets/models/frontier_pack/enemy_crawler.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        2.32,
+        0.97,
+        1.78
+      ],
+      "sockets": [
+        "Sensor"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "81e5097a9586fbb5dd3a8f293813b70026198ce158e639f74d0bf23ef00d18b3",
+      "triangles": 7852,
+      "mesh_nodes": 1,
+      "materials": 6,
+      "animations": [
+        "Scuttle"
+      ],
+      "skins": 1,
+      "joints": 9,
+      "bytes": 340688,
+      "sha256": "b11284407b4076bb5871f6041e8d29377e8b74f97eacaed7a4e37c8be8a8be88"
+    },
+    {
+      "id": "enemy_warden",
+      "title": "Harri / centinela",
+      "category": "enemies",
+      "description": "Guardián bípedo de placas minerales y cristales.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/enemy_warden.blend",
+      "glb": "res://assets/models/frontier_pack/enemy_warden.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        1.06,
+        1.99026,
+        0.655
+      ],
+      "sockets": [
+        "Hand_L",
+        "Hand_R",
+        "Back",
+        "Head_top",
+        "Feet"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "2392005246e1c6f9baaf8d32955d394a00270808360ccd9e4d1baf08d195b090",
+      "triangles": 8740,
+      "mesh_nodes": 1,
+      "materials": 5,
+      "animations": [
+        "Idle",
+        "Walk",
+        "Wave"
+      ],
+      "skins": 1,
+      "joints": 18,
+      "bytes": 618812,
+      "sha256": "9bc417edd769d010bd066271d1df94cd2c75391c9a7e7633f1fcbf4727fad341"
+    },
+    {
+      "id": "world_ocean",
+      "title": "Urdin / oceánico",
+      "category": "worlds",
+      "description": "Globo de océanos, archipiélagos y nubes estilizadas.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/world_ocean.blend",
+      "glb": "res://assets/models/frontier_pack/world_ocean.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        2.01083,
+        2.0,
+        2.013
+      ],
+      "sockets": [
+        "Center",
+        "North_pole"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "76a6c29655f45938b192b379d2dfb7b2129b225086c8047716c49cb94345d4d9",
+      "triangles": 9882,
+      "mesh_nodes": 1,
+      "materials": 2,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 346668,
+      "sha256": "b3b6ade20b3f962dd16041e3753df044061319e96abfa3fa98d362f8280da6dd"
+    },
+    {
+      "id": "world_desert",
+      "title": "Harea / desértico",
+      "category": "worlds",
+      "description": "Globo de estratos cálidos y mesetas erosionadas.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/world_desert.blend",
+      "glb": "res://assets/models/frontier_pack/world_desert.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "sockets": [
+        "Center",
+        "North_pole"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "c46a3b83352ff876f18f33f57f35e9235623942d45cdce576682251a85989e33",
+      "triangles": 9024,
+      "mesh_nodes": 1,
+      "materials": 1,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 264920,
+      "sha256": "12514fb62e3cfe4c5a0dd916b99a7942d22052a38a25f0ea64a21c652a025440"
+    },
+    {
+      "id": "world_ice",
+      "title": "Izotz / helado",
+      "category": "worlds",
+      "description": "Globo de casquetes, hielo azul y fracturas.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/world_ice.blend",
+      "glb": "res://assets/models/frontier_pack/world_ice.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "sockets": [
+        "Center",
+        "North_pole"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "ad2ae310559747cc4a753495cd2158ba9a7389ccb1e85f5b89ffb519d0f45cc2",
+      "triangles": 9024,
+      "mesh_nodes": 1,
+      "materials": 1,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 264916,
+      "sha256": "13d8ebfac9385540bdce5d956e502e2a23c8ee9de52451b536b55d9f6f817dbd"
+    },
+    {
+      "id": "world_lava",
+      "title": "Labe / volcánico",
+      "category": "worlds",
+      "description": "Globo de costra oscura y fisuras incandescentes.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/world_lava.blend",
+      "glb": "res://assets/models/frontier_pack/world_lava.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "sockets": [
+        "Center",
+        "North_pole"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "5b52936868df69d7bee1d33e1e27fda31ccaf306e986192cdbb85350199dfa08",
+      "triangles": 9024,
+      "mesh_nodes": 1,
+      "materials": 1,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 264996,
+      "sha256": "a07828ec9744e8a80efad6cd0e698114d6616d744d7d467e669a71b318df048a"
+    },
+    {
+      "id": "world_gas",
+      "title": "Ortzadar / gigante",
+      "category": "worlds",
+      "description": "Globo bandeado con sistema de anillos independiente.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/world_gas.blend",
+      "glb": "res://assets/models/frontier_pack/world_gas.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        3.87195,
+        2.0,
+        3.70841
+      ],
+      "sockets": [
+        "Center",
+        "North_pole"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "7467e1e7d04d8341816b3f92e3579594162d207b87c0a690b69d216c8142ad16",
+      "triangles": 10304,
+      "mesh_nodes": 1,
+      "materials": 6,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 327744,
+      "sha256": "7df9766906589546fb04d0761ab26037785b39896739b820a3cde56d5e6fe3b3"
+    },
+    {
+      "id": "cargo_crate",
+      "title": "Caja modular",
+      "category": "props",
+      "description": "Contenedor con tapa articulada, cierres y cantoneras.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/cargo_crate.blend",
+      "glb": "res://assets/models/frontier_pack/cargo_crate.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        1.32,
+        0.97,
+        0.9925
+      ],
+      "sockets": [
+        "Pickup"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "9ea66e604a287efef3ec0fedde86c74d347712abe4428aac6e4e882e27fba344",
+      "triangles": 1296,
+      "mesh_nodes": 2,
+      "materials": 6,
+      "animations": [
+        "Open"
+      ],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 98036,
+      "sha256": "51b53a76d56de42aa1557d40bbf5d921a5d281677a6f789250f808aa9ffe1ea7"
+    },
+    {
+      "id": "medical_capsule",
+      "title": "Cápsula de auxilio",
+      "category": "props",
+      "description": "Suministro reconocible por paneles blancos y cruz turquesa.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/medical_capsule.blend",
+      "glb": "res://assets/models/frontier_pack/medical_capsule.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        0.64,
+        1.01,
+        0.64
+      ],
+      "sockets": [
+        "Pickup"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "90aed6aaa3149333415c6584fb435e48f5f7b392d7521ff86bed3a459a0ae41b",
+      "triangles": 816,
+      "mesh_nodes": 1,
+      "materials": 5,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 57404,
+      "sha256": "f09008ee1d59e13d3ece6b2684aea2b7a736b0aea12f8da6b3573e5efa15d053"
+    },
+    {
+      "id": "navigation_beacon",
+      "title": "Baliza de navegación",
+      "category": "props",
+      "description": "Nodo orbital con paneles y anillo emisor.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/navigation_beacon.blend",
+      "glb": "res://assets/models/frontier_pack/navigation_beacon.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        3.2,
+        2.13,
+        1.11
+      ],
+      "sockets": [
+        "Signal",
+        "Mount"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "f3e45778f7a4850187feeefe57fb6c88b42fff1766f7882fd58e35ce295f54cd",
+      "triangles": 2784,
+      "mesh_nodes": 1,
+      "materials": 5,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 146620,
+      "sha256": "3b0b450c44c53bcbce9f10cc5a4dc3e045eddde4f96f01c06ca48edabf0805e1"
+    },
+    {
+      "id": "mineral_cluster",
+      "title": "Veta de cristales",
+      "category": "props",
+      "description": "Recurso mineral con cinco cristales y base rocosa.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/mineral_cluster.blend",
+      "glb": "res://assets/models/frontier_pack/mineral_cluster.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        1.23638,
+        1.41504,
+        1.06
+      ],
+      "sockets": [
+        "Pickup"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "f35855b7084e75b7ea605c40cdbfd4738b263581ec44a2c634f43ec7e3757f62",
+      "triangles": 230,
+      "mesh_nodes": 1,
+      "materials": 4,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 23200,
+      "sha256": "f7ef0bc5b01dc82e3090334cb010efe2778c480d19ff251f903c0199a0b48ece"
+    },
+    {
+      "id": "field_scanner",
+      "title": "Escáner de campo",
+      "category": "props",
+      "description": "Herramienta de exploración con pantalla y sonda.",
+      "license": "MIT",
+      "source": "art/blender/frontier_pack/sources/field_scanner.blend",
+      "glb": "res://assets/models/frontier_pack/field_scanner.glb",
+      "forward": "-Z",
+      "up": "+Y",
+      "units": "metres",
+      "dimensions_m": [
+        0.32,
+        0.2425,
+        0.68
+      ],
+      "sockets": [
+        "Grip",
+        "Sensor"
+      ],
+      "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
+      "source_sha256": "c32e710e6eb389047c3456ccab24152b6287ae849128451c20442b53b009e98e",
+      "triangles": 1528,
+      "mesh_nodes": 1,
+      "materials": 6,
+      "animations": [],
+      "skins": 0,
+      "joints": 0,
+      "bytes": 82288,
+      "sha256": "c0c9e720d798e6feee9f248d8599e16a9f876483187c9db97af88730cad8b5fd"
+    }
+  ]
+}
