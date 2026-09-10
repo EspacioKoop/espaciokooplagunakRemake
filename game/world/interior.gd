@@ -161,7 +161,7 @@ func _ready() -> void:
 	body.add_child(camera)
 	camera.current = true
 	gui_input.connect(func(event):
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed: Input.mouse_mode = Input.MOUSE_MODE_CAPTURED)
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and not _controls_blocked(): Input.mouse_mode = Input.MOUSE_MODE_CAPTURED)
 	_map = DeckMap.new()
 	_map.deck = self
 	_map.anchor_left = 1.0
@@ -215,18 +215,40 @@ func _apply_zone_visibility() -> void:
 		_corridors.update_labels(zone)
 	if _map != null: _map.visible = on_ship
 
+func _controls() -> Node:
+	return get_tree().root.get_node_or_null("Controls")
+
+func _controls_blocked() -> bool:
+	var controls = _controls()
+	return controls != null and controls.gameplay_blocked()
+
+func _input_action(event: InputEvent, action: String, fallback: int) -> bool:
+	if _controls() != null and InputMap.has_action(action): return event.is_action_pressed(action)
+	if action == "capture_pointer": return event is InputEventMouseButton and event.button_index == fallback and event.pressed
+	return event is InputEventKey and event.keycode == fallback and event.pressed and not event.echo
+
+func _binding(action: String, fallback: String) -> String:
+	var controls = _controls()
+	return controls.binding_label(action) if controls != null else fallback
+
 func _input(event: InputEvent) -> void:
-	if not is_visible_in_tree(): return
+	if not is_visible_in_tree() or body == null: return
+	if _input_action(event, "release_pointer", KEY_ESCAPE):
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		get_viewport().set_input_as_handled()
+		return
+	if _controls_blocked(): return
+	if _input_action(event, "capture_pointer", MOUSE_BUTTON_LEFT):
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
-			body.rotation.y -= event.relative.x * 0.0022
-			camera.rotation.x = clampf(camera.rotation.x - event.relative.y * 0.0022, -1.25, 1.25)
-		if event is InputEventKey and event.pressed and not event.echo:
-			if event.keycode == KEY_ESCAPE:
-				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-				get_viewport().set_input_as_handled()
-			elif event.keycode == KEY_E:
-				interact()
+			var controls = _controls()
+			var look: Vector2 = controls.mouse_look(event.relative) if controls != null else event.relative * 0.0022
+			body.rotation.y -= look.x
+			camera.rotation.x = clampf(camera.rotation.x - look.y, -1.25, 1.25)
+		if _input_action(event, "interact", KEY_E):
+			interact()
+			get_viewport().set_input_as_handled()
 
 func interact() -> void:
 	if seated: stand_up()
@@ -262,11 +284,19 @@ func _physics_process(delta: float) -> void:
 	_animation_time += delta if not reduced_motion else 0.0
 	_animate_decor(delta)
 	var input = Vector2.ZERO
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		input.x = float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A))
-		input.y = float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W))
-	var direction = body.basis * Vector3(input.x, 0, input.y).normalized()
-	var speed = 5.0 if Input.is_physical_key_pressed(KEY_SHIFT) else 3.1
+	var controls = _controls()
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and not _controls_blocked():
+		if controls != null:
+			input = controls.movement_vector()
+			var look: Vector2 = controls.look_vector() * delta
+			body.rotation.y -= look.x
+			camera.rotation.x = clampf(camera.rotation.x - look.y, -1.25, 1.25)
+		else:
+			input.x = float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A))
+			input.y = float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W))
+	var direction = body.basis * Vector3(input.x, 0, input.y).limit_length()
+	var sprint = Input.is_action_pressed("sprint") if controls != null else Input.is_physical_key_pressed(KEY_SHIFT)
+	var speed = 5.0 if sprint else 3.1
 	body.velocity.x = direction.x * speed
 	body.velocity.z = direction.z * speed
 	if not body.is_on_floor(): body.velocity.y -= 9.8 * delta
@@ -302,6 +332,9 @@ func _physics_process(delta: float) -> void:
 	elif not _near_interaction.is_empty(): prompt = "E · " + _near_interaction.title
 	elif _near_station: prompt = "E · Operar " + Catalog.role_name(ZONES[zone].role)
 	else: prompt = "WASD · Caminar     Mayús · Correr     Esc · Liberar el ratón"
+	if controls != null:
+		prompt = prompt.replace("E ·", _binding("interact", "E") + " ·").replace("Mayús ·", _binding("sprint", "Mayús") + " ·").replace("Esc ·", _binding("release_pointer", "Esc") + " ·")
+		prompt = prompt.replace("WASD", "/".join([_binding("move_forward", "W"), _binding("move_left", "A"), _binding("move_back", "S"), _binding("move_right", "D")]))
 	_pose_clock += delta
 	if _pose_clock > 0.1:
 		_pose_clock = 0.0
