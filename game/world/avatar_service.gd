@@ -137,7 +137,7 @@ func _publish() -> void:
 	if _mode != "host": return
 	var packet = JSON.stringify({"version": 1, "profiles": profiles}).to_utf8_buffer()
 	for peer_id in _subscribers:
-		if _session.roster.has(peer_id) and peer_id in multiplayer.get_peers():
+		if _session.roster.has(peer_id) and _session._peer_active(peer_id):
 			_receive.rpc_id(peer_id, packet)
 
 @rpc("authority", "call_remote", "reliable", 0)
