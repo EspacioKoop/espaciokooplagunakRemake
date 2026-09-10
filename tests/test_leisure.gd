@@ -3,6 +3,7 @@ var checks = 0
 var failures = 0
 var app: Control
 var deck
+var session
 var zones: Array = []
 
 func _initialize() -> void: call_deferred("run")
@@ -22,6 +23,7 @@ func run() -> void:
  app = load("res://main.tscn").instantiate()
  root.add_child(app)
  await settle(3)
+ session = root.get_node("Session")
  app._new_game()
  app._go("deck")
  await settle()
@@ -112,19 +114,19 @@ func run() -> void:
  for display in displays:
   if display.table_id == "poker": poker = display
  check(poker != null, "poker table projection is attached to its physical table")
- var joined = Session.table_order("table_join", {"table": "poker"})
+ var joined = session.table_order("table_join", {"table": "poker"})
  check(joined.ok, "local player can sit from the native lounge state")
- check(Session.table_order("table_bot", {"table": "poker"}).ok, "native poker can add first table NPC")
- check(Session.table_order("table_bot", {"table": "poker"}).ok, "native poker can add second table NPC")
- check(Session.table_order("table_start", {"table": "poker"}).ok, "native poker starts while physical table is visible")
+ check(session.table_order("table_bot", {"table": "poker"}).ok, "native poker can add first table NPC")
+ check(session.table_order("table_bot", {"table": "poker"}).ok, "native poker can add second table NPC")
+ check(session.table_order("table_start", {"table": "poker"}).ok, "native poker starts while physical table is visible")
  await settle(5)
  if poker != null:
   check(poker._dynamic.get_child_count() > 4, "physical table projects live cards seats and round state")
- var projected: Dictionary = Session.view.get("lounge", {}).get("tables", {}).get("poker", {}).get("round", {})
+ var projected: Dictionary = session.view.get("lounge", {}).get("tables", {}).get("poker", {}).get("round", {})
  check(projected.get("private", []).size() == 2, "3D table source contains own private poker hand")
  var foreign_visible = false
  for player in projected.get("players", []):
-  if player.id != projected.get("identity", "") and player.get("cards", []).size() >= 2 and not projected.get("showdown", false): foreign_visible = true
+  if player.get("id", "") != "self" and player.get("cards", []).size() >= 2 and not projected.get("showdown", false): foreign_visible = true
  check(not foreign_visible, "3D projection never receives another hidden poker hand")
  app._ambient.stop()
  app._effects.stop()
