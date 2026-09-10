@@ -36,6 +36,8 @@ jobs:
           .toolchain/godot --headless --path game --script ../tests/test_ship_physics.gd -- --test
       - name: Verify atlas factions crew trade and game direction
         run: .toolchain/godot --headless --path game --script ../tests/test_expedition.gd -- --test
+      - name: Verify short long range sensors probe analysis and hacking
+        run: .toolchain/godot --headless --path game --script ../tests/test_advanced_sensors.gd -- --test
       - name: Exercise five actual network processes
         run: python3 tests/run_network.py
       - name: Verify actual HTTP boundary
