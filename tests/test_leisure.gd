@@ -41,6 +41,7 @@ func run() -> void:
  await settle(3)
  check(not deck._corridors.doors[0].open, "hatch can be closed again")
  await preload("res://../tests/test_ship_corridors.gd").run(self)
+ await preload("res://../tests/test_ship_deck_layout.gd").run(self)
  for zone in range(7, 13):
   deck.teleport_zone(zone)
   await settle()

@@ -1,0 +1,49 @@
+name: Verify network trust boundaries
+
+on:
+  push:
+    branches: [main, agent/32-network-boundary-c42]
+    paths:
+      - 'game/**'
+      - 'tests/test_network_boundary.gd'
+      - 'tests/run_network_boundary.py'
+      - 'tests/test_network_boundary_runner.py'
+      - 'tools/bootstrap.py'
+      - 'SECURITY.md'
+      - 'docs/NETWORK_BOUNDARY.md'
+      - '.github/workflows/network-boundary.yml'
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tests/test_network_boundary.gd'
+      - 'tests/run_network_boundary.py'
+      - 'tests/test_network_boundary_runner.py'
+      - 'tools/bootstrap.py'
+      - 'SECURITY.md'
+      - 'docs/NETWORK_BOUNDARY.md'
+      - '.github/workflows/network-boundary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: network-boundary-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  boundary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify runner failure detection and isolation
+        run: python3 -m unittest discover -s tests -p test_network_boundary_runner.py -v
+      - name: Download verified Godot toolchain
+        run: python3 tools/bootstrap.py
+      - name: Import resources
+        run: .toolchain/godot --headless --editor --path game --quit -- --test
+      - name: Reject unauthorized orders and redact real recipient snapshots
+        run: python3 tests/run_network_boundary.py

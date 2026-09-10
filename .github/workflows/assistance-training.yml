@@ -1,0 +1,54 @@
+name: Assistance training
+
+on:
+  push:
+    branches: [agent/32-assistance-training-c42]
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tests/test_cooperation.gd'
+      - 'tests/*assistance_training*'
+      - 'tools/bootstrap.py'
+      - '.github/workflows/assistance-training.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: assistance-training-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  training:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check runner failure handling
+        run: python3 -m unittest discover -s tests -p test_assistance_training_runner.py -v
+      - name: Install graphical runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Download verified Godot
+        run: python3 tools/bootstrap.py
+      - name: Import resources and reject script errors
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/assistance-training
+          timeout 180 .toolchain/godot --headless --editor --path game --quit 2>&1 | tee build/assistance-training/import.log
+          if grep -E '^[[:space:]]*(SCRIPT ERROR|ERROR):' build/assistance-training/import.log; then exit 1; fi
+      - name: Native rules and isolated UI regression
+        run: python3 tests/run_assistance_training.py --output build/assistance-training/headless
+      - name: Render and exercise the real training window
+        run: xvfb-run -a python3 tests/run_assistance_training.py --graphical --output build/assistance-training/graphical
+      - name: Preserve logs and rendered evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: assistance-training-evidence
+          path: build/assistance-training/
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,30 @@
+name: Verify standalone NPC workbench
+
+on:
+  pull_request:
+  push:
+    branches: [main, agent/32-npc-workbench-n73]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npc-workbench-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  npc-workbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify isolated runner
+        run: python3 -m unittest discover -s tests -p test_npc_workbench_runner.py -v
+      - run: python3 tools/bootstrap.py
+      - name: Install display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Run generation, negative cases and real native UI
+        run: xvfb-run -a python3 tests/run_npc_workbench.py --graphics

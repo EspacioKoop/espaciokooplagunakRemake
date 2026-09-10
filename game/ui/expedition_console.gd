@@ -191,6 +191,11 @@ func _skill_total(skills: Dictionary) -> int:
 func _make_chronicle() -> void:
 	var root = _tab("Crónica y bestiario")
 	root.add_child(ConsoleUI.label("Crónica de la expedición", 27))
+	var export_button = ConsoleUI.button("Exportar sesión…", _open_session_report)
+	export_button.name = "ExportSessionReport"
+	var session = get_tree().root.get_node_or_null("Session")
+	export_button.disabled = session == null or session.view.is_empty()
+	root.add_child(export_button)
 	var bestiary = ConsoleUI.card(root, "BESTIARIO / CATÁLOGO")
 	if systems.data.bestiary.is_empty():
 		bestiary.add_child(ConsoleUI.paragraph("Identifica contactos para alimentar el catálogo.", 15))
@@ -202,6 +207,20 @@ func _make_chronicle() -> void:
 	for i in range(maxi(0, entries.size() - 60), entries.size()):
 		var entry: Dictionary = entries[i]
 		chronicle.add_child(ConsoleUI.paragraph("[%s] %s · %s" % [entry.sector, entry.source, entry.text], 13, ConsoleUI.MUTED))
+
+func _open_session_report() -> void:
+	var session = get_tree().root.get_node_or_null("Session")
+	if session == null or systems == null or session.view.is_empty():
+		return
+	for child in get_children():
+		if child is SessionReportDialog and not child.is_queued_for_deletion():
+			child.popup_centered()
+			return
+	var dialog = SessionReportDialog.new()
+	dialog.name = "SessionReportDialog"
+	dialog.configure(session.view, systems.data)
+	add_child(dialog)
+	dialog.popup_centered()
 
 func _make_director() -> void:
 	var root = _tab("Dirección")
