@@ -8,7 +8,7 @@ var status: Label
 var selected = ""
 
 func _ready() -> void:
-	title = "Flotas y facciones · F7"
+	title = "Flotas y facciones · F5"
 	size = Vector2i(1040, 720)
 	transient = true
 	theme = ConsoleUI.make_theme()
@@ -31,7 +31,7 @@ func _rebuild() -> void:
 	var heading = ConsoleUI.label("CONTROL ESTRATÉGICO DE FLOTA", 25, ConsoleUI.TEAL)
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(heading)
-	top.add_child(ConsoleUI.label("F7 · cerrar", 13, ConsoleUI.MUTED))
+	top.add_child(ConsoleUI.label("F5 · cerrar", 13, ConsoleUI.MUTED))
 	if session == null or session.view.is_empty():
 		body.add_child(ConsoleUI.paragraph("Inicia una misión para ver las flotas del sector.", 16))
 		return
@@ -59,50 +59,32 @@ func _rebuild() -> void:
 		line.add_child(choose)
 	var side = ConsoleUI.card(content, "ÓRDENES")
 	side.get_parent().custom_minimum_size.x = 360
-	var current: Dictionary = {}
-	for row in rows:
-		if str(row.id) == selected: current = row
-	if current.is_empty():
-		side.add_child(ConsoleUI.paragraph("Selecciona una nave aliada para transmitir órdenes. Las hostiles muestran su intención y moral, pero no obedecen.", 14))
+	if selected.is_empty():
+		side.add_child(ConsoleUI.paragraph("Selecciona una nave identificada. Las aliadas obedecen si la relación con su facción lo permite.", 14))
 	else:
-		side.add_child(ConsoleUI.label(current.name, 20, ConsoleUI.TEAL if current.kind == "friendly" else ConsoleUI.RED))
-		side.add_child(ConsoleUI.label("Facción %s · orden %s · moral %d" % [current.faction, current.order, int(current.morale)], 13, ConsoleUI.MUTED))
-		var target_menu = OptionButton.new()
-		for c in session.view.contacts:
-			if c.kind == "hostile":
-				target_menu.add_item(c.name)
-				target_menu.set_item_metadata(target_menu.item_count - 1, c.id)
-		side.add_child(ConsoleUI.label("Objetivo para intercepción", 13, ConsoleUI.MUTED))
-		side.add_child(target_menu)
+		side.add_child(ConsoleUI.label("Objetivo: " + selected, 16, ConsoleUI.TEAL))
 		for order in FleetAI.ORDERS:
-			var button = ConsoleUI.button(order.capitalize(), _order.bind(order, target_menu), order == "escort")
-			button.disabled = not can_order or current.kind != "friendly" or (order == "intercept" and target_menu.item_count == 0)
+			if order == "intercept": continue
+			var button = ConsoleUI.button(order.capitalize(), func(value = order): fleet.command("order", {"target": selected, "order": value, "objective": ""}))
+			button.disabled = not can_order
 			side.add_child(button)
+		var enemy = OptionButton.new()
+		for row in rows:
+			if row.kind == "hostile":
+				enemy.add_item(row.name)
+				enemy.set_item_metadata(enemy.item_count - 1, row.id)
+		side.add_child(enemy)
+		var intercept = ConsoleUI.button("Interceptar hostil", func(): fleet.command("order", {"target": selected, "order": "intercept", "objective": enemy.get_item_metadata(enemy.selected) if enemy.item_count > 0 else ""}), true)
+		intercept.disabled = not can_order or enemy.item_count == 0
+		side.add_child(intercept)
 	var convoy = ConsoleUI.card(side, "CONVOY")
-	convoy.add_child(ConsoleUI.paragraph("Mando puede agrupar todas las naves aliadas visibles en un convoy de escolta; después puede disolverlo desde su identificador.", 13))
-	var allied: Array = []
-	var fleet_id = ""
-	for row in rows:
-		if row.kind == "friendly":
-			allied.append(row.id)
-			if fleet_id.is_empty() and not str(row.fleet).is_empty(): fleet_id = str(row.fleet)
-	var form = ConsoleUI.button("Formar convoy con aliadas", func(): fleet.command("form_convoy", {"members": allied}), true)
-	form.disabled = session.role != "mando" or allied.size() < 2
-	convoy.add_child(form)
-	var release = ConsoleUI.button("Disolver convoy", func(): fleet.command("release_convoy", {"fleet": fleet_id}))
-	release.disabled = session.role != "mando" or fleet_id.is_empty()
-	convoy.add_child(release)
-	status = ConsoleUI.label(fleet.last_report if not fleet.last_report.is_empty() else "La IA estratégica se ejecuta en el anfitrión.", 13, ConsoleUI.MUTED)
+	convoy.add_child(ConsoleUI.paragraph("Mando puede formar convoyes desde dos hasta seis aliados mediante la API autoritativa; las naves pasan a escolta y comparten identificador de flota.", 13))
+	status = ConsoleUI.label("IA estratégica activa: patrulla, escolta, intercepción y retirada por moral.", 13, ConsoleUI.MUTED)
 	body.add_child(status)
 
 func _select(id: String) -> void:
 	selected = id
 	_rebuild()
-
-func _order(order: String, target_menu: OptionButton) -> void:
-	var objective = ""
-	if order == "intercept" and target_menu.item_count > 0: objective = str(target_menu.get_item_metadata(target_menu.selected))
-	fleet.command("order", {"target": selected, "order": order, "objective": objective})
 
 func _notice(text: String, ok: bool) -> void:
 	if status != null:
