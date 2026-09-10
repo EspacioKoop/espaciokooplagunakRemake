@@ -14,11 +14,16 @@ static func validate(value: Variant) -> String:
 		return "El perfil de legibilidad tiene campos desconocidos o incompletos."
 	if not value.format is String or value.format != FORMAT:
 		return "Formato de legibilidad no reconocido."
-	if typeof(value.version) not in [TYPE_INT, TYPE_FLOAT] or value.version != VERSION:
+	if typeof(value.version) not in [TYPE_INT, TYPE_FLOAT] or float(value.version) != float(VERSION):
 		return "Versión de legibilidad no compatible."
 	if typeof(value.text_percent) not in [TYPE_INT, TYPE_FLOAT]:
 		return "El tamaño del texto debe ser un número."
-	if not is_finite(float(value.text_percent)) or value.text_percent not in PERCENTAGES:
+	# JSON numbers are floats; Array membership distinguishes them from integers.
+	# Bound and check integrality before conversion, without truncating fractions.
+	var percent = float(value.text_percent)
+	if not is_finite(percent) or percent < 100.0 or percent > 150.0:
+		return "Elige un tamaño de texto de 100, 115, 130 o 150 %."
+	if percent != floorf(percent) or int(percent) not in PERCENTAGES:
 		return "Elige un tamaño de texto de 100, 115, 130 o 150 %."
 	return ""
 
