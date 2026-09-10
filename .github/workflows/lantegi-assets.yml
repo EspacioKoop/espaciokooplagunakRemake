@@ -37,7 +37,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y xvfb xauth libgl1-mesa-dri libegl1 libxi6 libxrender1 libxfixes3 libxxf86vm1 fonts-dejavu-core
           python -m pip install 'bpy==4.5.3' 'Pillow==11.3.0'
-      - name: Apply reserved name correction before first authoring
+      - name: Apply first-batch authoring corrections before creating sources
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -46,7 +46,13 @@ jobs:
           text=text.replace('balea_rescue','dortoka_freighter').replace('Balea · nave de rescate','Dortoka · transporte logístico')
           text=text.replace('Transporte volumétrico con rampa y cápsulas laterales','Transporte logístico con rampa y módulos de carga laterales')
           text=text.replace("'rescue_pod_'", "'cargo_pod_'")
+          text=text.replace('ob = finish(bpy.context.object, name, pos, mat, parent, bevel, True)', 'ob = finish(bpy.context.object, name, pos, mat, parent, min(bevel, radius * .2, depth * .2), True)')
           p.write_text(text)
+          p=Path('art/blender/lantegi_pack/export.py')
+          text=p.read_text()
+          old='        bm.from_mesh(ob.data)\n        bmesh.ops.recalc_face_normals'
+          new='        bm.from_mesh(ob.data)\n        bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=1e-7)\n        bmesh.ops.dissolve_degenerate(bm, edges=list(bm.edges), dist=1e-7)\n        bmesh.ops.triangulate(bm, faces=list(bm.faces))\n        degenerate = [f for f in bm.faces if f.calc_area() <= 1e-12]\n        if degenerate:\n            bmesh.ops.delete(bm, geom=degenerate, context="FACES_ONLY")\n        bmesh.ops.recalc_face_normals'
+          p.write_text(text.replace(old,new))
           PY
       - name: Create actual editable sources without replacing edits
         run: |
@@ -67,11 +73,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          git add -- art/blender/lantegi_pack/build.py art/blender/lantegi_pack/*.blend game/assets/models/lantegi_pack docs/images/lantegi_pack
+          git add -- art/blender/lantegi_pack/build.py art/blender/lantegi_pack/export.py art/blender/lantegi_pack/*.blend game/assets/models/lantegi_pack docs/images/lantegi_pack
           python - <<'PY'
           import subprocess
           for p in subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines():
-              allowed=(p.startswith('art/blender/lantegi_pack/') and (p.endswith('.blend') or p.endswith('/build.py'))) or p.startswith('game/assets/models/lantegi_pack/') or p.startswith('docs/images/lantegi_pack/')
+              allowed=(p.startswith('art/blender/lantegi_pack/') and (p.endswith('.blend') or p.endswith('/build.py') or p.endswith('/export.py'))) or p.startswith('game/assets/models/lantegi_pack/') or p.startswith('docs/images/lantegi_pack/')
               if not allowed: raise SystemExit('Unexpected staged path: '+p)
           PY
           if ! git diff --cached --quiet; then
