@@ -1,0 +1,16 @@
+.lagunak-panel .window-content { background: #0b1825; color: #deeceb; }
+.lagunak-content { display: flex; flex-direction: column; gap: 12px; padding: 12px; overflow: auto; }
+.lagunak-content h2 { color: #70dfce; border: 0; margin: 0; }
+.lagunak-content p { line-height: 1.5; margin: 0; }
+.lagunak-content label { display: grid; gap: 6px; }
+.lagunak-content input { color: #deeceb; background: #112331; border: 1px solid #355460; padding: 8px; }
+.lagunak-content button { color: #deeceb; border: 1px solid #355460; background: #17323d; min-height: 36px; white-space: normal; }
+.lagunak-content button:focus-visible { outline: 2px solid #f6bf70; }
+.lagunak-content button:disabled { opacity: .5; }
+.lagunak-actions { display: flex; gap: 10px; }
+.lagunak-origin { color: #9ab8bd; font-size: 13px; overflow-wrap: anywhere; }
+.lagunak-status { color: #70dfce; }
+.lagunak-ship { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.lagunak-ship div { background: #152a36; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; }
+.lagunak-events { display: grid; gap: 10px; }
+.lagunak-events p { padding: 8px 0; border-top: 1px solid #294652; }

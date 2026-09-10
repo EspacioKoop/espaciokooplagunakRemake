@@ -103,7 +103,8 @@ func _add_door(position: Vector3, destination: int, title: String, source: int) 
 func teleport_zone(index: int) -> void:
 	zone = clampi(index, 0, ZONES.size() - 1)
 	if body == null: return
-	body.position = ZONES[zone].at + Vector3(0 if zone == 1 else 4.8, 0.4, ZONES[zone].depth * 0.5 - 2.0)
+	var entry_x = 0.0 if zone == 1 else (-3.0 if zone == 2 else 4.8)
+	body.position = ZONES[zone].at + Vector3(entry_x, 0.4, ZONES[zone].depth * 0.5 - 2.0)
 	body.velocity = Vector3.ZERO
 	body.rotation.y = 0
 	if zone != 1: body.look_at(ZONES[zone].at + Vector3(0, 0.4, 0))

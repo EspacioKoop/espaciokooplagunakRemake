@@ -1,0 +1,73 @@
+name: Verify and release standalone
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: standalone-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Download verified Godot toolchain
+        run: python3 tools/bootstrap.py --templates
+      - name: Import resources
+        run: .toolchain/godot --headless --editor --path game --quit
+      - name: Complete campaign and validate saves
+        run: .toolchain/godot --headless --path game --script ../tests/test_core.gd -- --test
+      - name: Exercise five actual network processes
+        run: python3 tests/run_network.py
+      - name: Verify actual HTTP boundary
+        run: python3 tests/run_telemetry.py
+      - name: Exercise native UI and room collisions
+        run: timeout 60 .toolchain/godot --headless --path game --script ../tests/test_ui.gd -- --test
+      - name: Test optional Foundry client
+        run: node --test integrations/foundry/tests/client.test.mjs
+      - name: Export both standalone applications
+        run: python3 tools/build.py
+      - name: Capture the exported Linux game
+        run: python3 tools/capture.py --binary "$PWD/build/linux/EspaciokoopLagunak.x86_64" --output docs/images
+      - name: Package downloads and validate all artifacts
+        run: |
+          python3 tools/package_downloads.py
+          python3 tools/verify_artifacts.py
+          cp docs/RELEASE_NOTES.md dist/RELEASE_NOTES.md
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: standalone-downloads
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 30
+
+  windows-smoke:
+    needs: build
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: standalone-downloads
+          path: dist
+      - name: Start the exported Windows application
+        shell: pwsh
+        run: |
+          Expand-Archive dist/EspaciokoopLagunak-1.0.0-windows-x86_64.zip -DestinationPath game
+          $application = (Resolve-Path game/EspaciokoopLagunak.exe).Path
+          $result = Start-Process -FilePath $application -ArgumentList '--headless','--audio-driver','Dummy','--quit-after','60','--','--test' -Wait -PassThru -RedirectStandardOutput stdout.txt -RedirectStandardError stderr.txt
+          Get-Content stdout.txt,stderr.txt
+          if ($result.ExitCode -ne 0) { throw "Application exited with $($result.ExitCode)" }
+          if (Select-String -Path stdout.txt,stderr.txt -Pattern '^(SCRIPT ERROR|ERROR):') { throw 'Godot reported an error' }

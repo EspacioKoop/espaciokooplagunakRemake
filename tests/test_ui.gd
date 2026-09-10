@@ -1,0 +1,70 @@
+extends SceneTree
+var failures = 0
+var checks = 0
+var app: Control
+
+func _initialize() -> void: call_deferred("run")
+
+func check(value: bool, label: String) -> void:
+	checks += 1
+	if not value:
+		failures += 1
+		push_error("UI_FAIL " + label)
+
+func settle() -> void:
+	for i in 4: await process_frame
+
+func run() -> void:
+	root.size = Vector2i(1600, 900)
+	app = load("res://main.tscn").instantiate()
+	root.add_child(app)
+	await settle()
+	var session = root.get_node("Session")
+	app._new_game()
+	await settle()
+	check(session.role == "navegacion", "new game selects navigation")
+	var autopilot: Button
+	for button in app.find_children("*", "Button", true, false):
+		if button.text == "Piloto automático": autopilot = button
+	check(autopilot != null, "navigation control exists")
+	if autopilot != null: autopilot.pressed.emit()
+	check(session.sim.state.ship.autopilot == "argi", "navigation button issues real order")
+	for role in Catalog.ROLES:
+		app._choose_role(role)
+		await settle()
+		check(session.role == role and app._last_role == role, "station controls " + role)
+	for page in ["home", "bridge", "deck", "atlas", "campaign", "editor", "sessions", "settings"]:
+		app._go(page)
+		await settle()
+		check(app._footer.get_global_rect().end.y <= root.get_visible_rect().size.y + 1, "footer within viewport on " + page)
+		check(app._content.get_global_rect().end.x <= root.get_visible_rect().size.x + 1, "content width on " + page)
+		if page == "deck":
+			var zones = app._deck.get_script().get_script_constant_map().ZONES
+			for index in zones.size():
+				app._deck.teleport_zone(index)
+				await create_timer(0.5).timeout
+				check(app._deck.body.is_on_floor(), "walkable floor " + zones[index].name)
+		if page == "editor":
+			var editor = app._editor
+			editor._new_mission()
+			editor._add_contact(Vector2(250, 300))
+			check(editor.mission.contacts.size() == 2, "editor adds contact")
+			var id: String = editor.mission.contacts.back().id
+			editor._move_contact(id, Vector2(600, 400))
+			check(editor.mission.contacts.back().position == [600.0, 400.0], "editor moves contact")
+			editor._undo_change()
+			check(editor.mission.contacts.back().position == [250.0, 300.0], "editor undo restores coordinates")
+			editor._save()
+			var path = "user://missions/" + editor.mission.id + ".json"
+			check(FileAccess.file_exists(path), "editor writes mission")
+			editor._load_file(ProjectSettings.globalize_path(path))
+			check(Catalog.validate_mission(editor.mission).is_empty(), "saved mission reopens")
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	app._ambient.stop()
+	app._effects.stop()
+	app._ambient.stream = null
+	app._effects.stream = null
+	app.queue_free()
+	await settle()
+	print("UI_OK ", checks, " checks; ", failures, " failures")
+	quit(1 if failures else 0)

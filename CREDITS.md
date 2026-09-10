@@ -1,9 +1,9 @@
-# Créditos
+# Créditos y procedencia
 
-Dirección del proyecto y encargo: VaroTv7.
+Dirección del proyecto y encargo: VaroTv7. Diseño, programación, misiones, interfaz, modelado procedural original en Blender y síntesis de audio: trabajo realizado con asistencia de Codex para este remake.
 
-Modelado procedural original en Blender y síntesis de audio: trabajo realizado con asistencia de Codex. Las imágenes son capturas reales de la aplicación ejecutada durante el desarrollo, sin retoques.
+Los veinte modelos proceden de `art/blender/lagunak_assets.blend`, editable con Blender 4.5.3 LTS. `art/blender/export_assets.py` produce las exportaciones GLB y su manifiesto de integridad. Los seis archivos WAV se sintetizaron para el proyecto. Las ocho imágenes de `docs/images/` son capturas directas del ejecutable de Linux; no son ilustraciones ni maquetas.
 
-El proyecto EspacioKoop/espaciokooplagunak se estudió como referencia funcional. Los modelos y el audio publicados aquí se crearon de nuevo. EmptyEpsilon, SeriousProton, Godot, Blender y Foundry pertenecen a sus respectivos titulares.
+Se estudió [EspacioKoop/espaciokooplagunak](https://github.com/EspacioKoop/espaciokooplagunak) como referencia funcional. Se reconoce el trabajo de Varo, Gurucharri y los colaboradores de ese proyecto. Su código C++, Lua y JavaScript, sus recursos heredados y su historial de EmptyEpsilon no se han incorporado a este repositorio. El inventario y las decisiones del remake se describen en `docs/SOURCE_REVIEW.md`.
 
-Esta publicación parcial no incluye los ejecutables ni el código de la aplicación mostrada en las capturas.
+El código, las misiones, los modelos y el audio propios de este repositorio se distribuyen con la [licencia MIT](LICENSE). Godot Engine y sus componentes conservan sus licencias: los avisos oficiales se incluyen en `third_party/` y en las descargas. Blender y Foundry VTT son herramientas externas y pertenecen a sus titulares; Foundry no se incluye en los paquetes ni es necesario para jugar.

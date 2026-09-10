@@ -1,0 +1,14 @@
+{
+  "id": "espaciokoop-lagunak",
+  "title": "Espaciokoop Lagunak · Enlace de bitácora",
+  "description": "Consulta opcional de la nave e importación manual de bitácoras desde la aplicación independiente.",
+  "version": "1.0.0",
+  "compatibility": {"minimum": "13", "maximum": "13"},
+  "authors": [{"name": "Espaciokoop Lagunak"}],
+  "esmodules": ["main.mjs"],
+  "styles": ["style.css"],
+  "url": "https://github.com/VaroTv7/espaciokooplagunakRemake",
+  "manifest": "https://raw.githubusercontent.com/VaroTv7/espaciokooplagunakRemake/main/integrations/foundry/module.json",
+  "download": "https://github.com/VaroTv7/espaciokooplagunakRemake/releases/download/v1.0.0/espaciokoop-lagunak-foundry.zip",
+  "license": "LICENSE"
+}

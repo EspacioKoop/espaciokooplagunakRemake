@@ -140,6 +140,7 @@ func _ready() -> void:
 	_fields.goal_text = goal_text
 	goal_text.text_submitted.connect(_goal_text)
 	goal_text.focus_exited.connect(func(): _goal_text(goal_text.text))
+	right.add_child(ConsoleUI.label("NUEVO OBJETIVO", 13, ConsoleUI.MUTED))
 	_goal_kind = OptionButton.new()
 	for name in GOAL_NAMES: _goal_kind.add_item(name)
 	right.add_child(_goal_kind)

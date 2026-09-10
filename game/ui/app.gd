@@ -534,7 +534,11 @@ func _field(parent: Node, caption: String, text: String = "", secret: bool = fal
 func _sessions() -> void:
 	_content.add_child(ConsoleUI.label("Una tripulación, desde varios equipos", 30))
 	_content.add_child(ConsoleUI.paragraph("Abre una sesión en tu red y comparte la dirección y la clave con tu tripulación. No hace falta crear una cuenta. El anfitrión conserva el guardado y decide la siguiente misión.", 18))
-	var body = ConsoleUI.row(_content, 18)
+	var scroll = ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	ConsoleUI.expand(scroll)
+	_content.add_child(scroll)
+	var body = ConsoleUI.row(scroll, 18)
 	ConsoleUI.expand(body)
 	var host = ConsoleUI.card(body, "01 / ANFITRIÓN")
 	host.get_parent().size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -758,7 +762,7 @@ func _make_audio() -> void:
 	_ambient.stream = stream
 	_ambient.volume_db = -20
 	add_child(_ambient)
-	_ambient.play()
+	if "--test" not in OS.get_cmdline_user_args(): _ambient.play()
 	_effects = AudioStreamPlayer.new()
 	_effects.volume_db = -10
 	_effects.max_polyphony = 4
@@ -766,7 +770,7 @@ func _make_audio() -> void:
 	_apply_audio()
 
 func _play_effect(name: String) -> void:
-	if _effects == null: return
+	if _effects == null or "--test" in OS.get_cmdline_user_args(): return
 	var path = "res://assets/audio/" + name + ".wav"
 	if not ResourceLoader.exists(path): path = "res://assets/audio/confirm.wav"
 	_effects.stream = load(path)
@@ -797,6 +801,12 @@ func _notification(what: int) -> void:
 
 func _quit() -> void:
 	Session.save_game()
+	for player in [_ambient, _effects]:
+		if player != null:
+			player.stop()
+			player.stream = null
+	await get_tree().process_frame
+	await get_tree().process_frame
 	get_tree().quit()
 
 func _exit_tree() -> void:

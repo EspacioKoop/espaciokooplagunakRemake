@@ -46,6 +46,7 @@ func _process(_delta: float) -> void:
 		var available = peer.get_available_bytes()
 		if available > 0:
 			if client.data.size() + available > 8192:
+				peer.get_data(mini(available, 16384))
 				_respond(client, 431, {"error": "Headers too large"}, false)
 				continue
 			var chunk = peer.get_data(available)
@@ -111,7 +112,7 @@ func _respond(client: Dictionary, status: int, data: Dictionary, cors: bool) -> 
 	var body = JSON.stringify(data).to_utf8_buffer() if status != 204 else PackedByteArray()
 	var labels = {200: "OK", 204: "No Content", 400: "Bad Request", 401: "Unauthorized", 403: "Forbidden", 404: "Not Found", 405: "Method Not Allowed", 431: "Request Header Fields Too Large"}
 	var header = "HTTP/1.1 %d %s\r\nContent-Type: application/json; charset=utf-8\r\nContent-Length: %d\r\nConnection: close\r\nCache-Control: no-store\r\nX-Content-Type-Options: nosniff\r\n" % [status, labels[status], body.size()]
-	if cors: header += "Access-Control-Allow-Origin: " + origin + "\r\nVary: Origin\r\nAccess-Control-Allow-Methods: GET, OPTIONS\r\nAccess-Control-Allow-Headers: Authorization\r\n"
+	if cors: header += "Access-Control-Allow-Origin: " + origin + "\r\nVary: Origin\r\nAccess-Control-Allow-Methods: GET, OPTIONS\r\nAccess-Control-Allow-Headers: Authorization\r\nAccess-Control-Allow-Private-Network: true\r\n"
 	if status == 405: header += "Allow: GET, OPTIONS\r\n"
 	client.peer.put_data((header + "\r\n").to_utf8_buffer())
 	client.peer.put_data(body)
