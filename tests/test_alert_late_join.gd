@@ -11,6 +11,7 @@ var port = 0
 var failures = 0
 var checks = 0
 var accepted = false
+var first_received_alert = ""
 var responses: Array = []
 
 func _initialize() -> void:
@@ -63,8 +64,13 @@ func assert_view(level: String) -> void:
 	check(not session.view.get("mission", {}).has("contacts"), "late join does not disclose source contact catalogue")
 	check(not session.view.has("campaign_document"), "authoring document remains private")
 
+func capture_first_snapshot() -> void:
+	if session.mode == "client" and first_received_alert.is_empty() and session.view.has("ship"):
+		first_received_alert = str(session.view.ship.get("alert", "missing"))
+
 func connect_client() -> bool:
 	accepted = false
+	first_received_alert = ""
 	responses.clear()
 	var result = session.join_session("127.0.0.1", port, TEST_KEY, "AlertTest-" + mode, mode)
 	if not check(result.ok, "ENet connection starts"): return false
@@ -115,6 +121,7 @@ func run_host() -> void:
 func run_client() -> void:
 	if not await connect_client(): return
 	# The first accepted snapshot must already contain red, not a later replay.
+	check(first_received_alert == "roja", "first wire snapshot contains red")
 	assert_view("roja")
 	if mode == "enlace":
 		if not await send_alert({"level": "roja"}, true, "roja"): return
@@ -130,6 +137,7 @@ func run_client() -> void:
 		mark("left.navegacion")
 		if not await wait_for(func(): return marked("reconnect"), "host changed alert while disconnected"): return
 		if not await connect_client(): return
+		check(first_received_alert == "ambar", "first reconnect snapshot contains current amber")
 		assert_view("ambar")
 	elif mode == "enlace":
 		if not await wait_for(func(): return marked("enlace_amber"), "navigator offline before amber command"): return
@@ -155,6 +163,7 @@ func run() -> void:
 	session.suppress_saves = true
 	session.notice.connect(func(message, ok): responses.append({"message": message, "ok": ok}))
 	session.joined.connect(func(): accepted = true)
+	session.updated.connect(capture_first_snapshot)
 	if mode == "host": await run_host()
 	else: await run_client()
 	session.close_session()
