@@ -246,6 +246,10 @@ func _binding(action: String, fallback: String) -> String:
 	var controls = _controls()
 	return controls.binding_label(action) if controls != null else fallback
 
+func _character_control_active() -> bool:
+	var controls = _controls()
+	return controls.character_control_active() if controls != null else Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+
 func _input(event: InputEvent) -> void:
 	if not is_visible_in_tree() or body == null or _controls_blocked(): return
 	if _input_action(event, "release_pointer", KEY_ESCAPE):
@@ -254,7 +258,7 @@ func _input(event: InputEvent) -> void:
 		return
 	if _input_action(event, "capture_pointer", MOUSE_BUTTON_LEFT):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	if _character_control_active():
 		if event is InputEventMouseMotion:
 			var controls = _controls()
 			var look: Vector2 = controls.mouse_look(event.relative) if controls != null else event.relative * 0.0022
@@ -345,7 +349,7 @@ func _physics_process(delta: float) -> void:
 	_sync_seat()
 	var input = Vector2.ZERO
 	var controls = _controls()
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and not _controls_blocked():
+	if _character_control_active() and not _controls_blocked():
 		if controls != null:
 			input = controls.movement_vector()
 			var look: Vector2 = controls.look_vector() * delta
@@ -354,7 +358,7 @@ func _physics_process(delta: float) -> void:
 			input.x = float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A))
 			input.y = float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W))
 	var direction = body.basis * Vector3(input.x, 0, input.y).limit_length()
-	var sprint = Input.is_action_pressed("sprint") if controls != null else Input.is_physical_key_pressed(KEY_SHIFT)
+	var sprint = controls.action_pressed("sprint") if controls != null else Input.is_physical_key_pressed(KEY_SHIFT)
 	var speed = 5.0 if sprint else 3.1
 	body.velocity.x = direction.x * speed
 	body.velocity.z = direction.z * speed

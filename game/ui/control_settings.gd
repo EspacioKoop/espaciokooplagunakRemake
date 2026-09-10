@@ -53,6 +53,13 @@ func _ready() -> void:
 	options.add_theme_constant_override("h_separation", 20)
 	options.add_theme_constant_override("v_separation", 8)
 	body.add_child(options)
+	options.add_child(ConsoleUI.label("Pantalla táctil", 17))
+	var touch_toggle = CheckBox.new()
+	touch_toggle.name = "TouchControlsToggle"
+	touch_toggle.text = "Mostrar controles táctiles (esta sesión)"
+	touch_toggle.button_pressed = controls.touch != null and controls.touch.enabled
+	touch_toggle.toggled.connect(func(value): controls.touch.set_enabled(value))
+	options.add_child(touch_toggle)
 	options.add_child(ConsoleUI.label("Idioma de controles", 17))
 	_locale = OptionButton.new()
 	_locale.add_item("Español")
