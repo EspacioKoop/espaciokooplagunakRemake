@@ -1,0 +1,109 @@
+name: Lantegi Blender models
+
+on:
+  push:
+    branches: [agent/52-lantegi-models]
+    paths: ['art/blender/lantegi_pack/**', 'game/asset_lab/lantegi_pack/**', 'tests/lantegi_pack/**', '.github/workflows/lantegi-assets.yml']
+  pull_request:
+    paths: ['art/blender/lantegi_pack/**', 'game/assets/models/lantegi_pack/**', 'game/asset_lab/lantegi_pack/**', 'tests/lantegi_pack/**', '.github/workflows/lantegi-assets.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: lantegi-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  models:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Install Blender and display runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri libegl1 libxi6 libxrender1 libxfixes3 libxxf86vm1 fonts-dejavu-core
+          python -m pip install 'bpy==4.5.3' 'Pillow==11.3.0'
+      - name: Apply reserved name correction before first authoring
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('art/blender/lantegi_pack/build.py')
+          text=p.read_text()
+          text=text.replace('balea_rescue','dortoka_freighter').replace('Balea · nave de rescate','Dortoka · transporte logístico')
+          text=text.replace('Transporte volumétrico con rampa y cápsulas laterales','Transporte logístico con rampa y módulos de carga laterales')
+          text=text.replace("'rescue_pod_'", "'cargo_pod_'")
+          p.write_text(text)
+          PY
+      - name: Create actual editable sources without replacing edits
+        run: |
+          mkdir -p build/lantegi
+          python -m compileall -q art/blender/lantegi_pack tests/lantegi_pack
+          python -u art/blender/lantegi_pack/build.py --missing-only 2>&1 | tee build/lantegi/build.log
+      - name: Export and round-trip render all ten models
+        run: python -u art/blender/lantegi_pack/export.py --render 2>&1 | tee build/lantegi/export.log
+      - name: Validate binary geometry and negative fixtures
+        run: python tests/lantegi_pack/validate.py 2>&1 | tee build/lantegi/validate.log
+      - name: Download repository-pinned Godot with verified checksum
+        run: python tools/bootstrap.py
+      - name: Real engine import, animations, anchors and graphical inspection
+        run: python tests/lantegi_pack/run.py
+      - name: Preserve generated files on this agent branch only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/agent/52-lantegi-models'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git add -- art/blender/lantegi_pack/build.py art/blender/lantegi_pack/*.blend game/assets/models/lantegi_pack docs/images/lantegi_pack
+          python - <<'PY'
+          import subprocess
+          for p in subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines():
+              allowed=(p.startswith('art/blender/lantegi_pack/') and (p.endswith('.blend') or p.endswith('/build.py'))) or p.startswith('game/assets/models/lantegi_pack/') or p.startswith('docs/images/lantegi_pack/')
+              if not allowed: raise SystemExit('Unexpected staged path: '+p)
+          PY
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'build(art): preserve validated Lantegi Blender sources and GLB'
+            git fetch origin agent/52-lantegi-models
+            git rebase origin/agent/52-lantegi-models
+            auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+            git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" push origin HEAD:refs/heads/agent/52-lantegi-models
+          fi
+          git rev-parse HEAD > build/lantegi/delivery_commit.txt
+      - name: Package sources and evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          out=Path('build/lantegi'); out.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out/'Lantegi_3D.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for directory in ['art/blender/lantegi_pack','game/assets/models/lantegi_pack','game/asset_lab/lantegi_pack','tests/lantegi_pack','docs/images/lantegi_pack']:
+                  for p in sorted(Path(directory).rglob('*')):
+                      if p.is_file() and '__pycache__' not in p.parts and p.suffix not in {'.pyc','.blend1','.import'}: z.write(p)
+              for p in [Path('docs/LANTEGI_ASSET_PACK.md'),Path('LICENSE'),*out.glob('*.json'),*out.glob('*.log'),*out.glob('*.txt')]:
+                  if p.is_file(): z.write(p)
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: lantegi-model-evidence
+          path: |
+            build/lantegi/
+            docs/images/lantegi_pack/overview.png
+          if-no-files-found: error
+          retention-days: 14
