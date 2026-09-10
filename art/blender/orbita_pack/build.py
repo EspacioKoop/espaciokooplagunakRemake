@@ -1,7 +1,7 @@
 """Original Orbita library. Blender/bpy 4.5.3, Python 3.11; no downloaded art.
 
 Run from repository root: python art/blender/orbita_pack/build.py
-Blender CLI: blender -b --python art/blender/orbita_pack/build.py
+Blender CLI: blender -b --python art/blender/orbita_pack/build.py --
 Existing .blend files are never replaced unless --force is explicit.
 Use export.py after manual edits; do NOT regenerate an edited source.
 Coordinates in helpers are Godot metres: X right, Y up, -Z forward.
@@ -54,6 +54,7 @@ def material(name, rgb, metal=0.0, rough=.42, glow=0.0):
 
 def reset():
     bpy.ops.wm.read_factory_settings(use_empty=True)
+    bpy.context.scene.name = 'mechanical_cycle'
     bpy.context.scene.unit_settings.system = 'METRIC'
     bpy.context.scene.unit_settings.scale_length = 1.0
     bpy.context.scene.render.fps = 24
@@ -86,7 +87,10 @@ def node(name, parent=None, at=(0, 0, 0)):
 
 
 def socket(parent, name, at):
-    ob = node('socket_' + name, parent, at)
+    full_name = 'socket_' + name
+    if bpy.data.objects.get(full_name) is not None:
+        raise ValueError('Socket names must be globally unique: ' + full_name)
+    ob = node(full_name, parent, at)
     ob['orbita_socket'] = name
     ob['forward'] = '-Z in Godot'
     return ob
@@ -357,8 +361,8 @@ def annulus(parent, name, inner, outer, y, mat):
                 verts.append(tuple(point((r*math.cos(a),height,r*math.sin(a)))))
     for i in range(steps):
         j=(i+1)%steps
-        faces.extend([(i,j,steps+j,steps+i),(2*steps+i,3*steps+i,3*steps+j,2*steps+j),
-                      (i,2*steps+i,2*steps+j,j),(steps+i,steps+j,3*steps+j,3*steps+i)])
+        faces.extend([(i,steps+i,steps+j,j),(2*steps+i,2*steps+j,3*steps+j,3*steps+i),
+                      (i,j,2*steps+j,2*steps+i),(steps+i,3*steps+i,3*steps+j,steps+j)])
     mesh=bpy.data.meshes.new(name); mesh.from_pydata(verts,[],faces); mesh.update()
     ob=bpy.data.objects.new(name,mesh); bpy.context.collection.objects.link(ob)
     ob.parent=parent; ob.data.materials.append(mat)
@@ -409,7 +413,7 @@ def solar(root):
                 box(wing,'Solar_cell',at,(.56,.032,.53),'solar',.008)
                 box(wing,'Cell_busbar',(at[0],.088,at[2]),(.015,.006,.51),'alloy',.001)
         cycle(wing,'X',.09)
-        socket(wing,'tip',(s*2.58,0,0))
+        socket(wing,'tip_left' if s<0 else 'tip_right',(s*2.58,0,0))
     rod(root,'Aerial_mast',(0,.42,.3),(0,1.08,.3),.04,'alloy')
     ring(root,'Antenna',(0,1.13,.3),.28,.035,'ceramic')
     rod(root,'Antenna_feed',(0,1.13,.3),(0,1.13,-.1),.025,'gold',.01)
