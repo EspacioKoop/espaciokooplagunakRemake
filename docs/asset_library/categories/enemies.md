@@ -1,0 +1,9 @@
+# Enemigos y drones
+
+[← Biblioteca](../../ASSET_LIBRARY.md)
+
+| Modelo | Modelo |
+| --- | --- |
+| <a href="../models/orbita--lapa_drone.md"><img src="https://raw.githubusercontent.com/EspacioKoop/espaciokooplagunakRemake/9e2401d7dcb4719dc831fd84093a6f9640453687/docs/images/orbita_pack/lapa_drone.png" alt="Lapa · dron parásito" width="300"></a><br>**[Lapa · dron parásito](../models/orbita--lapa_drone.md)**<br><code>orbita/lapa_drone</code> | <a href="../models/orbita--aingira_probe.md"><img src="https://raw.githubusercontent.com/EspacioKoop/espaciokooplagunakRemake/9e2401d7dcb4719dc831fd84093a6f9640453687/docs/images/orbita_pack/aingira_probe.png" alt="Aingira · sonda hostil" width="300"></a><br>**[Aingira · sonda hostil](../models/orbita--aingira_probe.md)**<br><code>orbita/aingira_probe</code> |
+| <a href="../models/frontier--enemy_watcher.md"><img src="https://raw.githubusercontent.com/EspacioKoop/espaciokooplagunakRemake/9e2401d7dcb4719dc831fd84093a6f9640453687/docs/images/frontier_pack/enemy_watcher.png" alt="Vigía / dron" width="300"></a><br>**[Vigía / dron](../models/frontier--enemy_watcher.md)**<br><code>frontier/enemy_watcher</code> | <a href="../models/frontier--enemy_crawler.md"><img src="https://raw.githubusercontent.com/EspacioKoop/espaciokooplagunakRemake/9e2401d7dcb4719dc831fd84093a6f9640453687/docs/images/frontier_pack/enemy_crawler.png" alt="Armiarma / caminante" width="300"></a><br>**[Armiarma / caminante](../models/frontier--enemy_crawler.md)**<br><code>frontier/enemy_crawler</code> |
+| <a href="../models/frontier--enemy_warden.md"><img src="https://raw.githubusercontent.com/EspacioKoop/espaciokooplagunakRemake/9e2401d7dcb4719dc831fd84093a6f9640453687/docs/images/frontier_pack/enemy_warden.png" alt="Harri / centinela" width="300"></a><br>**[Harri / centinela](../models/frontier--enemy_warden.md)**<br><code>frontier/enemy_warden</code> |  |
