@@ -1,4 +1,5 @@
 import {LagunakClient, FoundryClient, COMMANDS, newEvents, eventsHtml} from "./client.mjs";
+import {CrewWorkspace} from "./workspace.mjs";
 
 const ID = "espaciokoop-lagunak";
 let panel;
@@ -47,10 +48,11 @@ export class LagunakPanel extends foundry.applications.api.ApplicationV2 {
     this.status = element("p", "Sin conexión.", "lagunak-status");
     this.status.setAttribute("role", "status");
     this.ship = element("div", "", "lagunak-ship");
+    this.workspace = new CrewWorkspace(document);
     this.crew = element("div", "", "lagunak-crew");
     this.orders = element("div", "", "lagunak-orders");
     this.events = element("div", "", "lagunak-events");
-    root.append(this.status, this.ship, this.crew, this.orders, this.events);
+    root.append(this.status, this.ship, this.workspace.element, this.crew, this.orders, this.events);
     connect.addEventListener("click", async () => {
       this.stop();
       try {
@@ -87,6 +89,7 @@ export class LagunakPanel extends foundry.applications.api.ApplicationV2 {
       for (const [label, value] of [["Integridad", `${Math.round(state.ship.hull)} / ${Math.round(state.ship.max_hull)}`], ["Escudos", `${Math.round(state.ship.shield)} %`], ["Energía", `${Math.round(state.ship.energy)} %`], ["Combustible", `${Math.round(state.ship.fuel)} %`]]) {
         const item = element("div"); item.append(element("span", label), element("strong", value)); this.ship.append(item);
       }
+      this.workspace.update(state);
       this.crew.replaceChildren();
       if (state.crew) {
         this.crew.append(element("h3", state.crew.name || "Ficha aún no creada en el juego"));
@@ -106,6 +109,7 @@ export class LagunakPanel extends foundry.applications.api.ApplicationV2 {
       if (this.client === client) {
         this.lastState = null; this.orders.inert = true; this.importButton.disabled = true;
         this.crew.replaceChildren(); this.ship.replaceChildren(); this.events.replaceChildren();
+        this.workspace.clear();
         this.status.textContent = "No se pudo consultar la nave. " + error.message;
       }
     } finally { if (this.client === client) this.busy = false; }
@@ -186,6 +190,7 @@ export class LagunakPanel extends foundry.applications.api.ApplicationV2 {
     clearInterval(this.timer); this.timer = null;
     this.client?.close(); this.client = null; this.lastState = null;
     this.busy = false; this.orderKey = "";
+    this.workspace?.clear();
     this.orders?.replaceChildren(); this.crew?.replaceChildren(); this.ship?.replaceChildren(); this.events?.replaceChildren();
     if (this.importButton) this.importButton.disabled = true;
   }

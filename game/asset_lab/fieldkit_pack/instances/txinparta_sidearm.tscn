@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/fieldkit_pack/txinparta_sidearm.glb" id="1"]
+
+[node name="txinparta_sidearm" type="Node3D"]
+metadata/asset_id = "fieldkit/txinparta_sidearm"
+
+[node name="Model" parent="." instance=ExtResource("1")]
