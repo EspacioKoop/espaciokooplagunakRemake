@@ -4,21 +4,7 @@ signal station_requested(role: String)
 signal zone_changed(name: String)
 signal interaction_requested(entry: Dictionary)
 
-const ZONES = [
-	{"name": "Puente", "model": "bridge_room", "at": Vector3(0, 0, -42), "role": "navegacion", "depth": 20.0},
-	{"name": "Pasillo central", "model": "hallway", "at": Vector3.ZERO, "role": "mando", "depth": 42.0},
-	{"name": "Ingeniería", "model": "engineering_room", "at": Vector3(-24, 0, -12), "role": "ingenieria", "depth": 14.0},
-	{"name": "Camarotes", "model": "quarters_room", "at": Vector3(24, 0, -12), "role": "comunicaciones", "depth": 14.0},
-	{"name": "Bodega", "model": "cargo_room", "at": Vector3(-24, 0, 12), "role": "enlace", "depth": 14.0},
-	{"name": "Comedor", "model": "mess_room", "at": Vector3(24, 0, 12), "role": "mando", "depth": 14.0},
-	{"name": "Enfermería", "model": "medbay_room", "at": Vector3(0, 0, 42), "role": "reparaciones", "depth": 14.0},
-	{"name": "Cantina", "model": "cantina", "at": Vector3(80, 0, 0), "role": "", "depth": 24.0},
-	{"name": "Museo", "model": "museum_hall", "at": Vector3(150, 0, 0), "role": "", "depth": 58.0},
-	{"name": "Playa", "model": "beach", "at": Vector3(0, 0, 200), "role": "", "depth": 112.0},
-	{"name": "Terraza", "model": "terrace", "at": Vector3(80, 0, 80), "role": "", "depth": 24.0},
-	{"name": "Estudio", "model": "studio", "at": Vector3(150, 0, 80), "role": "", "depth": 24.0},
-	{"name": "Pasillo de recuerdos", "model": "memories_hall", "at": Vector3(80, 0, -80), "role": "", "depth": 64.0}
-]
+const ZONES = ShipDeckLayout.ZONES
 var zone = 0
 var prompt = "Pulsa sobre la vista para mirar y caminar."
 var viewport_3d: SubViewport
@@ -54,10 +40,10 @@ var _studio_mode = 0
 var book_open = false
 
 func _session() -> Node:
-	return get_tree().root.get_node_or_null("Session")
+	return get_tree().root.get_node_or_null("Session") if is_inside_tree() else null
 
 func _presence() -> Node:
-	return get_tree().root.get_node_or_null("SeatPresence")
+	return get_tree().root.get_node_or_null("SeatPresence") if is_inside_tree() else null
 
 func _ready() -> void:
 	_physical_seats = PhysicalSeatCatalog.all_seats()
@@ -115,7 +101,7 @@ func _ready() -> void:
 	for i in range(8, ZONES.size()):
 		_add_door(ZONES[7].at + connections[i - 8], i, ZONES[i].name.to_upper(), 7)
 		var exit_position = Vector3(-7, 0, 49.2) if i == 9 else Vector3(0, 0, ZONES[i].depth * 0.5 - 0.7)
-		_add_door(ZONES[i].at + exit_position, 7, "CABINA · VOLVER A CANTINA" if i == 9 else "VOLVER A CANTINA", i)
+		_add_door(ZONES[7].at + Vector3.ZERO if false else ZONES[i].at + exit_position, 7, "CABINA · VOLVER A CANTINA" if i == 9 else "VOLVER A CANTINA", i)
 		for entry in LeisurePlaces.interactions(i):
 			entry.zone = i
 			entry.position += ZONES[i].at
@@ -175,10 +161,10 @@ func _ready() -> void:
 	_map.deck = self
 	_map.anchor_left = 1.0
 	_map.anchor_right = 1.0
-	_map.offset_left = -286
+	_map.offset_left = -316
 	_map.offset_right = -16
 	_map.offset_top = 16
-	_map.offset_bottom = 206
+	_map.offset_bottom = 356
 	add_child(_map)
 	var presence = _presence()
 	if presence != null:
@@ -204,8 +190,10 @@ func teleport_zone(index: int) -> void:
 	stand_up()
 	zone = clampi(index, 0, ZONES.size() - 1)
 	if body == null: return
-	var entry_x = 0.0 if zone == 1 else (-3.0 if zone == 2 else 4.8)
-	body.position = ZONES[zone].at + Vector3(entry_x, 0.4, ZONES[zone].depth * 0.5 - 2.0)
+	if zone < ShipDeckLayout.SHIP_COUNT:
+		body.position = ShipDeckLayout.spawn(zone)
+	else:
+		body.position = ZONES[zone].at + Vector3(4.8, 0.4, ZONES[zone].depth * 0.5 - 2.0)
 	body.velocity = Vector3.ZERO
 	body.rotation.y = 0
 	if zone != 1: body.look_at(ZONES[zone].at + Vector3(0, 0.4, 0))
@@ -251,12 +239,13 @@ func _character_control_active() -> bool:
 	return controls.character_control_active() if controls != null else Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
 
 func _input(event: InputEvent) -> void:
-	if not is_visible_in_tree() or body == null or _controls_blocked(): return
+	if not is_inside_tree() or is_queued_for_deletion() or not is_visible_in_tree() or not is_instance_valid(body) or _controls_blocked(): return
 	if _input_action(event, "release_pointer", KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		get_viewport().set_input_as_handled()
 		return
 	if _input_action(event, "capture_pointer", MOUSE_BUTTON_LEFT):
+		if _map != null and _map.get_global_rect().has_point(get_global_mouse_position()): return
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if _character_control_active():
 		if event is InputEventMouseMotion:
@@ -264,10 +253,12 @@ func _input(event: InputEvent) -> void:
 			var look: Vector2 = controls.mouse_look(event.relative) if controls != null else event.relative * 0.0022
 			_apply_look(look)
 		if _input_action(event, "interact", KEY_E):
-			interact()
+			# A station callback can synchronously detach this viewport (#29).
 			get_viewport().set_input_as_handled()
+			interact()
 
 func interact() -> void:
+	if not is_inside_tree() or is_queued_for_deletion() or not is_instance_valid(body): return
 	if seated: stand_up()
 	elif _near_corridor_door >= 0: _corridors.toggle(_near_corridor_door)
 	elif _near_door >= 0: teleport_zone(_near_door)
@@ -304,7 +295,7 @@ func _seat_finished(operation: String, _ok: bool, _message: String) -> void:
 	_sync_seat()
 
 func _sync_seat() -> void:
-	if body == null: return
+	if not is_instance_valid(body): return
 	var presence = _presence()
 	if presence == null: return
 	var seat: Dictionary = presence.seat_for(presence.local_peer())
@@ -322,7 +313,7 @@ func _sync_seat() -> void:
 		body.collision_mask = 0
 
 func _restore_standing() -> void:
-	if not seated or body == null: return
+	if not seated or not is_instance_valid(body): return
 	seated = false
 	body.position = _standing_position
 	body.velocity = Vector3.ZERO
@@ -343,7 +334,7 @@ func turn_book(page: int) -> void:
 	_page_turn = 1.0
 
 func _physics_process(delta: float) -> void:
-	if body == null: return
+	if not is_instance_valid(body): return
 	_animation_time += delta if not reduced_motion else 0.0
 	_animate_decor(delta)
 	_sync_seat()
