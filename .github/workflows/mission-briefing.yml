@@ -1,0 +1,54 @@
+name: Mission briefing handouts
+
+on:
+  push:
+    branches: [main, agent/32-mission-briefing]
+    paths:
+      - 'game/**'
+      - 'tests/test_mission_briefing.gd'
+      - 'tests/run_mission_briefing.py'
+      - 'tools/bootstrap.py'
+      - '.github/workflows/mission-briefing.yml'
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tests/test_mission_briefing.gd'
+      - 'tests/run_mission_briefing.py'
+      - 'tools/bootstrap.py'
+      - '.github/workflows/mission-briefing.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: briefing-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  briefing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Test fail-closed runner controls
+        run: python3 tests/run_mission_briefing.py --self-test
+      - name: Install graphical test runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Download verified Godot toolchain
+        run: python3 tools/bootstrap.py
+      - name: Validate campaign handouts, privacy, files and graphical UI
+        shell: bash
+        run: |
+          set -o pipefail
+          xvfb-run -a python3 tests/run_mission_briefing.py --graphical 2>&1 | tee briefing-tests.log
+      - name: Retain synthetic test evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mission-briefing-test-log
+          path: briefing-tests.log
+          if-no-files-found: ignore
+          retention-days: 14
