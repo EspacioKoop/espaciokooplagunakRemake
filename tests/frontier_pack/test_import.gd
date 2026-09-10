@@ -20,7 +20,7 @@ func signature(instance: Node) -> String:
 	for node: Node in instance.find_children("*", "Node3D", true, false):
 		parts.append(str((node as Node3D).transform))
 		if node is Skeleton3D:
-			var skeleton := node as Skeleton3D
+			var skeleton: Skeleton3D = node as Skeleton3D
 			for index: int in range(skeleton.get_bone_count()):
 				parts.append(str(skeleton.get_bone_pose(index)))
 	return "|".join(parts)
@@ -37,7 +37,7 @@ func _run() -> void:
 	check(entries.size() == 24, "All 24 resources are present")
 	for entry: Dictionary in entries:
 		var identifier: String = str(entry["id"])
-		var scene := load(str(entry["glb"])) as PackedScene
+		var scene: PackedScene = load(str(entry["glb"])) as PackedScene
 		check(scene != null, identifier + " imports as PackedScene")
 		if scene == null:
 			continue
@@ -48,9 +48,9 @@ func _run() -> void:
 		var meshes: Array[Node] = instance.find_children("*", "MeshInstance3D", true, false)
 		check(not meshes.is_empty(), identifier + " contains mesh instances")
 		for child: Node in meshes:
-			var mesh := child as MeshInstance3D
-			check(mesh.mesh != null and mesh.mesh.get_surface_count() > 0, identifier + " contains renderable surfaces")
-			check(mesh.get_aabb().size.is_finite() and mesh.get_aabb().size.length() > 0, identifier + " has finite bounds")
+			var mesh_instance: MeshInstance3D = child as MeshInstance3D
+			check(mesh_instance.mesh != null and mesh_instance.mesh.get_surface_count() > 0, identifier + " contains renderable surfaces")
+			check(mesh_instance.get_aabb().size.is_finite() and mesh_instance.get_aabb().size.length() > 0, identifier + " has finite bounds")
 		for anchor: String in entry.get("sockets", []):
 			check(instance.find_child(anchor, true, false) != null, identifier + " socket " + anchor)
 		var players: Array[Node] = instance.find_children("*", "AnimationPlayer", true, false)
@@ -60,7 +60,7 @@ func _run() -> void:
 			var names: Array[String] = []
 			var changed: bool = false
 			for player_node: Node in players:
-				var player := player_node as AnimationPlayer
+				var player: AnimationPlayer = player_node as AnimationPlayer
 				for animation_name: StringName in player.get_animation_list():
 					if animation_name == &"RESET":
 						continue
@@ -80,27 +80,29 @@ func _run() -> void:
 		if int(entry.get("skins", 0)) > 0:
 			var skeletons: Array[Node] = instance.find_children("*", "Skeleton3D", true, false)
 			check(not skeletons.is_empty(), identifier + " imports skeleton")
-			for skeleton: Node in skeletons:
-				check((skeleton as Skeleton3D).get_bone_count() >= int(entry["joints"]), identifier + " preserves bones")
+			for skeleton_node: Node in skeletons:
+				check((skeleton_node as Skeleton3D).get_bone_count() >= int(entry["joints"]), identifier + " preserves bones")
 		root.remove_child(instance)
 		instance.free()
 		await process_frame
-	# Parse and instantiate the real gallery, including all of its UI controls.
-	var lab_scene := load("res://asset_lab/frontier_pack/showcase.tscn") as PackedScene
-	check(lab_scene != null, "Gallery scene parses")
-	if lab_scene != null:
-		var lab: Node = lab_scene.instantiate()
-		root.add_child(lab)
+	# Explicit types also keep the test independent of resource type inference.
+	var gallery_scene: PackedScene = load("res://asset_lab/frontier_pack/showcase.tscn") as PackedScene
+	check(gallery_scene != null, "Gallery scene parses")
+	if gallery_scene != null:
+		var gallery_instance: Node = gallery_scene.instantiate()
+		root.add_child(gallery_instance)
 		await process_frame
-		check(lab.get("entries").size() == 24, "Gallery loads complete catalogue")
+		var gallery_entries: Array = gallery_instance.get("entries")
+		check(gallery_entries.size() == 24, "Gallery loads complete catalogue")
 		for index: int in range(24):
-			lab.call("_select_asset", index)
+			gallery_instance.call("_select_asset", index)
 			await process_frame
-			check(is_instance_valid(lab.get("model")), "Gallery selects asset " + str(index))
-		lab.call("_select_asset", -1)
-		lab.call("_select_asset", 999)
-		check(int(lab.get("selected_index")) == 23, "Out-of-range selection does not mutate state")
-		root.remove_child(lab)
-		lab.free()
+			var displayed_model: Variant = gallery_instance.get("model")
+			check(is_instance_valid(displayed_model), "Gallery selects asset " + str(index))
+		gallery_instance.call("_select_asset", -1)
+		gallery_instance.call("_select_asset", 999)
+		check(int(gallery_instance.get("selected_index")) == 23, "Out-of-range selection does not mutate state")
+		root.remove_child(gallery_instance)
+		gallery_instance.free()
 	print("FRONTIER_GODOT_RESULT " + JSON.stringify({"checks": checks, "failures": failures, "assets": entries.size(), "passed": failures.is_empty()}))
 	quit(0 if failures.is_empty() else 1)
