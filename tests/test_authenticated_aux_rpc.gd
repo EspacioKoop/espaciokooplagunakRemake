@@ -115,7 +115,7 @@ func run_host(port: int) -> void:
 	# ENet has reset the packet peer but the authenticated roster has not drained.
 	var packet: ENetPacketPeer = session.multiplayer.multiplayer_peer.get_peer(member)
 	packet.peer_disconnect_now()
-	check(packet.get_state() == ENetPacketPeer.STATE_DISCONNECTED and packet.get_channels() == 0, "real disconnected ENet peer has zero channels")
+	check(packet.get_state() == ENetPacketPeer.STATE_DISCONNECTED and not packet.is_active(), "real ENet peer is reset and has no active transport")
 	check(session.roster.has(member), "authenticated roster still contains the closing peer")
 	check(not session._peer_active(member), "Session rejects the stale transport as an active recipient")
 	send_auxiliary_updates()
