@@ -92,7 +92,7 @@ func view(grant: Dictionary) -> Dictionary:
 	result.sequence = grant.sequence
 	result.log = FoundryProjection.events(session.sim.state.get("events", []))
 	var expedition = session.get_tree().root.get_node_or_null("Expedition")
-	var profile: Dictionary = {} if expedition == null else expedition.data.get("profiles", {}).get(grant.context.identity, {})
+	var profile: Dictionary = {} if expedition == null else FoundryProjection.dictionary(FoundryProjection.dictionary(expedition.data.get("profiles")).get(grant.context.identity))
 	result.crew = FoundryProjection.crew(profile)
 	return result
 

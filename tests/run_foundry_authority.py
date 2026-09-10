@@ -41,9 +41,9 @@ with tempfile.TemporaryDirectory(prefix="lagunak-foundry-") as temporary:
         process = subprocess.Popen([GODOT, "--headless", "--path", str(ROOT / "game"), "--script", str(ROOT / "tests/test_foundry_authority.gd"), "--", "--test", *args], env=env, stdout=stream, stderr=subprocess.STDOUT)
         logs.append(log); processes.append(process); streams.append(stream)
         return process
-    def request(path="/v2/view", token=None, user="foundry_navegacion", method="GET", value=None, headers=None, raw_body=None, fragmented=False):
+    def request(path="/v2/view", token=None, user="foundry_navegacion", method="GET", value=None, headers=None, raw_body=None, fragmented=False, host=None):
         body = raw_body if raw_body is not None else (json.dumps(value).encode() if value is not None else b"")
-        pairs = [("Host", f"127.0.0.1:{http}"), ("Authorization", "Bearer " + (token or credentials["users"]["navegacion"]["token"])), ("X-Lagunak-User", user)]
+        pairs = [("Host", host or f"127.0.0.1:{http}"), ("Authorization", "Bearer " + (token or credentials["users"]["navegacion"]["token"])), ("X-Lagunak-User", user)]
         if method == "POST": pairs += [("Content-Type", "application/json"), ("Content-Length", str(len(body)))]
         if headers: pairs += headers
         raw = (f"{method} {path} HTTP/1.1\r\n" + "".join(f"{key}: {val}\r\n" for key, val in pairs) + "\r\n").encode()
@@ -74,9 +74,11 @@ with tempfile.TemporaryDirectory(prefix="lagunak-foundry-") as temporary:
         status, head, _ = request(method="OPTIONS", headers=[("Origin", "http://localhost:30000"), ("Access-Control-Request-Method", "POST"), ("Access-Control-Request-Headers", "authorization,x-lagunak-user,content-type")])
         check(status == 204 and "X-Lagunak-User" in head and "GET, POST, OPTIONS" in head, "CORS preflight for personal control")
         check(request(headers=[("host", "attacker.invalid")])[0] == 400, "duplicate host rejected")
+        check(request(host="attacker.invalid")[0] == 403, "DNS rebinding host rejected")
         check(request(method="POST", path="/v2/command", raw_body=b"{" * 2049)[0] == 413, "body bounded")
         check(request(method="POST", path="/v2/command", raw_body=b"null")[0] == 400, "non-object JSON rejected")
         check(request(method="POST", path="/v2/command", raw_body=b"{")[0] == 400, "invalid JSON rejected")
+        check(request(method="POST", path="/v2/command", raw_body=b"\xff")[0] == 400, "invalid wire encoding rejected without decoder errors")
         check(request(method="POST", path="/v2/command", value={}, headers=[("Transfer-Encoding", "chunked")])[0] == 400, "chunking rejected")
         envelope = {"run_id": view["run_id"], "sequence": view["sequence"], "operation": "helm", "args": {"heading": 45, "throttle": .2}}
         def order(payload, **kwargs):
@@ -97,7 +99,7 @@ with tempfile.TemporaryDirectory(prefix="lagunak-foundry-") as temporary:
         readonly = request(token=engineer["token"], user=engineer["user"])[2]
         check(readonly["commands"] == [] and readonly["crew"]["name"] == "Crew ingenieria", "read-only personal view")
         check(order({**envelope, "sequence": 1, "operation": "power", "args": {"system": "reactor", "value": 1}}, token=engineer["token"], user=engineer["user"])[0] == 403, "read-only token cannot execute own station either")
-        node = subprocess.run(["node", str(ROOT / "integrations/foundry/tests/live.test.mjs")], env={**env, "FOUNDRY_TEST_BASE": f"http://127.0.0.1:{http}"}, text=True, capture_output=True, timeout=12)
+        node = subprocess.run(["node", str(ROOT / "integrations/foundry/tests/live-client.mjs")], env={**env, "FOUNDRY_TEST_BASE": f"http://127.0.0.1:{http}"}, text=True, capture_output=True, timeout=12)
         check(node.returncode == 0, "live Node client: " + node.stdout + node.stderr)
         time.sleep(1.05)
         statuses = [request(method="POST", path="/v2/command", value={})[0] for _ in range(8)]
