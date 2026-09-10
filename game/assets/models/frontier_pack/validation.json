@@ -1,0 +1,202 @@
+{
+  "format": "lagunak-frontier-validation",
+  "version": 1,
+  "passed": true,
+  "assets_checked": 24,
+  "triangles_total": 140252,
+  "assets": [
+    {
+      "id": "haizea_scout",
+      "triangles": 4396,
+      "exported_vertices": 5328,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "basajaun_hauler",
+      "triangles": 8664,
+      "exported_vertices": 15362,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "izar_science",
+      "triangles": 7000,
+      "exported_vertices": 8260,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "ekaitz_interceptor",
+      "triangles": 2856,
+      "exported_vertices": 3682,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "argi_sidearm",
+      "triangles": 2164,
+      "exported_vertices": 3369,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "tximista_carbine",
+      "triangles": 4408,
+      "exported_vertices": 5124,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "sugar_lance",
+      "triangles": 2168,
+      "exported_vertices": 4039,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "orbain_turret",
+      "triangles": 5056,
+      "exported_vertices": 3591,
+      "animation_channels": 1,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "crew_navigator",
+      "triangles": 10216,
+      "exported_vertices": 11631,
+      "animation_channels": 162,
+      "skinned_primitives": 8,
+      "status": "passed"
+    },
+    {
+      "id": "crew_engineer",
+      "triangles": 10304,
+      "exported_vertices": 11775,
+      "animation_channels": 162,
+      "skinned_primitives": 8,
+      "status": "passed"
+    },
+    {
+      "id": "crew_synthetic",
+      "triangles": 9688,
+      "exported_vertices": 11308,
+      "animation_channels": 162,
+      "skinned_primitives": 5,
+      "status": "passed"
+    },
+    {
+      "id": "enemy_watcher",
+      "triangles": 2828,
+      "exported_vertices": 2245,
+      "animation_channels": 2,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "enemy_crawler",
+      "triangles": 7852,
+      "exported_vertices": 5314,
+      "animation_channels": 27,
+      "skinned_primitives": 6,
+      "status": "passed"
+    },
+    {
+      "id": "enemy_warden",
+      "triangles": 8740,
+      "exported_vertices": 10036,
+      "animation_channels": 162,
+      "skinned_primitives": 5,
+      "status": "passed"
+    },
+    {
+      "id": "world_ocean",
+      "triangles": 9882,
+      "exported_vertices": 6467,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "world_desert",
+      "triangles": 9024,
+      "exported_vertices": 4751,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "world_ice",
+      "triangles": 9024,
+      "exported_vertices": 4751,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "world_lava",
+      "triangles": 9024,
+      "exported_vertices": 4751,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "world_gas",
+      "triangles": 10304,
+      "exported_vertices": 6031,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "cargo_crate",
+      "triangles": 1296,
+      "exported_vertices": 2592,
+      "animation_channels": 1,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "medical_capsule",
+      "triangles": 816,
+      "exported_vertices": 1512,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "navigation_beacon",
+      "triangles": 2784,
+      "exported_vertices": 3884,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "mineral_cluster",
+      "triangles": 230,
+      "exported_vertices": 540,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    },
+    {
+      "id": "field_scanner",
+      "triangles": 1528,
+      "exported_vertices": 2080,
+      "animation_channels": 0,
+      "skinned_primitives": 0,
+      "status": "passed"
+    }
+  ],
+  "scope": "GLB structure, buffer bounds, geometry, normals, materials, source hashes, skins, sockets, animation tracks. Not gameplay QA."
+}

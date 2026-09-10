@@ -1,0 +1,47 @@
+name: Verify local text readability
+
+on:
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tests/test_readability.gd'
+      - 'tests/run_readability.py'
+      - 'tests/test_readability_runner.py'
+      - 'tools/bootstrap.py'
+      - '.github/workflows/readability.yml'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: readability-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  readability:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Reject false-positive runner results
+        run: python3 -m unittest discover -s tests -p test_readability_runner.py -v
+      - name: Install virtual display
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Download verified engine
+        run: python3 tools/bootstrap.py
+      - name: Import resources
+        run: .toolchain/godot --headless --editor --path game --quit
+      - name: Validate text scaling, local persistence and actual modal UI
+        run: python3 tests/run_readability.py --graphical --screenshot build/readability.png
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: readability-panel
+          path: build/readability.png
+          if-no-files-found: warn
+          retention-days: 14

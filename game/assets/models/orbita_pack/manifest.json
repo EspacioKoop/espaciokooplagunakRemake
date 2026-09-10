@@ -1,0 +1,787 @@
+{
+  "schema": "espaciokoop-asset-pack",
+  "version": 1,
+  "pack": "orbita",
+  "issue": 52,
+  "blender": "4.5.3 LTS",
+  "geometry_seed": 5209,
+  "assets": [
+    {
+      "id": "orbita/karramarro_tug",
+      "version": 1,
+      "title": "Karramarro · remolcador orbital",
+      "category": "ships",
+      "description": "Nave industrial con horquillas de remolque y dos motores.",
+      "runtime": "game/assets/models/orbita_pack/karramarro_tug.glb",
+      "resource": "res://assets/models/orbita_pack/karramarro_tug.glb",
+      "source": "art/blender/orbita_pack/karramarro_tug.blend",
+      "preview": "docs/images/orbita_pack/karramarro_tug.png",
+      "sha256": "5a0a60a84bf4e5bf0246997c591e0221bb54586aa90e061ce5612b98b9510811",
+      "source_sha256": "ecc50d14563a0e57e5e2254eb0e450ad0cce09d0bcb2bc7c44261e5f44f9af1a",
+      "bytes": 458304,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        5.92,
+        3.38,
+        10.025
+      ],
+      "aabb_min": [
+        -2.96,
+        -0.73,
+        -5.625
+      ],
+      "aabb_max": [
+        2.96,
+        2.65,
+        4.4
+      ],
+      "triangles": 6464,
+      "editable_parts": 51,
+      "mesh_nodes": 1,
+      "materials": [
+        "Orbita_alloy",
+        "Orbita_graphite",
+        "Orbita_ceramic",
+        "Orbita_amber",
+        "Orbita_glass",
+        "Orbita_cyan",
+        "Orbita_teal"
+      ],
+      "sockets": [
+        {
+          "name": "socket_cargo",
+          "path": "karramarro_tug/socket_cargo"
+        },
+        {
+          "name": "socket_cockpit",
+          "path": "karramarro_tug/socket_cockpit"
+        },
+        {
+          "name": "socket_exhaust_2_18",
+          "path": "karramarro_tug/socket_exhaust_2_18"
+        },
+        {
+          "name": "socket_exhaust_m2_18",
+          "path": "karramarro_tug/socket_exhaust_m2_18"
+        },
+        {
+          "name": "socket_tow_left",
+          "path": "karramarro_tug/socket_tow_left"
+        },
+        {
+          "name": "socket_tow_right",
+          "path": "karramarro_tug/socket_tow_right"
+        }
+      ],
+      "animations": [],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/erlea_miner",
+      "version": 1,
+      "title": "Erlea · nave minera",
+      "category": "ships",
+      "description": "Nave minera de cuatro depósitos y cabezal de extracción ficticio.",
+      "runtime": "game/assets/models/orbita_pack/erlea_miner.glb",
+      "resource": "res://assets/models/orbita_pack/erlea_miner.glb",
+      "source": "art/blender/orbita_pack/erlea_miner.blend",
+      "preview": "docs/images/orbita_pack/erlea_miner.png",
+      "sha256": "735cd07167500cd08fb01caf524da462e09d9a463a330af2ddc212d6f45b191a",
+      "source_sha256": "1d2eccc7d3bc73a54a22b6612e41be3fbe74eb569713111756e3c92966b66796",
+      "bytes": 855756,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        5.92,
+        3.13,
+        8.19309
+      ],
+      "aabb_min": [
+        -2.96,
+        -1.06,
+        -4.53809
+      ],
+      "aabb_max": [
+        2.96,
+        2.07,
+        3.655
+      ],
+      "triangles": 11988,
+      "editable_parts": 51,
+      "mesh_nodes": 2,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_amber",
+        "Orbita_glass",
+        "Orbita_ceramic",
+        "Orbita_alloy",
+        "Orbita_cyan",
+        "Orbita_gold"
+      ],
+      "sockets": [
+        {
+          "name": "socket_cargo",
+          "path": "erlea_miner/socket_cargo"
+        },
+        {
+          "name": "socket_cockpit",
+          "path": "erlea_miner/socket_cockpit"
+        },
+        {
+          "name": "socket_exhaust_0_94",
+          "path": "erlea_miner/socket_exhaust_0_94"
+        },
+        {
+          "name": "socket_exhaust_m0_94",
+          "path": "erlea_miner/socket_exhaust_m0_94"
+        },
+        {
+          "name": "socket_mining_left",
+          "path": "erlea_miner/socket_mining_left"
+        },
+        {
+          "name": "socket_mining_right",
+          "path": "erlea_miner/socket_mining_right"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/pulse_turret",
+      "version": 1,
+      "title": "Begi · torreta de pulso",
+      "category": "equipment",
+      "description": "Equipo ficticio de doble emisor con pivote de orientación.",
+      "runtime": "game/assets/models/orbita_pack/pulse_turret.glb",
+      "resource": "res://assets/models/orbita_pack/pulse_turret.glb",
+      "source": "art/blender/orbita_pack/pulse_turret.blend",
+      "preview": "docs/images/orbita_pack/pulse_turret.png",
+      "sha256": "459430e23b0f4de34158788b40f283267e65b5582908b18ea2b7c103b79d1ff2",
+      "source_sha256": "be941d2351ca9c8b91c29cd0d4d1170465d4fe3f6aa14709bbfc02a5b6490cae",
+      "bytes": 543636,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        1.34,
+        0.865,
+        1.965
+      ],
+      "aabb_min": [
+        -0.67,
+        0.08,
+        -1.295
+      ],
+      "aabb_max": [
+        0.67,
+        0.945,
+        0.67
+      ],
+      "triangles": 7676,
+      "editable_parts": 18,
+      "mesh_nodes": 2,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_amber",
+        "Orbita_ceramic",
+        "Orbita_teal",
+        "Orbita_alloy",
+        "Orbita_cyan"
+      ],
+      "sockets": [
+        {
+          "name": "socket_mount",
+          "path": "pulse_turret/socket_mount"
+        },
+        {
+          "name": "socket_muzzle_left",
+          "path": "pulse_turret/Yaw/socket_muzzle_left"
+        },
+        {
+          "name": "socket_muzzle_right",
+          "path": "pulse_turret/Yaw/socket_muzzle_right"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/containment_projector",
+      "version": 1,
+      "title": "Lotura · proyector de contención",
+      "category": "equipment",
+      "description": "Equipo ficticio de campo, cámara central y tres antenas.",
+      "runtime": "game/assets/models/orbita_pack/containment_projector.glb",
+      "resource": "res://assets/models/orbita_pack/containment_projector.glb",
+      "source": "art/blender/orbita_pack/containment_projector.blend",
+      "preview": "docs/images/orbita_pack/containment_projector.png",
+      "sha256": "91046c1a59dc9a8c7d68022ea714f0427e0517aa3b9d0b73fc287713572e5f6b",
+      "source_sha256": "15da557bcabb01986dfb0254df1c7de2362ff67b1d8c6779c30c220a859f896f",
+      "bytes": 160416,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        1.00011,
+        1.52,
+        1.03138
+      ],
+      "aabb_min": [
+        -0.425,
+        0.0,
+        -0.51569
+      ],
+      "aabb_max": [
+        0.57511,
+        1.52,
+        0.51569
+      ],
+      "triangles": 1964,
+      "editable_parts": 14,
+      "mesh_nodes": 2,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_ceramic",
+        "Orbita_alloy",
+        "Orbita_amber",
+        "Orbita_cyan",
+        "Orbita_gold",
+        "Orbita_teal"
+      ],
+      "sockets": [
+        {
+          "name": "socket_field_origin",
+          "path": "containment_projector/Field_gimbal/socket_field_origin"
+        },
+        {
+          "name": "socket_mount",
+          "path": "containment_projector/socket_mount"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/technician_robot",
+      "version": 1,
+      "title": "Torlo · técnico mecánico",
+      "category": "avatars",
+      "description": "Tripulante robótico con articulaciones rígidas y anclajes de equipo.",
+      "runtime": "game/assets/models/orbita_pack/technician_robot.glb",
+      "resource": "res://assets/models/orbita_pack/technician_robot.glb",
+      "source": "art/blender/orbita_pack/technician_robot.blend",
+      "preview": "docs/images/orbita_pack/technician_robot.png",
+      "sha256": "788e4bd06a9e0e77ea0d82cdb8bd7a57d6efb6eef7d7f7c147b53beae77f1719",
+      "source_sha256": "e4b18a2872674983e04d518e8da7cf398bc3448b22d7fe9deefbfe30ccabcd6e",
+      "bytes": 275692,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        1.2263,
+        2.01,
+        0.775
+      ],
+      "aabb_min": [
+        -0.61315,
+        0.0,
+        -0.35
+      ],
+      "aabb_max": [
+        0.61315,
+        2.01,
+        0.425
+      ],
+      "triangles": 3328,
+      "editable_parts": 37,
+      "mesh_nodes": 4,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_alloy",
+        "Orbita_ceramic",
+        "Orbita_amber",
+        "Orbita_cyan",
+        "Orbita_teal"
+      ],
+      "sockets": [
+        {
+          "name": "socket_hand_left",
+          "path": "technician_robot/Arm_left/socket_hand_left"
+        },
+        {
+          "name": "socket_hand_right",
+          "path": "technician_robot/Arm_right/socket_hand_right"
+        },
+        {
+          "name": "socket_view",
+          "path": "technician_robot/Head_yaw/socket_view"
+        },
+        {
+          "name": "socket_back",
+          "path": "technician_robot/socket_back"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/medic_robot",
+      "version": 1,
+      "title": "Osasun · asistente sanitario",
+      "category": "avatars",
+      "description": "Robot de tripulación compacto con pantalla y brazos articulados.",
+      "runtime": "game/assets/models/orbita_pack/medic_robot.glb",
+      "resource": "res://assets/models/orbita_pack/medic_robot.glb",
+      "source": "art/blender/orbita_pack/medic_robot.blend",
+      "preview": "docs/images/orbita_pack/medic_robot.png",
+      "sha256": "f62cc5747b71768e1b6d4f0233cc918759a40b6653d6e816ee455aae454a2f22",
+      "source_sha256": "408c506152da7d6302ed78a45dffd2bc359289ffa71ef237a21342e236c1c8ea",
+      "bytes": 299812,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        1.2263,
+        2.01,
+        0.775
+      ],
+      "aabb_min": [
+        -0.61315,
+        0.0,
+        -0.35
+      ],
+      "aabb_max": [
+        0.61315,
+        2.01,
+        0.425
+      ],
+      "triangles": 3540,
+      "editable_parts": 37,
+      "mesh_nodes": 4,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_alloy",
+        "Orbita_ceramic",
+        "Orbita_teal",
+        "Orbita_cyan"
+      ],
+      "sockets": [
+        {
+          "name": "socket_hand_left",
+          "path": "medic_robot/Arm_left/socket_hand_left"
+        },
+        {
+          "name": "socket_hand_right",
+          "path": "medic_robot/Arm_right/socket_hand_right"
+        },
+        {
+          "name": "socket_view",
+          "path": "medic_robot/Head_yaw/socket_view"
+        },
+        {
+          "name": "socket_back",
+          "path": "medic_robot/socket_back"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/lapa_drone",
+      "version": 1,
+      "title": "Lapa · dron parásito",
+      "category": "enemies",
+      "description": "Dron de seis patas, caparazón y sensor orientable.",
+      "runtime": "game/assets/models/orbita_pack/lapa_drone.glb",
+      "resource": "res://assets/models/orbita_pack/lapa_drone.glb",
+      "source": "art/blender/orbita_pack/lapa_drone.blend",
+      "preview": "docs/images/orbita_pack/lapa_drone.png",
+      "sha256": "d22beacd66be8f686c4c3a95acff45e718030352f4f06775ca848bd1f2cc5c0f",
+      "source_sha256": "3b6d9dcfd18fea281c0062566fc49e33866e22acc9770ad32db97f1ac1cb9522",
+      "bytes": 287036,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        2.24,
+        0.905,
+        1.705
+      ],
+      "aabb_min": [
+        -1.12,
+        0.005,
+        -0.985
+      ],
+      "aabb_max": [
+        1.12,
+        0.91,
+        0.72
+      ],
+      "triangles": 3552,
+      "editable_parts": 36,
+      "mesh_nodes": 2,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_plum",
+        "Orbita_alloy",
+        "Orbita_red"
+      ],
+      "sockets": [
+        {
+          "name": "socket_sensor",
+          "path": "lapa_drone/Sensor_yaw/socket_sensor"
+        },
+        {
+          "name": "socket_attach",
+          "path": "lapa_drone/socket_attach"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/aingira_probe",
+      "version": 1,
+      "title": "Aingira · sonda hostil",
+      "category": "enemies",
+      "description": "Sonda segmentada con aletas y articulación de la cola.",
+      "runtime": "game/assets/models/orbita_pack/aingira_probe.glb",
+      "resource": "res://assets/models/orbita_pack/aingira_probe.glb",
+      "source": "art/blender/orbita_pack/aingira_probe.blend",
+      "preview": "docs/images/orbita_pack/aingira_probe.png",
+      "sha256": "debd87afc6a67b8434e1f09279e8216cff33e1001c0c7f18b91e04b2bde8e4cf",
+      "source_sha256": "cf7790c46b3b135df7f8809f12591e0600107b314040865dbb1b40020be2dac1",
+      "bytes": 371176,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        1.40177,
+        0.62,
+        3.92909
+      ],
+      "aabb_min": [
+        -0.70088,
+        -0.31,
+        -1.3541
+      ],
+      "aabb_max": [
+        0.70088,
+        0.31,
+        2.575
+      ],
+      "triangles": 4984,
+      "editable_parts": 23,
+      "mesh_nodes": 6,
+      "materials": [
+        "Orbita_red",
+        "Orbita_plum",
+        "Orbita_alloy",
+        "Orbita_graphite",
+        "Orbita_gold"
+      ],
+      "sockets": [
+        {
+          "name": "socket_sensor",
+          "path": "aingira_probe/socket_sensor"
+        },
+        {
+          "name": "socket_tail",
+          "path": "aingira_probe/Tail_00/Tail_01/Tail_02/Tail_03/Tail_04/socket_tail"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/harri_moon",
+      "version": 1,
+      "title": "Harri · luna de cráteres",
+      "category": "worlds",
+      "description": "Mundo estilizado con relieve de cráteres modelado y color en materiales.",
+      "runtime": "game/assets/models/orbita_pack/harri_moon.glb",
+      "resource": "res://assets/models/orbita_pack/harri_moon.glb",
+      "source": "art/blender/orbita_pack/harri_moon.blend",
+      "preview": "docs/images/orbita_pack/harri_moon.png",
+      "sha256": "887b9c1ff2c6692e70436d52abb96cce201719bf4b2bda3cd07f62d60bc5badf",
+      "source_sha256": "c64cb18d083a019fdf54983723bc5e828e222b8131833d762440ae7f9a0c282a",
+      "bytes": 181032,
+      "units": "display_units",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        2.01106,
+        2.03149,
+        2.02792
+      ],
+      "aabb_min": [
+        -1.0,
+        -1.01145,
+        -1.01632
+      ],
+      "aabb_max": [
+        1.01106,
+        1.02004,
+        1.01159
+      ],
+      "triangles": 5120,
+      "editable_parts": 1,
+      "mesh_nodes": 1,
+      "materials": [
+        "Harri_rock_0",
+        "Harri_rock_1",
+        "Harri_rock_2",
+        "Harri_rock_3",
+        "Harri_rock_4",
+        "Harri_rock_5"
+      ],
+      "sockets": [
+        {
+          "name": "socket_centre",
+          "path": "harri_moon/socket_centre"
+        }
+      ],
+      "animations": [],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/eraztun_giant",
+      "version": 1,
+      "title": "Eraztun · gigante anillado",
+      "category": "worlds",
+      "description": "Planeta bandeado con anillos de geometría de doble cara.",
+      "runtime": "game/assets/models/orbita_pack/eraztun_giant.glb",
+      "resource": "res://assets/models/orbita_pack/eraztun_giant.glb",
+      "source": "art/blender/orbita_pack/eraztun_giant.blend",
+      "preview": "docs/images/orbita_pack/eraztun_giant.png",
+      "sha256": "3f411501886894b14d6f74793c03f55baf6847e0ce8e58d41dc7fa4c04809560",
+      "source_sha256": "dcd0a1499da90a26d1b0dc6f08bc281fbc1e8b8658d15b8eda1b0f29ffcf8294",
+      "bytes": 635852,
+      "units": "display_units",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        4.54,
+        2.0,
+        4.14994
+      ],
+      "aabb_min": [
+        -2.27,
+        -1.0,
+        -2.07497
+      ],
+      "aabb_max": [
+        2.27,
+        1.0,
+        2.07497
+      ],
+      "triangles": 16704,
+      "editable_parts": 7,
+      "mesh_nodes": 2,
+      "materials": [
+        "Eraztun_band_0",
+        "Eraztun_band_1",
+        "Eraztun_band_2",
+        "Eraztun_band_3",
+        "Eraztun_band_4",
+        "Eraztun_band_5"
+      ],
+      "sockets": [
+        {
+          "name": "socket_centre",
+          "path": "eraztun_giant/socket_centre"
+        }
+      ],
+      "animations": [],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/docking_collar",
+      "version": 1,
+      "title": "Kaia · collar de atraque",
+      "category": "infrastructure",
+      "description": "Módulo abierto con anclajes frontal y posterior.",
+      "runtime": "game/assets/models/orbita_pack/docking_collar.glb",
+      "resource": "res://assets/models/orbita_pack/docking_collar.glb",
+      "source": "art/blender/orbita_pack/docking_collar.blend",
+      "preview": "docs/images/orbita_pack/docking_collar.png",
+      "sha256": "e42762c1325f3fece93c53459e2f12b58197fb0e5aeeeeb0bb240793c360faaf",
+      "source_sha256": "831de41c4caf256342ce656d4b8402ac263d1cad22b676128c2626ef7ad7cbf5",
+      "bytes": 344152,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        3.07,
+        2.96,
+        1.295
+      ],
+      "aabb_min": [
+        -1.535,
+        0.0,
+        -0.685
+      ],
+      "aabb_max": [
+        1.535,
+        2.96,
+        0.61
+      ],
+      "triangles": 4624,
+      "editable_parts": 24,
+      "mesh_nodes": 1,
+      "materials": [
+        "Orbita_graphite",
+        "Orbita_ceramic",
+        "Orbita_alloy",
+        "Orbita_cyan",
+        "Orbita_amber"
+      ],
+      "sockets": [
+        {
+          "name": "socket_mount",
+          "path": "docking_collar/socket_mount"
+        },
+        {
+          "name": "socket_port_back",
+          "path": "docking_collar/socket_port_back"
+        },
+        {
+          "name": "socket_port_front",
+          "path": "docking_collar/socket_port_front"
+        }
+      ],
+      "animations": [],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    },
+    {
+      "id": "orbita/solar_array",
+      "version": 1,
+      "title": "Eguzki · módulo solar",
+      "category": "infrastructure",
+      "description": "Bus orbital de dos alas, paneles separados y antena.",
+      "runtime": "game/assets/models/orbita_pack/solar_array.glb",
+      "resource": "res://assets/models/orbita_pack/solar_array.glb",
+      "source": "art/blender/orbita_pack/solar_array.blend",
+      "preview": "docs/images/orbita_pack/solar_array.png",
+      "sha256": "efde93229b318378714f96598695c1fe525d5cc2a96585f86c88593a6f18e5db",
+      "source_sha256": "4823f8baf63f4c079bfb5558656564050d3f5c92b41e4dbc10bcd0f5a88fe727",
+      "bytes": 592888,
+      "units": "metres",
+      "axes": "Godot +Y up, -Z forward",
+      "dimensions": [
+        7.03,
+        1.87,
+        2.48
+      ],
+      "aabb_min": [
+        -3.515,
+        -0.425,
+        -1.24
+      ],
+      "aabb_max": [
+        3.515,
+        1.445,
+        1.24
+      ],
+      "triangles": 8352,
+      "editable_parts": 73,
+      "mesh_nodes": 3,
+      "materials": [
+        "Orbita_alloy",
+        "Orbita_gold",
+        "Orbita_ceramic",
+        "Orbita_graphite",
+        "Orbita_solar"
+      ],
+      "sockets": [
+        {
+          "name": "socket_bus",
+          "path": "solar_array/socket_bus"
+        },
+        {
+          "name": "socket_mount",
+          "path": "solar_array/socket_mount"
+        },
+        {
+          "name": "socket_tip_left",
+          "path": "solar_array/Wing_left/socket_tip_left"
+        },
+        {
+          "name": "socket_tip_right",
+          "path": "solar_array/Wing_right/socket_tip_right"
+        }
+      ],
+      "animations": [
+        "mechanical_cycle"
+      ],
+      "license": "MIT",
+      "status": "exported_not_gameplay_integrated",
+      "rig": "rigid_object_hierarchy",
+      "collision": "not_included",
+      "lod": "not_included",
+      "provenance": "Original authored geometry; no imported art"
+    }
+  ]
+}

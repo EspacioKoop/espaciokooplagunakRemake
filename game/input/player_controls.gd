@@ -5,6 +5,8 @@ signal profile_changed
 const Profile = preload("res://input/control_profile.gd")
 const SettingsPanel = preload("res://ui/control_settings.gd")
 const TouchControls = preload("res://input/touch_controls.gd")
+const ReadabilityService = preload("res://ui/readability_service.gd")
+var readability: Node
 var touch: Control
 var profile: Dictionary = Profile.defaults()
 var profile_path = "user://controls-v1.json"
@@ -17,6 +19,8 @@ var _focus_before: WeakRef
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	readability = ReadabilityService.new()
+	add_child(readability)
 	# Test processes never overwrite a person's normal preferences.
 	if "--test" in OS.get_cmdline_user_args(): profile_path = "user://controls-test-v1.json"
 	var loaded = Profile.load_file(profile_path)
