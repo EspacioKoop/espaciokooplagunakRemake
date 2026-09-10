@@ -13,9 +13,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--godot', default=str(ROOT / '.toolchain/godot'))
     parser.add_argument('--graphical', action='store_true', help='Require Xvfb or DISPLAY and test captured movement')
+    parser.add_argument('--screenshot', type=Path, help='Save the real graphical controls panel')
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix='lagunak-input-') as temp:
         env = dict(os.environ, XDG_DATA_HOME=temp, XDG_CONFIG_HOME=temp)
+        if args.screenshot:
+            args.screenshot.resolve().parent.mkdir(parents=True, exist_ok=True)
+            env['INPUT_CAPTURE_PATH'] = str(args.screenshot.resolve())
         for script in ['test_input_controls.gd', 'test_input_ui.gd']:
             command = [args.godot, '--headless', '--path', str(ROOT / 'game'), '--script', str(ROOT / 'tests' / script), '--', '--test']
             if args.graphical and script == 'test_input_ui.gd':

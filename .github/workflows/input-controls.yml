@@ -34,4 +34,11 @@ jobs:
       - name: Import resources
         run: .toolchain/godot --headless --editor --path game --quit
       - name: Validate profiles, live remapping, controller menus and physical walking
-        run: python3 tests/run_input_controls.py --graphical
+        run: python3 tests/run_input_controls.py --graphical --screenshot build/input-controls.png
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: input-controls-panel
+          path: build/input-controls.png
+          if-no-files-found: warn
+          retention-days: 14

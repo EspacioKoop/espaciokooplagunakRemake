@@ -22,7 +22,7 @@ func _ready() -> void:
 	load_error = loaded.error
 	Profile.install(profile)
 	TranslationServer.set_locale(profile.locale)
-	for pair in [["ui_focus_next", JOY_BUTTON_RIGHT_SHOULDER], ["ui_focus_prev", JOY_BUTTON_LEFT_SHOULDER]]:
+	for pair in [["ui_accept", JOY_BUTTON_A], ["ui_select", JOY_BUTTON_X], ["ui_cancel", JOY_BUTTON_B], ["ui_up", JOY_BUTTON_DPAD_UP], ["ui_down", JOY_BUTTON_DPAD_DOWN], ["ui_left", JOY_BUTTON_DPAD_LEFT], ["ui_right", JOY_BUTTON_DPAD_RIGHT], ["ui_focus_next", JOY_BUTTON_RIGHT_SHOULDER], ["ui_focus_prev", JOY_BUTTON_LEFT_SHOULDER]]:
 		var event = InputEventJoypadButton.new()
 		event.button_index = pair[1]
 		event.device = -1
@@ -65,6 +65,10 @@ func _input(event: InputEvent) -> void:
 		return
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		get_viewport().set_input_as_handled()
+		return
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and (event is InputEventJoypadButton or event is InputEventJoypadMotion or event.is_action("ui_accept")):
+		# InputMap state still reaches gameplay; captured input must not click a background menu.
 		get_viewport().set_input_as_handled()
 		return
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and event is InputEventJoypadButton and event.pressed:

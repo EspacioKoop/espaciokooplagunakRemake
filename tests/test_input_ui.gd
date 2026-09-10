@@ -57,6 +57,9 @@ func run() -> void:
 		check(panel.get_global_rect().end.x <= root.get_visible_rect().size.x + 1, "panel fits width " + str(viewport))
 		check(panel.close_button.get_global_rect().end.y < root.get_visible_rect().size.y, "exit visible at " + str(viewport))
 		check(panel.status.get_global_rect().end.y < root.get_visible_rect().size.y, "binding feedback visible at " + str(viewport))
+	if DisplayServer.get_name() != "headless" and not OS.get_environment("INPUT_CAPTURE_PATH").is_empty():
+		await RenderingServer.frame_post_draw
+		check(root.get_texture().get_image().save_png(OS.get_environment("INPUT_CAPTURE_PATH")) == OK, "capture real rendered controls panel")
 	panel._begin_capture("move_forward", "keyboard")
 	await create_timer(0.18).timeout
 	key(KEY_S)
@@ -171,6 +174,7 @@ func run() -> void:
 	if autopilot != null:
 		autopilot.grab_focus()
 		pad_button(JOY_BUTTON_A)
+		await settle()
 		pad_button(JOY_BUTTON_A, false)
 		await settle()
 		check(root.get_node("Session").sim.state.ship.autopilot == "argi", "gamepad A activates actual ship autopilot through UI")
