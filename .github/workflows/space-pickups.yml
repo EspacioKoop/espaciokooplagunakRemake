@@ -1,0 +1,22 @@
+name: Verify space pickups
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pickups:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Download verified Godot
+        run: python3 tools/bootstrap.py
+      - name: Import resources
+        run: .toolchain/godot --headless --editor --path game --quit
+      - name: Verify collisions, persistence, authority and affected regressions
+        run: python3 tests/run_space_pickups.py
