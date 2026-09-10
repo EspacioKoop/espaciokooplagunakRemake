@@ -20,7 +20,17 @@ func setup(owner: Node) -> void:
 	]
 	for spec in specs:
 		_add_link(spec[0], spec[1], spec[2], spec[3], spec[4], spec[5])
+	_install_social_tables()
 	update_labels(0)
+
+func _install_social_tables() -> void:
+	if deck._zone_models.size() <= 7: return
+	var cantina: Node3D = deck._zone_models[7]
+	for spec in [["poker", Vector3(-5, 1.08, 0)], ["blackjack", Vector3(5, 1.08, 0)], ["dados", Vector3(-5, 1.08, 6)]]:
+		var display = SocialTableDisplay.new()
+		display.table_id = spec[0]
+		display.position = spec[1]
+		cantina.add_child(display)
 
 func _add_link(start: Vector3, source: int, finish: Vector3, target: int, source_title: String, target_title: String) -> void:
 	var delta = finish - start
