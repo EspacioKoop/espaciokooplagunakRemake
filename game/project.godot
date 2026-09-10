@@ -16,6 +16,7 @@ Sensors="*res://core/advanced_sensors.gd"
 Crew="*res://core/crew_system.gd"
 GroundCombat="*res://core/ground_combat.gd"
 Fleet="*res://core/fleet_ai.gd"
+Armaments="*res://core/ship_armaments.gd"
 
 [display]
 window/size/viewport_width=1600
