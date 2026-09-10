@@ -1,0 +1,89 @@
+name: Frontier Blender asset library
+
+on:
+  push:
+    branches: [agent/41-frontier-assets]
+    paths:
+      - 'art/blender/frontier_pack/*.py'
+      - '.github/workflows/frontier-assets.yml'
+  pull_request:
+    paths:
+      - 'art/blender/frontier_pack/**'
+      - 'game/assets/models/frontier_pack/**'
+      - 'game/asset_lab/frontier_pack/**'
+      - 'tests/frontier_pack/**'
+      - '.github/workflows/frontier-assets.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontier-assets-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, as in repository CI
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Blender Python runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libegl1 libgl1 libxi6 libxrender1 libxfixes3 libxxf86vm1 libxkbcommon0 libsm6 libice6 fonts-dejavu-core
+          python -m pip install --disable-pip-version-check bpy==4.5.3 Pillow==11.3.0
+      - name: Generate editable sources and real Blender renders
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = push ] || [ ! -f game/assets/models/frontier_pack/manifest.json ]; then
+            python art/blender/frontier_pack/build_pack.py --render --rebuild
+          fi
+      - name: Validate all model buffers, skins, animations and source hashes
+        run: python tests/frontier_pack/validate_pack.py
+      - name: Record generator provenance
+        run: sha256sum art/blender/frontier_pack/build_pack.py > game/assets/models/frontier_pack/generator.sha256
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: frontier-assets-and-evidence
+          path: |
+            art/blender/frontier_pack/sources/
+            game/assets/models/frontier_pack/
+            docs/images/frontier_pack/
+          retention-days: 30
+          if-no-files-found: error
+
+  preserve-on-asset-branch:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/agent/41-frontier-assets'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: agent/41-frontier-assets
+      - uses: actions/download-artifact@v4
+        with:
+          name: frontier-assets-and-evidence
+          path: .
+      - name: Preserve validated binary assets without modifying main
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = 'agent/41-frontier-assets'
+          sha256sum --check game/assets/models/frontier_pack/generator.sha256
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/blender/frontier_pack/sources game/assets/models/frontier_pack docs/images/frontier_pack
+          if ! git diff --cached --quiet; then
+            git commit -m 'build(assets): preserve validated Blender sources, GLBs and render catalogue'
+            git push origin HEAD:refs/heads/agent/41-frontier-assets
+          fi
