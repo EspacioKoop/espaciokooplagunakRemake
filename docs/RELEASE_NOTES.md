@@ -13,6 +13,8 @@ Los paquetes incluyen recursos, instrucciones y licencias; no requieren instalar
 
 ## Cambios desde 0.9
 
+- Corregidas las conexiones físicas entre compartimentos: puertas y pasillos alineados, sin choque con paredes o pilares. Verificados los seis enlaces de ida y vuelta y la apertura de las doce escotillas, sin bloqueos, caídas ni teletransportes.
+
 - Controles táctiles de movimiento, cámara, interacción y menús. Se activan automáticamente en dispositivo táctil o desde el panel F9 para pruebas en escritorio.
 - Servidor dedicado opcional con Docker/Compose, anfitrión observador, autenticación y guardado persistente. Instrucciones reproducibles en `docs/DEDICATED_SERVER.md` del repositorio.
 - Suministros y artefactos recogibles por colisión, con recursos limitados, objetivos y consumo persistente, también en red.
