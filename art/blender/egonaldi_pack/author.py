@@ -15,6 +15,7 @@ ROOT=HERE.parents[2]
 sys.path.insert(0,str(HERE.parent/'bizigai_pack'))
 from build import Mesh, material, collection, anchor, glb_info, godot_to_blender
 import bpy
+import bmesh
 from mathutils import Vector, Matrix
 
 OUT=ROOT/'game/assets/models/egonaldi_pack'
@@ -241,7 +242,6 @@ def build(ident,force=False):
   a=anchor('socket_'+name,godot_to_blender(pos),Matrix.Identity(3),coll)
   a['purpose']=name
   if name.startswith('connector_'):
-   # Local glTF -Z forward points outside at each connection.
    a.rotation_mode='XYZ';a.rotation_euler=(0,0,math.pi if name.endswith('south') else 0)
  scene=bpy.context.scene;scene['asset_id']='egonaldi/'+ident
  scene['license']='MIT';scene['units']='metres'
@@ -274,22 +274,48 @@ def preview(ident,path):
  bpy.ops.render.render(write_still=True)
 
 
+def prepare_export_meshes():
+ """Evaluate editable bevels, then weld coincident cap vertices at 10 micrometres.
+ Narrow beveled rods can otherwise contain collapsed triangles. Work is in memory;
+ this is geometric cleanup of the delivery, not weaker validation or source loss.
+ """
+ depsgraph=bpy.context.evaluated_depsgraph_get()
+ for obj in list(bpy.context.scene.objects):
+  if obj.type!='MESH':continue
+  evaluated=obj.evaluated_get(depsgraph)
+  data=bpy.data.meshes.new_from_object(evaluated,preserve_all_data_layers=True,depsgraph=depsgraph)
+  data.name=obj.data.name+'_export'
+  # Keep Godot's collision suffix at the end of the runtime mesh name.
+  if obj.name.endswith('-col'):data.name=obj.name
+  obj.modifiers.clear();obj.data=data
+  bm=bmesh.new();bm.from_mesh(data)
+  before=len(bm.verts)
+  bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=0.00001)
+  bmesh.ops.dissolve_degenerate(bm,edges=list(bm.edges),dist=0.00001)
+  bmesh.ops.triangulate(bm,faces=list(bm.faces))
+  bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces))
+  removed=before-len(bm.verts)
+  bm.to_mesh(data);bm.free();data.update()
+  if removed:print('EGONALDI_WELD',obj.name,'coincident_vertices=',removed)
+
+
 def export(ident):
  source=HERE/(ident+'.blend');before=sha(source)
  bpy.ops.wm.open_mainfile(filepath=str(source))
+ prepare_export_meshes()
  OUT.mkdir(parents=True,exist_ok=True);target=OUT/(ident+'.glb')
  bpy.ops.export_scene.gltf(filepath=str(target),export_format='GLB',export_apply=True,
   export_yup=True,export_extras=True,export_animations=False,export_cameras=False,export_lights=False)
- require_same=sha(source)==before
- if not require_same:raise RuntimeError('Exporter modified source')
+ if sha(source)!=before:raise RuntimeError('Exporter modified source')
  info=glb_info(target)
  info.update({'id':'egonaldi/'+ident,'name':DESTINATIONS[ident][0],'description':DESTINATIONS[ident][1],
   'source':str(source.relative_to(ROOT)),'source_sha256':before,'runtime':str(target.relative_to(ROOT)),
   'res_path':'res://assets/models/egonaldi_pack/'+ident+'.glb',
   'units':'metres','floor_size_m':[36,40],'height_m':8.4,'axes':'+Y up; -Z north/forward',
   'arrival_m':list(SOCKETS['arrival']),'sockets':{'socket_'+k:list(v) for k,v in SOCKETS.items()},
-  'connector_aperture_m':[6,6],'clear_route_m':[[0,.98,17],[0,.98,0],[0,.98,-17]],
+  'connector_aperture_m':[5.95,6],'clear_route_m':[[0,.98,17],[0,.98,0],[0,.98,-17]],
   'preview':str((IMAGES/(ident+'.png')).relative_to(ROOT)),
+  'export_cleanup':'evaluated modifiers; coincident vertices welded at 0.00001 m; triangulated',
   'limits':['Reusable scenery, not new campaign rules','Open connectors; no door or docking logic','No NPC, economy, policing or resource simulation']})
  preview(ident,target)
  info['preview_sha256']=sha(IMAGES/(ident+'.png'))
