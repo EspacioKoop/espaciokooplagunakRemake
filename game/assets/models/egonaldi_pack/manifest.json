@@ -1,0 +1,584 @@
+{
+  "schema": "egonaldi-destinations",
+  "version": 1,
+  "license": "MIT",
+  "authoring": "Blender 4.5.3 LTS",
+  "assets": [
+    {
+      "triangles": 8920,
+      "bytes": 519916,
+      "meshes": 9,
+      "sha256": "bd2e33e69570079b13dffdf32c8bf7fc4a4c3888d5f86e83991a1b96c39eac9c",
+      "id": "egonaldi/itun_embassy",
+      "name": "Itun",
+      "description": "Embajada y sala de negociación",
+      "source": "art/blender/egonaldi_pack/itun_embassy.blend",
+      "source_sha256": "38f4702861e242012edd047213de63232b596d8bf7119aac8ab0cc8b23a65862",
+      "runtime": "game/assets/models/egonaldi_pack/itun_embassy.glb",
+      "res_path": "res://assets/models/egonaldi_pack/itun_embassy.glb",
+      "units": "metres",
+      "floor_size_m": [
+        36,
+        40
+      ],
+      "height_m": 8.4,
+      "axes": "+Y up; -Z north/forward",
+      "arrival_m": [
+        0,
+        0.98,
+        17
+      ],
+      "sockets": {
+        "socket_arrival": [
+          0,
+          0.98,
+          17
+        ],
+        "socket_return": [
+          0,
+          0.05,
+          18.5
+        ],
+        "socket_connector_south": [
+          0,
+          0,
+          20
+        ],
+        "socket_connector_north": [
+          0,
+          0,
+          -20
+        ],
+        "socket_npc_left": [
+          -3,
+          0.05,
+          6
+        ],
+        "socket_npc_right": [
+          3,
+          0.05,
+          6
+        ],
+        "socket_objective": [
+          -3,
+          0.05,
+          -6
+        ],
+        "socket_encounter": [
+          3,
+          0.05,
+          -6
+        ]
+      },
+      "connector_aperture_m": [
+        5.95,
+        6
+      ],
+      "clear_route_m": [
+        [
+          0,
+          0.98,
+          17
+        ],
+        [
+          0,
+          0.98,
+          0
+        ],
+        [
+          0,
+          0.98,
+          -17
+        ]
+      ],
+      "preview": "docs/images/egonaldi_pack/itun_embassy.png",
+      "export_cleanup": "evaluated modifiers; coincident vertices welded at 0.00001 m; triangulated",
+      "limits": [
+        "Reusable scenery, not new campaign rules",
+        "Open connectors; no door or docking logic",
+        "No NPC, economy, policing or resource simulation"
+      ],
+      "preview_sha256": "09d3bfc8a305602786b9f2e36127bde9b3c03217bd4aec7163a60809deaaca2c"
+    },
+    {
+      "triangles": 5960,
+      "bytes": 365412,
+      "meshes": 9,
+      "sha256": "06076f1c846d52187326c0bf31c7161b094a20c678f4797efa6b4adc21e75bd2",
+      "id": "egonaldi/babes_security",
+      "name": "Babes",
+      "description": "Control de seguridad y celdas",
+      "source": "art/blender/egonaldi_pack/babes_security.blend",
+      "source_sha256": "530430f7e4693f73fad875be9276d8cbb40b760b967f2ca96e2452764b9897c5",
+      "runtime": "game/assets/models/egonaldi_pack/babes_security.glb",
+      "res_path": "res://assets/models/egonaldi_pack/babes_security.glb",
+      "units": "metres",
+      "floor_size_m": [
+        36,
+        40
+      ],
+      "height_m": 8.4,
+      "axes": "+Y up; -Z north/forward",
+      "arrival_m": [
+        0,
+        0.98,
+        17
+      ],
+      "sockets": {
+        "socket_arrival": [
+          0,
+          0.98,
+          17
+        ],
+        "socket_return": [
+          0,
+          0.05,
+          18.5
+        ],
+        "socket_connector_south": [
+          0,
+          0,
+          20
+        ],
+        "socket_connector_north": [
+          0,
+          0,
+          -20
+        ],
+        "socket_npc_left": [
+          -3,
+          0.05,
+          6
+        ],
+        "socket_npc_right": [
+          3,
+          0.05,
+          6
+        ],
+        "socket_objective": [
+          -3,
+          0.05,
+          -6
+        ],
+        "socket_encounter": [
+          3,
+          0.05,
+          -6
+        ]
+      },
+      "connector_aperture_m": [
+        5.95,
+        6
+      ],
+      "clear_route_m": [
+        [
+          0,
+          0.98,
+          17
+        ],
+        [
+          0,
+          0.98,
+          0
+        ],
+        [
+          0,
+          0.98,
+          -17
+        ]
+      ],
+      "preview": "docs/images/egonaldi_pack/babes_security.png",
+      "export_cleanup": "evaluated modifiers; coincident vertices welded at 0.00001 m; triangulated",
+      "limits": [
+        "Reusable scenery, not new campaign rules",
+        "Open connectors; no door or docking logic",
+        "No NPC, economy, policing or resource simulation"
+      ],
+      "preview_sha256": "2698557411d7551024a6453533abac085d65be9b77b059852b6f7c6c25c7e5a5"
+    },
+    {
+      "triangles": 4696,
+      "bytes": 274000,
+      "meshes": 9,
+      "sha256": "b93e8d7b23f2dcc3c7b3db6877735e9a60ab08b4d5dde1b464d3deaf01adcf90",
+      "id": "egonaldi/trebe_training",
+      "name": "Trebe",
+      "description": "Entrenamiento físico y obstáculos",
+      "source": "art/blender/egonaldi_pack/trebe_training.blend",
+      "source_sha256": "ed851e4c4787e3bc246063c3a5abb08757d116dfd8de8068dbe90d3b9b5a9ae1",
+      "runtime": "game/assets/models/egonaldi_pack/trebe_training.glb",
+      "res_path": "res://assets/models/egonaldi_pack/trebe_training.glb",
+      "units": "metres",
+      "floor_size_m": [
+        36,
+        40
+      ],
+      "height_m": 8.4,
+      "axes": "+Y up; -Z north/forward",
+      "arrival_m": [
+        0,
+        0.98,
+        17
+      ],
+      "sockets": {
+        "socket_arrival": [
+          0,
+          0.98,
+          17
+        ],
+        "socket_return": [
+          0,
+          0.05,
+          18.5
+        ],
+        "socket_connector_south": [
+          0,
+          0,
+          20
+        ],
+        "socket_connector_north": [
+          0,
+          0,
+          -20
+        ],
+        "socket_npc_left": [
+          -3,
+          0.05,
+          6
+        ],
+        "socket_npc_right": [
+          3,
+          0.05,
+          6
+        ],
+        "socket_objective": [
+          -3,
+          0.05,
+          -6
+        ],
+        "socket_encounter": [
+          3,
+          0.05,
+          -6
+        ]
+      },
+      "connector_aperture_m": [
+        5.95,
+        6
+      ],
+      "clear_route_m": [
+        [
+          0,
+          0.98,
+          17
+        ],
+        [
+          0,
+          0.98,
+          0
+        ],
+        [
+          0,
+          0.98,
+          -17
+        ]
+      ],
+      "preview": "docs/images/egonaldi_pack/trebe_training.png",
+      "export_cleanup": "evaluated modifiers; coincident vertices welded at 0.00001 m; triangulated",
+      "limits": [
+        "Reusable scenery, not new campaign rules",
+        "Open connectors; no door or docking logic",
+        "No NPC, economy, policing or resource simulation"
+      ],
+      "preview_sha256": "6f8e3d42263d43a2ce1588ea6e685063760f6f9f880ae00771f91428a6d4ac7e"
+    },
+    {
+      "triangles": 6488,
+      "bytes": 387992,
+      "meshes": 9,
+      "sha256": "89f7bea626f7894a5e8efc72b0de36e64c0b9b0fe51b3729adeaced6bcd8be87",
+      "id": "egonaldi/zeru_observatory",
+      "name": "Zeru",
+      "description": "Observatorio panorámico",
+      "source": "art/blender/egonaldi_pack/zeru_observatory.blend",
+      "source_sha256": "96b16fbee902670433b36e526e138d9764bb165a5acbbb55b56faa5b7f63ce8f",
+      "runtime": "game/assets/models/egonaldi_pack/zeru_observatory.glb",
+      "res_path": "res://assets/models/egonaldi_pack/zeru_observatory.glb",
+      "units": "metres",
+      "floor_size_m": [
+        36,
+        40
+      ],
+      "height_m": 8.4,
+      "axes": "+Y up; -Z north/forward",
+      "arrival_m": [
+        0,
+        0.98,
+        17
+      ],
+      "sockets": {
+        "socket_arrival": [
+          0,
+          0.98,
+          17
+        ],
+        "socket_return": [
+          0,
+          0.05,
+          18.5
+        ],
+        "socket_connector_south": [
+          0,
+          0,
+          20
+        ],
+        "socket_connector_north": [
+          0,
+          0,
+          -20
+        ],
+        "socket_npc_left": [
+          -3,
+          0.05,
+          6
+        ],
+        "socket_npc_right": [
+          3,
+          0.05,
+          6
+        ],
+        "socket_objective": [
+          -3,
+          0.05,
+          -6
+        ],
+        "socket_encounter": [
+          3,
+          0.05,
+          -6
+        ]
+      },
+      "connector_aperture_m": [
+        5.95,
+        6
+      ],
+      "clear_route_m": [
+        [
+          0,
+          0.98,
+          17
+        ],
+        [
+          0,
+          0.98,
+          0
+        ],
+        [
+          0,
+          0.98,
+          -17
+        ]
+      ],
+      "preview": "docs/images/egonaldi_pack/zeru_observatory.png",
+      "export_cleanup": "evaluated modifiers; coincident vertices welded at 0.00001 m; triangulated",
+      "limits": [
+        "Reusable scenery, not new campaign rules",
+        "Open connectors; no door or docking logic",
+        "No NPC, economy, policing or resource simulation"
+      ],
+      "preview_sha256": "eb997eef353dba2fb68c1d58a68dff24603ab60422453f74a82e52bfb3fcd213"
+    },
+    {
+      "triangles": 8960,
+      "bytes": 499300,
+      "meshes": 9,
+      "sha256": "1bf882a2f4b40e26c7d71875563852a14732422b4f1f72e47fcc333de3a0f7c6",
+      "id": "egonaldi/ur_recycling",
+      "name": "Ur",
+      "description": "Reciclaje y depuración de agua",
+      "source": "art/blender/egonaldi_pack/ur_recycling.blend",
+      "source_sha256": "42b1c5838f022afaa9a563bf2a19fad2d7edadd084ef266eb7ca6a8dc14a1459",
+      "runtime": "game/assets/models/egonaldi_pack/ur_recycling.glb",
+      "res_path": "res://assets/models/egonaldi_pack/ur_recycling.glb",
+      "units": "metres",
+      "floor_size_m": [
+        36,
+        40
+      ],
+      "height_m": 8.4,
+      "axes": "+Y up; -Z north/forward",
+      "arrival_m": [
+        0,
+        0.98,
+        17
+      ],
+      "sockets": {
+        "socket_arrival": [
+          0,
+          0.98,
+          17
+        ],
+        "socket_return": [
+          0,
+          0.05,
+          18.5
+        ],
+        "socket_connector_south": [
+          0,
+          0,
+          20
+        ],
+        "socket_connector_north": [
+          0,
+          0,
+          -20
+        ],
+        "socket_npc_left": [
+          -3,
+          0.05,
+          6
+        ],
+        "socket_npc_right": [
+          3,
+          0.05,
+          6
+        ],
+        "socket_objective": [
+          -3,
+          0.05,
+          -6
+        ],
+        "socket_encounter": [
+          3,
+          0.05,
+          -6
+        ]
+      },
+      "connector_aperture_m": [
+        5.95,
+        6
+      ],
+      "clear_route_m": [
+        [
+          0,
+          0.98,
+          17
+        ],
+        [
+          0,
+          0.98,
+          0
+        ],
+        [
+          0,
+          0.98,
+          -17
+        ]
+      ],
+      "preview": "docs/images/egonaldi_pack/ur_recycling.png",
+      "export_cleanup": "evaluated modifiers; coincident vertices welded at 0.00001 m; triangulated",
+      "limits": [
+        "Reusable scenery, not new campaign rules",
+        "Open connectors; no door or docking logic",
+        "No NPC, economy, policing or resource simulation"
+      ],
+      "preview_sha256": "0949d813bfabdf66086a12b5b4566d813cdde15c554ff9002c068336922a9680"
+    },
+    {
+      "triangles": 16480,
+      "bytes": 987152,
+      "meshes": 9,
+      "sha256": "3eb475e42f2c20d7732c4063ff336e84f9ed1c27f15d00081046378b72aefb06",
+      "id": "egonaldi/isil_sanctuary",
+      "name": "Isil",
+      "description": "Cámara de meditación y jardín mineral",
+      "source": "art/blender/egonaldi_pack/isil_sanctuary.blend",
+      "source_sha256": "3bee387c4d14692729a8feff4bf2167995ada936a0a3e256266cfddfc5734e35",
+      "runtime": "game/assets/models/egonaldi_pack/isil_sanctuary.glb",
+      "res_path": "res://assets/models/egonaldi_pack/isil_sanctuary.glb",
+      "units": "metres",
+      "floor_size_m": [
+        36,
+        40
+      ],
+      "height_m": 8.4,
+      "axes": "+Y up; -Z north/forward",
+      "arrival_m": [
+        0,
+        0.98,
+        17
+      ],
+      "sockets": {
+        "socket_arrival": [
+          0,
+          0.98,
+          17
+        ],
+        "socket_return": [
+          0,
+          0.05,
+          18.5
+        ],
+        "socket_connector_south": [
+          0,
+          0,
+          20
+        ],
+        "socket_connector_north": [
+          0,
+          0,
+          -20
+        ],
+        "socket_npc_left": [
+          -3,
+          0.05,
+          6
+        ],
+        "socket_npc_right": [
+          3,
+          0.05,
+          6
+        ],
+        "socket_objective": [
+          -3,
+          0.05,
+          -6
+        ],
+        "socket_encounter": [
+          3,
+          0.05,
+          -6
+        ]
+      },
+      "connector_aperture_m": [
+        5.95,
+        6
+      ],
+      "clear_route_m": [
+        [
+          0,
+          0.98,
+          17
+        ],
+        [
+          0,
+          0.98,
+          0
+        ],
+        [
+          0,
+          0.98,
+          -17
+        ]
+      ],
+      "preview": "docs/images/egonaldi_pack/isil_sanctuary.png",
+      "export_cleanup": "evaluated modifiers; coincident vertices welded at 0.00001 m; triangulated",
+      "limits": [
+        "Reusable scenery, not new campaign rules",
+        "Open connectors; no door or docking logic",
+        "No NPC, economy, policing or resource simulation"
+      ],
+      "preview_sha256": "deea2aacd18f5586ce7d62688f0be87de75c476f60cd1dff187dc3fa335b6e53"
+    }
+  ]
+}
