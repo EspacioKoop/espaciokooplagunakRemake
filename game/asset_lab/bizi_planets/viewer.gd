@@ -116,8 +116,38 @@ func select_planet(index: int) -> bool:
 	return_to_orbit()
 	return true
 
+func _terrain_faces(node: Node3D, relative: Transform3D) -> PackedVector3Array:
+	var result := PackedVector3Array()
+	if node is MeshInstance3D and str(node.name).begins_with("terrain_chunk"):
+		for point in node.mesh.get_faces():
+			result.append((relative * point).snapped(Vector3.ONE * 0.00001))
+	for child in node.get_children():
+		if child is Node3D:
+			result.append_array(_terrain_faces(child, relative * child.transform))
+	return result
+
+func _add_terrain_collision() -> void:
+	# The eight VISUAL sectors remain independently reusable. Physics sees one
+	# welded shell, not eight independent trimeshes whose boundary rays can miss.
+	var faces := _terrain_faces(surface_model, Transform3D.IDENTITY)
+	if faces.is_empty():
+		push_error("BIZI: missing terrain physics shell")
+		return
+	var mesh_shape := ConcavePolygonShape3D.new()
+	mesh_shape.set_faces(faces)
+	mesh_shape.backface_collision = true
+	var body := StaticBody3D.new()
+	body.name = "TerrainCollision"
+	body.collision_layer = 1
+	body.collision_mask = 2
+	var shape := CollisionShape3D.new()
+	shape.shape = mesh_shape
+	body.add_child(shape)
+	surface_model.add_child(body)
+	collision_count += 1
+
 func _add_collisions(node: Node, ignore: bool = false) -> void:
-	var skip := ignore or str(node.name).begins_with("resource_") or str(node.name).begins_with("water_visual")
+	var skip := ignore or str(node.name).begins_with("resource_") or str(node.name).begins_with("water_visual") or str(node.name).begins_with("terrain_chunk")
 	if node is MeshInstance3D and node.mesh != null and not skip:
 		var body := StaticBody3D.new()
 		body.name = "PreviewCollision"
@@ -143,6 +173,7 @@ func enter_surface(poi_index: int = -1) -> bool:
 		surface_model = scene.instantiate() as Node3D
 		add_child(surface_model)
 		_add_collisions(surface_model)
+		_add_terrain_collision()
 	orbital_model.hide()
 	surface_model.show()
 	surface_mode = true
