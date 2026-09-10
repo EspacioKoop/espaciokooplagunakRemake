@@ -1,0 +1,29 @@
+name: Verify storage properties
+on:
+  pull_request:
+  push:
+    branches: [main, agent/32-save-properties]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: storage-properties-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  storage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify failure detection and isolation
+        run: python3 tests/run_storage_properties.py --self-test
+      - name: Download verified Godot
+        run: python3 tools/bootstrap.py
+      - name: Import resources
+        run: .toolchain/godot --headless --editor --path game --quit
+      - name: Check save properties and legacy migrations
+        run: python3 tests/run_storage_properties.py --seed 3204301 --samples 64
+      - name: Check an independent deterministic seed
+        run: python3 tests/run_storage_properties.py --seed 641709 --samples 64
