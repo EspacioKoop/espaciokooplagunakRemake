@@ -175,7 +175,7 @@ func _process(delta: float) -> void:
 		if not contacts.has(c.id):
 			var mapped = {"station": "station", "friendly": "transport", "hostile": "sentinel", "derelict": "transport", "anomaly": "anomaly", "beacon": "beacon", "unknown": "beacon", "asteroid": "asteroid", "planet": "planet", "blackhole": "anomaly", "wormhole": "anomaly", "nebula": "anomaly"}
 			var node = Node3D.new()
-			var object = model(mapped[c.kind])
+			var object = PickupModel.create(c.kind) if c.kind in SpacePickups.KINDS else model(mapped[c.kind])
 			var scale_value = {"station": 0.7, "beacon": 0.35, "unknown": 0.20}.get(c.kind, 0.7)
 			if c.kind in SpacePhysics.KINDS: scale_value = SpacePhysics.radius(c) * 0.04
 			object.scale = Vector3.ONE * scale_value
