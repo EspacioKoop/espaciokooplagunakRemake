@@ -1,0 +1,41 @@
+name: Verify native GM live console
+on:
+  pull_request:
+    paths: ['game/**', 'tests/**', '.github/workflows/gm-live.yml']
+  push:
+    branches: [agent/32-gm-live-n4]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gm-live-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  gm-live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Install display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Download verified engine
+        run: python3 tools/bootstrap.py
+      - name: Import resources
+        run: .toolchain/godot --headless --editor --path game --quit
+      - name: Exercise GM state invariants
+        run: python3 tests/run_gm_live.py
+      - name: Preserve reproducible tracked source and pinned engine for diagnosis
+        if: always()
+        run: |
+          mkdir -p build/gm-live
+          git archive --format=tar HEAD | gzip > build/gm-live/tracked-source.tar.gz
+          tar czf build/gm-live/verified-editor.tar.gz -C .toolchain godot
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: gm-live-reproduction
+          path: build/gm-live/*.tar.gz
+          if-no-files-found: error
+          retention-days: 2
