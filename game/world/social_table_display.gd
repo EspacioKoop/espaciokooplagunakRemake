@@ -1,9 +1,10 @@
 class_name SocialTableDisplay
 extends Node3D
 ## A recipient-specific 3D projection of a native ShipLounge table.
-## The projection consumes only Session.view, so hidden cards never cross the privacy boundary.
+## The projection consumes only the injected recipient view, so hidden cards never cross the privacy boundary.
 
 var table_id = "poker"
+var session: Node
 var _dynamic: Node3D
 var _signature = ""
 
@@ -17,7 +18,8 @@ func _process(_delta: float) -> void:
 	_refresh(false)
 
 func _refresh(force: bool) -> void:
-	var lounge: Dictionary = Session.view.get("lounge", {})
+	if session == null or not is_instance_valid(session): return
+	var lounge: Dictionary = session.view.get("lounge", {})
 	var table: Dictionary = lounge.get("tables", {}).get(table_id, {})
 	var signature = "empty" if table.is_empty() else "%s:%s:%s" % [table.get("revision", -1), table.get("hands", 0), table.get("round", {}).get("stage", "")]
 	if not force and signature == _signature: return
