@@ -6,7 +6,9 @@ Referencia auditada: [EspacioKoop/espaciokooplagunak](https://github.com/Espacio
 
 ## Checkpoint reproducible
 
-Última CI completamente verde antes de esta actualización documental: `074dde973e1ea977cf7d9b4aafd94caa2c4bfd48`, workflow `34497615803`.
+**Release 0.9 publicada:** [v0.9.0](https://github.com/VaroTv7/espaciokooplagunakRemake/releases/tag/v0.9.0), commit `b9b5566a8e5229302508c80ebad31f2ce9b67699`, CI canónica `34508171985` y publicación `34508653674`, ambas verdes. Linux/Windows y SHA256SUMS disponibles.
+
+Esta matriz describe también avances posteriores de `main` hacia 1.0; no los atribuye a los binarios inmutables de 0.9. El checkpoint más reciente y las reservas viven en los issues #1 y #7. La paridad total sigue abierta.
 
 Esa pasada valida campaña y guardados, operaciones, cooperación, física, cuatro cuadrantes, colisiones dinámicas, montajes/torretas, maniobra lateral continua, atlas/facciones base, sensores avanzados, reglas de tripulación, combate táctico, IA estratégica de flotas, cinco procesos ENet reales, HTTP, UI, museo/playa/social, mesas/reconexión, cliente Foundry opcional, exportación Linux/Windows, captura del ejecutable, empaquetado y smoke real de Windows.
 
@@ -22,12 +24,12 @@ Esa pasada valida campaña y guardados, operaciones, cooperación, física, cuat
 | Escudos direccionales | **Hecho: 4 cuadrantes** | babor/estribor de proa/popa, migración desde dos segmentos y desbordamiento de hemisferio en `ship_model.gd` |
 | Haces/tubos clásicos | **Hecho** | frecuencia, blanco automático, guiado, nuclear, mina, EMP y HVLI |
 | Montajes múltiples y torretas | **Hecho como sistema modular** | `ship_armaments.gd`, `armament_console.gd`, `test_armaments.gd` |
-| Loadouts | **Hecho: 4 plantillas propias** | exploración, escolta, ciencia/contención y artillería |
+| Loadouts | **Hecho**: cuatro plantillas propias y catálogo de 38 variantes verificadas (#25, posterior a0.9) | selector en astillero, diseño/montajes, combate y guardado; adaptaciones y límites en `docs/SHIP_TEMPLATES.md` |
 | Autodestrucción coordinada | **Hecho** | tres puestos/códigos e identidad por conexión |
 | Reparación automática/equipos móviles | **Hecho** | desplazamiento físico lógico, trabajo y repuestos |
 | Asistencias cooperativas | **Hecho** | temporización, secuencia, precisión, puzle, propuestas consumibles y ayuda narrativa |
 
-**Pendiente de esta área:** migrar/crear el catálogo completo de plantillas y montajes del producto original que siga siendo relevante y exponer la edición detallada del loadout en el astillero, no sólo elegir plantillas durante la partida.
+**Pendiente de esta área:** migrar/crear el catálogo completo de plantillas y montajes del producto original que siga siendo relevante. La edición detallada del loadout ya está integrada en el astillero (#8), con importación/exportación y pruebas de combate real.
 
 ## Física y mundo espacial
 
@@ -40,7 +42,8 @@ Esa pasada valida campaña y guardados, operaciones, cooperación, física, cuat
 | Colisión nave ↔ estación | **Hecho** |
 | Colisión nave ↔ nave | **Hecho**, con daño para ambos participantes cuando corresponde |
 | Autopiloto frente a tráfico | **Hecho**, evasión tangencial de contactos dinámicos sin borrar la ruta |
-| Variantes completas de objetos del original | **Pendiente** |
+| Suministros y artefactos recogibles | **Hecho** (#24, posterior a0.9): colisión barrida, recursos con límites, objetivos y consumo persistente una sola vez; ENet real probado |
+| Variantes restantes de objetos del original | **Pendiente de completar inventario** |
 
 `tests/test_ship_physics.gd` y `tests/test_ship_quadrants_collisions.gd` fijan el comportamiento físico y la compatibilidad de guardado.
 
@@ -117,14 +120,15 @@ La Itsaso mantiene cargados simultáneamente sus siete compartimentos principale
 | Mesas sociales | **Hecho**: póker, blackjack y dados, NPC, red, privacidad y reconexión |
 | Proyección física de mesa | **Hecho**: cartas/dados/estado recipient-specific sobre la mesa 3D |
 | Avatares alrededor de partidas | **Hecho visualmente** |
-| Reserva autoritativa de asientos del espacio y poses compartidas | **Pendiente** |
-| Personalidades/poses de ocio y guardianes/variantes de recuerdos | **Pendiente** |
+| Reserva autoritativa de asientos humanos y poses compartidas | **Hecho**: exclusividad, liberación y cancelación verificadas (#12) |
+| Guardianes/centinelas y recuerdos ligados a campaña | **Hecho**: galería interactiva y recursos Blender propios (#17) |
+| Personalidades/poses restantes de NPC de ocio y catálogo artístico completo | **Pendiente** |
 
 ## Atlas, campaña y dirección
 
 | Capacidad | Estado |
 |---|---|
-| Campaña standalone | **Hecho base**, seis misiones propias y consecuencias |
+| Campaña standalone | **Hecho**: seis misiones propias y editor de campañas multi-misión con dependencias, progreso y persistencia (#13) |
 | Guardado local | **Hecho** |
 | Inventario / bestiario / crónica / perfiles | **Hecho base y persistente** |
 | Atlas por sector y marcadores | **Hecho base** |
@@ -148,10 +152,11 @@ La referencia original ya definía el formato `espaciokoop-cosmography` v1 y un 
 | Editor visual de misión | **Hecho base** |
 | Astillero estructural | **Hecho** |
 | Importación/exportación de diseño de nave | **Hecho** |
-| Editor completo de campañas | **Pendiente** |
-| Editor de personajes | **Pendiente** |
-| Editor visual de montajes/loadouts | **Pendiente** |
-| Dependencias de contenido | **Pendiente** |
+| Editor nativo de campañas multi-misión | **Hecho** (#13); migración original separada |
+| Editor nativo de personajes | **Hecho** (#16/#19), conserva progresión y valida importación/identidad |
+| Editor visual de montajes/loadouts | **Hecho** (#8), round-trip y uso en combate |
+| Dependencias entre misiones de campañas nativas | **Hecho** (#13) |
+| Dependencias entre tipos de recursos y formatos originales | **Pendiente** |
 | Migración de formatos originales | **Pendiente** |
 | Catálogo completo de escenarios/bestiario/inventario/libros/hitos | **Pendiente** |
 
@@ -161,12 +166,13 @@ La referencia original ya definía el formato `espaciokoop-cosmography` v1 y un 
 |---|---|---|
 | Blender / modelos | Fuentes `.blend`, GLB propios y assets del ocio | recursos equivalentes de los bloques de contenido aún pendientes |
 | Capturas | captura real automatizada del ejecutable en CI y README | ampliar galería conforme entren nuevas superficies finales |
-| Audio | sonidos propios base | representación/música/audio procedural restante si corresponde al original |
-| Avatar | tripulante visible en red | editor/asignación, retratos, poses, retargeting, mirada y progresión visual |
-| Foundry | cliente opcional desacoplado y probado | autoridad por usuario, puestos, fichas y sincronización restante; prueba contra Foundry real |
-| Distribución | Linux + Windows exportados y ejecutados en CI | macOS, Android, mando/táctil, Docker/periféricos cuando correspondan |
+| Audio | música procedural reactiva y controles locales (#9) | recursos restantes que estén presentes y utilizados en el original |
+| Avatar | editor, retratos, variantes persistentes y presencia autenticada (#10); desconexión corregida (#20) | poses/retargeting/progresión visual restantes; auditar consumidores originales antes de exigir nuevas funciones |
+| Foundry | cliente opcional, ficha propia y controles con autoridad por usuario/puesto (#15) | sincronización restante, navegador remoto y validación contra Foundry real |
+| Distribución | release0.9 Linux/Windows; exportador macOS Universal2 y preflight Android (#14) | APK real y validación física macOS/Android; periféricos relevantes |
+| Servidor dedicado / Docker | **Hecho** (#23, posterior a0.9): host observador, autenticación, volumen persistente y reinicio; Docker/Compose real probado en CI | acceso remoto Foundry y periféricos según requisitos verificados |
 | Herramientas externas | no son necesarias para la campaña nueva | bot Discord, netboot, packs y utilidades de la referencia que sigan teniendo sentido |
-| Accesibilidad | escalas/opciones existentes y movimiento reducido | remapeo completo, mando/táctil, idiomas y opciones restantes |
+| Accesibilidad | remapeo de movimiento, mando, ajustes y panel ES/EN (#11); táctil de cubierta y menús (#22, posterior a0.9) | atajos de pantallas restantes, traducción completa y validación táctil en dispositivo |
 
 ## Regla de mantenimiento
 
