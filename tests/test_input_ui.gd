@@ -156,12 +156,19 @@ func run() -> void:
 		check(not seat.is_empty(), "real terrace seat exists for interaction")
 		if not seat.is_empty():
 			deck.body.position = seat.position + Vector3(0, 0.4, 0.8)
-			await create_timer(0.2).timeout
+			for frame in 6: await physics_frame
+			await settle()
+			check(deck._near_interaction.get("id", "") == seat.id, "player is physically within reach of the chosen seat")
 			pad_button(JOY_BUTTON_START)
 			pad_button(JOY_BUTTON_START, false)
+			await settle()
+			check(Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and not controls.gameplay_blocked(), "seat interaction has captured gameplay input")
+			var probe = Profile.event_for_pad(Profile.button(JOY_BUTTON_Y))
+			probe.pressed = true
+			check(probe.is_action_pressed("interact"), "rebound gamepad event matches interaction InputMap")
 			pad_button(JOY_BUTTON_Y)
 			pad_button(JOY_BUTTON_Y, false)
-			check(deck.seated, "remapped gamepad action sits at a nearby real seat")
+			check(deck.seated, "remapped gamepad action sits at a nearby real seat: mode=%s blocked=%s near=%s binding=%s" % [Input.mouse_mode, controls.gameplay_blocked(), deck._near_interaction.get("id", ""), controls.binding_label("interact", "gamepad")])
 			pad_button(JOY_BUTTON_Y)
 			pad_button(JOY_BUTTON_Y, false)
 			check(not deck.seated, "remapped gamepad action stands up")
