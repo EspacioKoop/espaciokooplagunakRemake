@@ -137,7 +137,7 @@ func run_host(port: int) -> void:
 	hidden.known = false
 	hidden.position = [2000.0, 2000.0]
 	session.sim.state.contacts.append(hidden)
-	expect(session.order("destruct_arm", {"confirmation": "ITSASO"}).ok, "private codes fixture armed")
+	expect(not session.order("destruct_arm", {"confirmation": "ITSASO"}).ok, "captain cannot initiate engineering-only action")
 	mark("host.ready")
 	var checked_unauthenticated = false
 	var checked_navigation = false
@@ -193,6 +193,9 @@ func join_as(port: int, role: String) -> bool:
 
 func run_victim(port: int) -> void:
 	if not await join_as(port, "ingenieria"): return
+	# Initialize private codes through the station that owns this operation.
+	session.order("destruct_arm", {"confirmation": "ITSASO"})
+	if not expect(await wait_for(func(): return session.view.operations.destruct.armed), "engineering arms private-code fixture"): return
 	var own_id = str(session.multiplayer.get_unique_id())
 	session.order("assist_begin", {"recipient": "navegacion", "mode": "precision"})
 	if not expect(await wait_for(func(): return session.view.cooperation.tasks.has(own_id)), "victim receives own private task"): return
