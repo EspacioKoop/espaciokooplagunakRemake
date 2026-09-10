@@ -19,10 +19,15 @@ func signature(instance: Node) -> String:
 	var parts: Array[String] = []
 	for node: Node in instance.find_children("*", "Node3D", true, false):
 		parts.append(str((node as Node3D).transform))
-		if node is Skeleton3D:
-			var skeleton: Skeleton3D = node as Skeleton3D
-			for index: int in range(skeleton.get_bone_count()):
-				parts.append(str(skeleton.get_bone_pose(index)))
+	# Inspect skeletons explicitly; their animation is stored in bone properties,
+	# not in the Node3D transform of the imported rig node.
+	for node: Node in instance.find_children("*", "Skeleton3D", true, false):
+		var skeleton: Skeleton3D = node as Skeleton3D
+		skeleton.force_update_all_bone_transforms()
+		for index: int in range(skeleton.get_bone_count()):
+			parts.append(str(skeleton.get_bone_pose_rotation(index)))
+			parts.append(str(skeleton.get_bone_pose_position(index)))
+			parts.append(str(skeleton.get_bone_global_pose(index)))
 	return "|".join(parts)
 
 
@@ -58,25 +63,33 @@ func _run() -> void:
 		if not expected.is_empty():
 			check(not players.is_empty(), identifier + " imports AnimationPlayer")
 			var names: Array[String] = []
-			var changed: bool = false
 			for player_node: Node in players:
 				var player: AnimationPlayer = player_node as AnimationPlayer
+				player.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+				player.active = true
 				for animation_name: StringName in player.get_animation_list():
 					if animation_name == &"RESET":
 						continue
 					names.append(str(animation_name))
 					var animation: Animation = player.get_animation(animation_name)
 					check(animation.length > 0 and animation.get_track_count() > 0, identifier + " nonempty clip " + str(animation_name))
+					player.stop()
 					player.play(animation_name)
-					player.seek(0.0, true)
 					player.advance(0.0)
+					# Skeleton updates are deferred; allow one frame before observing
+					# the pose, while manual mode keeps animation time deterministic.
+					await process_frame
 					var before: String = signature(instance)
-					player.seek(minf(animation.length * 0.31, 0.63), true)
-					player.advance(0.0)
-					changed = changed or before != signature(instance)
+					player.advance(minf(animation.length * 0.31, 0.63))
+					await process_frame
+					var after: String = signature(instance)
+					check(before != after, identifier + " clip moves imported scene: " + str(animation_name))
+					if before == after:
+						for track_index: int in range(animation.get_track_count()):
+							if animation.track_get_key_count(track_index) > 1:
+								print("ANIMATION_DIAGNOSTIC ", identifier, " ", animation_name, " ", animation.track_get_path(track_index), " keys=", animation.track_get_key_count(track_index))
 					player.stop()
 			check(names.size() >= expected.size(), identifier + " preserves animation clip count")
-			check(changed, identifier + " animation changes transforms or bone poses")
 		if int(entry.get("skins", 0)) > 0:
 			var skeletons: Array[Node] = instance.find_children("*", "Skeleton3D", true, false)
 			check(not skeletons.is_empty(), identifier + " imports skeleton")
@@ -85,7 +98,6 @@ func _run() -> void:
 		root.remove_child(instance)
 		instance.free()
 		await process_frame
-	# Explicit types also keep the test independent of resource type inference.
 	var gallery_scene: PackedScene = load("res://asset_lab/frontier_pack/showcase.tscn") as PackedScene
 	check(gallery_scene != null, "Gallery scene parses")
 	if gallery_scene != null:

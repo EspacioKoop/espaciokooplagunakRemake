@@ -1,13 +1,13 @@
 extends Node3D
 ## Asset inspection only: no Session access, network changes or campaign registration.
 
-const MANIFEST_PATH := "res://assets/models/frontier_pack/manifest.json"
-const RESOURCE_PREFIX := "res://assets/models/frontier_pack/"
+const MANIFEST_PATH: String = "res://assets/models/frontier_pack/manifest.json"
+const RESOURCE_PREFIX: String = "res://assets/models/frontier_pack/"
 var entries: Array[Dictionary] = []
 var selected_index: int = 0
 var display_root: Node3D
 var model: Node3D
-var camera: Camera3D
+var orbit_camera: Camera3D
 var picker: ItemList
 var details: Label
 var animation_picker: OptionButton
@@ -52,7 +52,7 @@ func _read_catalogue() -> bool:
 	if not source is Array or source.size() != 24:
 		details.text = "El catálogo debe contener los 24 recursos de esta edición."
 		return false
-	var id_pattern := RegEx.new()
+	var id_pattern: RegEx = RegEx.new()
 	id_pattern.compile("^[a-z][a-z0-9_]{1,63}$")
 	for value: Variant in source:
 		if not value is Dictionary:
@@ -67,8 +67,8 @@ func _read_catalogue() -> bool:
 
 
 func _build_stage() -> void:
-	var world := WorldEnvironment.new()
-	var environment := Environment.new()
+	var world: WorldEnvironment = WorldEnvironment.new()
+	var environment: Environment = Environment.new()
 	environment.background_mode = Environment.BG_COLOR
 	environment.background_color = Color("0b1620")
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
@@ -77,12 +77,12 @@ func _build_stage() -> void:
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	world.environment = environment
 	add_child(world)
-	var key := DirectionalLight3D.new()
+	var key: DirectionalLight3D = DirectionalLight3D.new()
 	key.rotation_degrees = Vector3(-38, -30, 0)
 	key.light_color = Color("ffe8ca")
 	key.light_energy = 1.8
 	add_child(key)
-	var rim := DirectionalLight3D.new()
+	var rim: DirectionalLight3D = DirectionalLight3D.new()
 	rim.rotation_degrees = Vector3(-20, 140, 0)
 	rim.light_color = Color("63ddcf")
 	rim.light_energy = 1.1
@@ -90,33 +90,33 @@ func _build_stage() -> void:
 	display_root = Node3D.new()
 	display_root.name = "DisplayRoot"
 	add_child(display_root)
-	camera = Camera3D.new()
-	camera.fov = 39
-	camera.near = 0.01
-	camera.far = 100
-	camera.h_offset = -0.55
-	add_child(camera)
-	camera.make_current()
+	orbit_camera = Camera3D.new()
+	orbit_camera.fov = 39
+	orbit_camera.near = 0.01
+	orbit_camera.far = 100
+	orbit_camera.h_offset = -0.55
+	add_child(orbit_camera)
+	orbit_camera.make_current()
 
 
 func _build_interface() -> void:
-	var canvas := CanvasLayer.new()
+	var canvas: CanvasLayer = CanvasLayer.new()
 	add_child(canvas)
-	var top := Label.new()
+	var top: Label = Label.new()
 	top.text = "FRONTERA  /  VOLUMEN 01"
 	top.position = Vector2(24, 20)
 	top.add_theme_font_size_override("font_size", 28)
 	canvas.add_child(top)
-	var subtitle := Label.new()
+	var subtitle: Label = Label.new()
 	subtitle.text = "Biblioteca 3D de desarrollo · no modifica la campaña"
 	subtitle.position = Vector2(26, 60)
 	subtitle.add_theme_color_override("font_color", Color("83b8b2"))
 	canvas.add_child(subtitle)
-	var panel := PanelContainer.new()
+	var panel: PanelContainer = PanelContainer.new()
 	panel.position = Vector2(20, 100)
 	panel.size = Vector2(320, 590)
 	canvas.add_child(panel)
-	var column := VBoxContainer.new()
+	var column: VBoxContainer = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 10)
 	panel.add_child(column)
 	picker = ItemList.new()
@@ -133,27 +133,27 @@ func _build_interface() -> void:
 	animation_picker = OptionButton.new()
 	animation_picker.item_selected.connect(_choose_animation)
 	column.add_child(animation_picker)
-	var buttons := HBoxContainer.new()
+	var buttons: HBoxContainer = HBoxContainer.new()
 	column.add_child(buttons)
-	var rotate_button := Button.new()
+	var rotate_button: Button = Button.new()
 	rotate_button.text = "Giro"
 	rotate_button.toggle_mode = true
 	rotate_button.toggled.connect(func(enabled: bool) -> void: turntable = enabled)
 	buttons.add_child(rotate_button)
-	var play_button := Button.new()
+	var play_button: Button = Button.new()
 	play_button.text = "Animar"
 	play_button.toggle_mode = true
 	play_button.button_pressed = true
 	play_button.toggled.connect(_set_playing)
 	buttons.add_child(play_button)
-	var reset_button := Button.new()
+	var reset_button: Button = Button.new()
 	reset_button.text = "Centrar"
 	reset_button.pressed.connect(func() -> void:
 		yaw = 0.6
 		pitch = 0.32
 		distance = 6.2)
 	buttons.add_child(reset_button)
-	var help := Label.new()
+	var help: Label = Label.new()
 	help.text = "Arrastrar: orbitar  ·  Rueda: zoom  ·  Flechas: modelo  ·  Espacio: giro  ·  C: clip  ·  Esc: salir\nVista normalizada para comparar siluetas. Las medidas reales se muestran en la ficha."
 	help.position = Vector2(24, 716)
 	help.add_theme_font_size_override("font_size", 14)
@@ -174,23 +174,23 @@ func _select_asset(index: int) -> void:
 		display_root.remove_child(model)
 		model.queue_free()
 	var entry: Dictionary = entries[index]
-	var scene := load(str(entry["glb"])) as PackedScene
-	if scene == null:
+	var packed_model: PackedScene = load(str(entry["glb"])) as PackedScene
+	if packed_model == null:
 		details.text = "No se ha podido importar " + str(entry["id"])
 		return
-	model = scene.instantiate() as Node3D
+	model = packed_model.instantiate() as Node3D
 	if model == null:
 		details.text = "La raíz del modelo no es Node3D."
 		return
 	display_root.scale = Vector3.ONE
 	display_root.rotation = Vector3.ZERO
 	display_root.add_child(model)
-	var merged := AABB()
+	var merged: AABB = AABB()
 	var first: bool = true
 	var inverse: Transform3D = model.global_transform.affine_inverse()
 	for child: Node in model.find_children("*", "MeshInstance3D", true, false):
-		var instance := child as MeshInstance3D
-		var transformed: AABB = (inverse * instance.global_transform) * instance.get_aabb()
+		var mesh_instance: MeshInstance3D = child as MeshInstance3D
+		var transformed: AABB = (inverse * mesh_instance.global_transform) * mesh_instance.get_aabb()
 		if first:
 			merged = transformed
 			first = false
@@ -243,8 +243,8 @@ func _set_playing(enabled: bool) -> void:
 func _process(delta: float) -> void:
 	if turntable:
 		yaw += delta * 0.25
-	camera.position = Vector3(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch)) * distance
-	camera.look_at(Vector3.ZERO)
+	orbit_camera.position = Vector3(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch)) * distance
+	orbit_camera.look_at(Vector3.ZERO)
 	if animation_player != null and playing and current_animation != &"" and not animation_player.is_playing():
 		animation_player.play(current_animation)
 	frame_count += 1
@@ -272,9 +272,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_ESCAPE:
 				get_tree().quit()
 			KEY_LEFT:
-				_select_asset(posmod(selected_index - 1, entries.size()))
+				if not entries.is_empty():
+					_select_asset(posmod(selected_index - 1, entries.size()))
 			KEY_RIGHT:
-				_select_asset(posmod(selected_index + 1, entries.size()))
+				if not entries.is_empty():
+					_select_asset(posmod(selected_index + 1, entries.size()))
 			KEY_SPACE:
 				turntable = not turntable
 			KEY_C:

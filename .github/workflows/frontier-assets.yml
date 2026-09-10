@@ -20,6 +20,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: frontier-assets-${{ github.ref }}
@@ -41,6 +42,28 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y libegl1 libgl1 libxi6 libxrender1 libxfixes3 libxxf86vm1 libxkbcommon0 libsm6 libice6 fonts-dejavu-core xvfb libgl1-mesa-dri
           python -m pip install --disable-pip-version-check bpy==4.5.3 Pillow==11.3.0
+      - name: Recover already-generated assets during initial branch preparation
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/41-frontier-assets' && hashFiles('game/assets/models/frontier_pack/preparation.sha256') == ''
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: frontier-assets-and-evidence
+          run-id: 34536993528
+          github-token: ${{ github.token }}
+          path: .frontier-recovery
+      - name: Reuse only matching generated geometry, never cached source code
+        run: |
+          set -euo pipefail
+          cache=.frontier-recovery
+          models=game/assets/models/frontier_pack
+          if [ -f "$cache/$models/preparation.sha256" ] && sha256sum --check --status "$cache/$models/generator.sha256" && sha256sum --check --status "$cache/$models/preparation.sha256"; then
+            mkdir -p art/blender/frontier_pack/sources "$models" docs/images/frontier_pack
+            cp -a "$cache/art/blender/frontier_pack/sources/." art/blender/frontier_pack/sources/
+            cp -a "$cache/$models/." "$models/"
+            cp -a "$cache/docs/images/frontier_pack/." docs/images/frontier_pack/
+            rm -f "$models/godot_validation.json" "$models/godot_import.log" "$models/tested_sources.sha256"
+          fi
+          rm -rf -- "$cache"
       - name: Generate or prepare changed sources
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -85,6 +108,14 @@ jobs:
             LICENSE
             !**/__pycache__/**
           retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && hashFiles('.toolchain/godot') != ''
+        with:
+          name: frontier-godot-toolchain
+          path: .toolchain/godot
+          include-hidden-files: true
+          retention-days: 3
           if-no-files-found: error
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
