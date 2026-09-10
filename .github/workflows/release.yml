@@ -42,6 +42,8 @@ jobs:
         run: .toolchain/godot --headless --path game --script ../tests/test_crew.gd -- --test
       - name: Verify tactical ground combat initiative cover weapons and AI
         run: .toolchain/godot --headless --path game --script ../tests/test_ground_combat.gd -- --test
+      - name: Verify faction fleet AI patrol escort intercept morale and convoy orders
+        run: .toolchain/godot --headless --path game --script ../tests/test_fleet_ai.gd -- --test
       - name: Exercise five actual network processes
         run: python3 tests/run_network.py
       - name: Verify actual HTTP boundary
