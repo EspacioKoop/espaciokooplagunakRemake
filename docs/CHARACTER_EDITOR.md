@@ -195,8 +195,9 @@ El runner crea directorios temporales separados para `XDG_DATA_HOME`,
 `XDG_CONFIG_HOME` y `XDG_CACHE_HOME`. **No ejecutar estas pruebas contra partidas
 reales**: los autoloads leen datos al arrancar y `profile_set` guarda incluso con
 `--test`. El test SceneTree además rechaza una ejecución sin `XDG_DATA_HOME`.
-El runner considera fallo los mensajes `SCRIPT ERROR`/`ERROR`, la ausencia de
-marcadores y salidas no cero; no basta que Godot termine con código cero.
+El runner normaliza ANSI/indentación y considera fallo los errores de motor,
+incluidos Unicode, los avisos inesperados, la ausencia de marcadores y salidas
+no cero; no basta que Godot termine con código cero.
 
 `tests/test_character_editor.gd` cubre límites, schema/JSON/UTF-8 negativos,
 privacidad, copias profundas, I/O real acotado, rutas protegidas, round-trip,
@@ -242,13 +243,13 @@ resultado del reinicio y logs; los fallos visuales conservan una captura diagnó
 
 Resultado observado en el candidato de este bloque:
 
-- **295** comprobaciones de documento/UI, **24** de Crew, **18** de Expedition y
+- **305** comprobaciones de documento/UI, **24** de Crew, **18** de Expedition y
   **22** de combate terrestre: cero fallos.
 - ENet real: anfitrión **9** y dos clientes autenticados **24 + 24**, cero fallos;
   ambos clientes aplican desde la UI real y el host conserva estado/persistencia.
 - Export Linux ejecutado por controles públicos, guardado y reinicio: correcto.
   SHA-256 del binario capturado:
-  `5d4193b5325b68980d3e120cc474f8afe0aa021800b6a77c124a8e5b6d306698`.
+  `b9cbdaea92d087dadb9c8c59043c70688a8cb353f3b49e1bfb92fa048ef08ee1`.
 - Export Windows generado; no se atribuye una prueba física Windows a esta pasada.
 - La exportación conserva un aviso Unicode de cosmografía ya presente en la base,
   cuyo archivo reservado no se modifica aquí. El runtime probado no emite errores
@@ -261,3 +262,24 @@ Los marcadores exigen comprobaciones positivas y cero fallos. Las rutas de parti
 y recursos se protegen también frente a variantes de mayúsculas para sistemas de
 archivos insensibles a capitalización. No se declara playtest humano ni paridad
 completa del proyecto por estas pruebas automatizadas.
+
+### Correcciones tras QA independiente
+
+El candidato inicial de #16 recibió dos P1: un escape `\u0000` llegaba al decoder
+de Godot y se sustituía por U+FFFD antes de validar; el runner admitía ese error
+Unicode y otros diagnósticos con ANSI/indentación. Se corrigen antes del decode
+y en el filtro del runner, respectivamente. La regresión cubre documento completo,
+archivo e importación UI: un NUL inválido conserva borrador/perfil; una barra
+invertida literal seguida de `u0000` y U+FFFD ya presente siguen siendo válidos.
+El bloqueo de identidad también permanece hasta cerrar si se vuelve al modo
+inicial después de haber observado otro modo/actor.
+
+El runner comprueba **10 controles sintéticos de subprocess**, identificados como
+pruebas del propio arnés, no del juego. Únicas excepciones de diagnósticos: el
+texto exacto de V-Sync en la pasada gráfica y un único aviso NUL de cosmografía
+al importar, condicionado al SHA-256 de esa fuente preexistente. Los tests de
+documentos/red y el runtime no pueden usar la excepción de importación.
+
+La captura y hash anteriores corresponden al ejecutable corregido combinado con
+la integración `b622e8e5a1f62d4793241f43470259180f42219e`; no al binario inicial de
+#16. No se han modificado los archivos del resto de carriles al aplicar estos fixes.

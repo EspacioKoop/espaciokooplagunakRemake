@@ -25,6 +25,7 @@ var _submitted: Dictionary = {}
 var _staged_import: Dictionary = {}
 var _actor = ""
 var _mode = ""
+var _identity_changed = false
 var _pending_seconds = 0.0
 var _awaiting_snapshot = false
 var _loading = false
@@ -163,7 +164,11 @@ func _session_mode() -> String:
 	return str(session.mode) if session != null else "offline"
 
 func _same_actor() -> bool:
-	return is_instance_valid(expedition) and expedition.actor_id() == _actor and _session_mode() == _mode
+	if _identity_changed: return false
+	if not is_instance_valid(expedition) or expedition.actor_id() != _actor or _session_mode() != _mode:
+		_identity_changed = true
+		return false
+	return true
 
 func _own_profile() -> Dictionary:
 	if not _same_actor(): return {}

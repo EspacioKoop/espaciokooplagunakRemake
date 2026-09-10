@@ -9,6 +9,10 @@ Una aplicación nativa de exploración espacial cooperativa: navega con la Itsas
 
 ![Inicio del ejecutable de Linux](docs/images/01_inicio.png)
 
+## Descargas
+
+Los paquetes publicados, las notas y sus sumas SHA-256 están en [GitHub Releases](https://github.com/VaroTv7/espaciokooplagunakRemake/releases). La **0.9** es standalone; la paridad completa se sigue en [el plan de 1.0](https://github.com/VaroTv7/espaciokooplagunakRemake/issues/1).
+
 ## Estado y ejecución
 
 El trabajo recuperado y las ampliaciones de nave, puestos, asistencia, espacios recorribles y mesas de ocio están conservados en este repositorio. La paridad completa con

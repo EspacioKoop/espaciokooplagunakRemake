@@ -25,6 +25,7 @@ def main():
             port = reserve.getsockname()[1]
         run_network(temporary, port, ["host", "player", "spectator", "intruder"])
         run_network(temporary, port, ["legacy_host", "legacy_client"])
+        run_network(temporary, port, ["retired_host", "closing_client", "live_client"])
 
 
 def run_network(temporary, port, cases):
@@ -37,7 +38,7 @@ def run_network(temporary, port, cases):
             command = [GODOT, "--headless", "--path", str(ROOT / "game"), "--script", str(ROOT / "tests/test_avatar_network.gd"), "--", "--test", "--case", name, "--port", str(port)]
             process = subprocess.Popen(command, env=environment, stdout=stream, stderr=subprocess.STDOUT)
             processes.append((name, process, stream, path))
-            if name in ["host", "legacy_host"]:
+            if name in ["host", "legacy_host", "retired_host"]:
                 deadline = time.monotonic() + 10
                 while "AVATAR_NETWORK_READY" not in path.read_text() and time.monotonic() < deadline:
                     if process.poll() is not None:
