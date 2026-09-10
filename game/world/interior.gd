@@ -340,6 +340,8 @@ func _update_avatars(session: Node) -> void:
 			var avatar = SpaceView.model("crew")
 			world.add_child(avatar)
 			_avatars[id] = avatar
+			var avatars = get_tree().root.get_node_or_null("Avatars")
+			if avatars != null: avatars.bind_avatar(avatar, id)
 		var pose: Dictionary = session.poses[key]
 		_avatars[id].position = Vector3(pose.position[0], pose.position[1], pose.position[2])
 		_avatars[id].rotation.y = float(pose.yaw)
