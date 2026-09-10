@@ -206,16 +206,19 @@ func _status() -> void:
 
 func report() -> Array:
 	var session = _session()
-	if session == null or session.view.is_empty(): return []
+	if session == null: return []
+	var sources: Array = session.view.get("contacts", [])
+	if session.mode != "client" and not session.sim.state.is_empty(): sources = session.sim.state.contacts
 	var rows: Array = []
-	for visible in session.view.contacts:
-		var source = session.sim.contact(str(visible.id)) if session.mode != "client" else visible
-		if source.kind not in ["friendly", "hostile"]: continue
-		rows.append({"id":source.id, "name":source.name, "kind":source.kind, "faction":source.get("faction", "desconocida"), "order":source.get("ai_order", "patrol"), "fleet":source.get("fleet_id", ""), "morale":source.get("morale", 100.0), "hull":source.hull})
+	for source in sources:
+		if not source is Dictionary or source.is_empty(): continue
+		if source.get("kind", "") not in ["friendly", "hostile"]: continue
+		if not bool(source.get("identified", false)): continue
+		rows.append({"id":source.get("id", ""), "name":source.get("name", "Contacto"), "kind":source.get("kind", "unknown"), "faction":source.get("faction", "desconocida"), "order":source.get("ai_order", "patrol"), "fleet":source.get("fleet_id", ""), "morale":source.get("morale", 100.0), "hull":source.get("hull", 100.0)})
 	return rows
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if not event is InputEventKey or not event.pressed or event.echo or event.keycode != KEY_F7: return
+	if not event is InputEventKey or not event.pressed or event.echo or event.keycode != KEY_F5: return
 	if _window != null and is_instance_valid(_window):
 		_window.queue_free()
 		_window = null
