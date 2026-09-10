@@ -225,6 +225,11 @@ class StrictJSON:
 				index += 2
 				continue
 			var code = token.substr(index + 2, 4).hex_to_int()
+			# Godot replaces escaped NUL with U+FFFD before domain validation.
+			# Reject before decoding; literal backslash-u0000 remains ordinary text.
+			if code == 0:
+				problem = "La plantilla no admite escapes Unicode NUL."
+				return ""
 			if code >= 0xd800 and code <= 0xdbff:
 				if index + 12 > token.length() - 1 or token.substr(index + 6, 2) != "\\u":
 					problem = "Escape Unicode sin pareja de sustitución válida."

@@ -13,7 +13,31 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 GODOT = os.environ.get("GODOT", str(ROOT / ".toolchain/godot"))
-ERRORS = re.compile(r"^(?:SCRIPT ERROR|ERROR):", re.MULTILINE)
+ANSI = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
+DIAGNOSTIC = re.compile(r"^(?:SCRIPT ERROR:|ERROR:|Parse Error:|Unicode parsing error|WARNING:)", re.I)
+COSMOGRAPHY_WARNING = "Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character"
+COSMOGRAPHY_BASE_SHA256 = "5d47e74bcab86b2f4ab5579d8e7754b61066c640958e2e383d9fdeb8abb9236a"
+VSYNC_WARNING = "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver."
+
+
+def engine_errors(text, *, import_phase=False, graphics=False):
+    """Normalize engine diagnostics; exceptions are exact and phase-scoped."""
+    import hashlib
+    errors = []
+    allowed_import = 0
+    for raw in ANSI.sub("", text).splitlines():
+        line = raw.strip()
+        if not DIAGNOSTIC.match(line):
+            continue
+        if graphics and line == VSYNC_WARNING:
+            continue
+        if import_phase and line == COSMOGRAPHY_WARNING and allowed_import == 0:
+            source = ROOT / "game/core/cosmography_catalog.gd"
+            if hashlib.sha256(source.read_bytes()).hexdigest() == COSMOGRAPHY_BASE_SHA256:
+                allowed_import += 1
+                continue
+        errors.append(line)
+    return errors
 
 
 def isolated_env(directory):
@@ -31,7 +55,9 @@ def godot_command(script):
             "--script", str(ROOT / "tests" / script), "--", "--test"]
 
 
-def checked_run(command, environment, marker=None):
+def checked_run(command, environment, marker=None, *, import_phase=False, graphics=False):
+    if import_phase and "--editor" not in command:
+        raise ValueError("Only editor import may allow the pinned cosmography diagnostic")
     try:
         result = subprocess.run(command, env=environment, cwd=ROOT, text=True,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=90)
@@ -40,8 +66,41 @@ def checked_run(command, environment, marker=None):
         print(output.decode(errors="replace") if isinstance(output, bytes) else output, flush=True)
         raise
     print(result.stdout, flush=True)
-    if result.returncode or ERRORS.search(result.stdout) or (marker and not re.search(marker, result.stdout)):
+    if result.returncode or engine_errors(result.stdout, import_phase=import_phase, graphics=graphics) or (marker and not re.search(marker, ANSI.sub("", result.stdout))):
         raise RuntimeError(f"Character gate failed: {command}")
+
+
+def verify_runner_contract():
+    """Explicit synthetic subprocess fixtures test the gate, not gameplay."""
+    import contextlib
+    import io
+    import sys
+    marker = r"CHARACTER_FIXTURE [1-9]\d*"
+    cases = [
+        ("CHARACTER_FIXTURE 1", 0, False, True),
+        ("CHARACTER_FIXTURE 0", 0, False, False),
+        ("missing marker", 0, False, False),
+        ("CHARACTER_FIXTURE 1", 1, False, False),
+        ("ERROR: fixture\nCHARACTER_FIXTURE 1", 0, False, False),
+        ("  \x1b[31mSCRIPT ERROR:\x1b[0m fixture\nCHARACTER_FIXTURE 1", 0, False, False),
+        (COSMOGRAPHY_WARNING + "\nCHARACTER_FIXTURE 1", 0, False, False),
+        ("WARNING: unrecognized fixture\nCHARACTER_FIXTURE 1", 0, False, False),
+        (VSYNC_WARNING + "\nCHARACTER_FIXTURE 1", 0, False, False),
+        (VSYNC_WARNING + "\nCHARACTER_FIXTURE 1", 0, True, True),
+    ]
+    for text, code, graphics, expected in cases:
+        fixture = [sys.executable, "-c", f"import sys; print({text!r}); sys.exit({code})"]
+        accepted = True
+        with contextlib.redirect_stdout(io.StringIO()):
+            try:
+                checked_run(fixture, os.environ.copy(), marker, graphics=graphics)
+            except RuntimeError:
+                accepted = False
+        if accepted != expected:
+            raise RuntimeError("Synthetic runner diagnostic fixture failed")
+    if not engine_errors(COSMOGRAPHY_WARNING + "\n" + COSMOGRAPHY_WARNING, import_phase=True):
+        raise RuntimeError("The pinned import exception must never allow repeated errors")
+    print(f"CHARACTER_RUNNER_CONTRACT_OK {len(cases)} synthetic subprocess controls", flush=True)
 
 
 def network(directory):
@@ -64,7 +123,7 @@ def network(directory):
                     text = path.read_text(encoding="utf-8")
                     if "CHARACTER_HOST_READY" in text:
                         break
-                    if process.poll() is not None or ERRORS.search(text):
+                    if process.poll() is not None or engine_errors(text):
                         raise RuntimeError(text)
                     time.sleep(.05)
                 else:
@@ -75,7 +134,7 @@ def network(directory):
             stream.close()
             output = path.read_text(encoding="utf-8")
             print(output, flush=True)
-            if code or ERRORS.search(output) or not re.search(
+            if code or engine_errors(output) or not re.search(
                     rf"CHARACTER_NETWORK_RESULT {name} checks=[1-9]\d* failures=0", output):
                 failed.append(name)
         if failed:
@@ -197,7 +256,7 @@ def capture_export(directory, output, binary, env):
                             game.wait(timeout=5)
             text = log_path.read_text()
             print(text, flush=True)
-            if ERRORS.search(text):
+            if engine_errors(text, graphics=True):
                 raise RuntimeError("Runtime errors in release export")
             logs.append(text)
         evidence = {"binary_sha256": hashlib.sha256(executable.read_bytes()).hexdigest(),
@@ -251,7 +310,7 @@ def capture(directory, output, binary=None):
             command = [GODOT, "--path", str(ROOT / "game"), "--resolution", "1600x900",
                        "--audio-driver", "Dummy", "--script", str(ROOT / "tests/test_character_editor.gd"),
                        "--", "--test", "--capture-to", str(output)]
-            checked_run(command, env, r"CHARACTER_EDITOR_CAPTURE_OK")
+            checked_run(command, env, r"CHARACTER_EDITOR_CAPTURE_OK", graphics=True)
         data = output.read_bytes()
         if data[:8] != b"\x89PNG\r\n\x1a\n" or struct.unpack(">II", data[16:24]) != (1600, 900):
             raise RuntimeError("Invalid character editor screenshot")
@@ -277,13 +336,14 @@ def main():
         parser.error("--capture-only requires --capture-to")
     if args.binary and not args.capture_to:
         parser.error("--binary requires --capture-to")
+    verify_runner_contract()
     with tempfile.TemporaryDirectory(prefix="lagunak-character-") as temporary:
         directory = Path(temporary)
         if args.capture_only:
             capture(directory, args.capture_to, args.binary)
             return
         checked_run([GODOT, "--headless", "--editor", "--path", str(ROOT / "game"), "--quit"],
-                    isolated_env(directory / "import"))
+                    isolated_env(directory / "import"), import_phase=True)
         for script, marker in (
             ("test_character_editor.gd", r"CHARACTER_EDITOR_TESTS [1-9]\d* checks; 0 failures"),
             ("test_crew.gd", r"CREW_TESTS [1-9]\d* checks; 0 failures"),

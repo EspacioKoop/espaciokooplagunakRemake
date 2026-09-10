@@ -115,6 +115,11 @@ func _schema_tests() -> void:
 		var unpaired = JSON.stringify(doc).replace("Ane Itsaso", escape)
 		check(not CharacterDocument.parse_text(unpaired).ok, "unpaired Unicode surrogate rejected without decoder errors")
 	check(CharacterDocument.parse_text(JSON.stringify(doc).replace("Ane Itsaso", "Ane \\ud83d\\ude80")).ok, "paired Unicode escape accepted")
+	for name in ["\\u0000Ane", "Ane\\u0000", "Ane\\u0000Itsaso"]:
+		var nul = JSON.stringify(doc).replace("Ane Itsaso", name)
+		check(not CharacterDocument.parse_text(nul).ok, "escaped NUL rejected before lossy Godot decoding")
+	for name in ["Ane�Itsaso", "Ane\\\\u0000Itsaso", "Ane\\u005cu0000Itsaso"]:
+		check(CharacterDocument.parse_text(JSON.stringify(doc).replace("Ane Itsaso", name)).ok, "replacement character and literal backslash-u0000 are legitimate text")
 	var padded = JSON.stringify(doc)
 	padded += " ".repeat(CharacterDocument.MAX_BYTES - padded.to_utf8_buffer().size())
 	check(CharacterDocument.parse_text(padded).ok, "exactly 32 KiB valid JSON accepted")
@@ -232,6 +237,11 @@ func _ui_tests() -> void:
 	bad.character.xp = 999
 	check(not editor.import_document(bad) and editor.read_document() == draft, "failed schema import never changes draft")
 	check(not editor.import_file("user://oversized-character.json") and editor.read_document() == draft, "failed disk import never changes draft")
+	var nul_path = "user://nul-character.json"
+	_write(nul_path, JSON.stringify(CharacterDocument.document(sample())).replace("Ane Itsaso", "Ane\\u0000Itsaso"))
+	check(not CharacterDocument.load_file(nul_path).ok, "NUL disk document fails before decoder")
+	check(not editor.import_file(nul_path) and editor.read_document() == draft, "NUL UI import preserves dirty draft")
+	check(crew.profile() == before and not editor.import_dialog.visible, "NUL import never mutates live profile or offers confirmation")
 	var imported = CharacterDocument.document(sample())
 	check(editor.import_document(imported) and editor.import_dialog.visible and editor.read_document() == draft, "valid import requires confirmation over dirty draft")
 	editor.import_dialog.get_cancel_button().pressed.emit()
@@ -347,6 +357,9 @@ func _pending_tests() -> void:
 	editor.apply_changes()
 	check(fake.calls == 2, "changed identity cannot dispatch another command")
 	session.mode = "offline"
+	editor._process(0.0)
+	editor.apply_changes()
+	check(editor.apply_button.disabled and fake.calls == 2, "returning to original mode cannot bypass latched identity guard")
 	editor.queue_free()
 	fake.queue_free()
 	await settle()
