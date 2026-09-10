@@ -273,9 +273,11 @@ func _physical_field(value: float, key: String) -> void:
 func _open_ship_design() -> void:
 	var editor = ShipDesignEditor.new()
 	editor.design = mission.get("ship_design", ShipModel.standard_design()).duplicate(true)
-	editor.design_changed.connect(func(value):
+	editor.loadout = mission.get("ship_loadout", LoadoutDocument.default_loadout()).duplicate(true)
+	editor.configuration_changed.connect(func(value, loadout):
 		_checkpoint()
 		mission.ship_design = value
+		mission.ship_loadout = loadout
 		_refresh())
 	add_child(editor)
 	editor.popup_centered()
