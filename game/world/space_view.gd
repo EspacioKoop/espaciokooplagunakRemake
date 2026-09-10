@@ -99,6 +99,17 @@ func _ready() -> void:
 	world.add_child(_beam)
 	gui_input.connect(_orbit_input)
 	_update_camera()
+	var avatars = get_node_or_null("/root/Avatars")
+	if avatars != null:
+		var button = ConsoleUI.button("Mi avatar", avatars.open_editor)
+		button.name = "AvatarButton"
+		button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		button.offset_left = -164
+		button.offset_right = -16
+		button.offset_top = 16
+		button.offset_bottom = 60
+		button.tooltip_text = "Traje, visor y equipo · Alt+A"
+		add_child(button)
 
 func _stars() -> void:
 	var instance = MultiMeshInstance3D.new()
