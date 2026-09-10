@@ -29,6 +29,7 @@ var _copy_button: Button
 var _remove_button: Button
 var _up_button: Button
 var _down_button: Button
+var _comparison_window: LoadoutComparisonWindow
 
 func _ready() -> void:
  add_theme_constant_override("separation", 18)
@@ -60,6 +61,7 @@ func _ready() -> void:
   templates.set_item_metadata(templates.item_count - 1, id)
  left.add_child(templates)
  left.add_child(ConsoleUI.button("Reemplazar por plantilla", _use_template))
+ left.add_child(ConsoleUI.button("Comparar montajes…", _open_comparison))
  left.add_child(ConsoleUI.paragraph("Entre 1 y 8 montajes independientes. Cancelar el astillero descarta todos sus cambios.", 13))
  var right = ConsoleUI.column(self, 8)
  ConsoleUI.expand(right)
@@ -117,6 +119,16 @@ func read_loadout() -> Dictionary:
  # Commit a value typed into a SpinBox even if the user clicks Apply directly.
  _flush_pending()
  return loadout.duplicate(true)
+
+func _open_comparison() -> void:
+ if is_instance_valid(_comparison_window) and not _comparison_window.is_queued_for_deletion():
+  _comparison_window.grab_focus()
+  return
+ _comparison_window = LoadoutComparisonWindow.new()
+ _comparison_window.configure(read_loadout())
+ _comparison_window.theme = ConsoleUI.make_theme()
+ add_child(_comparison_window)
+ _comparison_window.popup_centered_clamped(Vector2i(800, 640))
 
 func _flush_pending() -> void:
  # Godot redraws numeric text later; applying untouched controls can read stale

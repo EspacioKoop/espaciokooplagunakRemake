@@ -33,6 +33,7 @@ func _ready() -> void:
  tools_row.add_child(ConsoleUI.button("Diseño Itsaso", _reset_design))
  tools_row.add_child(ConsoleUI.button("Importar nave", func(): _choose_file(false)))
  tools_row.add_child(ConsoleUI.button("Exportar nave", func(): _choose_file(true)))
+ tools_row.add_child(ConsoleUI.button("Comparar estructura", _compare_structure))
  var templates_row = ConsoleUI.row(root)
  template_picker = OptionButton.new()
  template_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -140,6 +141,15 @@ func read_design() -> Dictionary:
  for ammo in ShipOperations.AMMO:
   value.ammo[ammo] = int(fields["ammo_" + ammo].value)
  return value
+
+func _compare_structure() -> void:
+ var value = read_design()
+ status.text = ShipModel.validate_design(value)
+ if not status.text.is_empty(): return
+ var comparison = ShipComparisonDialog.new()
+ comparison.source_design = value.duplicate(true)
+ add_child(comparison)
+ comparison.popup_centered()
 
 func _apply_design() -> void:
  var value = read_design()
