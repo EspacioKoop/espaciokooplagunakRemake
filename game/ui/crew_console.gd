@@ -72,13 +72,13 @@ func _rebuild() -> void:
 		if result.get("advantage", false): left.add_child(ConsoleUI.label("Ventaja aplicada", 13, ConsoleUI.AMBER))
 	var traits = ConsoleUI.card(left, "RASGOS")
 	if profile.traits.is_empty(): traits.add_child(ConsoleUI.label("Sin rasgos adquiridos", 14, ConsoleUI.MUTED))
-	for trait in profile.traits:
-		traits.add_child(ConsoleUI.label(CrewSystem.TRAITS[trait].name, 15, ConsoleUI.TEAL))
+	for trait_id in profile.traits:
+		traits.add_child(ConsoleUI.label(CrewSystem.TRAITS[trait_id].name, 15, ConsoleUI.TEAL))
 	var trait_row = ConsoleUI.row(traits)
 	var trait_menu = OptionButton.new()
-	for trait in CrewSystem.TRAITS:
-		trait_menu.add_item(CrewSystem.TRAITS[trait].name)
-		trait_menu.set_item_metadata(trait_menu.item_count - 1, trait)
+	for trait_id in CrewSystem.TRAITS:
+		trait_menu.add_item(CrewSystem.TRAITS[trait_id].name)
+		trait_menu.set_item_metadata(trait_menu.item_count - 1, trait_id)
 	trait_row.add_child(trait_menu)
 	trait_row.add_child(ConsoleUI.button("Adquirir", func(): crew.command("trait_add", {"trait": trait_menu.get_item_metadata(trait_menu.selected)})))
 	var right = ConsoleUI.card(content, "CAPACIDADES")
