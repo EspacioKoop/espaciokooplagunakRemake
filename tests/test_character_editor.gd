@@ -134,7 +134,7 @@ func _file_tests() -> void:
 	check(FileAccess.get_file_as_bytes(path) == original, "failed export preserves previous bytes")
 	fields.name = "Reemplazo"
 	check(CharacterDocument.save_file(path, fields).ok and CharacterDocument.load_file(path).document.character.name == "Reemplazo", "atomic replacement of an existing valid export")
-	for forbidden in ["res://forbidden.json", ProjectSettings.globalize_path("res://forbidden.json"), "relative.json", "https://example.invalid/a.json", "user://missing-parent/template.json", "user://campaign.json", "user://campaign.json.bak", "user://campaign.json.bak.json", ExpeditionSystems.PATH, ExpeditionSystems.PATH + ".bak.json"]:
+	for forbidden in ["res://forbidden.json", ProjectSettings.globalize_path("res://forbidden.json"), "relative.json", "https://example.invalid/a.json", "user://missing-parent/template.json", "user://campaign.json", "user://CAMPAIGN.JSON", "user://Expedition-Systems.JSON", "user://Campaign.Json.BAK.JSON", "user://campaign.json.bak", "user://campaign.json.bak.json", ExpeditionSystems.PATH, ExpeditionSystems.PATH + ".bak.json"]:
 		check(not CharacterDocument.save_file(forbidden, fields).ok, "reject unsafe export path " + forbidden)
 	var folder = "user://folder.json"
 	DirAccess.make_dir_absolute(ProjectSettings.globalize_path(folder))

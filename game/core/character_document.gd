@@ -127,7 +127,10 @@ static func _export_path(path: String) -> Dictionary:
 	var absolute = ProjectSettings.globalize_path(path).simplify_path()
 	if absolute.get_extension().to_lower() != "json": return _error("La plantilla debe tener extensión .json.")
 	var project = ProjectSettings.globalize_path("res://").simplify_path().trim_suffix("/")
-	if absolute == project or absolute.begins_with(project + "/"):
+	# Conservatively protect case aliases on every platform, including Windows.
+	var compared = absolute.to_lower()
+	project = project.to_lower()
+	if compared == project or compared.begins_with(project + "/"):
 		return _error("No se permite exportar dentro de los recursos del proyecto.")
 	# Disallow symbolic links in every component, including aliases into res://.
 	var cursor = absolute
@@ -140,8 +143,8 @@ static func _export_path(path: String) -> Dictionary:
 		return _error("La carpeta de destino no existe.")
 	if DirAccess.dir_exists_absolute(absolute): return _error("El destino es una carpeta, no un archivo.")
 	for protected in [ExpeditionSystems.PATH, "user://campaign.json"]:
-		var save_path = ProjectSettings.globalize_path(protected).simplify_path()
-		if absolute == save_path or absolute.begins_with(save_path + "."):
+		var save_path = ProjectSettings.globalize_path(protected).simplify_path().to_lower()
+		if compared == save_path or compared.begins_with(save_path + "."):
 			return _error("Una plantilla no puede sobrescribir partidas, temporales ni sus copias de seguridad.")
 	return {"ok": true, "path": absolute}
 
