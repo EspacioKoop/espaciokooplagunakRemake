@@ -1,0 +1,8 @@
+{
+  "assets": 24,
+  "checks": 293,
+  "failures": [],
+  "passed": true,
+  "scope": "Isolated Godot import, animations and real gallery. Not full campaign/network QA.",
+  "capture": true
+}

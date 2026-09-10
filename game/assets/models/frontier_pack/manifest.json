@@ -25,22 +25,23 @@
         15.0
       ],
       "sockets": [
-        "Engine",
-        "Engine.001",
-        "Cockpit",
-        "Dock",
-        "Forward"
+        "Socket_Engine",
+        "Socket_Engine_02",
+        "Socket_Cockpit",
+        "Socket_Dock",
+        "Socket_Forward"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "9193e19126e51852b6b99949bd901d283ff5a5e4728af5d64a826de6d067406f",
+      "source_sha256": "9a1cc45919dce1466b9ab683dd5146df59a3a2386cb07133db84d956d0f740ca",
       "triangles": 4396,
       "mesh_nodes": 1,
       "materials": 7,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 204624,
-      "sha256": "5885368cfcc5c98fe7e65e14f824822c4febc94c7838caf325b22da401d6857a"
+      "bytes": 204792,
+      "sha256": "034bedb521c28f151daa4d8e4f2aa9d49038dfed4a9c205536ef848a627b0255",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "basajaun_hauler",
@@ -59,28 +60,29 @@
         24.4495
       ],
       "sockets": [
-        "Cargo_mount",
-        "Cargo_mount.001",
-        "Cargo_mount.002",
-        "Engine",
-        "Cargo_mount.003",
-        "Cargo_mount.004",
-        "Cargo_mount.005",
-        "Engine.001",
-        "Dock",
-        "Cockpit",
-        "Forward"
+        "Socket_Cargo_mount",
+        "Socket_Cargo_mount_02",
+        "Socket_Cargo_mount_03",
+        "Socket_Engine",
+        "Socket_Cargo_mount_04",
+        "Socket_Cargo_mount_05",
+        "Socket_Cargo_mount_06",
+        "Socket_Engine_02",
+        "Socket_Dock",
+        "Socket_Cockpit",
+        "Socket_Forward"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "fb984acd90505223a99a38fd9eed7f73b07dad47a760c0d8d3c9e52195a68d6a",
+      "source_sha256": "88b3a19c0aa7cf8dcf033f851f7dd50273a3da18e61c5c6f5453a1198ac731e6",
       "triangles": 8664,
       "mesh_nodes": 1,
       "materials": 8,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 552892,
-      "sha256": "24cbce7f43d28c7abfefd6386025bda3da8cd69824c58bdd6daa2ca73a31bfbd"
+      "bytes": 553292,
+      "sha256": "47ba098f860e8b6c90e1b445dd91c432f56b6903ce8fb273756acb4634f86998",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "izar_science",
@@ -99,23 +101,24 @@
         18.878
       ],
       "sockets": [
-        "Engine",
-        "Engine.001",
-        "Science_array",
-        "Dock",
-        "Cockpit",
-        "Forward"
+        "Socket_Engine",
+        "Socket_Engine_02",
+        "Socket_Science_array",
+        "Socket_Dock",
+        "Socket_Cockpit",
+        "Socket_Forward"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "eb773f8ff55682fa90b0133a928093c0a6258b63f396a7d0b383e64a99c3acc0",
+      "source_sha256": "3be330f5805b6f1566403f09736c8d714bca04f8e1c56203300678eee2031543",
       "triangles": 7000,
       "mesh_nodes": 1,
       "materials": 8,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 314996,
-      "sha256": "822a82cc594fdaec202621b7374a1caef28b600d63af94160e56f75cf8eb19eb"
+      "bytes": 315208,
+      "sha256": "81a5f6a9038af4370ba9cb9157588f071b313f406e275cdd084046cad631ac4b",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "ekaitz_interceptor",
@@ -134,24 +137,25 @@
         16.0845
       ],
       "sockets": [
-        "Engine",
-        "Weapon_mount",
-        "Engine.001",
-        "Weapon_mount.001",
-        "Cockpit",
-        "Dock",
-        "Forward"
+        "Socket_Engine",
+        "Socket_Weapon_mount",
+        "Socket_Engine_02",
+        "Socket_Weapon_mount_02",
+        "Socket_Cockpit",
+        "Socket_Dock",
+        "Socket_Forward"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "05b60cacb34e4dcb1ad6392967c1cc899678d5e35a6633e3eb77616d1a4cc819",
+      "source_sha256": "6fa21df359efeecf44043a6343df1cf130b377ff0e2a2b0fa1358988651dedba",
       "triangles": 2856,
       "mesh_nodes": 1,
       "materials": 4,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 140152,
-      "sha256": "237ba5d6b841bfe533bc23cb94954eefa67435c533506424f00e0a367e2ef033"
+      "bytes": 140400,
+      "sha256": "7e6dcd4ff4d5a276c9d19a174006c5c931c849b6078bcbd340dfd9c61d8447c3",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "argi_sidearm",
@@ -170,20 +174,21 @@
         0.60217
       ],
       "sockets": [
-        "Grip.001",
-        "Muzzle",
-        "Sight_line"
+        "Socket_Grip",
+        "Socket_Muzzle",
+        "Socket_Sight_line"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "e67cb3161657e9cac237507139f606719c4e765a60b58ea5379a6f1616209b02",
+      "source_sha256": "ff077bbb5bce6d17652337b8460760231486018871ad417872a80095090d78dc",
       "triangles": 2164,
       "mesh_nodes": 1,
       "materials": 6,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 126716,
-      "sha256": "289a68ffe6bfb991b140614e19cbdcccbdf8ed502f771fe5889e78f84bce596b"
+      "bytes": 126816,
+      "sha256": "c64b6abaea48c9ad29523b429fdaabdd496055c87becd1767e1b929fd60c9f35",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "tximista_carbine",
@@ -202,21 +207,22 @@
         1.4805
       ],
       "sockets": [
-        "Offhand",
-        "Grip.001",
-        "Muzzle",
-        "Sight_line"
+        "Socket_Offhand",
+        "Socket_Grip",
+        "Socket_Muzzle",
+        "Socket_Sight_line"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "74df52ee07e12f8007c80298d45221c40a4f8d370da00e6cf1e64370bfa958aa",
+      "source_sha256": "493e7eec8d5e30abfb1dc16eaba300716c29d796ac84cb3d3c8a73cb150eae10",
       "triangles": 4408,
       "mesh_nodes": 1,
       "materials": 6,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 197248,
-      "sha256": "9e3600f49e44c20d7040c802f023bb66d5798365a9e6a9c8d68989cd78a236f4"
+      "bytes": 197380,
+      "sha256": "191c6f19ae618fb513f6c1a889dffaeaeb05a9f487d69e88f80a804f58a60c59",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "sugar_lance",
@@ -235,21 +241,22 @@
         1.3975
       ],
       "sockets": [
-        "Offhand",
-        "Grip.001",
-        "Muzzle",
-        "Sight_line"
+        "Socket_Offhand",
+        "Socket_Grip",
+        "Socket_Muzzle",
+        "Socket_Sight_line"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "a816f3d88ccb2baa142d63e9a6ef2908183881bdfecaa3410cf9f648295c3b07",
+      "source_sha256": "ad5e20bc3fa8ed795d14ea167cd99845d52393267fad0286418e1b53fab11aa3",
       "triangles": 2168,
       "mesh_nodes": 1,
       "materials": 6,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 149180,
-      "sha256": "4a36dd5a88831dd49511083d6c0ec23ba86967f67ec3d291992290ca848f3634"
+      "bytes": 149316,
+      "sha256": "b2318a773ac7ad9a6aa4c7a7bca0b0d575a8b6115fc7f60f540808ee7d67af2e",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "orbain_turret",
@@ -263,17 +270,17 @@
       "up": "+Y",
       "units": "metres",
       "dimensions_m": [
-        1.6983,
+        1.24,
         1.075,
-        1.82064
+        1.75
       ],
       "sockets": [
-        "Muzzle_L",
-        "Muzzle_R",
-        "Mount"
+        "Socket_Muzzle_L",
+        "Socket_Muzzle_R",
+        "Socket_Mount"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "a09195e60a9b5ecd40796e4b495f2c86e3e8b9a3f5f37cb8fbf8b0bad65a8c1e",
+      "source_sha256": "9b441499b14fdad6825d40c50be4468f28e0452ccf72e53ffbfe20fd6d469701",
       "triangles": 5056,
       "mesh_nodes": 2,
       "materials": 6,
@@ -282,8 +289,9 @@
       ],
       "skins": 0,
       "joints": 0,
-      "bytes": 152996,
-      "sha256": "2ff799bb48baf7a61894b20dc316982e9621629bee30db0eb12f6cb1f04258ad"
+      "bytes": 153100,
+      "sha256": "ae378f13c59ded4b239a88d49c0396b435f5680c3337b93aadc35ecc80c504b6",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "crew_navigator",
@@ -302,14 +310,14 @@
         0.51
       ],
       "sockets": [
-        "Hand_L",
-        "Hand_R",
-        "Back",
-        "Head_top",
-        "Feet"
+        "Socket_Hand_L",
+        "Socket_Hand_R",
+        "Socket_Back",
+        "Socket_Head_top",
+        "Socket_Feet"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "b4054498df823ac9c4622b43d60409f92bcb0dbe439b692ee52d05d65db10ce5",
+      "source_sha256": "7eb0397069125972b5b83c8b882cc1f3fc4661cbae27aad651b21eec63a67488",
       "triangles": 10216,
       "mesh_nodes": 1,
       "materials": 8,
@@ -320,8 +328,9 @@
       ],
       "skins": 1,
       "joints": 18,
-      "bytes": 714392,
-      "sha256": "5a977544d8f042a93d8e98b392c5b724c910e1729bea0f4dc6cb004d2ce53add"
+      "bytes": 714548,
+      "sha256": "77f54fcf638ad9afa082304f1586abd8efdb330fe3d4b661e95af723f4a8396e",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "crew_engineer",
@@ -340,14 +349,14 @@
         0.65
       ],
       "sockets": [
-        "Hand_L",
-        "Hand_R",
-        "Back",
-        "Head_top",
-        "Feet"
+        "Socket_Hand_L",
+        "Socket_Hand_R",
+        "Socket_Back",
+        "Socket_Head_top",
+        "Socket_Feet"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "60734c33c3a701ac07b48096ec4a83b8a9b318b16a8509fe01454277317a472a",
+      "source_sha256": "09df687649419b9c1165cde6ea11043fa62d0a9953074bc104dee8c8ddcf4fba",
       "triangles": 10304,
       "mesh_nodes": 1,
       "materials": 8,
@@ -358,8 +367,9 @@
       ],
       "skins": 1,
       "joints": 18,
-      "bytes": 722392,
-      "sha256": "6207381632f5759afa932b154ed67a205a76012fb4e03fa99e14e0de741ef097"
+      "bytes": 722548,
+      "sha256": "d76a344835db04fda099f6e4df0b915ba9939b26c9026debd1e5f663d46904f9",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "crew_synthetic",
@@ -378,14 +388,14 @@
         0.4525
       ],
       "sockets": [
-        "Hand_L",
-        "Hand_R",
-        "Back",
-        "Head_top",
-        "Feet"
+        "Socket_Hand_L",
+        "Socket_Hand_R",
+        "Socket_Back",
+        "Socket_Head_top",
+        "Socket_Feet"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "aea8b14b24319427112a4acf314204b6f23adc4640c0467ab55d427a0b7508ab",
+      "source_sha256": "a4728abe8ff6752ce4808a02acd0d4e8a8429c18efb692ee70f816f1e04951e6",
       "triangles": 9688,
       "mesh_nodes": 1,
       "materials": 5,
@@ -396,8 +406,9 @@
       ],
       "skins": 1,
       "joints": 18,
-      "bytes": 690668,
-      "sha256": "52a737395860f5aeede809259b20258522506dc30ab3600f97c663cc7785035c"
+      "bytes": 690828,
+      "sha256": "f318771a9c132a107b0b74feff199536e73a2bb2c8c6848d643d320579399e8c",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "enemy_watcher",
@@ -411,15 +422,15 @@
       "up": "+Y",
       "units": "metres",
       "dimensions_m": [
-        1.63638,
+        1.6,
         0.975,
-        1.09027
+        0.98
       ],
       "sockets": [
-        "Sensor"
+        "Socket_Sensor"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "3ca5825f80f1f3218edc9e5bf393eb8d73b490d2c3494d08bf1dd5eeebe0cfbd",
+      "source_sha256": "93b2042b6ff7f89280984c7001fb98ef9fba789871c45580e5061ecc6d7de0fc",
       "triangles": 2828,
       "mesh_nodes": 1,
       "materials": 6,
@@ -428,8 +439,9 @@
       ],
       "skins": 0,
       "joints": 0,
-      "bytes": 94464,
-      "sha256": "37bec85411a08569e7940996b05cf155dda2347355e7ff45152735031fbde874"
+      "bytes": 94496,
+      "sha256": "8840d774df9275179bab76ed3c4adecc433a7ca2157a19e440b2706599053de9",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "enemy_crawler",
@@ -448,10 +460,10 @@
         1.78
       ],
       "sockets": [
-        "Sensor"
+        "Socket_Sensor"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "81e5097a9586fbb5dd3a8f293813b70026198ce158e639f74d0bf23ef00d18b3",
+      "source_sha256": "1a3edbfeb6daef7a3a8b5a3064cc49ff34117493e150a3cfbd48f7dc1f87dacf",
       "triangles": 7852,
       "mesh_nodes": 1,
       "materials": 6,
@@ -460,8 +472,9 @@
       ],
       "skins": 1,
       "joints": 9,
-      "bytes": 340688,
-      "sha256": "b11284407b4076bb5871f6041e8d29377e8b74f97eacaed7a4e37c8be8a8be88"
+      "bytes": 340724,
+      "sha256": "3c90a9235b7d67f3b2d88a78ae9f60f649fdd54fbedf4b0e43e4c962a1adb835",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "enemy_warden",
@@ -480,14 +493,14 @@
         0.655
       ],
       "sockets": [
-        "Hand_L",
-        "Hand_R",
-        "Back",
-        "Head_top",
-        "Feet"
+        "Socket_Hand_L",
+        "Socket_Hand_R",
+        "Socket_Back",
+        "Socket_Head_top",
+        "Socket_Feet"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "2392005246e1c6f9baaf8d32955d394a00270808360ccd9e4d1baf08d195b090",
+      "source_sha256": "22a388e0410e1344e0d0499d6667302231691821ef773d9586d0bc14ba08d174",
       "triangles": 8740,
       "mesh_nodes": 1,
       "materials": 5,
@@ -498,8 +511,9 @@
       ],
       "skins": 1,
       "joints": 18,
-      "bytes": 618812,
-      "sha256": "9bc417edd769d010bd066271d1df94cd2c75391c9a7e7633f1fcbf4727fad341"
+      "bytes": 618972,
+      "sha256": "7784c5255670ac421780397cd3f3b744239d0cb52d582f492013c93e37f50187",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "world_ocean",
@@ -518,19 +532,20 @@
         2.013
       ],
       "sockets": [
-        "Center",
-        "North_pole"
+        "Socket_Center",
+        "Socket_North_pole"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "76a6c29655f45938b192b379d2dfb7b2129b225086c8047716c49cb94345d4d9",
+      "source_sha256": "0b5b1545da4ece300f4dd1b9eb3818fbfff6388c6efd6d8bac1299e6d0e6f3d0",
       "triangles": 9882,
       "mesh_nodes": 1,
       "materials": 2,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 346668,
-      "sha256": "b3b6ade20b3f962dd16041e3753df044061319e96abfa3fa98d362f8280da6dd"
+      "bytes": 346740,
+      "sha256": "0c65d790a1e0a3b257ae21cb7ca7372d9826d05f901008f8dbec2379d854708a",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "world_desert",
@@ -549,19 +564,20 @@
         2.0
       ],
       "sockets": [
-        "Center",
-        "North_pole"
+        "Socket_Center",
+        "Socket_North_pole"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "c46a3b83352ff876f18f33f57f35e9235623942d45cdce576682251a85989e33",
+      "source_sha256": "a2a82f1d9c4c78c0ec43068c4e8290a40d3fe600a4f2d6307abb1d37d7862b2a",
       "triangles": 9024,
       "mesh_nodes": 1,
       "materials": 1,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 264920,
-      "sha256": "12514fb62e3cfe4c5a0dd916b99a7942d22052a38a25f0ea64a21c652a025440"
+      "bytes": 264992,
+      "sha256": "564621b93434ff73fbc78e01fc84ea36f6f61659efee9289b3b12115660c67c9",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "world_ice",
@@ -580,19 +596,20 @@
         2.0
       ],
       "sockets": [
-        "Center",
-        "North_pole"
+        "Socket_Center",
+        "Socket_North_pole"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "ad2ae310559747cc4a753495cd2158ba9a7389ccb1e85f5b89ffb519d0f45cc2",
+      "source_sha256": "323274f033f6e2bd62ab6f39ba7811799f6e6e8069875194a30eaaa78f2ca05f",
       "triangles": 9024,
       "mesh_nodes": 1,
       "materials": 1,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 264916,
-      "sha256": "13d8ebfac9385540bdce5d956e502e2a23c8ee9de52451b536b55d9f6f817dbd"
+      "bytes": 264988,
+      "sha256": "fd45ffac3c1fd44eb81c3ce5edfd485b5b005e611ff4aeba36ed50ae7b2fa3e6",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "world_lava",
@@ -611,19 +628,20 @@
         2.0
       ],
       "sockets": [
-        "Center",
-        "North_pole"
+        "Socket_Center",
+        "Socket_North_pole"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "5b52936868df69d7bee1d33e1e27fda31ccaf306e986192cdbb85350199dfa08",
+      "source_sha256": "eccf3def63dc44f72e7e64a7240c719c66c5de804eced72791396145c684f72b",
       "triangles": 9024,
       "mesh_nodes": 1,
       "materials": 1,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 264996,
-      "sha256": "a07828ec9744e8a80efad6cd0e698114d6616d744d7d467e669a71b318df048a"
+      "bytes": 265068,
+      "sha256": "dd91f0e61076ec398edb90408bcc03d437b1ec36c60ba26cddca8ae4d9c05621",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "world_gas",
@@ -642,19 +660,20 @@
         3.70841
       ],
       "sockets": [
-        "Center",
-        "North_pole"
+        "Socket_Center",
+        "Socket_North_pole"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "7467e1e7d04d8341816b3f92e3579594162d207b87c0a690b69d216c8142ad16",
+      "source_sha256": "5c08ec794898a3ffc23a256ed159f7bd5af3c8070ae8340779b8b109027304a9",
       "triangles": 10304,
       "mesh_nodes": 1,
       "materials": 6,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 327744,
-      "sha256": "7df9766906589546fb04d0761ab26037785b39896739b820a3cde56d5e6fe3b3"
+      "bytes": 327816,
+      "sha256": "a6acb7e521dc76c601725c18362c19e9e1c186ca9d1a50e526877239a7d2351d",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "cargo_crate",
@@ -673,10 +692,10 @@
         0.9925
       ],
       "sockets": [
-        "Pickup"
+        "Socket_Pickup"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "9ea66e604a287efef3ec0fedde86c74d347712abe4428aac6e4e882e27fba344",
+      "source_sha256": "f0694470099a67609bc5b9ddc972ebd3ba4f4a68efe6a619ec1dd124473931e9",
       "triangles": 1296,
       "mesh_nodes": 2,
       "materials": 6,
@@ -685,8 +704,9 @@
       ],
       "skins": 0,
       "joints": 0,
-      "bytes": 98036,
-      "sha256": "51b53a76d56de42aa1557d40bbf5d921a5d281677a6f789250f808aa9ffe1ea7"
+      "bytes": 98072,
+      "sha256": "f893b43f376db0282f008e9d732d7cf2928244c0d6f57d0d86edeffdc5b40d70",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "medical_capsule",
@@ -705,18 +725,19 @@
         0.64
       ],
       "sockets": [
-        "Pickup"
+        "Socket_Pickup"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "90aed6aaa3149333415c6584fb435e48f5f7b392d7521ff86bed3a459a0ae41b",
+      "source_sha256": "49e9c3d4bee6fce93656444f917fb3001281ba1c795e51934eaa8c5c5ecfee90",
       "triangles": 816,
       "mesh_nodes": 1,
       "materials": 5,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 57404,
-      "sha256": "f09008ee1d59e13d3ece6b2684aea2b7a736b0aea12f8da6b3573e5efa15d053"
+      "bytes": 57440,
+      "sha256": "d1920760fc081e961617259352ab6a5d20a5fbe9fc0d34f52c0882b6f6193f0b",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "navigation_beacon",
@@ -735,19 +756,20 @@
         1.11
       ],
       "sockets": [
-        "Signal",
-        "Mount"
+        "Socket_Signal",
+        "Socket_Mount"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "f3e45778f7a4850187feeefe57fb6c88b42fff1766f7882fd58e35ce295f54cd",
+      "source_sha256": "8a17f29dc2a47e221c1e412b98d7ed03101f22e239152e38cc5529271fb95f18",
       "triangles": 2784,
       "mesh_nodes": 1,
       "materials": 5,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 146620,
-      "sha256": "3b0b450c44c53bcbce9f10cc5a4dc3e045eddde4f96f01c06ca48edabf0805e1"
+      "bytes": 146688,
+      "sha256": "ac03319f49a80c82c2545cc66fdd9e5f8d0ed7d33f480c448cc079899500bf75",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "mineral_cluster",
@@ -766,18 +788,19 @@
         1.06
       ],
       "sockets": [
-        "Pickup"
+        "Socket_Pickup"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "f35855b7084e75b7ea605c40cdbfd4738b263581ec44a2c634f43ec7e3757f62",
+      "source_sha256": "861a80a20609d7a8d1899123f0ca4e4403941636de903eee9eeb7b337d4c9dfd",
       "triangles": 230,
       "mesh_nodes": 1,
       "materials": 4,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 23200,
-      "sha256": "f7ef0bc5b01dc82e3090334cb010efe2778c480d19ff251f903c0199a0b48ece"
+      "bytes": 23236,
+      "sha256": "00b13bad248b36609a8ab92966a839ca1bdb408f021907f514ef0b3996fdfba1",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     },
     {
       "id": "field_scanner",
@@ -796,19 +819,21 @@
         0.68
       ],
       "sockets": [
-        "Grip",
-        "Sensor"
+        "Socket_Grip",
+        "Socket_Sensor"
       ],
       "integration": "Library resource; not automatically registered in campaign, avatar editor, combat or Atlas.",
-      "source_sha256": "c32e710e6eb389047c3456ccab24152b6287ae849128451c20442b53b009e98e",
+      "source_sha256": "db3d4b2f74c6fb4707fe7e41a7106b787bf94c09d97c4031fe38a0ac28af5307",
       "triangles": 1528,
       "mesh_nodes": 1,
       "materials": 6,
       "animations": [],
       "skins": 0,
       "joints": 0,
-      "bytes": 82288,
-      "sha256": "c0c9e720d798e6feee9f248d8599e16a9f876483187c9db97af88730cad8b5fd"
+      "bytes": 82356,
+      "sha256": "7c09e0db89ead762a2f7c83e9e2af9486640bddfbe602e776ccbada2d8a6ce06",
+      "socket_convention": "Socket_<semantic>[_02...]; +Y Blender / -Z glTF forward"
     }
-  ]
+  ],
+  "preparation_version": 1
 }
