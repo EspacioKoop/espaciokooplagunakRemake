@@ -129,7 +129,9 @@ func _publish() -> void:
 func _receive(data: PackedByteArray) -> void:
 	if _session == null or _session.mode != "client" or multiplayer.get_remote_sender_id() != 1: return
 	if data.is_empty() or data.size() > 8192: return
-	var value = JSON.parse_string(data.get_string_from_utf8())
+	var json = JSON.new()
+	if json.parse(data.get_string_from_utf8()) != OK: return
+	var value = json.data
 	if not value is Dictionary or value.size() != 2 or value.get("version") != 1: return
 	if not value.get("profiles") is Dictionary or value.profiles.size() > 9: return
 	var accepted: Dictionary = {}
@@ -138,7 +140,9 @@ func _receive(data: PackedByteArray) -> void:
 		var peer_id = int(key)
 		if peer_id < 1 or peer_id > 2147483647 or str(peer_id) != key: return
 		if not AvatarProfile.validate(value.profiles[key]).is_empty(): return
-		accepted[peer_id] = value.profiles[key].duplicate(true)
+		var decoded = AvatarProfile.decode(JSON.stringify(value.profiles[key]).to_utf8_buffer())
+		if not decoded.ok: return
+		accepted[peer_id] = decoded.profile
 	profiles = accepted
 	_pending = profiles.get(multiplayer.get_unique_id(), {}) != local_profile
 	_refresh_bound()

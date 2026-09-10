@@ -26,9 +26,17 @@ static func validate(value: Variant) -> String:
 
 static func decode(data: PackedByteArray) -> Dictionary:
 	if data.is_empty() or data.size() > MAX_BYTES: return {"ok": false, "message": "El avatar supera el tamaño permitido."}
-	var value = JSON.parse_string(data.get_string_from_utf8())
+	# Every supported value is ASCII. Reject bad encodings before string parsing.
+	for byte in data:
+		if byte not in [9, 10, 13] and (byte < 32 or byte > 126): return {"ok": false, "message": "Codificación de avatar no válida."}
+	var json = JSON.new()
+	if json.parse(data.get_string_from_utf8()) != OK: return {"ok": false, "message": "Documento de avatar dañado."}
+	var value = json.data
 	var error = validate(value)
-	return {"ok": error.is_empty(), "message": error, "profile": value if error.is_empty() else defaults()}
+	var profile = defaults()
+	if error.is_empty():
+		for key in ["suit", "visor", "gear"]: profile[key] = value[key]
+	return {"ok": error.is_empty(), "message": error, "profile": profile}
 
 static func read_profile(path: String = PATH) -> Dictionary:
 	if not FileAccess.file_exists(path): return {"ok": true, "message": "Avatar Itsaso.", "profile": defaults()}
