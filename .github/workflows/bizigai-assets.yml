@@ -1,0 +1,119 @@
+name: Bizigai habitable planets
+
+on:
+  push:
+    branches: [agent/56-bizigai-planets]
+    paths:
+      - 'art/blender/bizigai_pack/**'
+      - 'game/asset_lab/bizigai_pack/**'
+      - 'tests/bizigai_pack/**'
+      - '.github/workflows/bizigai-assets.yml'
+  pull_request:
+    paths:
+      - 'art/blender/bizigai_pack/**'
+      - 'game/assets/models/bizigai_pack/**'
+      - 'game/asset_lab/bizigai_pack/**'
+      - 'tests/bizigai_pack/**'
+      - '.github/workflows/bizigai-assets.yml'
+
+concurrency:
+  group: bizigai-${{ github.ref }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  planets:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Install Blender module and graphical runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri libegl1 libxi6 libxrender1 libxfixes3 libxxf86vm1 fonts-dejavu-core
+          python -m pip install 'bpy==4.5.3' 'Pillow==11.3.0'
+      - name: Build editable worlds and verify preservation
+        run: |
+          set -euo pipefail
+          mkdir -p build/bizigai
+          python -m compileall -q art/blender/bizigai_pack tests/bizigai_pack
+          python -u art/blender/bizigai_pack/build.py build 2>&1 | tee build/bizigai/build.log
+          python -u art/blender/bizigai_pack/build.py build 2>&1 | tee build/bizigai/preservation.log
+          grep -q 'BIZIGAI_SOURCES_PASS created=0 preserved=2' build/bizigai/preservation.log
+      - name: Export orbital, approach and surface GLB without changing sources
+        run: |
+          set -euo pipefail
+          python -u art/blender/bizigai_pack/build.py export 2>&1 | tee build/bizigai/export.log
+      - name: Verify GLB, sphere seams, anchors and negative contracts
+        run: |
+          set -euo pipefail
+          python tests/bizigai_pack/validate.py 2>&1 | tee build/bizigai/validate.log
+      - name: Download repository-pinned verified Godot
+        run: python tools/bootstrap.py
+      - name: Import and walk the real spherical surfaces
+        run: python tests/bizigai_pack/run.py
+      - name: Package sources, runtime and evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root=Path.cwd(); out=root/'build/bizigai'; out.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out/'Bizigai_Planetas_Habitables.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for directory in ['art/blender/bizigai_pack','game/assets/models/bizigai_pack','game/asset_lab/bizigai_pack','tests/bizigai_pack','docs/images/bizigai_pack']:
+                  for p in sorted((root/directory).rglob('*')):
+                      if p.is_file() and '__pycache__' not in p.parts and p.suffix not in {'.pyc','.blend1','.import','.uid'}:
+                          z.write(p,p.relative_to(root))
+              for name in ['docs/BIZIGAI_PLANETS.md','LICENSE']:
+                  if (root/name).is_file(): z.write(root/name,name)
+              for p in sorted(out.glob('*')):
+                  if p.suffix in {'.log','.json'}: z.write(p,p.relative_to(root))
+              z.writestr('game/project.godot','config_version=5\n\n[application]\nconfig/name="Bizigai - Planetas habitables"\nrun/main_scene="res://asset_lab/bizigai_pack/lab.tscn"\n\n[display]\nwindow/size/viewport_width=1600\nwindow/size/viewport_height=900\n\n[rendering]\nrenderer/rendering_method="gl_compatibility"\nrenderer/rendering_method.mobile="gl_compatibility"\n')
+              z.writestr('LEEME.txt','Abrir game/project.godot con Godot 4.7.1. Esta copia ejecuta sólo el laboratorio de recursos. Los dos planetas son habitables por diseño de ficción. Órbita, aproximación y superficie comparten coordenadas. Pulsar Recorrer para teletransporte; WASD, ratón, Mayús, Espacio; Esc libera ratón; F vuelve a órbita. Sin vuelo seamless ni reglas de campaña. Las validaciones reales están en build/bizigai. Los .blend editables están en art/blender/bizigai_pack.\n')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: bizigai-planets-evidence
+          path: |
+            build/bizigai/*.log
+            build/bizigai/*.json
+            build/bizigai/Bizigai_Planetas_Habitables.zip
+            docs/images/bizigai_pack/*.png
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve validated binaries only on the unchanged agent branch
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/agent/56-bizigai-planets'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin agent/56-bizigai-planets
+          test "$(git rev-parse origin/agent/56-bizigai-planets)" = "$GITHUB_SHA" || { echo 'Refusing stale generated assets'; exit 1; }
+          git add -- art/blender/bizigai_pack/*.blend game/assets/models/bizigai_pack docs/images/bizigai_pack
+          python - <<'PY'
+          import subprocess
+          paths=subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines()
+          for p in paths:
+              allowed=(p.startswith('art/blender/bizigai_pack/') and p.endswith('.blend')) or p.startswith('game/assets/models/bizigai_pack/') or p.startswith('docs/images/bizigai_pack/')
+              if not allowed: raise SystemExit('Unexpected publication path: '+p)
+          PY
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'build(art): preserve validated Bizigai Blender worlds, GLB and Godot captures'
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" push origin HEAD:refs/heads/agent/56-bizigai-planets
