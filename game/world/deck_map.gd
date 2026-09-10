@@ -43,9 +43,11 @@ func _draw() -> void:
 		draw_circle(player, 3.2, Color.WHITE)
 		var facing = Vector2(-sin(deck.body.rotation.y), -cos(deck.body.rotation.y))
 		draw_line(player, player + facing * 10.0, Color.WHITE, 1.5, true)
-	for key in Session.poses:
+	var session = get_tree().root.get_node_or_null("Session")
+	if session == null: return
+	for key in session.poses:
 		if int(key) == multiplayer.get_unique_id(): continue
-		var pose: Dictionary = Session.poses[key]
+		var pose: Dictionary = session.poses[key]
 		var coordinates: Array = pose.get("position", [])
 		if coordinates.size() != 3: continue
 		var remote = Vector3(float(coordinates[0]), float(coordinates[1]), float(coordinates[2]))
