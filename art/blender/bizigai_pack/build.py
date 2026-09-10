@@ -421,7 +421,12 @@ def export(world):
                 if tier!="surface" and obj.name.startswith("understory_"): continue
                 if tier=="orbital" and obj.name.startswith("detail_"): continue
                 obj.hide_set(False); obj.select_set(True); selected.append(obj)
-                if tier!="surface" and obj.name.endswith("-col"): obj.name=obj.name[:-4]
+                if tier!="surface":
+                    # Godot also considers the mesh resource name, not only its node.
+                    # Rename in memory after opening; never save these export-only changes.
+                    if obj.name.endswith("-col"): obj.name=obj.name[:-4]
+                    if obj.type=="MESH" and obj.data.name.endswith("-col"):
+                        obj.data.name=obj.data.name[:-4]
         if tier=="surface":
             for ident,title,kind in WORLDS[world]["pois"]:
                 a=bpy.data.objects["arrival_"+ident]; f=bpy.data.objects["focus_"+ident]
