@@ -19,7 +19,8 @@ func check(value: bool, label: String) -> bool:
 func settle() -> void:
 	for i in 4: await process_frame
 
-func button_named(text: String, parent: Node = app) -> Button:
+func button_named(text: String, parent: Node = null) -> Button:
+	if parent == null: parent = app
 	for button in parent.find_children("*", "Button", true, false):
 		if button.text == text and button.is_visible_in_tree(): return button
 	return null
@@ -27,7 +28,7 @@ func button_named(text: String, parent: Node = app) -> Button:
 func interaction_event(device: String) -> InputEvent:
 	for binding in InputMap.action_get_events("interact"):
 		if (device == "keyboard" and binding is InputEventKey) or (device == "gamepad" and binding is InputEventJoypadButton):
-			var event: InputEvent = binding.duplicate()
+			var event = binding.duplicate()
 			event.pressed = true
 			if event is InputEventKey: event.echo = false
 			if event is InputEventJoypadButton: event.device = 0
