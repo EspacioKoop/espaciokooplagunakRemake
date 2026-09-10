@@ -43,6 +43,10 @@ func _attach(new_deck: WorldDeck) -> void:
 	gallery = Node3D.new()
 	gallery.name = "MemoryGallery"
 	deck._zone_models[MemoryCatalog.ZONE].add_child(gallery)
+	for sign in deck._zone_models[MemoryCatalog.ZONE].get_children():
+		if sign is Label3D:
+			sign.font_size = 24
+			sign.pixel_size = 0.003
 	var bundle = BUNDLE.instantiate()
 	_spawn(bundle, "memory_keeper", Vector3(-3.5, 0, 28.5), -1)
 	for i in MemoryCatalog.MISSIONS.size():
@@ -54,7 +58,7 @@ func _attach(new_deck: WorldDeck) -> void:
 		_collision(prism, Vector3(0.75, 1.9, 0.75))
 		var light = OmniLight3D.new()
 		light.position = point + Vector3(0.4, 2.6, 0)
-		light.omni_range = 7
+		light.omni_range = 11
 		gallery.add_child(light)
 		lamps.append(light)
 		var label = _label(point + Vector3(0, 2.9, 0), 28)
@@ -65,8 +69,15 @@ func _attach(new_deck: WorldDeck) -> void:
 	banner = _label(Vector3(0, 4.0, 26.5), 38)
 	bundle.free()
 	deck.interaction_requested.connect(_interact)
-	deck.zone_changed.connect(func(_zone): _refresh_markers())
+	deck.zone_changed.connect(_zone_changed)
 	refresh()
+
+func _zone_changed(_zone: String) -> void:
+	if deck.zone == MemoryCatalog.ZONE:
+		# WorldDeck restores each destination's lighting before emitting this signal.
+		deck._sun.light_energy = 0.16
+		deck._environment.ambient_light_energy = 0.3
+	_refresh_markers()
 
 func _copy_model(bundle: Node, model_name: String) -> Node3D:
 	return bundle.find_child(model_name, true, false).duplicate() as Node3D
@@ -117,7 +128,7 @@ func _apply_variant() -> void:
 	var color = {"vigilia": Color("87bfff"), "travesia": Color("75ead5"), "alba": Color("ffcb83")}[active_variant]
 	for i in lamps.size():
 		lamps[i].light_color = color if memories[i].unlocked else color.darkened(0.28)
-		lamps[i].light_energy = 2.2 if memories[i].unlocked else 0.55
+		lamps[i].light_energy = 2.4 if memories[i].unlocked else 1.2
 		labels[i].text = "%02d · %s" % [i + 1, memories[i].state]
 		labels[i].modulate = color if memories[i].unlocked else Color("9faec1")
 	banner.text = "MEMORIAS DE LA ITSASO\n" + active_variant.to_upper()

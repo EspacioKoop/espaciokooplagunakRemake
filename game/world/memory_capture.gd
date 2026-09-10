@@ -40,9 +40,9 @@ func run(app: Control, director: Node) -> void:
 	deck.interact()
 	check(deck.zone == 7, "return cabin is accessible in exported game")
 	deck.teleport_zone(12)
-	deck.body.position = WorldDeck.ZONES[12].at + Vector3(0.8, .2, 29)
-	deck.body.look_at(WorldDeck.ZONES[12].at + Vector3(-2.5, .2, 21))
-	deck.camera.rotation.x = -.015
+	deck.body.position = WorldDeck.ZONES[12].at + Vector3(0, .2, 31)
+	deck.body.look_at(WorldDeck.ZONES[12].at + Vector3(-2, .2, 25))
+	deck.camera.rotation.x = -.04
 	await settle(30)
 	if "--memory-capture" in OS.get_cmdline_user_args():
 		if DisplayServer.get_name() == "headless":

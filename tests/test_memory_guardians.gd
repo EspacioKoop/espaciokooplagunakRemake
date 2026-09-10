@@ -76,9 +76,11 @@ func run() -> void:
 	var original_campaign: Dictionary = session.sim.state.campaign.duplicate(true)
 	var keeper = MemoryCatalog.interactions()[0]
 	await place(keeper.position)
+	var original_light: Color = gallery.lamps[0].light_color
 	deck.interact()
 	await settle(2)
 	check(gallery.variant_mode == 1 and gallery.guide == 0, "keeper E changes real variant and guides current mission")
+	check(gallery.lamps[0].light_color != original_light, "variant changes actual lights even before any memory unlocks")
 	var readers: Array = app.get_children().filter(func(child): return child is Window and not child is AcceptDialog)
 	check(readers.size() == 1, "existing app reader opens exactly once")
 	if readers.size() == 1:
@@ -89,6 +91,10 @@ func run() -> void:
 	deck.interact()
 	await settle(2)
 	check(gallery.active_variant == "vigilia", "second keeper interaction selects vigil")
+	await close_readers()
+	deck.interact()
+	await settle(2)
+	check(gallery.variant_mode == 0, "third interaction restores automatic campaign environment")
 	await close_readers()
 	check(session.sim.state.campaign == original_campaign, "guardian visits grant no campaign rewards or saved progress")
 	await place(Vector3(0, 0, 0))
@@ -104,6 +110,7 @@ func run() -> void:
 	session.view.mission.id = view.mission.id
 	session.updated.emit()
 	check(gallery.memories[2].unlocked and not gallery.memories[1].unlocked, "public update refreshes in-world records")
+	check(gallery.active_variant == "travesia" and gallery.lamps[2].light_energy > gallery.lamps[1].light_energy, "campaign progress changes actual automatic lights and identifies unlocked records")
 	await place(MemoryCatalog.reading_point(2))
 	var memory_entry = {"id": "memory_2", "index": 999}
 	check(gallery.interact(memory_entry) and 2 in gallery.visited, "canonical ID controls reading, caller-supplied index is ignored")
@@ -128,6 +135,7 @@ func run() -> void:
 	await place(Vector3(0, 0, 31.3))
 	deck.interact()
 	check(deck.zone == 7, "existing return to cantina is always accessible")
+	check(is_equal_approx(deck._sun.light_energy, 0.7) and is_equal_approx(deck._environment.ambient_light_energy, 0.25), "gallery lighting does not leak into another zone")
 	check(not gallery.interact(keeper.duplicate()), "guardian interaction rejected outside its zone")
 	app._go("bridge")
 	await settle()
