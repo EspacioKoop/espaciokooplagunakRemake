@@ -36,6 +36,7 @@ func open_access_panel() -> void:
 	if not enabled or authority.session == null or authority.session.mode == "client": return
 	if not is_instance_valid(_panel):
 		_panel = FoundryAccessPanel.new()
+		_panel.visible = false
 		add_child(_panel)
 		_panel.setup(self)
 	_panel.popup_centered()
@@ -76,6 +77,10 @@ func _process(_delta: float) -> void:
 			_consume(client)
 
 func _consume(client: Dictionary) -> void:
+	# The closed command schema contains only ASCII identifiers/enums/numbers.
+	# Reject wire bytes before decoding so malformed UTF-8 cannot produce log errors.
+	for byte in client.data:
+		if byte > 126 or byte == 0: _respond(client, 400, {"error": "Invalid request encoding"}, false); return
 	var raw: String = client.data.get_string_from_utf8()
 	var end = raw.find("\r\n\r\n")
 	if end < 0:

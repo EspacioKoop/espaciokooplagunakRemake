@@ -10,6 +10,12 @@ static func fields(source: Dictionary, names: Array) -> Dictionary:
 		elif value is bool or Catalog.finite_number(value): result[key] = value
 	return result
 
+static func dictionary(value: Variant) -> Dictionary:
+	return value if value is Dictionary else {}
+
+static func array(value: Variant) -> Array:
+	return value if value is Array else []
+
 static func position(value: Variant) -> Array:
 	if value is Array and value.size() == 2 and Catalog.finite_number(value[0]) and Catalog.finite_number(value[1]): return value.duplicate()
 	return []
@@ -22,10 +28,10 @@ static func state(view: Dictionary) -> Dictionary:
 	result.ship.position = position(view.ship.get("position"))
 	result.ship.systems = {}
 	for id in Catalog.SYSTEMS:
-		var system: Variant = view.ship.get("systems", {}).get(id)
+		var system: Variant = dictionary(view.ship.get("systems")).get(id)
 		if system is Dictionary: result.ship.systems[id] = fields(system, ["power", "heat", "health"])
 	result.contacts = []
-	for contact in view.get("contacts", []).slice(0, 48):
+	for contact in array(view.get("contacts")).slice(0, 48):
 		if not contact is Dictionary: continue
 		var safe = fields(contact, ["id", "identified"])
 		safe.position = position(contact.get("position"))
@@ -39,10 +45,10 @@ static func state(view: Dictionary) -> Dictionary:
 
 static func crew(profile: Dictionary) -> Dictionary:
 	var result = fields(profile, ["name", "approach", "focus", "condition", "level", "xp"])
-	result.skills = fields(profile.get("skills", {}), ExpeditionSystems.SKILLS)
+	result.skills = fields(dictionary(profile.get("skills")), ExpeditionSystems.SKILLS)
 	# Narrative milestones and inventory are deliberately excluded from this surface.
 	result.traits = []
-	for trait_id in profile.get("traits", []).slice(0, 8):
+	for trait_id in array(profile.get("traits")).slice(0, 8):
 		if trait_id is String and trait_id in CrewSystem.TRAITS: result.traits.append(trait_id)
 	return result
 

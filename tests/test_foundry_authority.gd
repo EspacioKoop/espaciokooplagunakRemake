@@ -22,7 +22,10 @@ func run() -> void:
 	if "--foundry-peer" in args:
 		var role = args[args.find("--foundry-peer") + 1]
 		session.join_session("127.0.0.1", int(OS.get_environment("FOUNDRY_TEST_UDP")), "synthetic-foundry-network", role, role)
-		await create_timer(45).timeout
+		var peer_deadline = Time.get_ticks_msec() + 45000
+		while Time.get_ticks_msec() < peer_deadline and not FileAccess.file_exists(OS.get_environment("FOUNDRY_TEST_CONTROL") + "/disconnect-" + role): await process_frame
+		session.close_session()
+		await create_timer(0.2).timeout
 		quit(); return
 	session.new_campaign()
 	authority = session.telemetry.authority

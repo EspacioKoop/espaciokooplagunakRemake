@@ -12,16 +12,21 @@ var access_list: VBoxContainer
 func setup(source: Node) -> void:
 	telemetry = source
 	title = "Foundry · Accesos por usuario"
+	theme = ConsoleUI.make_theme()
 	size = Vector2i(700, 600)
 	min_size = Vector2i(580, 460)
 	close_requested.connect(hide)
 	var scroll = ScrollContainer.new()
 	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(scroll)
+	var margin = MarginContainer.new()
+	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for side in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 16)
+	scroll.add_child(margin)
 	var body = VBoxContainer.new()
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.add_theme_constant_override("separation", 14)
-	scroll.add_child(body)
+	margin.add_child(body)
 	var description = Label.new()
 	description.text = "Vincula un usuario de Foundry a un tripulante nativo activo.\nEl token de Sesión conserva únicamente consulta pública.\nLos accesos caducan tras una hora o al cambiar misión, puesto o sesión."
 	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
