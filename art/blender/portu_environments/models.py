@@ -104,7 +104,7 @@ def socket(name,p,kind,parent,rotation=(0,0,0)):
 def console(parent,p=(0,0,0),name='Console'):
     x,y,z=p
     box(name+'_base',(x,y,z+.48),(1.6,.9,.96),'dark',parent)
-    panel=box(name+'_panel',(x,y+.07,z+1.18),(1.7,.10,.85),'metal',parent)
+    box(name+'_panel',(x,y+.07,z+1.18),(1.7,.10,.85),'metal',parent)
     box(name+'_display',(x,y-.0,z+1.2),(1.38,.035,.57),'blue',parent)
     for i in range(5):box(name+'_readout',(x-.50+i*.25,y-.03,z+1.09+i*.045),(.14,.025,.03),'cyan',parent,.003)
     box(name+'_keypad',(x,y-.45,z+.91),(1.35,.35,.07),'wall',parent)
@@ -133,7 +133,6 @@ def shell(root,title):
     box('Subdeck',(0,0,-.24),(24.8,36,.4),'metal',floor)
     for x in range(-10,12,4):
         for y in range(-14,18,4):box('Floor_tile',(x,y,-.025),(3.975,3.975,.11),'floor',floor,.012)
-    # Central four-metre aisle stays free in every environment.
     for x in (-2.15,2.15):box('Aisle_edge',(x,2,.035),(.08,26,.014),'accent',floor,.002)
     for x in (-12.2,12.2):
         box('Side_wall',(x,0,3),(.35,32,6),'wall',structural)
@@ -150,7 +149,6 @@ def shell(root,title):
         box('Ceiling_beam',(0,y,5.85),(24,.35,.5),'metal',roof)
         for x in (-6,6):box('Ceiling_light',(x,y,5.60),(5,.55,.12),'white',roof)
     box('Roof',(0,0,6.2),(24.4,32,.28),'wall',roof)
-    # A real two-leaf sliding door separates the arrival vestibule.
     for x in (-7.2,7.2):box('Vestibule_wall',(x,-10,2.1),(10.2,.3,4.2),'dark',structural)
     box('Door_header',(0,-10,3.9),(4.6,.5,.7),'metal',structural)
     for side,name in ((-1,'left'),(1,'right')):
@@ -256,10 +254,11 @@ def communications(p):
             chair(p,(x,y-1.3,0))
             box('Signal_rack',(x+2,y+.3,1.6),(1.1,1.3,3.2),'dark',p)
             for z in range(7):box('Link_slot',(x+2,y-.37,.5+z*.37),(.75,.04,.13),'cyan' if z%2 else 'blue',p)
-    box('Link_wall',(0,14.8,3),(18,.35,4.6),'dark',p)
-    for x in (-6,0,6):
-        box('Command_screen',(x,14.58,3.2),(5.1,.05,2.8),'blue',p)
-        for i in range(6):box('Diagram',(x-1.8+i*.65,14.54,2.6+i*.21),(.35,.03,.5),'cyan',p)
+    # Leave the same clear rear connector as every other Portu room.
+    for x in (-7,7):
+        box('Link_wall',(x,14.8,3),(9.4,.35,4.6),'dark',p)
+        box('Command_screen',(x,14.58,3.2),(8.2,.05,2.8),'blue',p)
+        for i in range(8):box('Diagram',(x-2.8+i*.8,14.54,2.6+i*.16),(.35,.03,.5),'cyan',p)
 
 
 def cargo(p):
@@ -269,7 +268,6 @@ def cargo(p):
             box('Rack_pillar',(x-2.4,y,2.2),(.25,.25,4.4),'metal',p)
             box('Rack_pillar',(x+2.4,y,2.2),(.25,.25,4.4),'metal',p)
         box('Rack_lintel',(x,.5,4.3),(5,11.3,.3),'accent',p)
-    # Flush usable transfer deck; consumers may animate it after reserving mechanics.
     box('Cargo_transfer_plate',(0,5,.045),(3.8,8,.025),'metal',p)
     for y in (1,9):box('Lift_warning',(0,y,.067),(3.8,.12,.012),'accent',p,.002)
     for x in (-2.7,2.7):
@@ -333,11 +331,20 @@ def build(missing=False,force=False):
         print('PORTU_SOURCE',spec[0],flush=True)
 
 
+def has_area(face):
+    # Double-precision cross product: Blender calc_area() can report tiny positive
+    # areas for exactly collinear tessellated lettering after joining transforms.
+    a,b,c=[tuple(v.co) for v in face.verts]
+    u=[b[i]-a[i] for i in range(3)];v=[c[i]-a[i] for i in range(3)]
+    cross=(u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0])
+    return sum(x*x for x in cross)>1e-16
+
+
 def clean(mesh):
     bm=bmesh.new();bm.from_mesh(mesh)
     bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=1e-6)
     bmesh.ops.triangulate(bm,faces=list(bm.faces))
-    bad=[f for f in bm.faces if f.calc_area()<1e-10]
+    bad=[f for f in bm.faces if not has_area(f)]
     if bad:bmesh.ops.delete(bm,geom=bad,context='FACES')
     bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces));bm.to_mesh(mesh);bm.free();mesh.update()
 
