@@ -6,6 +6,7 @@ on:
       - 'game/**'
       - 'tests/test_readability.gd'
       - 'tests/run_readability.py'
+      - 'tests/test_readability_runner.py'
       - 'tools/bootstrap.py'
       - '.github/workflows/readability.yml'
   push:
@@ -27,6 +28,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Reject false-positive runner results
+        run: python3 -m unittest discover -s tests -p test_readability_runner.py -v
       - name: Install virtual display
         run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
       - name: Download verified engine
