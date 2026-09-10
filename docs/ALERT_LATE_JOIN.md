@@ -4,13 +4,13 @@ Subcarril de [#32, §2.3](https://github.com/EspacioKoop/espaciokooplagunakRemak
 
 ## Comportamiento bajo prueba
 
-El identificador de alerta intermedia en el protocolo es `ambar`; los otros son `roja` y `verde`. Solo el puesto `mando` puede ejecutar `alert`. La simulación valida el nivel antes de cambiar el estado. `Session` distribuye vistas por destinatario a los integrantes autenticados.
+El identificador de alerta intermedia en el protocolo es `ambar`; los otros son `roja` y `verde`. Los puestos autorizados son **Mando y Enlace**, según la unión de `Catalog.PERMISSIONS` y `ShipOperations.PERMISSIONS`. La prueba fija explícitamente ambos puestos y comprueba que los otros seis carecen de ese permiso; no calcula automáticamente el resultado esperado a partir de la implementación. La simulación valida el nivel antes de cambiar el estado. `Session` distribuye vistas por destinatario a los integrantes autenticados.
 
 La regresión arranca **ocho procesos Godot reales**: anfitrión/Mando y los siete puestos restantes. Todos los clientes llegan después de que Mando haya establecido alerta roja. Se comprueba:
 
 1. La primera vista aceptada ya contiene `roja`, sin depender de que el cliente presenciase la orden anterior. Se conserva el puesto autenticado y no se incluye el catálogo de contactos de la misión ni el documento de autoría de campaña.
-2. Cada puesto no autorizado intenta cambiar a verde, primero con una orden normal y después añadiendo `role=mando` y `principal=1` a los argumentos. Se exige una respuesta negativa del servidor y una vista posterior que siga en rojo. No se interpreta el acuse local «orden enviada» como aceptación del servidor.
-3. Navegación se desconecta. El anfitrión espera su retirada real del roster, cambia a ámbar y permite la reconexión. La primera vista de Navegación debe ser ámbar, no su antiguo rojo; los otros seis clientes reciben el cambio en vivo.
+2. Los seis puestos no autorizados intentan cambiar a verde, primero con una orden normal y después añadiendo `role=mando` y `principal=1` a los argumentos. Se exige una respuesta negativa del servidor y una vista posterior que siga en rojo. No se interpreta el acuse local «orden enviada» como aceptación del servidor. Enlace confirma una orden válida y comprueba el rechazo de un nivel inexistente.
+3. Navegación se desconecta. El anfitrión espera su retirada real del roster; entonces **Enlace cambia a ámbar mediante un RPC real**. El anfitrión espera la modificación de su estado autoritativo antes de permitir la reconexión. La primera vista de Navegación debe ser ámbar, no su antiguo rojo; los demás clientes reciben el cambio en vivo.
 4. Mando establece verde. Los siete clientes y el anfitrión deben coincidir. Los clientes salen y el anfitrión comprueba que las desconexiones no modificaron su alerta.
 
 También se exige que un nivel inválido solicitado por Mando sea rechazado sin modificar el estado de la simulación.
@@ -32,6 +32,8 @@ El runner importa el proyecto con Godot antes de ejecutar los ocho procesos. Tam
 El resultado solo es verde si todos los procesos terminan con código cero, sin errores Godot y con exactamente un resumen válido para su propio puesto. Se rechazan resúmenes ausentes, duplicados, de otro proceso, incompletos o con fallos. Los errores con códigos ANSI también se detectan. Un resultado verde de una ejecución anterior se invalida al iniciar la siguiente.
 
 `dist/alert-late-join/` contiene `import.log`, un log por proceso y `result.json`. El workflow aditivo [alert-late-join.yml](../.github/workflows/alert-late-join.yml) conserva esa evidencia tanto en éxito como en fallo. El resultado unitario de Python solo valida el runner: **no sustituye el resultado ENet**. Para acreditar una ejecución, enlazar su run de Actions y el SHA concreto en el PR o issue.
+
+La primera ejecución de esta nueva prueba, [34532809957](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/34532809957), falló por una expectativa incorrecta del test: solo había considerado la tabla de permisos de `Catalog`, omitiendo el permiso adicional de Enlace en `ShipOperations`. Se corrigió la prueba para verificar ambos puestos autorizados y se añadió el cambio remoto de Enlace. **No se alteraron permisos ni código de producción para obtener un resultado verde.**
 
 ## Aislamiento y límites
 
