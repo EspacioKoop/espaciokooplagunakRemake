@@ -24,6 +24,10 @@ concurrency:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   orbita:
     runs-on: ubuntu-24.04
@@ -55,7 +59,9 @@ jobs:
       - name: Download repository-pinned verified Godot
         run: python tools/bootstrap.py
       - name: Import and inspect every asset in real Godot
-        run: python tests/orbita_pack/run.py
+        run: |
+          python tests/orbita_pack/run.py
+          cp build/orbita/godot-viewer.png docs/images/orbita_pack/godot_viewer.png
       - name: Package sources, models and evidence
         if: always()
         run: |
@@ -66,9 +72,9 @@ jobs:
           with zipfile.ZipFile(out/'Orbita_Biblioteca_3D.zip','w',zipfile.ZIP_DEFLATED) as z:
               for directory in ['art/blender/orbita_pack','game/assets/models/orbita_pack','game/asset_lab/orbita_pack','docs/images/orbita_pack','tests/orbita_pack']:
                   for p in sorted((root/directory).rglob('*')):
-                      if p.is_file() and '__pycache__' not in p.parts and p.suffix not in {'.pyc','.blend1'}:
+                      if p.is_file() and '__pycache__' not in p.parts and p.suffix not in {'.pyc','.blend1','.import'}:
                           z.write(p,p.relative_to(root))
-              for name in ['docs/ORBITA_ASSET_PACK.md','docs/ASSET_LIBRARY.md','docs/asset_library.json','LICENSE']:
+              for name in ['docs/ORBITA_ASSET_PACK.md','docs/ASSET_LIBRARY.md','docs/asset_library.json','LICENSE','build/orbita/validation.json','build/orbita/godot-tests.log','build/orbita/godot-capture.log']:
                   p=root/name
                   if p.is_file(): z.write(p,name)
           PY
