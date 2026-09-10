@@ -25,11 +25,13 @@ func _ready() -> void:
 
 func _build_collision(node: Node, moving: bool) -> void:
 	var is_door := moving or str(node.name) in ["door_left", "door_right"]
-	if node is MeshInstance3D and node.mesh != null:
+	var mesh_node := node as MeshInstance3D
+	if mesh_node != null and mesh_node.mesh != null:
 		var body: PhysicsBody3D
 		if is_door:
-			body = AnimatableBody3D.new()
-			body.sync_to_physics = false
+			var animated := AnimatableBody3D.new()
+			animated.sync_to_physics = false
+			body = animated
 		else:
 			body = StaticBody3D.new()
 		body.name = "RoomCollision"
@@ -37,15 +39,15 @@ func _build_collision(node: Node, moving: bool) -> void:
 		body.collision_mask = 2
 		var shape := CollisionShape3D.new()
 		if is_door:
-			var bounds := node.get_aabb()
+			var bounds: AABB = mesh_node.get_aabb()
 			var box := BoxShape3D.new()
 			box.size = bounds.size
 			shape.shape = box
 			shape.position = bounds.position + bounds.size * 0.5
 		else:
-			shape.shape = node.mesh.create_trimesh_shape()
+			shape.shape = mesh_node.mesh.create_trimesh_shape()
 		body.add_child(shape)
-		node.add_child(body)
+		mesh_node.add_child(body)
 		collision_count += 1
 	for child in node.get_children():
 		if not child is PhysicsBody3D:
