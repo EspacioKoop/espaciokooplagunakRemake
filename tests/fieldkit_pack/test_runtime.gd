@@ -64,12 +64,24 @@ func run_tests() -> void:
 		var moved: bool = false
 		for node: Node in animation_players:
 			var player := node as AnimationPlayer
-			check(player.has_animation("field_cycle"), id + " named animation")
-			if not player.has_animation("field_cycle"):
+			var clip: StringName = &""
+			var clip_count: int = 0
+			# Godot recognizes the _cycle suffix, enables looping and strips it.
+			# Binary validation separately enforces the authored field_cycle name.
+			print("FIELDKIT_IMPORTED_CLIPS ", id, " ", player.get_animation_list())
+			for candidate: StringName in player.get_animation_list():
+				if candidate == &"RESET":
+					continue
+				clip_count += 1
+				if str(candidate) in ["field", "field_cycle"]:
+					clip = candidate
+			check(clip_count == 1, id + " exactly one mechanical clip")
+			check(not clip.is_empty(), id + " authored or Godot-normalized name")
+			if clip.is_empty():
 				continue
-			var animation := player.get_animation("field_cycle")
+			var animation := player.get_animation(clip)
 			check(animation.length > 1.9, id + " complete animation duration")
-			player.play("field_cycle")
+			player.play(clip)
 			player.advance(0.0)
 			var before: Dictionary = {}
 			transforms(model, before)
