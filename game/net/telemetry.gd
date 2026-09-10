@@ -105,6 +105,7 @@ func _consume(client: Dictionary) -> void:
 	var length_text: String = headers.get("content-length", "0")
 	if length_text.is_empty() or length_text.length() > 5 or not length_text.is_valid_int() or str(int(length_text)) != length_text: _respond(client, 400, {"error": "Invalid body length"}, cors); return
 	var length = int(length_text)
+	if length < 0: _respond(client, 400, {"error": "Invalid body length"}, cors); return
 	if length > MAX_BODY: _respond(client, 413, {"error": "Body too large"}, cors); return
 	if first[0] != "POST" and length != 0: _respond(client, 400, {"error": "Unexpected body"}, cors); return
 	if client.data.size() < header_bytes + length: return

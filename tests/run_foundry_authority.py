@@ -75,6 +75,7 @@ with tempfile.TemporaryDirectory(prefix="lagunak-foundry-") as temporary:
         check(status == 204 and "X-Lagunak-User" in head and "GET, POST, OPTIONS" in head, "CORS preflight for personal control")
         check(request(headers=[("host", "attacker.invalid")])[0] == 400, "duplicate host rejected")
         check(request(host="attacker.invalid")[0] == 403, "DNS rebinding host rejected")
+        check(request(headers=[("Content-Length", "-1")])[0] == 400, "negative body length rejected")
         check(request(method="POST", path="/v2/command", raw_body=b"{" * 2049)[0] == 413, "body bounded")
         check(request(method="POST", path="/v2/command", raw_body=b"null")[0] == 400, "non-object JSON rejected")
         check(request(method="POST", path="/v2/command", raw_body=b"{")[0] == 400, "invalid JSON rejected")
