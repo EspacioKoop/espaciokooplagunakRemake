@@ -1,0 +1,38 @@
+name: Memory guardians and playable gallery
+
+on:
+  pull_request:
+  push:
+    branches: [main, agent/6-memory-guardians]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  memory-guardians:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Download verified Godot and templates
+        run: python3 tools/bootstrap.py --templates
+      - name: Validate editable models, campaign projection and playable interactions
+        run: python3 tests/run_memory_guardians.py
+      - name: Check existing leisure and room interactions
+        run: .toolchain/godot --headless --path game --script ../tests/test_leisure.gd -- --test
+      - name: Export standalone Linux game
+        run: |
+          mkdir -p build/memory
+          XDG_DATA_HOME="$PWD/.toolchain/data" .toolchain/godot --headless --path game --export-release Linux "$PWD/build/memory/EspaciokoopLagunak.x86_64"
+      - name: Walk and capture exported game
+        run: xvfb-run -a python3 tests/run_memory_guardians.py --binary "$PWD/build/memory/EspaciokoopLagunak.x86_64" --capture "$PWD/build/memory/memory-guardians.png"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: memory-guardians-evidence
+          path: build/memory/memory-guardians.png
+          if-no-files-found: error

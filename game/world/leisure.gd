@@ -33,6 +33,5 @@ static func interactions(zone: int) -> Array:
   if zone == 10: result.append({"id": "fishing", "kind": "plaque", "title": "Mirador de la caña", "position": Vector3(10, 0, -8), "text": "Un asiento junto al horizonte. El aparejo forma parte del mirador; este punto no concede recursos de la nave."})
  elif zone == 11: result.append({"id": "studio_lights", "kind": "lights", "title": "Cambiar iluminación del estudio", "position": Vector3(0, 0, -1)})
  elif zone == 12:
-  for i in 6:
-   result.append({"id": "memory_%d" % i, "kind": "plaque", "title": ["La partida", "El eco", "El refugio", "La guardia", "El regreso", "La cooperación"][i], "position": Vector3(3.1, 0, -25 + i * 10), "text": "Un espacio de contemplación para la tripulación. Las memorias de esta galería son composiciones nuevas; el progreso de tu expedición se consulta desde Campaña."})
+  result = MemoryCatalog.interactions()
  return result

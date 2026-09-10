@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://ui/app.gd" id="1"]
+[ext_resource type="Script" path="res://world/memory_guardians.gd" id="2_memory_guardians"]
 [ext_resource type="Script" path="res://audio/reactive_score.gd" id="3_reactive_score"]
 
 [node name="Lagunak" type="Control"]
@@ -14,3 +15,6 @@ script = ExtResource("1")
 
 [node name="ReactiveScore" type="Node" parent="."]
 script = ExtResource("3_reactive_score")
+
+[node name="MemoryGuardians" type="Node" parent="."]
+script = ExtResource("2_memory_guardians")
