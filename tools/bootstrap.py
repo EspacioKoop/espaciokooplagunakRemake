@@ -2,7 +2,6 @@
 """Download pinned official Godot binaries and verify their published SHA-512."""
 import argparse
 import hashlib
-import os
 import platform
 from pathlib import Path
 import shutil

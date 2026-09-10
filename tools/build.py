@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import zipfile
 
 from export_targets import (GODOT_VERSION, TARGETS, add_target_argument, artifact_name,
                             selected_targets, template_directory, validate_artifact, validate_presets)
@@ -16,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def run_checked(command, env):
     result = subprocess.run([str(c) for c in command], env=env, stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT, text=True)
-    output = result.stdout
+                            stderr=subprocess.STDOUT, text=True, timeout=600)
+    output = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", result.stdout)
     for key, value in env.items():
         if key.startswith("GODOT_") and "PASSWORD" in key and value:
             output = output.replace(value, "<REDACTED>")
@@ -98,6 +99,9 @@ def main(argv=None):
         if args.check:
             print("EXPORT_CHECK_OK", ", ".join(names))
             return 0
+        # The existing release workflow calls this command, so new format and
+        # failure tests remain a gate without requiring workflow permissions.
+        run_checked([sys.executable, ROOT / "tests/test_platform_exports.py"], env)
         # Fresh editor settings pick up JAVA_HOME/ANDROID_HOME without replacing user settings.
         with tempfile.TemporaryDirectory(prefix="lagunak-export-config-") as config:
             env["XDG_CONFIG_HOME"] = config
@@ -116,7 +120,7 @@ def main(argv=None):
                     staged.replace(target)
                 print("EXPORTED", target.name, target.stat().st_size, flush=True)
         return 0
-    except (ValueError, OSError, KeyError) as error:
+    except (ValueError, OSError, KeyError, zipfile.BadZipFile, subprocess.TimeoutExpired) as error:
         print("EXPORT_FAILED:", error, file=sys.stderr)
         return 1
 
