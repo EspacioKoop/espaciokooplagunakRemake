@@ -38,6 +38,8 @@ jobs:
         run: .toolchain/godot --headless --path game --script ../tests/test_ship_quadrants_collisions.gd -- --test
       - name: Verify modular mounts turrets arcs and automatic fire
         run: .toolchain/godot --headless --path game --script ../tests/test_armaments.gd -- --test
+      - name: Verify sustained lateral maneuvering and stabilization
+        run: .toolchain/godot --headless --path game --script ../tests/test_continuous_maneuvering.gd -- --test
       - name: Verify atlas factions crew trade and game direction
         run: .toolchain/godot --headless --path game --script ../tests/test_expedition.gd -- --test
       - name: Verify short long range sensors probe analysis and hacking
