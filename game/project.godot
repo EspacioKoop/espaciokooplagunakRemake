@@ -17,6 +17,7 @@ Crew="*res://core/crew_system.gd"
 Combat="*res://core/ground_combat.gd"
 Fleet="*res://core/fleet_ai.gd"
 Armaments="*res://core/ship_armaments.gd"
+Thrusters="*res://core/continuous_maneuvering.gd"
 
 [display]
 window/size/viewport_width=1600
