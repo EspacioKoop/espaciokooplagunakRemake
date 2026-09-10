@@ -1,0 +1,702 @@
+{
+  "schema": "bizigai-planets",
+  "version": 1,
+  "license": "MIT",
+  "authoring": "Blender 4.5.3 LTS",
+  "provenance": "Original procedural mesh authoring; no imported art or personal data",
+  "habitable_is_fictional_design": true,
+  "worlds": [
+    {
+      "name": "Lurga",
+      "radius_m": 240.0,
+      "seed": 5601,
+      "biome": "Mesetas templadas de roca roja, praderas y arboledas de copa ancha",
+      "habitable": true,
+      "breathable_atmosphere": true,
+      "gravity_m_s2": 9.0,
+      "id": "bizigai/lurga",
+      "source": "art/blender/bizigai_pack/lurga.blend",
+      "source_sha256": "03b19ee4b9dec22580e13ff1387402196ad87f7e9e04e7c4eb453080192c828e",
+      "axes": "+Y north/up; -Z zero longitude; +X east",
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "units": "metres",
+      "pois": [
+        {
+          "id": "bizigai/lurga/puerto_terracota",
+          "name": "Puerto Terracota",
+          "kind": "landing",
+          "arrival_node": "arrival_puerto_terracota",
+          "focus_node": "focus_puerto_terracota",
+          "arrival_m": [
+            29.183146,
+            231.479446,
+            -66.947586
+          ],
+          "focus_m": [
+            28.968428,
+            227.092987,
+            -82.35936
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/huerto_cupulas",
+          "name": "Huerto de las Cúpulas",
+          "kind": "greenhouse",
+          "arrival_node": "arrival_huerto_cupulas",
+          "focus_node": "focus_huerto_cupulas",
+          "arrival_m": [
+            54.921921,
+            196.680862,
+            145.995438
+          ],
+          "focus_m": [
+            56.180573,
+            206.033295,
+            133.043304
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/ojo_meseta",
+          "name": "Ojo de la Meseta",
+          "kind": "observatory",
+          "arrival_node": "arrival_ojo_meseta",
+          "focus_node": "focus_ojo_meseta",
+          "arrival_m": [
+            -167.360184,
+            177.293259,
+            -65.287025
+          ],
+          "focus_m": [
+            -166.033203,
+            172.988937,
+            -80.666298
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/foro_rojo",
+          "name": "Foro Rojo",
+          "kind": "ruins",
+          "arrival_node": "arrival_foro_rojo",
+          "focus_node": "focus_foro_rojo",
+          "arrival_m": [
+            199.470016,
+            144.29213,
+            -49.59877
+          ],
+          "focus_m": [
+            198.180176,
+            140.837341,
+            -65.193985
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/veta_ambar",
+          "name": "Veta Ámbar",
+          "kind": "quarry",
+          "arrival_node": "arrival_veta_ambar",
+          "focus_node": "focus_veta_ambar",
+          "arrival_m": [
+            -107.062744,
+            96.877113,
+            197.807556
+          ],
+          "focus_m": [
+            -111.372169,
+            109.720169,
+            189.246307
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/paso_gemelo",
+          "name": "Paso Gemelo",
+          "kind": "arches",
+          "arrival_node": "arrival_paso_gemelo",
+          "focus_node": "focus_paso_gemelo",
+          "arrival_m": [
+            -52.294266,
+            89.255424,
+            -224.696503
+          ],
+          "focus_m": [
+            -50.16964,
+            74.692978,
+            -231.039307
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/taller_nomada",
+          "name": "Taller Nómada",
+          "kind": "workshop",
+          "arrival_node": "arrival_taller_nomada",
+          "focus_node": "focus_taller_nomada",
+          "arrival_m": [
+            197.884094,
+            39.985935,
+            152.075821
+          ],
+          "focus_m": [
+            204.723114,
+            49.191628,
+            140.88237
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/cisterna_juncos",
+          "name": "Cisterna de los Juncos",
+          "kind": "water",
+          "arrival_node": "arrival_cisterna_juncos",
+          "focus_node": "focus_cisterna_juncos",
+          "arrival_m": [
+            -241.622482,
+            13.686689,
+            44.347527
+          ],
+          "focus_m": [
+            -244.427109,
+            15.797464,
+            28.711393
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/jardin_viento",
+          "name": "Jardín del Viento",
+          "kind": "wind",
+          "arrival_node": "arrival_jardin_viento",
+          "focus_node": "focus_jardin_viento",
+          "arrival_m": [
+            160.947342,
+            -5.058676,
+            -178.025284
+          ],
+          "focus_m": [
+            153.149353,
+            -17.326933,
+            -184.770004
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/campo_helios",
+          "name": "Campo Helios",
+          "kind": "solar",
+          "arrival_node": "arrival_campo_helios",
+          "focus_node": "focus_campo_helios",
+          "arrival_m": [
+            9.526744,
+            -59.556614,
+            242.541763
+          ],
+          "focus_m": [
+            10.35061,
+            -44.022648,
+            246.392365
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/anillo_testigos",
+          "name": "Anillo de los Testigos",
+          "kind": "monolith",
+          "arrival_node": "arrival_anillo_testigos",
+          "focus_node": "focus_anillo_testigos",
+          "arrival_m": [
+            -179.431534,
+            -70.94072,
+            -167.254944
+          ],
+          "focus_m": [
+            -169.53479,
+            -81.993629,
+            -173.312775
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/casco_perdido",
+          "name": "Casco Perdido",
+          "kind": "wreck",
+          "arrival_node": "arrival_casco_perdido",
+          "focus_node": "focus_casco_perdido",
+          "arrival_m": [
+            218.204742,
+            -107.233482,
+            23.057178
+          ],
+          "focus_m": [
+            220.071014,
+            -106.964806,
+            7.143197
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/refugio_brezos",
+          "name": "Refugio de los Brezos",
+          "kind": "camp",
+          "arrival_node": "arrival_refugio_brezos",
+          "focus_node": "focus_refugio_brezos",
+          "arrival_m": [
+            -140.913193,
+            -140.62291,
+            130.62674
+          ],
+          "focus_m": [
+            -153.783264,
+            -132.651855,
+            125.36998
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/terrazas_semilla",
+          "name": "Terrazas Semilla",
+          "kind": "farm",
+          "arrival_node": "arrival_terrazas_semilla",
+          "focus_node": "focus_terrazas_semilla",
+          "arrival_m": [
+            26.674252,
+            -159.651474,
+            -185.475113
+          ],
+          "focus_m": [
+            23.196993,
+            -171.785629,
+            -175.601883
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/pozo_calido",
+          "name": "Pozo Cálido",
+          "kind": "thermal",
+          "arrival_node": "arrival_pozo_calido",
+          "focus_node": "focus_pozo_calido",
+          "arrival_m": [
+            73.940941,
+            -213.575439,
+            119.237526
+          ],
+          "focus_m": [
+            87.837898,
+            -206.651031,
+            123.204521
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/lurga/aguja_sur",
+          "name": "Aguja del Sur",
+          "kind": "relay",
+          "arrival_node": "arrival_aguja_sur",
+          "focus_node": "focus_aguja_sur",
+          "arrival_m": [
+            -90.599785,
+            -234.299194,
+            -7.367674
+          ],
+          "focus_m": [
+            -84.271523,
+            -236.364151,
+            -21.945023
+          ],
+          "status": "modeled_location_not_gameplay"
+        }
+      ],
+      "representations": {
+        "surface": {
+          "triangles": 291864,
+          "bytes": 15692788,
+          "meshes": 50,
+          "sha256": "48a26f64ece80389fe5393469dc95aecfe1b749f208cf42a4697fc7e75d75de6",
+          "path": "game/assets/models/bizigai_pack/lurga_surface.glb",
+          "res_path": "res://assets/models/bizigai_pack/lurga_surface.glb",
+          "terrain_grid_per_face": 64,
+          "collision": "six terrain trimeshes and landmark structure trimeshes"
+        },
+        "approach": {
+          "triangles": 119352,
+          "bytes": 6588032,
+          "meshes": 44,
+          "sha256": "c104adc39e9020844e1af10be09b997a01fe5f9e2a9c994e41bbe797553d11fd",
+          "path": "game/assets/models/bizigai_pack/lurga_approach.glb",
+          "res_path": "res://assets/models/bizigai_pack/lurga_approach.glb",
+          "terrain_grid_per_face": 32,
+          "collision": "none"
+        },
+        "orbital": {
+          "triangles": 10776,
+          "bytes": 534908,
+          "meshes": 22,
+          "sha256": "5e8994e75b49519e75324a03614838c2fcf6e2a3de22dbec33dd765199740cad",
+          "path": "game/assets/models/bizigai_pack/lurga_orbital.glb",
+          "res_path": "res://assets/models/bizigai_pack/lurga_orbital.glb",
+          "terrain_grid_per_face": 16,
+          "collision": "none"
+        }
+      },
+      "tree_count": 628
+    },
+    {
+      "name": "Elur",
+      "radius_m": 200.0,
+      "seed": 5602,
+      "biome": "Altiplano alpino templado, tundra florida y lagunas geotérmicas",
+      "habitable": true,
+      "breathable_atmosphere": true,
+      "gravity_m_s2": 8.0,
+      "id": "bizigai/elur",
+      "source": "art/blender/bizigai_pack/elur.blend",
+      "source_sha256": "04614eaaf276f54f02c39a981d95514ec24f45cc7980a85fbed5883b6baba1ba",
+      "axes": "+Y north/up; -Z zero longitude; +X east",
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "units": "metres",
+      "pois": [
+        {
+          "id": "bizigai/elur/base_albor",
+          "name": "Base Albor",
+          "kind": "landing",
+          "arrival_node": "arrival_base_albor",
+          "focus_node": "focus_base_albor",
+          "arrival_m": [
+            23.928923,
+            190.198074,
+            -52.55357
+          ],
+          "focus_m": [
+            23.714205,
+            185.811615,
+            -67.965347
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/vivero_aurora",
+          "name": "Vivero Aurora",
+          "kind": "greenhouse",
+          "arrival_node": "arrival_vivero_aurora",
+          "focus_node": "focus_vivero_aurora",
+          "arrival_m": [
+            44.805248,
+            159.740173,
+            121.497543
+          ],
+          "focus_m": [
+            46.0639,
+            169.092606,
+            108.54541
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/mirador_cenit",
+          "name": "Mirador del Cénit",
+          "kind": "observatory",
+          "arrival_node": "arrival_mirador_cenit",
+          "focus_node": "focus_mirador_cenit",
+          "arrival_m": [
+            -135.220474,
+            143.701202,
+            -50.252846
+          ],
+          "focus_m": [
+            -133.893494,
+            139.396881,
+            -65.632118
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/claustro_nieve",
+          "name": "Claustro de Nieve",
+          "kind": "ruins",
+          "arrival_node": "arrival_claustro_nieve",
+          "focus_node": "focus_claustro_nieve",
+          "arrival_m": [
+            176.314484,
+            127.781036,
+            -42.331978
+          ],
+          "focus_m": [
+            175.024643,
+            124.326241,
+            -57.927189
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/jardin_cuarzo",
+          "name": "Jardín de Cuarzo",
+          "kind": "quarry",
+          "arrival_node": "arrival_jardin_cuarzo",
+          "focus_node": "focus_jardin_cuarzo",
+          "arrival_m": [
+            -92.703506,
+            82.940224,
+            173.021194
+          ],
+          "focus_m": [
+            -97.012932,
+            95.783279,
+            164.459946
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/puerta_desfiladero",
+          "name": "Puerta del Desfiladero",
+          "kind": "arches",
+          "arrival_node": "arrival_puerta_desfiladero",
+          "focus_node": "focus_puerta_desfiladero",
+          "arrival_m": [
+            -44.915874,
+            77.958557,
+            -191.159027
+          ],
+          "focus_m": [
+            -42.791248,
+            63.396114,
+            -197.501831
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/estacion_alpina",
+          "name": "Estación Alpina",
+          "kind": "workshop",
+          "arrival_node": "arrival_estacion_alpina",
+          "focus_node": "focus_estacion_alpina",
+          "arrival_m": [
+            163.023758,
+            31.852535,
+            127.575478
+          ],
+          "focus_m": [
+            169.862778,
+            41.058228,
+            116.382027
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/laguna_espejo",
+          "name": "Laguna Espejo",
+          "kind": "water",
+          "arrival_node": "arrival_laguna_espejo",
+          "focus_node": "focus_laguna_espejo",
+          "arrival_m": [
+            -214.000748,
+            11.942453,
+            40.763954
+          ],
+          "focus_m": [
+            -216.805374,
+            14.053228,
+            25.127817
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/crestas_brisa",
+          "name": "Crestas de la Brisa",
+          "kind": "wind",
+          "arrival_node": "arrival_crestas_brisa",
+          "focus_node": "focus_crestas_brisa",
+          "arrival_m": [
+            140.743317,
+            -3.095055,
+            -154.045532
+          ],
+          "focus_m": [
+            132.945328,
+            -15.363311,
+            -160.790253
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/terraza_sol",
+          "name": "Terraza del Sol",
+          "kind": "solar",
+          "arrival_node": "arrival_terraza_sol",
+          "focus_node": "focus_terraza_sol",
+          "arrival_m": [
+            7.924659,
+            -52.181835,
+            203.940414
+          ],
+          "focus_m": [
+            8.748526,
+            -36.647869,
+            207.791016
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/corona_ecos",
+          "name": "Corona de Ecos",
+          "kind": "monolith",
+          "arrival_node": "arrival_corona_ecos",
+          "focus_node": "focus_corona_ecos",
+          "arrival_m": [
+            -145.390961,
+            -55.06723,
+            -133.058167
+          ],
+          "focus_m": [
+            -135.494217,
+            -66.120148,
+            -139.115997
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/quilla_boreal",
+          "name": "Quilla Boreal",
+          "kind": "wreck",
+          "arrival_node": "arrival_quilla_boreal",
+          "focus_node": "focus_quilla_boreal",
+          "arrival_m": [
+            193.763748,
+            -95.329498,
+            21.930681
+          ],
+          "focus_m": [
+            195.63002,
+            -95.060822,
+            6.016699
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/campamento_lumen",
+          "name": "Campamento Lumen",
+          "kind": "camp",
+          "arrival_node": "arrival_campamento_lumen",
+          "focus_node": "focus_campamento_lumen",
+          "arrival_m": [
+            -119.841919,
+            -121.949242,
+            113.037575
+          ],
+          "focus_m": [
+            -132.71199,
+            -113.978188,
+            107.780815
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/bancales_alpinos",
+          "name": "Bancales Alpinos",
+          "kind": "farm",
+          "arrival_node": "arrival_bancales_alpinos",
+          "focus_node": "focus_bancales_alpinos",
+          "arrival_m": [
+            22.853436,
+            -132.4944,
+            -157.045547
+          ],
+          "focus_m": [
+            19.376177,
+            -144.628555,
+            -147.172318
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/termas_azules",
+          "name": "Termas Azules",
+          "kind": "thermal",
+          "arrival_node": "arrival_termas_azules",
+          "focus_node": "focus_termas_azules",
+          "arrival_m": [
+            59.518681,
+            -178.388046,
+            98.515785
+          ],
+          "focus_m": [
+            73.415642,
+            -171.463638,
+            102.48278
+          ],
+          "status": "modeled_location_not_gameplay"
+        },
+        {
+          "id": "bizigai/elur/faro_austral",
+          "name": "Faro Austral",
+          "kind": "relay",
+          "arrival_node": "arrival_faro_austral",
+          "focus_node": "focus_faro_austral",
+          "arrival_m": [
+            -74.343925,
+            -189.411591,
+            -3.713206
+          ],
+          "focus_m": [
+            -68.015663,
+            -191.476547,
+            -18.290554
+          ],
+          "status": "modeled_location_not_gameplay"
+        }
+      ],
+      "representations": {
+        "surface": {
+          "triangles": 182748,
+          "bytes": 8816368,
+          "meshes": 50,
+          "sha256": "aad0c1a21dbed152deae8f3aea606186471ed32caa5d9bcb24c2188e1884157a",
+          "path": "game/assets/models/bizigai_pack/elur_surface.glb",
+          "res_path": "res://assets/models/bizigai_pack/elur_surface.glb",
+          "terrain_grid_per_face": 64,
+          "collision": "six terrain trimeshes and landmark structure trimeshes"
+        },
+        "approach": {
+          "triangles": 58836,
+          "bytes": 2719404,
+          "meshes": 44,
+          "sha256": "482089028ae125210435f606b7330778334a69e65d2f1865626b6714232cdad5",
+          "path": "game/assets/models/bizigai_pack/elur_approach.glb",
+          "res_path": "res://assets/models/bizigai_pack/elur_approach.glb",
+          "terrain_grid_per_face": 32,
+          "collision": "none"
+        },
+        "orbital": {
+          "triangles": 10776,
+          "bytes": 537872,
+          "meshes": 22,
+          "sha256": "703316771b9e855f2c9a1af454c437bfcd3f6ff0bbf8e2f5d164c8b134982211",
+          "path": "game/assets/models/bizigai_pack/elur_orbital.glb",
+          "res_path": "res://assets/models/bizigai_pack/elur_orbital.glb",
+          "terrain_grid_per_face": 16,
+          "collision": "none"
+        }
+      },
+      "tree_count": 403
+    }
+  ],
+  "limits": [
+    "Not astronomical scale",
+    "No flight or seamless transition",
+    "No network, missions, enemies or harvest logic",
+    "Water is shallow visual basin geometry, no swimming",
+    "Vegetation has no collision",
+    "No planetary orbit or spin"
+  ]
+}
