@@ -1,0 +1,95 @@
+name: Verify native mission contract
+
+on:
+  pull_request:
+    paths:
+      - 'tools/validate_mission.py'
+      - 'tools/mission_validator.gd'
+      - 'schemas/mission-v1.schema.json'
+      - 'examples/missions/**'
+      - 'tests/test_mission_validator.*'
+      - 'game/core/**'
+      - 'game/data/campaign.json'
+      - 'game/project.godot'
+      - 'tools/bootstrap.py'
+      - 'tools/export_targets.py'
+      - '.github/workflows/mission-contract.yml'
+  push:
+    branches: [main, agent/32-mission-contract-c42]
+    paths:
+      - 'tools/validate_mission.py'
+      - 'tools/mission_validator.gd'
+      - 'schemas/mission-v1.schema.json'
+      - 'examples/missions/**'
+      - 'tests/test_mission_validator.*'
+      - 'game/core/**'
+      - 'game/data/campaign.json'
+      - 'game/project.godot'
+      - 'tools/bootstrap.py'
+      - 'tools/export_targets.py'
+      - '.github/workflows/mission-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mission-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mission-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, same pin as repository CI
+        with:
+          persist-credentials: false
+      - name: Test strict JSON transport, schema and runner failures
+        run: |
+          python3 -m pip install 'jsonschema==4.26.0'
+          python3 -m unittest discover -s tests -p test_mission_validator.py -v
+      - name: Prepare pinned engine
+        run: python3 tools/bootstrap.py
+      - name: Import production project
+        shell: bash
+        run: |
+          set -o pipefail
+          timeout 180 .toolchain/godot --headless --editor --path game --import 2>&1 | tee mission-import.log
+          if grep -E '^(SCRIPT ERROR|ERROR):' mission-import.log; then exit 1; fi
+      - name: Test real Catalog, schema contract and playable example
+        shell: bash
+        run: |
+          set -o pipefail
+          timeout 120 .toolchain/godot --headless --path game --script ../tests/test_mission_validator.gd -- --test 2>&1 | tee mission-contract.log
+          if grep -E '^(SCRIPT ERROR|ERROR):' mission-contract.log; then exit 1; fi
+          grep -E 'MISSION_CONTRACT_TESTS [0-9]+ checks; 0 failures' mission-contract.log
+      - name: Exercise public CLI against real Godot and bundled missions
+        run: |
+          python3 tools/validate_mission.py examples/missions/first-contact.json --godot .toolchain/godot --json
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import subprocess
+          import tempfile
+          from jsonschema import Draft202012Validator
+          root = pathlib.Path.cwd()
+          schema = json.loads((root / 'schemas/mission-v1.schema.json').read_text())
+          missions = json.loads((root / 'game/data/campaign.json').read_text())['missions']
+          validator = Draft202012Validator(schema)
+          with tempfile.TemporaryDirectory() as directory:
+              paths = []
+              for index, mission in enumerate(missions):
+                  validator.validate(mission)
+                  path = pathlib.Path(directory) / f'mission-{index}.json'
+                  path.write_text(json.dumps(mission), encoding='utf-8')
+                  paths.append(str(path))
+              subprocess.run(['python3', 'tools/validate_mission.py', '--godot', '.toolchain/godot', '--json', *paths], check=True)
+              bad = json.loads((root / 'examples/missions/first-contact.json').read_text())
+              bad['objectives'][0]['target'] = 'missing'
+              path = pathlib.Path(directory) / 'bad.json'
+              path.write_text(json.dumps(bad), encoding='utf-8')
+              process = subprocess.run(['python3', 'tools/validate_mission.py', str(path), '--godot', '.toolchain/godot', '--json'], capture_output=True, text=True)
+              assert process.returncode == 1, (process.returncode, process.stdout, process.stderr)
+              assert json.loads(process.stdout)['results'][0]['status'] == 'invalid'
+          PY

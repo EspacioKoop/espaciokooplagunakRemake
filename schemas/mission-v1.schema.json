@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:espaciokoop:mission:v1",
+  "title": "Misión nativa de Espaciokoop Lagunak — contrato v1",
+  "description": "Ayuda estructural para autoría. Catalog.validate_mission es la autoridad: comprueba también referencias, compatibilidad de objetivos, física, recogibles, diseño y montajes. No es un formato de campaña, guardado ni paquete ejecutable.",
+  "type": "object",
+  "required": ["id", "title", "sector", "briefing", "contacts", "objectives"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": {"type": "string"},
+    "id": {"$ref": "#/$defs/identifier"},
+    "title": {"$ref": "#/$defs/missionText"},
+    "sector": {"$ref": "#/$defs/missionText"},
+    "briefing": {"$ref": "#/$defs/missionText"},
+    "reward": {"type": "number", "minimum": 0, "maximum": 10000},
+    "contacts": {"type": "array", "maxItems": 48, "items": {"$ref": "#/$defs/contact"}},
+    "objectives": {"type": "array", "minItems": 1, "maxItems": 24, "items": {"$ref": "#/$defs/objective"}},
+    "ship_design": {"type": "object", "description": "Diseño nativo validado por ShipModel.validate_design; no basta con ser un objeto."},
+    "ship_loadout": {"type": "object", "description": "Montajes nativos validados por LoadoutDocument.validate_loadout; no basta con ser un objeto."}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_-]+$"},
+    "missionText": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "position": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number", "minimum": -12000, "maximum": 12000}},
+    "contact": {
+      "type": "object",
+      "required": ["id", "name", "kind", "position"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "name": {"type": "string", "maxLength": 80},
+        "kind": {"type": "string", "enum": ["station", "friendly", "hostile", "derelict", "anomaly", "beacon", "asteroid", "planet", "blackhole", "wormhole", "nebula", "supplydrop", "artifact"]},
+        "position": {"$ref": "#/$defs/position"},
+        "frequency": {"type": "integer", "minimum": 0, "maximum": 20},
+        "known": {"type": "boolean"},
+        "jammed": {"type": "boolean"},
+        "hull": {"type": "number", "minimum": 0, "maximum": 100},
+        "survivors": {"type": "number", "minimum": 0, "maximum": 100},
+        "radius": {"type": "number", "minimum": 5, "maximum": 2000},
+        "gravity": {"type": "number", "minimum": 0, "maximum": 100000000},
+        "destination": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}, "description": "Destino de portal; los límites los comprueba SpacePhysics."}
+      }
+    },
+    "objective": {
+      "type": "object",
+      "required": ["type", "target", "text"],
+      "additionalProperties": true,
+      "properties": {
+        "type": {"type": "string", "enum": ["navigate", "dock", "hail", "scan", "salvage", "rescue", "defeat", "repair_target", "choice", "probe", "touch", "pickup"]},
+        "target": {"$ref": "#/$defs/identifier"},
+        "text": {"type": "string", "minLength": 1, "maxLength": 500}
+      }
+    }
+  }
+}
