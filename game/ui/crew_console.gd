@@ -15,7 +15,11 @@ func _ready() -> void:
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for edge in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + edge, 18)
 	add_child(margin)
-	body = ConsoleUI.column(margin, 12)
+	var scroll = ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	margin.add_child(scroll)
+	body = ConsoleUI.column(scroll, 12)
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	if crew != null:
 		crew.updated.connect(_rebuild)
 		crew.notice.connect(_notice)
@@ -33,7 +37,10 @@ func _rebuild() -> void:
 	var top = ConsoleUI.row(body)
 	var heading = ConsoleUI.label(profile.name.to_upper(), 27, ConsoleUI.TEAL)
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heading.clip_text = true
+	heading.custom_minimum_size.x = 140
 	top.add_child(heading)
+	top.add_child(ConsoleUI.button("Editar ficha", _open_character_editor, true))
 	top.add_child(ConsoleUI.label("NIVEL %d · %d/%d XP · F4 cerrar" % [profile.level, profile.xp, profile.level * 10], 14, ConsoleUI.MUTED))
 	var meters = ConsoleUI.row(body, 12)
 	for info in [["CONCENTRACIÓN", "%d / %d" % [profile.focus, CrewSystem.MAX_FOCUS]], ["CONDICIÓN", "%d%%" % profile.condition], ["ENFOQUE", profile.approach.capitalize()]]:
@@ -102,6 +109,19 @@ func _rebuild() -> void:
 		milestones.add_child(ConsoleUI.label(str(milestone), 13, ConsoleUI.MUTED))
 	status = ConsoleUI.label("Las tiradas y capacidades se resuelven en el anfitrión.", 13, ConsoleUI.MUTED)
 	body.add_child(status)
+
+func _open_character_editor() -> CharacterEditor:
+	# Root-owned, not a child of the periodically rebuilt body (or this console).
+	# Closing F4 cannot destroy a dirty draft; its own close path confirms discard.
+	for window in get_tree().get_nodes_in_group(CharacterEditor.EDITOR_GROUP):
+		if window is CharacterEditor and not window.is_queued_for_deletion():
+			window.grab_focus()
+			return window
+	var editor = CharacterEditor.new()
+	editor.expedition = get_tree().root.get_node_or_null("Expedition")
+	get_tree().root.add_child(editor)
+	editor.popup_centered(Vector2i(1040, 740))
+	return editor
 
 func _use_ability(id: String, system_menu: OptionButton) -> void:
 	var args = {"ability": id}

@@ -77,4 +77,15 @@ func run() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://expedition-systems.json"))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://expedition-systems.json.bak"))
 	print("CREW_TESTS ", checks, " checks; ", failures, " failures")
+	if "--character-child" not in OS.get_cmdline_user_args():
+		# Additive canonical-CI entry. The Python runner isolates every save and
+		# --from-crew prevents recursion without dropping existing crew checks.
+		var output: Array = []
+		var runner = ProjectSettings.globalize_path("res://../tests/run_character_editor.py")
+		var code = OS.execute("python3", [runner, "--from-crew"], output, true)
+		var text = "\n".join(output)
+		print(text)
+		if code != 0 or "CHARACTER_EDITOR_OK" not in text or "SCRIPT ERROR:" in text or "ERROR:" in text:
+			failures += 1
+			push_error("CREW_FAIL character editor integration gate")
 	quit(1 if failures else 0)
