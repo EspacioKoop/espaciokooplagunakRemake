@@ -50,8 +50,8 @@ Tras descomprimir en un Mac, ejecutar la `.app` prueba la UI. Para una comprobac
 reproducible del motor, desde el directorio descomprimido:
 
 ```sh
-codesign --verify --deep --strict --verbose=2 EspaciokoopLagunak.app
-EspaciokoopLagunak.app/Contents/MacOS/EspaciokoopLagunak --headless --audio-driver Dummy --quit-after 60 -- --test
+codesign --verify --deep --strict --verbose=2 "Espaciokoop Lagunak.app"
+"Espaciokoop Lagunak.app/Contents/MacOS/Espaciokoop Lagunak" --headless --audio-driver Dummy --quit-after 60 -- --test
 ```
 
 Una exportación válida desde Linux no demuestra por sí sola arranque en macOS.
