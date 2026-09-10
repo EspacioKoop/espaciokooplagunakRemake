@@ -12,6 +12,7 @@ var tabs: TabContainer
 var fields: Dictionary = {}
 var status: Label
 var dialog: FileDialog
+var template_picker: OptionButton
 var _exporting = false
 var _pending_numbers: Dictionary = {}
 
@@ -32,6 +33,16 @@ func _ready() -> void:
  tools_row.add_child(ConsoleUI.button("Diseño Itsaso", _reset_design))
  tools_row.add_child(ConsoleUI.button("Importar nave", func(): _choose_file(false)))
  tools_row.add_child(ConsoleUI.button("Exportar nave", func(): _choose_file(true)))
+ var templates_row = ConsoleUI.row(root)
+ template_picker = OptionButton.new()
+ template_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+ for entry in ShipTemplateCatalog.entries():
+  template_picker.add_item(entry.name)
+  template_picker.set_item_metadata(template_picker.item_count - 1, entry.id)
+ templates_row.add_child(template_picker)
+ templates_row.add_child(ConsoleUI.button("Cargar variante", func():
+  if template_picker.selected >= 0: select_template(str(template_picker.get_selected_metadata()))))
+ root.add_child(ConsoleUI.paragraph(ShipTemplateCatalog.NOTICE, 13))
  tabs = TabContainer.new()
  ConsoleUI.expand(tabs)
  root.add_child(tabs)
@@ -97,6 +108,17 @@ func _ready() -> void:
 func _reset_design() -> void:
  set_design(ShipModel.standard_design())
  loadout_editor.set_loadout(LoadoutDocument.default_loadout())
+
+func select_template(id: String) -> bool:
+ var result = ShipTemplateCatalog.configuration(id)
+ if result.has("error"):
+  status.text = result.error
+  return false
+ set_design(result.design)
+ loadout = result.loadout.duplicate(true)
+ loadout_editor.set_loadout(loadout)
+ status.text = "%s · %d montajes cargados. Puedes editar y exportar la configuración." % [design.name, loadout.mounts.size()]
+ return true
 
 func set_design(value: Dictionary) -> void:
  design = value.duplicate(true)
