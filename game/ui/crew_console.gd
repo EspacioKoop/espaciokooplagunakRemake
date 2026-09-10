@@ -42,6 +42,8 @@ func _rebuild() -> void:
 	top.add_child(heading)
 	top.add_child(ConsoleUI.button("Editar ficha", _open_character_editor, true))
 	top.add_child(ConsoleUI.label("NIVEL %d · %d/%d XP · F4 cerrar" % [profile.level, profile.xp, profile.level * 10], 14, ConsoleUI.MUTED))
+	var preparation = ConsoleUI.row(body)
+	preparation.add_child(ConsoleUI.button("Briefing de misión", _open_mission_briefing))
 	var meters = ConsoleUI.row(body, 12)
 	for info in [["CONCENTRACIÓN", "%d / %d" % [profile.focus, CrewSystem.MAX_FOCUS]], ["CONDICIÓN", "%d%%" % profile.condition], ["ENFOQUE", profile.approach.capitalize()]]:
 		var card = ConsoleUI.card(meters, info[0])
@@ -109,6 +111,9 @@ func _rebuild() -> void:
 		milestones.add_child(ConsoleUI.label(str(milestone), 13, ConsoleUI.MUTED))
 	status = ConsoleUI.label("Las tiradas y capacidades se resuelven en el anfitrión.", 13, ConsoleUI.MUTED)
 	body.add_child(status)
+
+func _open_mission_briefing() -> MissionBriefingWindow:
+	return MissionBriefingWindow.open_for(get_tree())
 
 func _open_character_editor() -> CharacterEditor:
 	# Root-owned, not a child of the periodically rebuilt body (or this console).

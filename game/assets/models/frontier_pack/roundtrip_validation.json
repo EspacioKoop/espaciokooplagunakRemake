@@ -1,0 +1,127 @@
+{
+  "passed": true,
+  "assets_checked": 24,
+  "scope": "Reopen all editable Blender sources and re-export without overwriting sources. Structural equivalence, not byte-identical exporter output.",
+  "assets": [
+    {
+      "id": "haizea_scout",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "basajaun_hauler",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "izar_science",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "ekaitz_interceptor",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "argi_sidearm",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "tximista_carbine",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "sugar_lance",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "orbain_turret",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "crew_navigator",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "crew_engineer",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "crew_synthetic",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "enemy_watcher",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "enemy_crawler",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "enemy_warden",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "world_ocean",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "world_desert",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "world_ice",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "world_lava",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "world_gas",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "cargo_crate",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "medical_capsule",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "navigation_beacon",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "mineral_cluster",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    },
+    {
+      "id": "field_scanner",
+      "source_unchanged": true,
+      "geometry_and_clips_preserved": true
+    }
+  ]
+}

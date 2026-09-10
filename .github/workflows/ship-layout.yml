@@ -1,0 +1,56 @@
+name: Verify ship floorplan and real UI captures
+
+on:
+  pull_request:
+    paths:
+      - 'game/world/**'
+      - 'tests/capture_ship_layout.gd'
+      - 'tests/test_ship_deck_layout.gd'
+      - '.github/workflows/ship-layout.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'game/world/**'
+      - 'tests/capture_ship_layout.gd'
+      - 'tests/test_ship_deck_layout.gd'
+      - '.github/workflows/ship-layout.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ship-layout-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  graphical:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install graphical runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+      - name: Download verified Godot
+        run: python3 tools/bootstrap.py
+      - name: Import assets
+        run: .toolchain/godot --headless --editor --path game --quit
+      - name: Exercise actual map clicks and capture the running app
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          SHIP_LAYOUT_CAPTURE_DIR: ${{ github.workspace }}/build/ship-layout
+        run: |
+          set -o pipefail
+          timeout 90 xvfb-run -a -s '-screen 0 1600x900x24' .toolchain/godot --path game --audio-driver Dummy --script ../tests/capture_ship_layout.gd -- --test 2>&1 | tee ship-layout.log
+          if grep -E '^(SCRIPT ERROR|ERROR):' ship-layout.log; then exit 1; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: ship-layout-real-captures
+          path: |
+            build/ship-layout/*.png
+            ship-layout.log
+          if-no-files-found: warn
+          retention-days: 14

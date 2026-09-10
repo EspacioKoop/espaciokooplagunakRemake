@@ -1,0 +1,48 @@
+name: Validate parity evidence register
+
+on:
+  pull_request:
+  push:
+    branches: [main, agent/32-parity-evidence]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: parity-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  parity-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, same pin as existing workflows
+        with:
+          persist-credentials: false
+      - name: Test offline validation and negative cases
+        run: python3 -m unittest discover -s tests -p test_parity_evidence.py -v
+      - name: Validate actual register and catalogue references
+        run: python3 tools/check_parity_evidence.py --markdown parity-evidence.md
+      - name: Verify deterministic report
+        run: |
+          python3 tools/check_parity_evidence.py --markdown parity-evidence-second.md
+          cmp parity-evidence.md parity-evidence-second.md
+      - name: Publish evidence register, not release approval
+        shell: bash
+        run: |
+          cat parity-evidence.md >> "$GITHUB_STEP_SUMMARY"
+          python3 - <<'PY'
+          from collections import Counter
+          from pathlib import Path
+          from tools.check_parity_evidence import collect, load_json
+          root = Path.cwd()
+          data = load_json(root / 'docs/parity/issue32_inventory.json')
+          rows = collect(data, root)
+          print('Rows:', len(rows))
+          print('Scopes:', dict(Counter(row['scope'] for row in rows)))
+          print('Statuses:', dict(Counter(row['status'] for row in rows)))
+          print('Coverage complete:', data['coverage']['complete'])
+          print('Structural validation only: this workflow does not certify gameplay or authorize a release.')
+          PY

@@ -39,6 +39,9 @@ func _ready() -> void:
 	var body = ConsoleUI.row(root, 16)
 	ConsoleUI.expand(body)
 	var left = _scroll_side(body, 290)
+	var npc_button = ConsoleUI.button("Taller de NPC…", _open_npc_workbench)
+	npc_button.name = "NpcWorkbenchButton"
+	left.add_child(npc_button)
 	left.add_child(ConsoleUI.label("DATOS DE LA MISIÓN", 13, ConsoleUI.MUTED))
 	for field in [["id", "Identificador"], ["title", "Título"], ["sector", "Sector"]]:
 		left.add_child(ConsoleUI.label(field[1], 14, ConsoleUI.MUTED))
@@ -269,6 +272,15 @@ func _physical_field(value: float, key: String) -> void:
 		contact.destination = destination
 	else: contact[key] = value
 	_validate()
+
+func _open_npc_workbench() -> void:
+	for child in get_children():
+		if child is NpcWorkbench and not child.is_queued_for_deletion():
+			child.popup_centered_clamped(Vector2i(880, 700), 0.9)
+			return
+	var workshop = NpcWorkbench.new()
+	add_child(workshop)
+	workshop.popup_centered_clamped(Vector2i(880, 700), 0.9)
 
 func _open_ship_design() -> void:
 	var editor = ShipDesignEditor.new()
