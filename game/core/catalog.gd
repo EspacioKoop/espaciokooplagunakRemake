@@ -5,14 +5,14 @@ const ROLES := ["mando", "navegacion", "ingenieria", "armas", "sensores", "comun
 const ROLE_NAMES := ["Mando", "Navegación", "Ingeniería", "Armas", "Sensores", "Comunicaciones", "Enlace", "Control de daños"]
 const SYSTEMS := ["motores", "escudos", "armas", "sensores"]
 const PERMISSIONS := {
-	"mando": ["alert", "mission_choice", "assist"],
-	"navegacion": ["helm", "autopilot", "dock", "undock", "boost", "assist"],
-	"ingenieria": ["power", "coolant", "shields", "assist"],
-	"armas": ["fire", "missile", "assist"],
-	"sensores": ["scan", "assist"],
-	"comunicaciones": ["hail", "negotiate", "assist"],
-	"enlace": ["probe", "salvage", "rescue", "assist"],
-	"reparaciones": ["repair", "repair_target", "assist"]
+	"mando": ["alert", "mission_choice"],
+	"navegacion": ["helm", "autopilot", "dock", "undock", "boost"],
+	"ingenieria": ["power", "coolant", "shields"],
+	"armas": ["fire", "missile"],
+	"sensores": ["scan"],
+	"comunicaciones": ["hail", "negotiate"],
+	"enlace": ["probe", "salvage", "rescue"],
+	"reparaciones": ["repair", "repair_target"]
 }
 const DESCRIPTIONS := {
 	"mando": "Coordina la alerta, decide el desenlace y consulta los objetivos compartidos.",
@@ -69,6 +69,8 @@ static func validate_mission(value: Variant) -> String:
 		for coordinate in contact.position:
 			if not finite_number(coordinate) or absf(float(coordinate)) > 12000:
 				return "Coordenada fuera del sector."
+		if contact.has("frequency") and (not finite_number(contact.frequency) or contact.frequency < 0 or contact.frequency > 20 or contact.frequency != floorf(contact.frequency)):
+			return "Frecuencia de contacto inválida."
 		for flag in ["jammed", "known"]:
 			if contact.has(flag) and not contact[flag] is bool:
 				return "Indicador inválido: " + flag

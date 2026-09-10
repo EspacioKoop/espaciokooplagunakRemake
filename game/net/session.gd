@@ -6,7 +6,7 @@ signal joined
 signal disconnected
 
 const DEFAULT_PORT = 27840
-const PROTOCOL = 1
+const PROTOCOL = 2
 var sim = Simulation.new()
 var view: Dictionary = {}
 var mode = "offline"
@@ -28,13 +28,16 @@ var _previous_status = ""
 var suppress_saves = false
 
 func _ready() -> void:
+	# Clients exchange orders and views only with the host. Avoid transport peer
+	# announcements to connections that are still authenticating or closing.
+	multiplayer.server_relay = false
 	multiplayer.peer_connected.connect(_peer_connected)
 	multiplayer.peer_disconnected.connect(_peer_disconnected)
 	multiplayer.connection_failed.connect(_connection_failed)
 	multiplayer.server_disconnected.connect(_connection_failed)
 	telemetry = Telemetry.new()
 	add_child(telemetry)
-	telemetry.get_state = func(): return view.duplicate(true)
+	telemetry.get_state = _telemetry_view
 	telemetry.get_events = func(): return view.get("events", []).duplicate(true)
 	suppress_saves = "--capture" in OS.get_cmdline_user_args() or "--test" in OS.get_cmdline_user_args()
 
@@ -86,7 +89,7 @@ func order(operation: String, args: Dictionary = {}) -> Dictionary:
 	if mode == "client":
 		_receive_order.rpc_id(1, operation, args)
 		return {"ok": true, "message": "Orden enviada al anfitrión."}
-	var result = sim.command(role, operation, args)
+	var result = sim.command(role, operation, args, "local" if mode == "offline" else "1")
 	notice.emit(result.message, result.ok)
 	_refresh_view()
 	return result
@@ -153,7 +156,11 @@ func _peer_connected(id: int) -> void:
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _challenge(nonce: String, protocol: int) -> void:
-	if mode != "client" or nonce.length() != 48 or protocol != PROTOCOL: return
+	if mode != "client" or nonce.length() != 48: return
+	if protocol != PROTOCOL:
+		connection_status = "La versión de red no coincide. Usad la misma compilación de Lagunak."
+		_connection_failed()
+		return
 	var proof = Crypto.new().hmac_digest(HashingContext.HASH_SHA256, access_key.to_utf8_buffer(), nonce.to_utf8_buffer())
 	_authenticate.rpc_id(1, proof, _player_name, _desired_role)
 
@@ -180,9 +187,10 @@ func _authenticate(proof: PackedByteArray, player_name: String, requested_role: 
 	_refresh_view()
 
 func _reject_peer(id: int, message: String) -> void:
+	if not _peer_active(id): return
 	_response.rpc_id(id, message, false)
 	await get_tree().create_timer(0.15).timeout
-	if mode == "host": multiplayer.multiplayer_peer.disconnect_peer(id)
+	if _peer_active(id): multiplayer.multiplayer_peer.get_peer(id).peer_disconnect_later()
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _accepted(assigned_role: String) -> void:
@@ -221,7 +229,7 @@ func _receive_order(operation: String, args: Dictionary) -> void:
 	if mode != "host": return
 	var id = multiplayer.get_remote_sender_id()
 	if not roster.has(id) or not _allow_order(id): return
-	var result = sim.command(roster[id].role, operation, args)
+	var result = sim.command(roster[id].role, operation, args, str(id))
 	_response.rpc_id(id, result.message, result.ok)
 	_refresh_view()
 
@@ -275,7 +283,7 @@ func _connection_failed() -> void:
 
 func _refresh_view() -> void:
 	if mode == "client": return
-	view = sim.snapshot()
+	view = sim.snapshot(role, "local" if mode == "offline" else "1")
 	if not view.is_empty():
 		view.roster = roster.duplicate(true)
 		view.poses = poses.duplicate(true)
@@ -290,14 +298,18 @@ func _physics_process(delta: float) -> void:
 		_broadcast_clock = 0.0
 		_refresh_view()
 		if mode == "host" and not view.is_empty():
-			var raw = JSON.stringify(view, "", false).to_utf8_buffer()
-			if raw.size() <= 256 * 1024:
-				var packet = PackedByteArray()
-				packet.resize(4)
-				packet.encode_u32(0, raw.size())
-				packet.append_array(raw.compress(FileAccess.COMPRESSION_DEFLATE))
-				for id in roster:
-					if int(id) != 1: _snapshot.rpc_id(int(id), packet)
+			for id in roster:
+				if int(id) == 1: continue
+				var recipient_view = sim.snapshot(roster[id].role, str(id))
+				recipient_view.roster = roster.duplicate(true)
+				recipient_view.poses = poses.duplicate(true)
+				var raw = JSON.stringify(recipient_view, "", false).to_utf8_buffer()
+				if raw.size() <= 256 * 1024:
+					var packet = PackedByteArray()
+					packet.resize(4)
+					packet.encode_u32(0, raw.size())
+					packet.append_array(raw.compress(FileAccess.COMPRESSION_DEFLATE))
+					_snapshot.rpc_id(int(id), packet)
 			for id in _challenges.keys():
 				if Time.get_ticks_msec() > _challenges[id].until:
 					_challenges.erase(id)
@@ -312,3 +324,14 @@ func _exit_tree() -> void:
 	if telemetry != null: telemetry.stop()
 	if not suppress_saves and mode != "client" and not sim.state.is_empty(): save_game()
 	if multiplayer.multiplayer_peer != null: multiplayer.multiplayer_peer.close()
+
+func _telemetry_view() -> Dictionary:
+	var public_view: Dictionary = view.duplicate(true) if mode == "client" else sim.snapshot()
+	ShipOperations.redact(public_view, "")
+	Cooperation.redact(public_view, "")
+	return public_view
+
+func _peer_active(id: int) -> bool:
+	if mode != "host" or id not in multiplayer.get_peers(): return false
+	var peer: ENetPacketPeer = multiplayer.multiplayer_peer.get_peer(id)
+	return peer != null and peer.get_state() == ENetPacketPeer.STATE_CONNECTED

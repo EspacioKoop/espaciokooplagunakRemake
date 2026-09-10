@@ -1,13 +1,9 @@
-# Espaciokoop Lagunak 1.0.0
+# Estado del remake
 
-Aplicación nativa independiente en Godot, con ocho puestos, seis misiones, campaña persistente, cooperación por red, interiores recorribles y editor de misiones.
+Trabajo recuperado y ampliado; paridad completa con el original todavía pendiente.
 
-- Veinte modelos con fuente editable de Blender y exportaciones GLB incluidas.
-- Puestos con órdenes y permisos propios; simulación autoritativa a 30 Hz.
-- Exploración, análisis, interferencias, rescates, combate, reparación y diplomacia.
-- Guardado local con copia anterior y validación de integridad.
-- Cooperación mediante ENet y claves de sesión; Foundry opcional y solo de consulta.
-- Ejecutables para Linux y Windows x86_64 con recursos incorporados.
-- Módulo de Foundry 13, instrucciones, licencias y sumas SHA-256.
+Aplicación nativa Godot, ocho puestos, seis misiones, campaña persistente, cooperación por red, siete interiores recorribles, veinte modelos de Blender y editor de misiones.
 
-El README muestra capturas reales de la aplicación. Consulta `docs/PLAYER_GUIDE.md` para los controles y `docs/VALIDATION.md` para el alcance de las comprobaciones.
+La ampliación añade operaciones de puestos y cuatro minijuegos de asistencia con propuestas consumibles. El README incluye diez capturas reales del ejecutable. Las pruebas de núcleo, operaciones y asistencia suman 274 comprobaciones; también se prueban interfaz, HTTP y cinco procesos de red.
+
+Los paquetes de Actions permiten ejecutar el estado de ese commit. No equivalen a una versión final con paridad total. Consulte `docs/FEATURE_PARITY.md` y `docs/VALIDATION.md`.

@@ -60,6 +60,46 @@ func run() -> void:
 			editor._load_file(ProjectSettings.globalize_path(path))
 			check(Catalog.validate_mission(editor.mission).is_empty(), "saved mission reopens")
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	session.select_role("ingenieria")
+	var operations = app._open_operations()
+	await settle()
+	var console = operations.get_child(0).get_child(0)
+	console.action_menu.item_selected.emit(console.definitions.find("coolant_level"))
+	console.fields.system.select(2)
+	console.fields.value.value = 3.0
+	for button in console.find_children("*", "Button", true, false):
+		if button.text == "Ejecutar orden": button.pressed.emit()
+	check(session.sim.state.operations.coolant.armas == 3.0, "native operations form applies actual coolant")
+	operations.queue_free()
+	await settle()
+	session.select_role("mando")
+	var assistance = app._open_assistance()
+	await settle()
+	var aid = assistance.get_child(0).get_child(0).get_child(0)
+	aid.chooser.select(2)
+	for i in aid.recipient.item_count:
+		if aid.recipient.get_item_metadata(i) == "ingenieria": aid.recipient.select(i)
+	aid.start_button.pressed.emit()
+	await settle()
+	check(session.sim.state.cooperation.tasks.local.mode == "precision", "native assistance button starts selected skill task")
+	check(aid.chooser.disabled and aid.recipient.disabled, "active challenge displays locked actual selections")
+	var task: Dictionary = session.sim.state.cooperation.tasks.local
+	var click = InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = Vector2(task.center[0] * aid.panel.size.x, task.center[1] * aid.panel.size.y)
+	aid.panel.gui_input.emit(click)
+	var before_assistance: Dictionary = session.sim.state.ship.duplicate(true)
+	for button in aid.find_children("*", "Button", true, false):
+		if button.text == "Enviar resultado": button.pressed.emit()
+	check(session.sim.state.cooperation.tokens.size() == 1, "native precision input creates proposal")
+	check(session.sim.state.ship == before_assistance, "native helper does not directly operate the ship")
+	session.select_role("ingenieria")
+	for button in aid.find_children("*", "Button", true, false):
+		if button.text == "Aplicar la primera propuesta para mi puesto": button.pressed.emit()
+	check(session.sim.state.operations.coolant.motores > 0 and session.sim.state.cooperation.tokens.is_empty(), "native recipient consumes proposal exactly once")
+	assistance.queue_free()
+	await settle()
 	app._ambient.stop()
 	app._effects.stop()
 	app._ambient.stream = null

@@ -277,6 +277,8 @@ func _build_actions() -> void:
 	var name = ConsoleUI.label(Catalog.role_name(Session.role), 24)
 	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(name)
+	top.add_child(ConsoleUI.button("Operaciones", _open_operations))
+	if Session.role == "ingenieria": top.add_child(ConsoleUI.button("Asistencia", _open_assistance))
 	_target_menu = OptionButton.new()
 	_target_menu.custom_minimum_size.x = 295
 	_target_menu.add_theme_font_size_override("font_size", 15)
@@ -360,11 +362,50 @@ func _build_actions() -> void:
 			_actions.add_child(ConsoleUI.paragraph("Los drones reparan 35 puntos de un sistema en 5 segundos. Reparar una estación consume 5 repuestos y requiere estar a menos de 300 m.", 15))
 	if Session.role != "ingenieria":
 		var support = ConsoleUI.row(_actions)
-		var assist = ConsoleUI.button("Asistir a la tripulación · 15 energía", _send.bind("assist", {}))
+		var assist = ConsoleUI.button("Asistencia entre puestos", _open_assistance)
 		assist.add_theme_font_size_override("font_size", 13)
 		support.add_child(assist)
 		_action_refs.summary = ConsoleUI.label("", 13, ConsoleUI.MUTED)
 		support.add_child(_action_refs.summary)
+
+func _open_assistance() -> Window:
+	var window = Window.new()
+	window.title = "Asistencia entre puestos"
+	window.size = Vector2i(1020, 840)
+	window.transient = true
+	window.exclusive = true
+	add_child(window)
+	var scroll = ScrollContainer.new()
+	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	window.add_child(scroll)
+	var margin = MarginContainer.new()
+	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for edge in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + edge, 20)
+	scroll.add_child(margin)
+	margin.add_child(AssistanceConsole.new())
+	window.close_requested.connect(window.queue_free)
+	window.popup_centered()
+	return window
+
+func _open_operations() -> Window:
+	var window = Window.new()
+	window.title = "Operaciones de la Itsaso"
+	window.size = Vector2i(1080, 710)
+	window.transient = true
+	window.exclusive = true
+	add_child(window)
+	var margin = MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	for edge in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + edge, 20)
+	window.add_child(margin)
+	var console = OperationsConsole.new()
+	console.role = Session.role
+	console.selected_target = _target
+	margin.add_child(console)
+	window.close_requested.connect(window.queue_free)
+	window.popup_centered()
+	return window
 
 func _send(operation: String, args: Dictionary) -> void:
 	var result = Session.order(operation, args)
@@ -835,6 +876,7 @@ func _start_server(args: PackedStringArray) -> void:
 	set_process(false)
 
 func _capture(args: PackedStringArray) -> void:
+	get_tree().root.gui_embed_subwindows = true
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	DisplayServer.window_set_size(Vector2i(1600, 900))
 	get_window().size = Vector2i(1600, 900)
@@ -865,7 +907,24 @@ func _capture(args: PackedStringArray) -> void:
 	_go("editor")
 	_editor.set_mission(Catalog.missions()[1])
 	await _take(path, "08_editor.png")
-	print("LAGUNAK_CAPTURE_OK 8 screenshots")
+	Session.role = "ingenieria"
+	Session._refresh_view()
+	_go("bridge")
+	var operations = _open_operations()
+	operations.size = Vector2i(1500, 790)
+	operations.popup_centered()
+	await _take(path, "09_operaciones.png")
+	operations.queue_free()
+	await get_tree().process_frame
+	Session.role = "mando"
+	Session.order("assist_begin", {"recipient": "ingenieria", "mode": "puzzle"})
+	var assistance = _open_assistance()
+	assistance.size = Vector2i(1500, 790)
+	assistance.popup_centered()
+	await _take(path, "10_asistencia.png")
+	assistance.queue_free()
+	await get_tree().process_frame
+	print("LAGUNAK_CAPTURE_OK 10 screenshots")
 	_ambient.stop()
 	_effects.stop()
 	_ambient.stream = null

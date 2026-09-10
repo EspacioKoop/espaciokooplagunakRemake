@@ -27,6 +27,8 @@ La vista de clientes y consultas se obtiene mediante `snapshot()`. El catálogo 
 
 El anfitrión ejecuta la simulación. Los clientes envían órdenes y reciben estado a 10 Hz, serializado como JSON y comprimido con DEFLATE. El receptor limita el tamaño declarado y descomprimido a 256 KiB. La asignación de puestos y los permisos se verifican en el anfitrión; un cliente no decide qué puesto representa una orden.
 
+El transporte desactiva el reenvío entre clientes (`server_relay`): toda comunicación de juego pasa por el anfitrión. La tripulación y su presencia se distribuyen en las vistas autorizadas; las conexiones todavía sin autenticar no reciben anuncios de otros participantes.
+
 La entrada usa un reto de un solo uso y HMAC-SHA256 con una clave de sesión aleatoria. Los retos caducan a los ocho segundos. Se limitan las órdenes aceptadas de cada participante a veinte por segundo. Las posiciones de tripulantes utilizan un canal no fiable separado y coordenadas acotadas. ENet no proporciona cifrado en esta implementación; la documentación recomienda una red local o VPN.
 
 ## Guardado
@@ -46,3 +48,11 @@ El módulo de Foundry consulta cada dos segundos después de que la dirección d
 Los modelos editables permanecen organizados por colecciones dentro del archivo Blender. El exportador evalúa modificadores, combina copias temporales, elimina el desplazamiento de la exposición y genera GLB centrados; no modifica el archivo fuente. Los veinte modelos publicados se verifican con un manifiesto SHA-256.
 
 Godot 4.7.1 se descarga desde sus publicaciones oficiales y se comprueba con la suma SHA-512 publicada. Las exportaciones incorporan el paquete de recursos en el ejecutable. Los ZIP incluyen instrucciones, licencia del proyecto y los avisos de licencia de Godot.
+
+## Operaciones y asistencia nativas
+
+`ship_operations.gd` implementa las órdenes ampliadas y sus temporizadores. `cooperation.gd` mantiene los cuatro retos y las propuestas. El despachador de `Simulation` conserva la autorización y resuelve el efecto de cada orden; las interfaces no asignan resultados de victoria ni permisos.
+
+El protocolo ENet es ahora **2**: los snapshots se proyectan para cada conexión, de modo que los códigos de autodestrucción y los retos solo llegan al destinatario. Las conexiones con protocolo anterior se rechazan con indicación de actualizar. La telemetría de Foundry usa la proyección sin códigos ni retos privados.
+
+El guardado continúa leyendo el formato 1 anterior. Si faltan las nuevas secciones, las inicializa con valores definidos; las operaciones nuevas se validan antes de restaurar. Las asistencias efímeras se cancelan al recuperar la partida.

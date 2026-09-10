@@ -17,7 +17,10 @@ func start(mission: Dictionary, carry: Dictionary = {}, base_hull: float = 100.0
 	for original in mission.contacts:
 		var c: Dictionary = original.duplicate(true)
 		c.merge({"identified": c.get("known", false), "jammed": false, "known": false, "hull": 100.0, "hailed": false, "negotiated": false, "rescued": false, "salvaged": false, "probed": false, "pacified": false, "attack_at": 0.0, "survivors": 6}, false)
+		c.frequency = int(c.get("frequency", posmod(c.id.hash(), 21)))
 		state.contacts.append(c)
+	ShipOperations.initialize(state)
+	Cooperation.initialize(state)
 	log_event("Misión iniciada", mission.title)
 
 func contact(id: String) -> Dictionary:
@@ -34,10 +37,10 @@ func distance_to(c: Dictionary) -> float:
 func reply(ok: bool, message: String) -> Dictionary:
 	return {"ok": ok, "message": message}
 
-func command(role: String, operation: String, args: Dictionary = {}) -> Dictionary:
+func command(role: String, operation: String, args: Dictionary = {}, principal: String = "local") -> Dictionary:
 	if state.is_empty() or state.status != "active":
 		return reply(false, "La misión no está activa.")
-	if operation not in Catalog.PERMISSIONS.get(role, []):
+	if operation not in Catalog.PERMISSIONS.get(role, []) and operation not in ShipOperations.PERMISSIONS.get(role, []) and not (role in Catalog.ROLES and operation in Cooperation.COMMANDS):
 		return reply(false, "Esta orden pertenece a otro puesto.")
 	if args.size() > 8:
 		return reply(false, "Demasiados parámetros.")
@@ -46,6 +49,16 @@ func command(role: String, operation: String, args: Dictionary = {}) -> Dictiona
 			return reply(false, "Parámetro no válido.")
 		if args[key] is String and args[key].length() > 80:
 			return reply(false, "Parámetro demasiado largo.")
+	if operation in Cooperation.COMMANDS:
+		var response = Cooperation.perform(self, role, operation, args, principal)
+		if response.ok and operation != "assist_input": log_event(Catalog.role_name(role), response.message)
+		return response
+	if operation in ShipOperations.PERMISSIONS.get(role, []) and operation not in ["shields", "alert"]:
+		var extended = ShipOperations.perform(self, role, operation, args, principal)
+		if extended.ok:
+			log_event(Catalog.role_name(role), extended.message)
+			advance_objectives()
+		return extended
 	var ship: Dictionary = state.ship
 	var c: Dictionary = contact(str(args.get("target", "")))
 	var system = str(args.get("system", ""))
@@ -59,6 +72,8 @@ func command(role: String, operation: String, args: Dictionary = {}) -> Dictiona
 			if not Catalog.finite_number(args.get("heading")) or not Catalog.finite_number(args.get("throttle")) or float(args.throttle) < 0 or float(args.throttle) > 1 or absf(float(args.heading)) > 36000:
 				return reply(false, "Rumbo o impulso fuera de rango.")
 			if not ship.docked.is_empty(): return reply(false, "Desatraca antes de maniobrar.")
+			state.operations.route = ""
+			state.operations.docking = ""
 			ship.heading = fposmod(float(args.heading), 360.0)
 			ship.throttle = float(args.throttle)
 			ship.autopilot = ""
@@ -83,9 +98,10 @@ func command(role: String, operation: String, args: Dictionary = {}) -> Dictiona
 			ship.docked = ""
 			message = "Amarras liberadas."
 		"boost":
-			if not ship.docked.is_empty() or ship.energy < 25 or ship.boost_until > state.time:
-				return reply(false, "Impulso no disponible: necesita 25 de energía y estar en vuelo.")
+			if not ship.docked.is_empty() or ship.energy < 25 or ship.boost_until > state.time or state.operations.maneuver < 30:
+				return reply(false, "Impulso no disponible: necesita 25 de energía, 30% de carga y estar en vuelo.")
 			ship.energy -= 25
+			state.operations.maneuver -= 30
 			ship.boost_until = state.time + 3.0
 			message = "Sobrealimentación de motores durante 3 segundos."
 		"power":
@@ -102,10 +118,11 @@ func command(role: String, operation: String, args: Dictionary = {}) -> Dictiona
 			message = "Refrigeración dirigida a " + system + "."
 		"shields":
 			if not args.get("enabled") is bool: return reply(false, "Estado de escudos no válido.")
+			if args.enabled and state.operations.calibration > 0: return reply(false, "Espera a que termine la recalibración de escudos.")
 			ship.shields_enabled = args.enabled
 			message = "Escudos activados." if args.enabled else "Escudos bajados."
 		"scan":
-			if distance_to(c) > 900 or ship.systems.sensores.power < 1: return reply(false, "Escaneo: alcance 900 m y Sensores con potencia.")
+			if sensor_distance(c) > 900 or ship.systems.sensores.power < 1: return reply(false, "Escaneo: alcance 900 m y Sensores con potencia.")
 			if c.jammed and not c.hailed: return reply(false, "Interferencia: Comunicaciones debe abrir un canal.")
 			if not state.scan.target.is_empty(): return reply(false, "Ya hay un escaneo en curso.")
 			state.scan = {"target": c.id, "remaining": 2.5 if c.probed else 5.0}
@@ -161,7 +178,7 @@ func command(role: String, operation: String, args: Dictionary = {}) -> Dictiona
 			if operation == "fire" and ship.energy < 12: return reply(false, "El pulso necesita 12 de energía.")
 			if operation == "missile": ship.torpedoes -= 1
 			else: ship.energy -= 12
-			var efficiency = 0.7 + 0.15 * ship.systems.armas.power
+			var efficiency = (0.7 + 0.15 * ship.systems.armas.power) * (1.3 if operation == "fire" and state.operations.beam_frequency == int(c.get("frequency", 0)) else 1.0)
 			c.hull = maxf(0, c.hull - (34.0 if operation == "missile" else 18.0) * efficiency)
 			ship.weapon_ready = state.time + (3.0 if operation == "missile" else 1.0)
 			ship.systems.armas.heat = minf(120, ship.systems.armas.heat + 4)
@@ -179,12 +196,7 @@ func command(role: String, operation: String, args: Dictionary = {}) -> Dictiona
 			state.campaign.decisions[envoy.id] = args.choice
 			fact("choice", envoy.id)
 			message = "Decisión registrada: " + args.choice + "."
-		"assist":
-			if ship.energy < 15 or ship.assist.get(role, 0.0) > state.time: return reply(false, "Asistencia requiere 15 de energía y no puede acumularse.")
-			ship.energy -= 15
-			ship.assist[role] = state.time + 8.0
-			ship.shield = minf(100.0, ship.shield + 15.0)
-			message = "Asistencia: 15 puntos de escudo y refuerzo del reactor durante 8 segundos."
+
 	log_event(Catalog.role_name(role), message)
 	advance_objectives()
 	return reply(true, message)
@@ -196,6 +208,8 @@ func tick(delta: float) -> void:
 	if state.is_empty() or state.status != "active" or delta <= 0 or not is_finite(delta): return
 	delta = minf(delta, 0.1)
 	state.time += delta
+	ShipOperations.tick(self, delta)
+	Cooperation.tick(state)
 	var ship: Dictionary = state.ship
 	for key in Catalog.SYSTEMS:
 		var s: Dictionary = ship.systems[key]
@@ -213,7 +227,7 @@ func tick(delta: float) -> void:
 		ship.energy = minf(100, ship.energy + 10 * delta)
 		for s in ship.systems.values(): s.health = minf(100, s.health + 3 * delta)
 	else:
-		var speed_limit = 160.0 * (0.25 + 0.375 * ship.systems.motores.power) * ship.systems.motores.health / 100.0
+		var speed_limit = (1.0 + state.operations.warp * 3.0) * 160.0 * (0.25 + 0.375 * ship.systems.motores.power) * ship.systems.motores.health / 100.0
 		if ship.boost_until > state.time: speed_limit *= 2.0
 		var desired_speed = speed_limit * ship.throttle
 		if not ship.autopilot.is_empty():
@@ -225,7 +239,7 @@ func tick(delta: float) -> void:
 			else:
 				var offset = Vector2(target.position[0] - ship.position[0], target.position[1] - ship.position[1])
 				ship.heading = fposmod(rad_to_deg(offset.angle()), 360.0)
-				desired_speed = minf(speed_limit, maxf(0, (offset.length() - 115) * 1.5))
+				desired_speed = minf(speed_limit, minf(sqrt(170.0 * maxf(0, offset.length() - 115)), maxf(0, (offset.length() - 115) * 1.5)))
 		if ship.fuel <= 0: desired_speed = minf(desired_speed, 8.0)
 		ship.speed = move_toward(ship.speed, desired_speed, 85 * delta)
 		var velocity = Vector2.from_angle(deg_to_rad(ship.heading)) * ship.speed * delta
@@ -241,7 +255,7 @@ func tick(delta: float) -> void:
 				c.position = [c.position[0] + direction.x, c.position[1] + direction.y]
 			if distance < 600 and c.attack_at <= state.time:
 				c.attack_at = state.time + 3.0
-				var damage = 9.0
+				var damage = 9.0 * (0.65 if ship.shields_enabled and state.operations.shield_frequency == int(c.get("frequency", 0)) else 1.0)
 				if ship.shields_enabled:
 					var absorbed = minf(ship.shield, damage)
 					ship.shield -= absorbed
@@ -250,7 +264,7 @@ func tick(delta: float) -> void:
 				if damage > 0: ship.systems.motores.health = maxf(10, ship.systems.motores.health - 1.5)
 	if not state.scan.target.is_empty():
 		var target = contact(state.scan.target)
-		if target.is_empty() or distance_to(target) > 900 or ship.systems.sensores.power == 0:
+		if target.is_empty() or sensor_distance(target) > 900 or ship.systems.sensores.power == 0:
 			state.scan = {"target": "", "remaining": 0.0}
 			log_event("Sensores", "Escaneo interrumpido: alcance o potencia insuficiente.")
 		else:
@@ -305,12 +319,20 @@ func log_event(source: String, message: String) -> void:
 	state.events.append({"seq": state.sequence, "time": state.time, "source": source, "text": message})
 	if state.events.size() > 200: state.events.pop_front()
 
-func snapshot() -> Dictionary:
+func snapshot(for_role: String = "", principal: String = "") -> Dictionary:
 	var safe: Dictionary = state.duplicate(true)
 	if safe.is_empty(): return safe
+	ShipOperations.redact(safe, for_role)
+	Cooperation.redact(safe, principal)
 	safe.mission.erase("contacts")
 	for i in safe.contacts.size():
 		var c: Dictionary = safe.contacts[i]
 		if not c.identified:
 			safe.contacts[i] = {"id": c.id, "name": "Eco %02d" % (i + 1), "kind": "unknown", "position": c.position, "identified": false, "hull": 100.0, "hailed": c.hailed, "probed": c.probed, "jammed": c.jammed}
 	return safe
+
+func sensor_distance(c: Dictionary) -> float:
+	var linked = contact(state.operations.science_link)
+	if not linked.is_empty() and linked.probed:
+		return Vector2(linked.position[0], linked.position[1]).distance_to(Vector2(c.position[0], c.position[1]))
+	return distance_to(c)

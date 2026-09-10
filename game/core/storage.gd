@@ -31,6 +31,11 @@ static func validate_state(value: Variant) -> String:
 	if not Catalog.finite_number(value.objective) or value.objective < 0 or value.objective > value.mission.objectives.size() or value.objective != floorf(value.objective): return "Objetivo inválido."
 	for k in ["time", "sequence"]:
 		if not Catalog.finite_number(value[k]) or value[k] < 0: return "Contador inválido."
+	if value.has("operations"):
+		var error = ShipOperations.validate(value.operations)
+		if not error.is_empty(): return error
+	if value.has("cooperation"):
+		if not value.cooperation is Dictionary or not ShipOperations.number(value.cooperation, "next_id", 1, 1e9, true): return "Asistencia guardada inválida."
 	var ship: Dictionary = value.ship
 	for k in ["position", "heading", "speed", "throttle", "autopilot", "docked", "hull", "max_hull", "shield", "shields_enabled", "energy", "fuel", "torpedoes", "probes", "parts", "alert", "coolant", "boost_until", "weapon_ready", "assist", "systems"]:
 		if not ship.has(k): return "Nave incompleta: " + k
@@ -68,6 +73,7 @@ static func validate_state(value: Variant) -> String:
 			if not Catalog.finite_number(coordinate) or absf(coordinate) > 14000: return "Contacto fuera de rango."
 		for k in ["identified", "jammed", "known", "hailed", "negotiated", "rescued", "salvaged", "probed", "pacified"]:
 			if not c.get(k) is bool: return "Indicador de contacto dañado."
+		if c.has("frequency") and not ShipOperations.number(c, "frequency", 0, 20, true): return "Frecuencia de contacto dañada."
 		for k in ["hull", "attack_at", "survivors"]:
 			if not Catalog.finite_number(c.get(k)) or c[k] < 0: return "Recurso de contacto dañado."
 		if c.kind not in ["station", "friendly", "hostile", "derelict", "anomaly", "beacon"]: return "Tipo de contacto dañado."
@@ -117,4 +123,9 @@ static func read_state(path: String = "user://campaign.json") -> Dictionary:
 	if envelope.payload.sha256_text() != envelope.sha256: return {"error": "La integridad del guardado no coincide."}
 	var state = JSON.parse_string(envelope.payload)
 	var issue = validate_state(state)
+	if issue.is_empty():
+		ShipOperations.initialize(state)
+		Cooperation.initialize(state)
+		# Transient assistance is deliberately cancelled on restore.
+		state.cooperation = {"next_id": state.cooperation.next_id, "tasks": {}, "tokens": {}, "cooldowns": {}}
 	return {"state": state} if issue.is_empty() else {"error": issue}

@@ -66,6 +66,13 @@ func _draw() -> void:
 			draw_line(center, p, Color(color, 0.25), 1, true)
 		if show_labels or selected == c.id: draw_string(font, p + Vector2(14, -7), c.name, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, color)
 
+	for point in data.get("operations", {}).get("waypoints", []):
+		var p = to_screen(point.position)
+		if p.distance_to(center) <= radius:
+			draw_line(p - Vector2(6, 0), p + Vector2(6, 0), ConsoleUI.AMBER, 2)
+			draw_line(p - Vector2(0, 6), p + Vector2(0, 6), ConsoleUI.AMBER, 2)
+			if show_labels: draw_string(font, p + Vector2(12, 0), point.name, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, ConsoleUI.AMBER)
+
 func _input_radar(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and not _drag.is_empty(): _ghost = to_world(event.position)
 	if event is InputEventMouseButton:

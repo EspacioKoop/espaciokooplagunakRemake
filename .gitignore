@@ -1,7 +1,7 @@
 .godot/
 build/
 dist/
-.toolchain/
+.toolchain
 __pycache__/
 *.pyc
 *.blend1

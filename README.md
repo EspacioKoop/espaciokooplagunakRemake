@@ -11,7 +11,7 @@ Una aplicación nativa de exploración espacial cooperativa: navega con la Itsas
 
 ## Estado y ejecución
 
-El trabajo recuperado está conservado en este repositorio. La paridad completa con
+El trabajo recuperado y la ampliación de puestos y asistencia están conservados en este repositorio. La paridad completa con
 el original sigue en implementación; no se considera una entrega final mientras
 queden funciones pendientes en [la matriz de paridad](docs/FEATURE_PARITY.md).
 La autonomía respecto a Foundry es obligatoria para todos los sistemas.
@@ -26,6 +26,8 @@ automático. **F1** abre la ayuda; **F5** guarda; **F11** alterna pantalla compl
 
 ## A bordo de la Itsaso
 
+- **Operaciones ampliadas:** warp, salto, maniobra lateral, atraque con cancelación, frecuencias, tubos de cinco tipos, autodestrucción coordinada, rutas y equipos móviles. Acceso desde **Puente → Operaciones**.
+- **Asistencia nativa:** temporización, secuencia, precisión y puzle. Las propuestas caducan y solo las consume el titular del puesto.
 - **Ocho puestos:** mando, navegación, ingeniería, armas, sensores, comunicaciones, enlace y control de daños. Cada orden tiene permisos, requisitos y consecuencias.
 - **Seis misiones nuevas:** exploración, interferencias, rescate, combate, reparación y diplomacia. Recompensas, supervivientes, reputación y refuerzos de casco persisten entre misiones.
 - **Sistemas conectados:** potencia, temperatura, refrigeración, daños, combustible, escudos, energía, sondas, torpedos y repuestos.
@@ -36,7 +38,7 @@ automático. **F1** abre la ayuda; **F5** guarda; **F11** alterna pantalla compl
 
 ## Capturas del juego
 
-Estas ocho imágenes se capturaron directamente desde el ejecutable autónomo de Linux a 1600 × 900. Muestran esta implementación en ejecución.
+Estas diez imágenes se capturaron directamente desde el ejecutable autónomo de Linux a 1600 × 900. Muestran esta implementación en ejecución.
 
 ### Puente y navegación
 
@@ -61,6 +63,12 @@ Estas ocho imágenes se capturaron directamente desde el ejecutable autónomo de
 ### Taller de misiones
 
 ![Editor visual y JSON integrado](docs/images/08_editor.png)
+
+### Operaciones y asistencia
+
+![Consola nativa de operaciones de Ingeniería](docs/images/09_operaciones.png)
+
+![Puzle de asistencia nativo con propuesta para otro puesto](docs/images/10_asistencia.png)
 
 ## Modelos en Blender
 
@@ -93,12 +101,12 @@ python3 tools/build.py
 python3 tools/package_downloads.py
 ```
 
-El bootstrap verifica las descargas oficiales de Godot mediante SHA-512. Los ZIP aparecen en `dist/`. CI ejecuta las pruebas de campaña, guardado, interfaz, cooperación y HTTP, exporta ambos sistemas, captura Linux y comprueba el arranque en Windows antes de publicar una versión.
+El bootstrap verifica las descargas oficiales de Godot mediante SHA-512. Los ZIP aparecen en `dist/`. CI ejecuta las pruebas de campaña, guardado, interfaz, cooperación y HTTP, exporta ambos sistemas, captura Linux y comprueba el arranque en Windows y conserva los paquetes de ese commit como artefactos de la ejecución.
 
-Comprobaciones locales: **136 del núcleo, 39 de interfaz, 14 HTTP y 10 del cliente**, más una sesión de red con **cinco procesos reales**. [Comandos y límites](docs/VALIDATION.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md).
+Comprobaciones locales: **136 del núcleo, 79 de operaciones, 59 de asistencia, 45 de interfaz, 14 HTTP y 10 del cliente**, más una sesión de red con **cinco procesos reales**. [Comandos y límites](docs/VALIDATION.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md).
 
 ## Un proyecto independiente
 
-Este repositorio tiene su propio historial y una implementación nueva en Godot. No es un fork de EmptyEpsilon y no incorpora su código, SeriousProton, escenarios Lua ni recursos heredados. Se estudió el proyecto EspacioKoop como referencia funcional: [análisis y decisiones](docs/SOURCE_REVIEW.md)..
+Este repositorio tiene su propio historial y una implementación nueva en Godot. No es un fork de EmptyEpsilon y no incorpora su código, SeriousProton, escenarios Lua ni recursos heredados. Se estudió el proyecto EspacioKoop como referencia funcional: [análisis y decisiones](docs/SOURCE_REVIEW.md).
 
 La campaña recuperada aporta seis misiones nuevas. La cobertura de todos los sistemas y del catálogo original es un requisito pendiente, no una exclusión del proyecto. Código y recursos propios bajo [MIT](LICENSE). [Créditos y procedencia](CREDITS.md). Los avisos de Godot y sus componentes se incluyen en `third_party/` y en los paquetes descargables.

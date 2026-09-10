@@ -70,3 +70,15 @@ Allí están la campaña, las preferencias y las misiones del editor. Estos arch
 En Linux: `./EspaciokoopLagunak.x86_64 --headless -- --server --port 27840`.
 
 El servidor recupera la campaña guardada o inicia una nueva. Escribe una clave nueva en `server-access.txt`, dentro del directorio local de datos; en Linux el archivo solo admite lectura y escritura de su propietario. Conserva ese archivo fuera del repositorio y comparte la clave únicamente con la tripulación.
+
+## Operaciones de cada puesto
+
+**Puente → Operaciones** abre las órdenes ampliadas del puesto ocupado. Las lecturas se actualizan desde el anfitrión. Los puntos trazados por Enlace aparecen en el radar; Navegación puede seguirlos. Los equipos de reparación se mueven hasta el destino antes de gastar repuestos. Los tubos deben terminar su carga y su munición se devuelve al descargarlos.
+
+La frecuencia de escudos exige cinco segundos de recalibración con los escudos bajos. Para la autodestrucción, Ingeniería escribe ITSASO, y Mando, Ingeniería y Armas confirman cada uno su código. En red deben ser tres conexiones distintas. La cuenta dura 15 segundos y puede cancelarse desde Ingeniería.
+
+## Ayudar a otro puesto
+
+Pulsa **Asistencia entre puestos** o **Asistencia** en Ingeniería. Elige un destinatario y un reto. La secuencia se muestra durante tres segundos y después se reproduce con cuatro teclas. En el puzle, cada casilla alterna su estado y el de sus vecinas. En precisión hay un único intento; en temporización debes detener el cursor dentro de la franja.
+
+Envía el resultado. Un éxito para Ingeniería o Navegación genera una propuesta que el titular puede aplicar desde su ventana de asistencia durante 120 segundos. No modifica la nave por sí sola y solo se puede usar una vez. Las ayudas a otros puestos quedan como ventajas narrativas en la bitácora. Los retos duran hasta 45 segundos; al restaurar una partida se cancelan las tareas efímeras.

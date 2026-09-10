@@ -1,4 +1,4 @@
-name: Verify and release standalone
+name: Verify and package standalone
 
 on:
   push:
@@ -29,6 +29,10 @@ jobs:
         run: .toolchain/godot --headless --editor --path game --quit
       - name: Complete campaign and validate saves
         run: .toolchain/godot --headless --path game --script ../tests/test_core.gd -- --test
+      - name: Verify native station operations and skill assistance
+        run: |
+          .toolchain/godot --headless --path game --script ../tests/test_operations.gd -- --test
+          .toolchain/godot --headless --path game --script ../tests/test_cooperation.gd -- --test
       - name: Exercise five actual network processes
         run: python3 tests/run_network.py
       - name: Verify actual HTTP boundary

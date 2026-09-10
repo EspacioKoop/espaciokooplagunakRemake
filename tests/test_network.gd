@@ -35,6 +35,8 @@ func run() -> void:
 		check(session.sim.state.ship.systems.armas.power == 4, "engineering command reaches authority")
 		check(session.sim.state.ship.systems.sensores.power == 0, "shared power budget")
 		check(session.role == "mando", "host station remains reserved")
+		check(session.view.operations.destruct.codes.keys() == ["mando"], "host sees only captain confirmation code")
+		check(session.view.cooperation.tasks.is_empty(), "host public view does not expose client skill tasks")
 	else:
 		var role = "navegacion" if mode == "nav" else "ingenieria"
 		if mode == "busy": role = "mando"
@@ -57,12 +59,17 @@ func run() -> void:
 				session.order("helm", {"heading": 0.0, "throttle": 0.4})
 				await delay(0.4)
 				check(session.view.ship.throttle == 0.4, "navigation snapshot acknowledgement")
+				check(session.view.operations.destruct.codes.is_empty(), "navigation cannot receive any confirmation code")
 				session.select_role("mando")
 				await delay(0.3)
 				check(session.role == "navegacion", "occupied station cannot be stolen")
-				session.update_pose(Vector3(1, 1, 1), 0)
-				await delay(0.3)
 				var id = str(session.multiplayer.get_unique_id())
+				# Presence is an unreliable stream, just as in the actual deck controller.
+				# A single lost datagram must not make this integration check flaky.
+				for attempt in 15:
+					session.update_pose(Vector3(1, 1, 1), 0)
+					await delay(0.1)
+					if session.poses.has(id): break
 				check(session.poses.has(id), "crew position replicated")
 				session.update_pose(Vector3(500, 1, 1), 0)
 				await delay(0.3)
@@ -73,6 +80,12 @@ func run() -> void:
 				session.order("power", {"system": "armas", "value": 4})
 				await delay(0.4)
 				check(session.view.ship.systems.armas.power == 4, "engineering snapshot acknowledgement")
+				session.order("destruct_arm", {"confirmation": "ITSASO"})
+				await delay(0.4)
+				check(session.view.operations.destruct.codes.keys() == ["ingenieria"], "server routes only the station's code")
+				session.order("assist_begin", {"recipient": "navegacion", "mode": "precision"})
+				await delay(0.4)
+				check(session.view.cooperation.tasks.keys() == [str(session.multiplayer.get_unique_id())], "server routes skill task to authenticated principal")
 			await delay(1.0)
 	session.close_session()
 	print("NETWORK_RESULT ", mode, " failures=", failures)

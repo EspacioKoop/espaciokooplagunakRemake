@@ -39,8 +39,10 @@ El editor permite crear y probar misiones con el mismo núcleo. El atlas represe
 
 Este remake tiene historial independiente y no incorpora código, escenarios ni recursos de EmptyEpsilon o SeriousProton. Tampoco pretende compatibilidad binaria, de partidas o de escenarios con ellos. Los modelos recuperados durante el desarrollo pertenecen al propio remake; no proceden del repositorio de referencia.
 
-La versión recuperada está incompleta respecto al requisito de paridad total: no incluye sus escenarios Lua, facciones y naves heredadas, autodestrucción, poker y blackjack, minijuegos de asistencia basados en fichas dnd5e, museo, bestiario, editor de personajes, Android, macOS, Docker ni bot de Discord. La asistencia recuperada se simplificó a una orden con coste de energía y efecto compartido; no satisface el requisito de los minijuegos originales. La integración Foundry 13 se limita a consulta y bitácora; las órdenes se ejecutan desde el juego.
+La versión recuperada está incompleta respecto al requisito de paridad total: no incluye sus escenarios Lua, facciones y naves heredadas, poker y blackjack, minijuegos de asistencia basados en fichas dnd5e, museo, bestiario, editor de personajes, Android, macOS, Docker ni bot de Discord. La asistencia recuperada se simplificó a una orden con coste de energía. Esa simplificación se ha sustituido por cuatro retos nativos y propuestas consumibles, con comprobaciones de autoridad y caducidad. Los enfoques de personaje siguen pendientes. La integración Foundry 13 se limita a consulta y bitácora; las órdenes se ejecutan desde el juego.
 
 Las mejoras verificables de esta entrega son autonomía del ejecutable, bucle completo de campaña con persistencia, distribución de puestos en red, editor jugable y recursos Blender editables. La calidad de la experiencia en partidas humanas largas y la conexión dentro de Foundry requieren ese uso real; el alcance de las pruebas realizadas está en [VALIDATION.md](VALIDATION.md).
 
 Estas carencias deben implementarse. Su enumeración no las excluye del encargo. La matriz `FEATURE_PARITY.md` registra el estado comprobable y evita declarar completa una implementación parcial.
+
+La ampliación de operaciones y asistencia se detalla, junto con todas las carencias conocidas, en [FEATURE_PARITY.md](FEATURE_PARITY.md).

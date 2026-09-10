@@ -1,6 +1,7 @@
 """Five actual Godot processes: host, two stations, wrong key and occupied station."""
 from pathlib import Path
 import os
+import re
 import subprocess
 import tempfile
 import time
@@ -29,7 +30,7 @@ with tempfile.TemporaryDirectory(prefix="lagunak-network-") as temporary:
             stream.close()
             output = path.read_text()
             print(output.strip())
-            if code or "SCRIPT ERROR" in output or f"NETWORK_RESULT {name} failures=0" not in output: failed.append(name)
+            if code or re.search(r"^(?:SCRIPT ERROR|ERROR):", output, re.M) or f"NETWORK_RESULT {name} failures=0" not in output: failed.append(name)
         assert not failed, "Network failures: " + ", ".join(failed)
         print("NETWORK_OK five actual processes")
     finally:
