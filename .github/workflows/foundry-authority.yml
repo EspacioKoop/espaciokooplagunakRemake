@@ -1,0 +1,35 @@
+name: Foundry authority and projection
+
+on:
+  push:
+    branches: [agent/5-foundry-authority]
+  pull_request:
+    paths:
+      - 'game/net/**'
+      - 'game/core/**'
+      - 'integrations/foundry/**'
+      - 'tests/*foundry*'
+      - '.github/workflows/foundry-authority.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  foundry-authority:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: python3 tools/bootstrap.py
+      - run: .toolchain/godot --headless --editor --path game --quit
+      - name: Host authority and native grant panel
+        run: .toolchain/godot --headless --path game --script ../tests/test_foundry_authority.gd -- --test
+      - name: Real HTTP and authenticated ENet identities
+        run: python3 tests/run_foundry_authority.py
+      - name: Legacy HTTP compatibility
+        run: python3 tests/run_telemetry.py
+      - name: Node protocol and panel contracts
+        run: node --test integrations/foundry/tests/client.test.mjs integrations/foundry/tests/authority.test.mjs integrations/foundry/tests/panel.test.mjs

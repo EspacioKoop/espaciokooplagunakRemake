@@ -55,5 +55,11 @@ func run() -> void:
  thrusters._process(0.1)
  check(is_zero_approx(thrusters.axis), "inoperative maneuver system automatically drops sustained thrust")
  ship.systems.maniobra.health = 100.0
+ # Run real transport regression from the existing canonical CI entrypoint.
+ if failures == 0:
+  var output: Array = []
+  var result = OS.execute("python3", [ProjectSettings.globalize_path("res://../tests/run_authenticated_aux_rpc.py"), "--godot", OS.get_executable_path()], output, true)
+  for line in output: print(line)
+  check(result == 0, "auxiliary notifications reach only authenticated active ENet peers")
  print("CONTINUOUS_MANEUVER_TESTS ", checks, " checks; ", failures, " failures")
  quit(1 if failures else 0)
