@@ -3,7 +3,9 @@ extends RefCounted
 ## Host-side swept collisions, inverse-square attraction and traversable gates.
 
 const KINDS = ["asteroid", "planet", "blackhole", "wormhole", "nebula"]
-const RADII = {"asteroid": 55.0, "planet": 300.0, "blackhole": 100.0, "wormhole": 80.0, "nebula": 400.0}
+const DYNAMIC_COLLIDERS = ["station", "friendly", "hostile", "derelict"]
+const RADII = {"asteroid": 55.0, "planet": 300.0, "blackhole": 100.0, "wormhole": 80.0, "nebula": 400.0,
+ "station": 82.0, "friendly": 28.0, "hostile": 28.0, "derelict": 30.0}
 
 static func validate_contact(c: Dictionary) -> String:
  if c.has("radius") and not ShipOperations.number(c, "radius", 5, 2000): return "Radio del objeto fuera de rango."
@@ -43,8 +45,9 @@ static func move(sim, delta: float, propulsion: Vector2) -> void:
  var first = INF
  var obstacle: Dictionary = {}
  for c in sim.state.contacts:
-  if c.hull <= 0 or c.kind not in ["asteroid", "planet", "blackhole", "wormhole"]: continue
+  if c.hull <= 0 or (c.kind not in ["asteroid", "planet", "blackhole", "wormhole"] and c.kind not in DYNAMIC_COLLIDERS): continue
   if c.kind == "wormhole" and ship.gate_cooldown > 0: continue
+  if c.kind == "station" and not ship.docked.is_empty() and ship.docked == c.id: continue
   var reach = radius(c) + (0.0 if c.kind == "wormhole" else ship.design.radius)
   var collision = segment_hit(start, end, Vector2(c.position[0], c.position[1]), reach)
   if collision < first:
@@ -62,19 +65,26 @@ static func move(sim, delta: float, propulsion: Vector2) -> void:
    sim.log_event("Navegación", "Tránsito completado por " + obstacle.name + ".")
   else:
    var center = Vector2(obstacle.position[0], obstacle.position[1])
-   var normal = (start.lerp(end, first) - center).normalized()
+   var hit_point = start.lerp(end, first)
+   var normal = (hit_point - center).normalized()
    if normal.length_squared() < 0.01: normal = -Vector2.from_angle(deg_to_rad(ship.heading))
    end = center + normal * (radius(obstacle) + ship.design.radius + 0.1)
    var speed = (propulsion / delta + drift).length()
-   ShipModel.damage(ship, minf(60, speed * 0.08), obstacle.position)
+   var impact = minf(60, speed * (0.105 if obstacle.kind in DYNAMIC_COLLIDERS else 0.08))
+   ShipModel.damage(ship, impact, obstacle.position)
+   if obstacle.kind in ["friendly", "hostile", "derelict"]:
+    obstacle.hull = maxf(0.0, float(obstacle.hull) - impact * 0.55)
+    if obstacle.hull <= 0: sim.fact("defeat", obstacle.id)
    if obstacle.kind == "blackhole": ship.hull = 0
-   drift = drift.slide(normal)
+   drift = drift.slide(normal) * (0.25 if obstacle.kind in DYNAMIC_COLLIDERS else 1.0)
    ship.speed = 0.0
    ship.throttle = 0.0
    ship.autopilot = ""
    sim.state.operations.warp = 0
    sim.state.operations.route = ""
-   if speed > 1: sim.log_event("Navegación", "Colisión con " + obstacle.name + ". Impulso detenido.")
+   if speed > 1:
+    var kind_text = "otra nave" if obstacle.kind in ["friendly", "hostile", "derelict"] else ("estación" if obstacle.kind == "station" else "objeto espacial")
+    sim.log_event("Navegación", "Colisión con %s (%s). Impulso detenido." % [obstacle.name, kind_text])
  ship.position = [clampf(end.x, -14000, 14000), clampf(end.y, -14000, 14000)]
  ship.drift = [drift.x, drift.y]
 
