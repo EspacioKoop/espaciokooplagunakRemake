@@ -110,12 +110,12 @@ func _perform(operation: String, args: Dictionary, actor: String, role: String) 
 	if profile_data.is_empty(): return _result(false, "No hay ficha de tripulación.")
 	match operation:
 		"trait_add":
-			var trait = str(args.get("trait", ""))
-			if trait not in TRAITS: return _result(false, "Rasgo desconocido.")
-			if trait in profile_data.traits: return _result(false, "Ya tienes ese rasgo.")
+			var trait_id = str(args.get("trait", ""))
+			if trait_id not in TRAITS: return _result(false, "Rasgo desconocido.")
+			if trait_id in profile_data.traits: return _result(false, "Ya tienes ese rasgo.")
 			if profile_data.traits.size() >= 2 + int(profile_data.level >= 5): return _result(false, "No quedan huecos de rasgo en este nivel.")
-			profile_data.traits.append(trait)
-			return _result(true, "Rasgo adquirido: " + TRAITS[trait].name + ".")
+			profile_data.traits.append(trait_id)
+			return _result(true, "Rasgo adquirido: " + TRAITS[trait_id].name + ".")
 		"check":
 			var skill = str(args.get("skill", ""))
 			var difficulty = int(args.get("difficulty", 10))
@@ -168,8 +168,8 @@ func _perform(operation: String, args: Dictionary, actor: String, role: String) 
 
 func _trait_bonus(profile_data: Dictionary, skill: String) -> int:
 	var bonus = 0
-	for trait in profile_data.traits:
-		if trait in TRAITS and TRAITS[trait].skill == skill: bonus += int(TRAITS[trait].bonus)
+	for trait_id in profile_data.traits:
+		if trait_id in TRAITS and TRAITS[trait_id].skill == skill: bonus += int(TRAITS[trait_id].bonus)
 	return bonus
 
 func _level_bonus(level: int) -> int:
