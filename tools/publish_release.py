@@ -1,4 +1,4 @@
-"""Publish the requested 0.9 release only from verified main workflow artifacts."""
+"""Publish an explicitly requested 0.9 release only from verified main workflow artifacts."""
 import argparse
 import hashlib
 import json
@@ -36,7 +36,7 @@ def gh(*args):
 
 def publish(directory, repository, commit, run_id):
     # A future version requires an explicit publication change; never auto-release 1.0.
-    if VERSION != "0.9.0":
+    if VERSION not in ("0.9.0", "0.9.1"):
         print("No automatic publication requested for", VERSION)
         return
     run = json.loads(gh("api", f"repos/{repository}/actions/runs/{run_id}"))
@@ -67,7 +67,7 @@ def publish(directory, repository, commit, run_id):
         if ref["object"]["type"] != "commit" or ref["object"]["sha"] != commit:
             raise ValueError("Existing release tag points to a different commit")
     gh("release", "create", tag, *map(str, assets), "--repo", repository,
-       "--target", commit, "--title", "Espaciokoop Lagunak 0.9", "--draft",
+       "--target", commit, "--title", f"Espaciokoop Lagunak {VERSION}", "--draft",
        "--notes-file", "docs/RELEASE_NOTES.md")
     gh("release", "edit", tag, "--repo", repository, "--draft=false", "--latest")
     print(f"RELEASE_PUBLISHED https://github.com/{repository}/releases/tag/{tag}")

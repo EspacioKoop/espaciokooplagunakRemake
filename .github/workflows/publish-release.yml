@@ -1,4 +1,4 @@
-name: Publish verified 0.9 release
+name: Publish verified 0.9 releases
 
 on:
   workflow_run:
