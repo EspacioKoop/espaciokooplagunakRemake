@@ -48,14 +48,19 @@ func _ready() -> void:
 
 func restart() -> void:
  seed_input.apply()
- var response = training.reset(Cooperation.MODES[console.chooser.selected], seed_input.value)
+ _reset_recipe(seed_input.value)
+
+func _reset_recipe(value: float) -> void:
+ var response = training.reset(Cooperation.MODES[console.chooser.selected], value)
  console._notice(response.message, response.ok)
  console._refresh()
  _refresh_guidance()
 
 func _next_seed() -> void:
  seed_input.value = 1 if training.practice_seed >= AssistanceTraining.MAX_SEED else training.practice_seed + 1
- restart()
+ # Programmatic value changes need no text submission; apply() could restore
+ # the previous edit text before SpinBox refreshes it.
+ _reset_recipe(seed_input.value)
 
 func _process(_delta: float) -> void:
  _refresh_guidance()

@@ -118,6 +118,14 @@ func test_rules() -> void:
  check(not other.order("assist_begin", {"mode": "precision", "recipient": "ingenieria"}).ok, "mode matches lesson")
  check(not other.apply_proposal().ok, "no proposal before exercise")
 
+func unchanged(before: Dictionary, after: Dictionary, label: String) -> void:
+ var changed: Array[String] = []
+ for key in before:
+  if not after.has(key) or before[key] != after[key]: changed.append(str(key))
+ for key in after:
+  if not before.has(key): changed.append(str(key))
+ check(changed.is_empty(), label + " unchanged; differing keys: " + ", ".join(changed))
+
 func find_button(node: Node, text: String) -> Button:
  if node is Button and node.text == text: return node
  for child in node.get_children():
@@ -130,7 +138,9 @@ func test_ui() -> void:
  session.new_campaign()
  session.paused = true
  session.set_process(false)
- session.order("assist_begin", {"recipient": "ingenieria", "mode": "precision"})
+ session.set_physics_process(false)
+ check(session.order("assist_begin", {"recipient": "ingenieria", "mode": "precision"}).ok, "live challenge fixture begins")
+ check(session.sim.state.cooperation.tasks.has("local"), "live fixture has an active task")
  var real_before: Dictionary = session.sim.state.duplicate(true)
  var view_before: Dictionary = session.view.duplicate(true)
  # --script is compiled before autoloads; load UI only after Session exists.
@@ -176,7 +186,8 @@ func test_ui() -> void:
  check(practice.training.phase == "proposal" and not practice.consume_button.disabled, "UI proposal step")
  practice.consume_button.pressed.emit()
  check(practice.training.phase == "complete", "UI recipient acceptance")
- check(session.sim.state == real_before and session.view == view_before, "live active challenge, campaign and view untouched")
+ unchanged(real_before, session.sim.state, "live state")
+ unchanged(view_before, session.view, "live view")
  check(session.role == "mando" and session.mode == "offline" and session.paused, "live identity and pause untouched")
  window.restart()
  check(practice.training.phase == "ready" and practice.controls.get_child_count() == 0, "restart clears stale controls")
@@ -209,7 +220,7 @@ func test_ui() -> void:
  reopened._unhandled_key_input(escape)
  await process_frame
  check(live.get_node_or_null("AssistanceTraining") == null, "escape closes window")
- check(session.sim.state == real_before, "closing practice preserves live challenge")
+ unchanged(real_before, session.sim.state, "live state after closing")
  live.queue_free()
  await process_frame
 
