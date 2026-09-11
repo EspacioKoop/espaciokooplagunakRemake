@@ -1,0 +1,54 @@
+name: Preview reviewed milestones (temporary)
+
+on:
+  push:
+    branches: [agent/72-platino-adoption]
+    paths: [.github/workflows/platino-sync.yml]
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: platino-milestones
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  preview:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/agent/72-platino-adoption'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify reviewed source and explicit configuration
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          lock = json.loads(Path('docs/platino/upstream-lock.json').read_text())
+          assert lock['commit'] == 'b5e01a2b2060a31268507797708a92a7d14ffc52'
+          for item in lock['files']:
+              raw = (Path('docs/platino/upstream') / item['path']).read_bytes()
+              assert hashlib.sha256(raw).hexdigest() == item['sha256']
+          assert hashlib.sha256(Path('docs/platino/upstream/scripts/platino.py').read_bytes()).hexdigest() == '62c9ea38a39d8bd7f994a1695f0e38ab2e7e0a3ef06cf1efba179034945f91b9'
+          assert hashlib.sha256(Path('.platino.json').read_bytes()).hexdigest() == '23bf27425059e339b48c1b54ba409898823d366d1541c5aba8bc97b7b65e632b'
+          PY
+          python3 -m unittest discover -s docs/platino/upstream/tests -v
+          python3 tools/platino.py check .platino.json
+      - name: Read the proposed plan without any write permission
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: ''
+        run: python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake > "$RUNNER_TEMP/platino-preview.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: platino-preview-72
+          path: ${{ runner.temp }}/platino-preview.json
+          retention-days: 7
+          if-no-files-found: error

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "repository": "EspacioKoop/espaciokooplagunakRemake",
+  "milestones": [
+    {
+      "title": "Adopción Normas Platino",
+      "description": "Hito de gobernanza sin release de juego. Alcance #72: normas fijadas y copia local íntegra, instrucciones coherentes, roadmap, sincronización explícita y probada e inventario reproducible. Salida: PR revisado e integrado, validación sobre su SHA y comprobación remota de milestones. No certifica paridad ni publica binarios. Decisión y evidencias: #72; reservas: #7.",
+      "issues": [
+        72
+      ]
+    },
+    {
+      "title": "v1.0.0",
+      "description": "Objetivo de paridad funcional completa con el original, no una fecha prometida. Alcance de trabajo: #2, #3, #4, #5, #6 y regresión de terminales #29; el plan #1, análisis #32 e inventario docs/parity conservan los pendientes transversales. Salida: G0–G3 con evidencia del candidato exacto, aceptación funcional y humana requerida, CI canónica, paquetes e integridad comprobados y autorización de publicación. Foundry sigue opcional. Un 100 % de issues no basta para publicar ni cerrar #1. No incluye las ideas futuras #30/#33/#59/#71.",
+      "issues": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        29
+      ]
+    },
+    {
+      "title": "Diseño futuro — decisiones sin release",
+      "description": "Hito de investigación y decisiones, no compromiso de implementar funciones ni promesa de versión. Agrupa los debates explícitamente futuros #30 (segunda pantalla Android), #33 (Big Walk), #59 (vuelo 3D y desembarco) y #71 (PULSAR). Salida por debate: registrar decisiones de producto, riesgos, dependencias y tareas aceptadas o aplazadas; cualquier implementación exige prioridad, alcance y reserva propios. No bloquea la paridad 1.0 ni la sustituye. Sin fecha ni release asociada.",
+      "issues": [
+        30,
+        33,
+        59,
+        71
+      ]
+    }
+  ]
+}
