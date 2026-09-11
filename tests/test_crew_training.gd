@@ -257,6 +257,7 @@ func test_ui() -> void:
   check(DisplayServer.get_name() != "headless", "capture requires real renderer")
   if DisplayServer.get_name() != "headless":
    window._refresh()
+   for scroll in window.find_children("*", "ScrollContainer", true, false): scroll.scroll_vertical = 0
    await process_frame
    await RenderingServer.frame_post_draw
    check(window.get_texture().get_image().save_png(capture) == OK, "fresh rendered school capture")
@@ -280,6 +281,52 @@ func test_ui() -> void:
  await process_frame
  ui_verified = true
 
+func test_shell_entry() -> void:
+ var app = load("res://main.tscn").instantiate()
+ root.add_child(app)
+ await process_frame
+ await process_frame
+ app.set_process(false)
+ app._go("bridge")
+ var session = root.get_node("Session")
+ # Fixture pause is established before opening any school window.
+ session.paused = true
+ await process_frame
+ await process_frame
+ var entry: Button
+ for button in app.find_children("*", "Button", true, false):
+  if button.text == "Asistencia entre puestos": entry = button
+ check(entry != null, "actual bridge exposes assistance entry")
+ if entry == null:
+  app.queue_free()
+  return
+ var before: Dictionary = session.sim.state.duplicate(true)
+ entry.pressed.emit()
+ await process_frame
+ await process_frame
+ var buttons = app.find_children("OpenCrewTraining", "Button", true, false)
+ check(buttons.size() == 1, "school entry reachable through the actual application shell")
+ if buttons.size() != 1:
+  app.queue_free()
+  return
+ buttons[0].pressed.emit()
+ await process_frame
+ await process_frame
+ var console = buttons[0].get_parent()
+ var school = console.get_node_or_null("CrewSchool")
+ check(school is Window and school.visible, "nested school opens in the real modal hierarchy")
+ if school != null:
+  school.set_process(false)
+  check(school.model.lesson == CrewTraining.FIRST_MISSION, "shell entry starts guided first mission")
+  ui_order(school, "navegacion", "autopilot", {"target": "argi"})
+  school.model.advance(1.0)
+  check(school.model.snapshot().ship.autopilot == "argi", "shell school controls its own native autopilot")
+  check(session.sim.state == before and session.paused and session.role == "mando", "shell school leaves the live game and role unchanged")
+ app.queue_free()
+ await process_frame
+ await process_frame
+ check(not is_instance_valid(school), "destroying shell also closes nested training windows")
+
 func run() -> void:
  if "--test" not in OS.get_cmdline_user_args():
   printerr("Run with -- --test and an isolated profile.")
@@ -289,5 +336,6 @@ func run() -> void:
  test_boundaries()
  test_out_of_order_end()
  await test_ui()
+ await test_shell_entry()
  print("CREW_TRAINING_RESULT ", JSON.stringify({"checks": checks, "failures": failures, "courses": courses, "first_mission": first_mission, "ui": ui_verified}))
  quit(1 if failures else 0)
