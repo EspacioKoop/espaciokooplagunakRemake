@@ -143,8 +143,12 @@ static func read_state(path: String = "user://campaign.json") -> Dictionary:
 	if not envelope is Dictionary or envelope.get("format") != "lagunak-save" or envelope.get("version") != 1 or not envelope.get("payload") is String or not envelope.get("sha256") is String: return {"error": "Cabecera de guardado inválida."}
 	if envelope.payload.sha256_text() != envelope.sha256: return {"error": "La integridad del guardado no coincide."}
 	if parser.parse(envelope.payload) != OK: return {"error": "Contenido de guardado inválido."}
-	var state = parser.data
-	var issue = validate_state(state)
+	return prepare_state(parser.data)
+
+static func prepare_state(value: Variant) -> Dictionary:
+	var issue = validate_state(value)
+	if not issue.is_empty(): return {"error": issue}
+	var state: Dictionary = value.duplicate(true)
 	if issue.is_empty():
 		ShipModel.initialize(state)
 		ShipOperations.initialize(state)
