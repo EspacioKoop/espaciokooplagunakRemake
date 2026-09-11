@@ -11,7 +11,7 @@ Esta ficha adapta las Normas Platino al remake de Espaciokoop Lagunak. No sustit
 | Plan maestro | [Issue #1](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1) |
 | Registro de reservas | [Issue #7](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/7) |
 | Roadmap | [`docs/ROADMAP.md`](ROADMAP.md) |
-| Milestones | `.platino.json`; actualmente vacío hasta aprobar el alcance y títulos de las nuevas versiones |
+| Milestones | `.platino.json`; activas en GitHub: 1.0 — Paridad funcional (#29, #32), Cosmografía y navegación (#56, #59), Contenido y catálogo (#2, #3, #6, #52), Plataforma y publicación (#4, #5, #30) |
 | Rama base | `main`; las entregas ordinarias llegan mediante PR |
 | Pruebas canónicas | `release.yml`, `python3 -m unittest discover -s tests -v`, `git diff --check` |
 | Merge y publicación | según autorización registrada en el issue #7 y revisión del PR |
