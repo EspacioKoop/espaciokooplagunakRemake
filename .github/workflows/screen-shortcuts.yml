@@ -1,0 +1,72 @@
+name: Verify screen shortcuts
+on:
+  push:
+    branches: [main, agent/32-screen-shortcuts-s10]
+    paths:
+      - 'game/**'
+      - 'tests/*screen_shortcut*'
+      - 'tools/bootstrap.py'
+      - '.github/workflows/screen-shortcuts.yml'
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tests/*screen_shortcut*'
+      - 'tools/bootstrap.py'
+      - '.github/workflows/screen-shortcuts.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: screen-shortcuts-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  shortcuts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      XDG_DATA_HOME: ${{ runner.temp }}/screen-shortcuts-data
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 tools/bootstrap.py
+      - name: Import and execute shortcut model
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/screen-shortcuts
+          .toolchain/godot --headless --editor --path game --quit 2>&1 | tee build/screen-shortcuts/import.log
+          .toolchain/godot --headless --path game --script ../tests/test_screen_shortcut_profile.gd -- --test 2>&1 | tee build/screen-shortcuts/model.log
+          python3 - <<'PY'
+          import pathlib, re
+          root = pathlib.Path('build/screen-shortcuts')
+          for path in root.glob('*.log'):
+              text = path.read_text()
+              assert not re.search(r'SCRIPT ERROR|Parse Error|ERROR:', text), path.name
+          assert re.search(r'SCREEN_SHORTCUT_MODEL_RESULT checks=[1-9][0-9]* failures=0', (root / 'model.log').read_text())
+          PY
+      - name: Preserve public checkout and toolchain for local verification
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p build/screen-shortcuts-development
+          git archive --format=tar.gz -o build/screen-shortcuts-development/source.tar.gz HEAD game tests tools
+          if test -f .toolchain/godot; then cp .toolchain/godot build/screen-shortcuts-development/godot; fi
+          git rev-parse HEAD > build/screen-shortcuts-development/revision.txt
+          cd build/screen-shortcuts-development
+          sha256sum source.tar.gz > SHA256SUMS
+          if test -f godot; then sha256sum godot >> SHA256SUMS; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: screen-shortcuts-development
+          path: build/screen-shortcuts-development/
+          if-no-files-found: error
+          retention-days: 2
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: screen-shortcuts-evidence
+          path: build/screen-shortcuts/
+          if-no-files-found: error
+          retention-days: 14
