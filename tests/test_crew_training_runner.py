@@ -113,6 +113,7 @@ class RunnerTests(unittest.TestCase):
         self.assertTrue(result['graphical'])
         self.assertEqual(len(result['capture_sha256']), 64)
         self.assertNotIn('--headless', records[1][0])
+        self.assertIn('1600x900', records[1][0])
         self.assertNotIn('CREW_TRAINING_SCREENSHOT', records[0][1])
         self.assertEqual(json.loads((self.folder / 'result.json').read_text()), result)
         self.assertFalse(Path(records[1][1]['CREW_TRAINING_SCREENSHOT']).exists())

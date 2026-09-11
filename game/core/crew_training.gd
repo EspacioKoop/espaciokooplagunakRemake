@@ -128,6 +128,7 @@ func guidance() -> String:
  if phase == "complete":
   return "Recorrido completado con las reglas del juego. %d órdenes aceptadas; %d rechazadas. Puedes repetirlo o elegir otro puesto. Nada se transfiere a tu campaña." % [accepted_orders, rejected_orders]
  if phase == "lost": return "La nave de prácticas se ha perdido. Reinicia: no has perdido progreso ni recursos de tu campaña."
+ if phase == "ended": return "La misión de prácticas terminó antes de completar el itinerario. Reinicia para seguir sus pasos; no se concede el recorrido por saltarse la guía."
  if phase == "expired": return "La práctica ha alcanzado su límite de tiempo simulado. Reinicia el recorrido; la campaña no se ha modificado."
  var step = current_step()
  return "%d/%d · %s\nPuesto: %s. %s" % [step_index + 1, _steps.size(), step.title, Catalog.role_name(step.role), step.help]
@@ -137,14 +138,20 @@ func _evaluate() -> void:
   phase = "lost"
   paused = true
   return
- if phase != "playing" or not _armed or not _satisfied(_steps[step_index]): return
- step_index += 1
- _armed = false
- _origin = Vector2(float(_sim.state.ship.position[0]), float(_sim.state.ship.position[1]))
- if step_index == _steps.size():
-  phase = "complete"
+ if phase != "playing": return
+ if _armed and _satisfied(_steps[step_index]):
+  step_index += 1
+  _armed = false
+  _origin = Vector2(float(_sim.state.ship.position[0]), float(_sim.state.ship.position[1]))
+  if step_index == _steps.size():
+   phase = "complete"
+   paused = true
+   if lesson not in completed: completed.append(lesson)
+ # Native objectives can be completed out of teaching order. Do not strand the
+ # window in a running phase when Simulation can no longer accept any commands.
+ if phase == "playing" and _sim.state.status != "active":
+  phase = "ended"
   paused = true
-  if lesson not in completed: completed.append(lesson)
 
 func _satisfied(step: Dictionary) -> bool:
  var ship: Dictionary = _sim.state.ship

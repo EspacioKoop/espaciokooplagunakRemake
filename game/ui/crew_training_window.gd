@@ -18,6 +18,8 @@ var pause_button: Button
 var _clock = 0.0
 
 func _ready() -> void:
+ transient = true
+ exclusive = true
  title = "Escuela de tripulación · simulación local"
  min_size = Vector2i(620, 480)
  size = Vector2i(940, 860)
@@ -118,7 +120,7 @@ func _select_operation(index: int) -> void:
  inputs.clear()
  var operation = str(operations.get_item_metadata(index))
  match operation:
-  "alert": _choice("level", "Niveau d'alerte" if false else "Nivel de alerta", [["verde", "Verde"], ["ambar", "Ámbar"], ["roja", "Roja"]])
+  "alert": _choice("level", "Nivel de alerta", [["verde", "Verde"], ["ambar", "Ámbar"], ["roja", "Roja"]])
   "mission_choice": _choice("choice", "Decisión", [["compartir", "Compartir"], ["reservar", "Reservar"]])
   "helm":
    _number("heading", "Rumbo (grados)", 0, 359, 1, 0)
@@ -238,6 +240,8 @@ func _open_assistance() -> void:
   return
  var window = load("res://ui/assistance_training_window.gd").new()
  window.name = "AssistancePractice"
+ window.transient = true
+ window.exclusive = true
  add_child(window)
  window.popup_centered()
 

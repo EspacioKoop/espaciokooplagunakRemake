@@ -94,7 +94,7 @@ def run(binary: Path, output: Path, graphical: bool) -> dict:
         if graphical:
             env["CREW_TRAINING_SCREENSHOT"] = str(capture)
         command = [str(binary)] + ([] if graphical else ["--headless"])
-        command += ["--path", str(ROOT / "game"), "--rendering-method", "gl_compatibility", "--audio-driver", "Dummy",
+        command += ["--path", str(ROOT / "game"), "--resolution", "1600x900", "--rendering-method", "gl_compatibility", "--audio-driver", "Dummy",
                     "--script", str(ROOT / "tests/test_crew_training.gd"), "--", "--test"]
         result = validate_output(execute(command, env, output / "training.log"))
         if graphical:

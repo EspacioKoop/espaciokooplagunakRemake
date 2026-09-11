@@ -67,6 +67,10 @@ func test_courses() -> void:
  check(model.completed.size() == 9, "repeat does not duplicate completed courses")
 
 func test_boundaries() -> void:
+ var localized = {"es": "Órbita de prácticas", "en": "Training orbit"}
+ check(CosmographyCatalog._localized(localized, "test", 120).is_empty(), "catalog text validates without constructing NUL strings")
+ for invalid in ["<script>", "a>b", "", " padded ", "x".repeat(121)]:
+  check(not CosmographyCatalog._localized({"es": invalid, "en": "Test"}, "test", 120).is_empty(), "catalog text boundary preserved")
  var model = CrewTraining.new()
  var before = model.snapshot()
  check(not model.reset("missing").ok and model.snapshot() == before, "unknown lesson preserves state")
@@ -109,9 +113,10 @@ func test_boundaries() -> void:
  copy.ship.hull = -1
  copy.contacts.clear()
  check(model.snapshot().ship.hull > 0 and not model.snapshot().contacts.is_empty(), "snapshot does not alias simulation")
+ var original_step = model.current_step()
  var step_copy = model.current_step()
  step_copy.args.throttle = 99
- check(model.current_step().args.throttle == 0.4, "step recipe does not alias")
+ check(model.current_step() == original_step, "step recipe does not alias")
  model.reset("sensores")
  model.select_role("sensores")
  var safe = model.snapshot()
@@ -139,6 +144,23 @@ func test_boundaries() -> void:
  for i in 451: pristine.advance(2.0)
  check(pristine.phase == "expired" and pristine.paused, "idle exercise time is bounded")
  check(pristine.reset("mando").ok and pristine.phase == "playing", "expired exercise can restart")
+
+func test_out_of_order_end() -> void:
+ var model = CrewTraining.new()
+ model.reset("navegacion")
+ model.select_role("navegacion")
+ check(model.order("autopilot", {"target": "port"}).ok, "native course permits experimentation")
+ for i in 500:
+  var view = model.snapshot()
+  var ship = Vector2(float(view.ship.position[0]), float(view.ship.position[1]))
+  if ship.distance_to(Vector2(0, 270)) < 190.0 and absf(float(view.ship.speed)) < 35.0: break
+  model.advance(0.1)
+ check(model.order("dock", {"target": "port"}).ok, "native mission can end out of teaching order")
+ check(model.snapshot().status == "won" and model.phase == "ended", "premature native win has explicit terminal phase")
+ check(model.paused and model.completed.is_empty() and model.step_index == 0, "no course credit for skipping the guide")
+ check(not model.order("undock").ok, "ended exercise cannot dispatch commands")
+ check(model.guidance().contains("Reinicia"), "premature win explains recovery")
+ check(model.reset("navegacion").ok and model.phase == "playing", "restart recovers out-of-order end")
 
 func choose_option(selector: OptionButton, value: Variant) -> bool:
  for i in selector.item_count:
@@ -188,6 +210,7 @@ func test_ui() -> void:
   console.queue_free()
   return
  window.set_process(false)
+ check(window.transient and window.exclusive, "school blocks input to the live parent window")
  check(window.lessons.item_count == 9 and window.roles.item_count == 8, "all courses and seats in UI")
  check(choose_option(window.lessons, "ingenieria"), "UI selects engineering lesson")
  ui_order(window, "ingenieria", "power", {"system": "sensores", "value": 0})
@@ -218,6 +241,16 @@ func test_ui() -> void:
  var assistance = window.get_node_or_null("AssistancePractice")
  check(assistance is Window and assistance.training != null, "existing four minigames reused")
  if assistance != null: assistance.queue_free()
+ await process_frame
+ window.size = Vector2i(620, 480)
+ await process_frame
+ await process_frame
+ check(window.size == Vector2i(620, 480), "window respects compact viewport")
+ check(window.roles.get_global_rect().end.x <= 620 and window.send_button.size.x <= 620, "main controls fit compact viewport")
+ window.send_button.grab_focus()
+ await process_frame
+ check(window.send_button.has_focus(), "keyboard focus reaches the execute control")
+ window.size = Vector2i(940, 860)
  await process_frame
  var capture = OS.get_environment("CREW_TRAINING_SCREENSHOT")
  if not capture.is_empty():
@@ -254,6 +287,7 @@ func run() -> void:
   return
  test_courses()
  test_boundaries()
+ test_out_of_order_end()
  await test_ui()
  print("CREW_TRAINING_RESULT ", JSON.stringify({"checks": checks, "failures": failures, "courses": courses, "first_mission": first_mission, "ui": ui_verified}))
  quit(1 if failures else 0)
