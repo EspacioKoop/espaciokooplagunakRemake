@@ -4,6 +4,7 @@ signal updated
 signal notice(text: String, ok: bool)
 signal joined
 signal disconnected
+signal transport_reset
 
 const DEFAULT_PORT = 27840
 const PROTOCOL = 5
@@ -223,6 +224,7 @@ func close_session() -> void:
 	poses.clear()
 	connection_status = "Partida local"
 	_refresh_view()
+	transport_reset.emit()
 
 func _peer_connected(id: int) -> void:
 	if mode != "host": return

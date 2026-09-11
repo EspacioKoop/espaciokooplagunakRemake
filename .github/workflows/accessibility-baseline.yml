@@ -18,4 +18,4 @@ jobs:
       - uses: chickensoft-games/setup-godot@v2
         with:
           version: 4.3.0
-      - run: godot --headless --path game --script ../tests/test_accessibility_baseline.gd
+      - run: godot --headless --path game --script "$GITHUB_WORKSPACE/tests/test_accessibility_baseline.gd"
