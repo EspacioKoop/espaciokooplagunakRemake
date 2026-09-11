@@ -70,6 +70,10 @@ Además, la aceptación Linux **extrae el ejecutable del ZIP descargable** y eje
 con gráficos reales la regresión de terminales y la suite de ocio/pasillos.
 No utiliza un proyecto suelto como respaldo; comprueba versión y recursos
 embebidos, guarda capturas y registra el SHA-256 del paquete y del ejecutable.
+Las suites se derivan de las pruebas existentes y se incorporan al mismo PCK,
+verificadas por hash. Un despachador de lista cerrada sólo se activa con
+`--test --release-acceptance=<fase>`; el juego normal no ejecuta las pruebas
+y no se habilita la carga de scripts externos de la plantilla.
 
 Las pruebas emplean perfiles sintéticos aislados. El posicionamiento de las
 pruebas de terminales es una fixture, no un paseo humano continuo por todo el

@@ -42,15 +42,14 @@ del ejecutable y hashes de los tests. Se ejecuta el binario extraído del ZIP co
 un directorio de trabajo vacío y perfiles locales desechables.
 
 ```sh
+python3 tests/release_092/prepare.py --check
 python3 -m unittest discover -s tests/release_092 -p test_runner.py -v
 python3 tests/release_092/run.py \
   --package dist/EspaciokoopLagunak-0.9.2-linux-x86_64.zip
 ```
 
 Hace falta una pantalla Linux o Xvfb. Se comprueban metadatos/recursos embebidos,
-terminales y la suite existente de ocio/pasillos. Sólo se reubican las referencias
-entre fixtures de test; las rutas de código/recursos `res://` continúan apuntando
-al PCK embebido. No se copia el proyecto para suplir recursos ausentes.
+terminales y la suite existente de ocio/pasillos. Las suites están embebidas en el mismo PCK, derivadas de los tests existentes: sólo cambian sus imports entre fixtures. `prepare.py --check` rechaza cualquier otra alteración. El despachador permanece inactivo en el juego normal y sólo acepta tres fases fijas junto a `--test`; no carga scripts externos ni habilita overrides de rutas de la plantilla. No se copia el proyecto para suplir recursos ausentes. Tras modificar un test fuente, regenerar las fixtures con `python3 tests/release_092/prepare.py` y revisar el diff.
 
 Las terminales usan posicionamiento sintético controlado; no se presenta como un
 paseo humano continuo. Los tests existentes recorren físicamente los seis enlaces

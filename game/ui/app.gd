@@ -97,7 +97,7 @@ func _build_shell() -> void:
 	_footer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_footer.clip_text = true
 	footer_row.add_child(_footer)
-	footer_row.add_child(ConsoleUI.label("ITSASO  /  1.0.0", 12, ConsoleUI.MUTED))
+	footer_row.add_child(ConsoleUI.label("ITSASO  /  " + str(ProjectSettings.get_setting("application/config/version", "")), 12, ConsoleUI.MUTED))
 	_new_confirmation = ConfirmationDialog.new()
 	_new_confirmation.title = "Comenzar una nueva expedición"
 	_new_confirmation.dialog_text = "Se reiniciará el progreso de la campaña local. El guardado anterior se conservará como copia de respaldo."

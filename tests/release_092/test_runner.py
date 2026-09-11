@@ -20,7 +20,7 @@ class AcceptanceTests(unittest.TestCase):
     def test_full_unique_success(self):
         self.assertEqual(runner.validate_output(0, GOOD, "terminals"), 161)
         self.assertEqual(runner.validate_output(0, "LEISURE_TESTS 135 checks; 0 failures\n", "leisure"), 135)
-        self.assertEqual(runner.validate_output(0, "EXPORT_CONTRACT_RESULT checks=9 failures=0\n", "contract"), 9)
+        self.assertEqual(runner.validate_output(0, "EXPORT_CONTRACT_RESULT checks=16 failures=0\n", "contract"), 16)
 
     def test_diagnostics_before_or_after_success_fail(self):
         for diagnostic in ("ERROR: boom", "  SCRIPT ERROR: boom", "Unicode parsing error", "\x1b[31mERROR:\x1b[0m boom"):
@@ -45,15 +45,40 @@ class AcceptanceTests(unittest.TestCase):
                 self.assertTrue(Path(env[key]).is_dir())
 
     def test_relocation_only_changes_test_imports(self):
+        content = runner.prepare.rendered()
+        for name in runner.SCRIPTS:
+            original = (runner.ROOT / "tests" / name).read_text()
+            relocated = content[runner.prepare.FIXTURE_DIR + "/" + name].decode()
+            for helper in ("test_ship_corridors.gd", "test_ship_deck_layout.gd"):
+                relocated = relocated.replace('"res://release_acceptance/fixtures/' + helper + '"', '"res://../tests/' + helper + '"')
+            self.assertEqual(original, relocated)
+        self.assertIn(b'"res://main.tscn"', content[runner.prepare.FIXTURE_DIR + "/test_terminal_transition.gd"])
+
+    def test_modified_embedded_assertions_and_extra_files_are_rejected(self):
+        import shutil
         with tempfile.TemporaryDirectory() as temp:
-            scripts = runner.prepare_scripts(Path(temp) / "fixtures")
+            root = Path(temp)
             for name in runner.SCRIPTS:
-                original = (runner.ROOT / "tests" / name).read_text()
-                relocated = scripts[name].read_text()
-                for helper in ("test_ship_corridors.gd", "test_ship_deck_layout.gd"):
-                    relocated = relocated.replace(json.dumps(str(scripts[helper])), '"res://../tests/' + helper + '"')
-                self.assertEqual(original, relocated)
-            self.assertIn('"res://main.tscn"', scripts["test_terminal_transition.gd"].read_text())
+                (root / "tests").mkdir(exist_ok=True)
+                shutil.copyfile(runner.ROOT / "tests" / name, root / "tests" / name)
+            (root / "tests/release_092").mkdir()
+            shutil.copyfile(Path(__file__).with_name("test_export_contract.gd"), root / "tests/release_092/test_export_contract.gd")
+            runner.prepare.prepare(root)
+            runner.prepare.prepare(root, check=True)
+            fixture = root / runner.prepare.FIXTURE_DIR / "test_terminal_transition.gd"
+            fixture.write_text(fixture.read_text() + "\n# unexpected edit\n")
+            with self.assertRaises(ValueError): runner.prepare.prepare(root, check=True)
+            runner.prepare.prepare(root)
+            (fixture.parent / "foreign.gd").write_text("extends Node")
+            with self.assertRaises(ValueError): runner.prepare.prepare(root, check=True)
+
+    def test_template_commands_never_override_paths_or_run_external_scripts(self):
+        for phase in ("contract", "terminals", "leisure"):
+            command = runner.embedded_command(Path("/tmp/app"), phase, Path("/tmp/captures"))
+            self.assertIn("--test", command)
+            self.assertIn("--release-acceptance=" + phase, command)
+            self.assertFalse({"--script", "--path", "--main-pack", "--main-loop", "--scene"}.intersection(command))
+        with self.assertRaises(ValueError): runner.embedded_command(Path("/tmp/app"), "../foreign", Path("/tmp/captures"))
 
     def test_zip_traversal_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp:

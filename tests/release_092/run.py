@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import signal
 import struct
 import subprocess
 import sys
@@ -17,6 +18,8 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 from export_targets import VERSION, checked_zip, package_name
+sys.path.insert(0, str(Path(__file__).parent))
+import prepare
 
 ANSI = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
 ERROR = re.compile(r"(?im)^\s*(?:SCRIPT ERROR|ERROR|USER ERROR|FATAL(?: ERROR)?):|Unicode parsing error")
@@ -35,8 +38,8 @@ def validate_output(code: int, text: str, phase: str) -> int:
     if code or ERROR.search(clean):
         raise ValueError(f"{phase}: engine error or nonzero exit")
     prefix, pattern, minimum = {
-        "contract": ("EXPORT_CONTRACT_RESULT", r"EXPORT_CONTRACT_RESULT checks=(\d+) failures=(\d+)", 9),
-        "terminals": ("TERMINAL_TRANSITION_RESULT", r"TERMINAL_TRANSITION_RESULT checks=(\d+) failures=(\d+)", 150),
+        "contract": ("EXPORT_CONTRACT_RESULT", r"EXPORT_CONTRACT_RESULT checks=(\d+) failures=(\d+)", 16),
+        "terminals": ("TERMINAL_TRANSITION_RESULT", r"TERMINAL_TRANSITION_RESULT checks=(\d+) failures=(\d+)", 161),
         "leisure": ("LEISURE_TESTS", r"LEISURE_TESTS (\d+) checks; (\d+) failures", 100),
     }[phase]
     summaries = [line for line in clean.splitlines() if line.startswith(prefix)]
@@ -59,22 +62,15 @@ def isolated_environment(directory: Path) -> dict[str, str]:
     return env
 
 
-def prepare_scripts(directory: Path) -> dict[str, Path]:
-    # Only test-to-test imports are relocated. Every production res:// stays
-    # untouched and must resolve inside the executable's embedded PCK.
-    directory.mkdir(parents=True)
-    result = {name: directory / name for name in SCRIPTS}
-    for name, target in result.items():
-        source = (ROOT / "tests" / name).read_text(encoding="utf-8")
-        for helper in ("test_ship_corridors.gd", "test_ship_deck_layout.gd"):
-            source = source.replace('"res://../tests/' + helper + '"', json.dumps(str(result[helper])))
-        if "res://../tests/" in source:
-            raise ValueError("Unexpected test dependency; review before adding it")
-        target.write_text(source, encoding="utf-8")
-    contract = directory / "test_export_contract.gd"
-    shutil.copyfile(Path(__file__).with_name(contract.name), contract)
-    result[contract.name] = contract
-    return result
+def embedded_command(binary: Path, phase: str, captures: Path) -> list[str]:
+    if phase not in ("contract", "terminals", "leisure"):
+        raise ValueError("Unknown embedded acceptance phase")
+    command = [str(binary), "--audio-driver", "Dummy", "--rendering-method", "gl_compatibility", "--", "--test", "--release-acceptance=" + phase]
+    if phase == "contract":
+        command += ["--expected-version=" + VERSION, "--expected-fixtures=" + digest(ROOT / prepare.MANIFEST)]
+    if phase == "terminals":
+        command += ["--evidence-dir", str(captures)]
+    return command
 
 
 def extract_binary(package: Path, target: Path) -> Path:
@@ -97,8 +93,11 @@ def extract_binary(package: Path, target: Path) -> Path:
 def run_checked(command: list[str], environment: dict[str, str], cwd: Path, log_path: Path, phase: str, timeout: float = 240) -> int:
     with tempfile.TemporaryFile() as log:
         try:
-            process = subprocess.run(command, cwd=cwd, env=environment, stdout=log, stderr=subprocess.STDOUT, timeout=timeout, check=False)
+            process = subprocess.Popen(command, cwd=cwd, env=environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+            process.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.wait()
             log.seek(0)
             log_path.write_bytes(log.read(MAX_LOG_BYTES) + b"\nRUNNER_TIMEOUT\n")
             raise
@@ -131,25 +130,23 @@ def main(argv: list[str] | None = None) -> None:
         (output / name).unlink(missing_ok=True)
     if package.name != package_name("linux"):
         raise ValueError("Package name does not match the explicit release version")
+    prepare.prepare(check=True)
     package_hash = digest(package)
     counts = {}
     with tempfile.TemporaryDirectory(prefix="lagunak-export-acceptance-") as temporary:
         directory = Path(temporary)
         binary = extract_binary(package, directory)
         binary_hash = digest(binary)
-        scripts = prepare_scripts(directory / "fixtures")
         captures = directory / "captures"
         captures.mkdir()
-        for phase, script in (("contract", "test_export_contract.gd"), ("terminals", "test_terminal_transition.gd"), ("leisure", "test_leisure.gd")):
+        for phase in ("contract", "terminals", "leisure"):
             profile = directory / phase
             profile.mkdir()
             env = isolated_environment(profile)
             # Deliberately empty cwd: no project.godot, .godot or game sources.
             work = profile / "empty"
             work.mkdir()
-            command = [str(binary), "--audio-driver", "Dummy", "--rendering-method", "gl_compatibility", "--script", str(scripts[script]), "--", "--test"]
-            if phase == "contract": command += ["--expected-version=" + VERSION]
-            if phase == "terminals": command += ["--evidence-dir", str(captures)]
+            command = embedded_command(binary, phase, captures)
             if not env.get("DISPLAY"):
                 if not shutil.which("xvfb-run"):
                     raise ValueError("Real display or xvfb-run is required; headless is not a substitute")
@@ -159,9 +156,9 @@ def main(argv: list[str] | None = None) -> None:
         if digest(binary) != binary_hash or digest(package) != package_hash:
             raise ValueError("The tested download changed during acceptance")
         for name in IMAGES: shutil.copyfile(captures / name, output / name)
-        sources = [ROOT / "tests" / name for name in SCRIPTS] + [Path(__file__), Path(__file__).with_name("test_export_contract.gd")]
+        sources = [ROOT / "tests" / name for name in SCRIPTS] + [Path(__file__), Path(__file__).with_name("test_export_contract.gd"), ROOT / "game/release_acceptance/dispatch.gd", Path(__file__).with_name("prepare.py")]
         report = {"version": VERSION, "package": package.name, "package_sha256": package_hash, "binary_sha256": binary_hash,
-                  "checks": counts, "failures": 0, "graphical": True, "loose_project_fallback": False,
+                  "checks": counts, "failures": 0, "graphical": True, "loose_project_fallback": False, "embedded_fixtures": True, "fixture_manifest_sha256": digest(ROOT / prepare.MANIFEST),
                   "sources_sha256": {str(path.relative_to(ROOT)): digest(path) for path in sources},
                   "limits": "Synthetic fixtures; terminal positioning is not an uninterrupted human walk. Existing leisure tests physically traverse six links both ways and inspect thirteen destinations. No user hardware or human playtest certification."}
         (output / "report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

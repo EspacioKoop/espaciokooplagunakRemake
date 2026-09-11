@@ -21,6 +21,7 @@ Fleet="*res://core/fleet_ai.gd"
 Armaments="*res://core/ship_armaments.gd"
 Thrusters="*res://core/continuous_maneuvering.gd"
 Avatars="*res://world/avatar_service.gd"
+ReleaseAcceptance="*res://release_acceptance/dispatch.gd"
 
 [display]
 window/size/viewport_width=1600

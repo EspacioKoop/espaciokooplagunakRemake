@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "sources": {
+    "tests/release_092/test_export_contract.gd": {
+      "fixture": "game/release_acceptance/fixtures/test_export_contract.gd",
+      "fixture_sha256": "6e36aa681ca74ef1214f6913854c4ce0cb94c6aeccda9f8609df4e9b9a64d6e1",
+      "source_sha256": "6e36aa681ca74ef1214f6913854c4ce0cb94c6aeccda9f8609df4e9b9a64d6e1"
+    },
+    "tests/test_leisure.gd": {
+      "fixture": "game/release_acceptance/fixtures/test_leisure.gd",
+      "fixture_sha256": "982812ad75b0b02def9601c8122f9788f1ee0d5b6b3508cc3432ad7281b139da",
+      "source_sha256": "1b3ad617c0b7edf2b8b9c7d7467951224d7a9eb5a1b432a21b6a69c5edf53e81"
+    },
+    "tests/test_ship_corridors.gd": {
+      "fixture": "game/release_acceptance/fixtures/test_ship_corridors.gd",
+      "fixture_sha256": "0257a7db06efd10187fdc7b11f411fe8e2c40b388fd931d0ae0db4dacdb25dee",
+      "source_sha256": "0257a7db06efd10187fdc7b11f411fe8e2c40b388fd931d0ae0db4dacdb25dee"
+    },
+    "tests/test_ship_deck_layout.gd": {
+      "fixture": "game/release_acceptance/fixtures/test_ship_deck_layout.gd",
+      "fixture_sha256": "f70e81bcd0d47a8be43edff8763ba3a31434104051520e02efd2215d506e734e",
+      "source_sha256": "01f22cf827d7cd89c8e01c902bc7c4cc30f539afbce3bcfe2c117e71d0210ea8"
+    },
+    "tests/test_terminal_transition.gd": {
+      "fixture": "game/release_acceptance/fixtures/test_terminal_transition.gd",
+      "fixture_sha256": "6275f3597a0af09273a3396735db961f8f577d0ce58477fe1ad0535da94e1d10",
+      "source_sha256": "6275f3597a0af09273a3396735db961f8f577d0ce58477fe1ad0535da94e1d10"
+    }
+  }
+}
