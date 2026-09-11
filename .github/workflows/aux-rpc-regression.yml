@@ -1,0 +1,44 @@
+name: Verify auxiliary RPC readiness and trust
+on:
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tests/test_authenticated_aux_rpc.gd'
+      - 'tests/run_authenticated_aux_rpc.py'
+      - 'tests/test_aux_rpc_runner.py'
+      - '.github/workflows/aux-rpc-regression.yml'
+  push:
+    branches: [main, agent/32-aux-rpc-barrier-n4]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: aux-rpc-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  auxiliary-rpc:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Reject false successes and isolate profiles
+        run: python3 tests/test_aux_rpc_runner.py
+      - name: Download verified engine
+        run: python3 tools/bootstrap.py
+      - name: Import resources
+        run: .toolchain/godot --headless --editor --path game --quit
+      - name: Simultaneous member-first startup
+        run: python3 tests/run_authenticated_aux_rpc.py --evidence-dir build/aux-rpc/simultaneous
+      - name: Guest waits before member authentication
+        run: python3 tests/run_authenticated_aux_rpc.py --startup-order guest-first --startup-gap-ms 500 --evidence-dir build/aux-rpc/guest-first
+      - name: Member waits before guest connection
+        run: python3 tests/run_authenticated_aux_rpc.py --startup-order member-first --startup-gap-ms 1500 --evidence-dir build/aux-rpc/member-first
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: aux-rpc-synthetic-evidence
+          path: build/aux-rpc/
+          if-no-files-found: warn
+          retention-days: 14

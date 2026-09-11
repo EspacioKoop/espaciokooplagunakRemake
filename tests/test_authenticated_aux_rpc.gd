@@ -47,6 +47,17 @@ func read_peer(name: String) -> int:
 	var data = JSON.parse_string(FileAccess.get_file_as_string(coordination.path_join(name + ".json")))
 	return int(data.id)
 
+func wait_for_host_connections(member: int, guest: int) -> bool:
+	# A client-side ready file is not a host-side ENet acknowledgement. Poll the
+	# real host until both transports and the guest challenge are observable.
+	var until = Time.get_ticks_msec() + 8000
+	while Time.get_ticks_msec() < until:
+		if session.roster.has(member) and session._peer_active(member) and session._peer_active(guest) and session._challenges.has(guest):
+			return check(true, "host observes both transports and the unauthenticated challenge")
+		await delay(0.02)
+	print("AUX_RPC_STAGE ", JSON.stringify({"member_active": session._peer_active(member), "guest_active": session._peer_active(guest), "member_in_roster": session.roster.has(member), "guest_challenged": session._challenges.has(guest)}))
+	return check(false, "host never acknowledged both client-ready transports")
+
 func send_auxiliary_updates() -> void:
 	# Advance production emitters with automatic processing disabled, so a
 	# client's updated signals unambiguously count real RPC delivery.
@@ -90,6 +101,7 @@ func run_host(port: int) -> void:
 	if not await wait_for("member-ready") or not await wait_for("guest-ready"): return
 	var member = read_peer("member-ready")
 	var guest = read_peer("guest-ready")
+	if not await wait_for_host_connections(member, guest): return
 	check(session.roster.has(member) and session.roster.size() == 2, "only host and authenticated member are in roster")
 	check(not session.roster.has(guest), "transport-only guest has no authenticated principal")
 	check(session._peer_active(member) and session._peer_active(guest), "both remote ENet connections are really active")
