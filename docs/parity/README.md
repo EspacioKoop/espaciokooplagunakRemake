@@ -16,7 +16,11 @@ El informe contiene una fila por bloque explícito del registro y por declaraci�
 
 **Un check verde aquí significa que el registro es coherente, no que todas las funciones estén terminadas.** El registro inicial deja `coverage.complete = false`, no contiene ejecuciones inventadas y distingue pruebas presentes de pruebas ejecutadas. `partial` describe la evidencia/paridad incompleta del alcance de la fila: no revoca pruebas históricas ni afirma que todo el sistema esté averiado.
 
-La lectura inicial del remake está fijada a `8b1dcf27683a00972b03d5203606eab12f31fe2d`; la referencia original, a `fecd0740545f485d2402c6dfe4b47d5a859cb96c`. Son referencias de auditoría, no afirmaciones de CI verde. El último checkpoint validado lo mantiene #1.
+El candidato de esta actualización está fijado a `f2015279bb7a8c307352a9526d1942a9df047ac4` (release 0.9.2); la referencia original permanece en `fecd0740545f485d2402c6dfe4b47d5a859cb96c`. El registro sigue sin declarar cobertura completa. Son referencias de auditoría, no afirmaciones de CI verde. El último checkpoint validado lo mantiene #1.
+
+## Reconciliación de contenido NPC
+
+El inventario distingue el motor de autoría del NPC de sus consumidores jugables. El taller de #50 cubre generación determinista, ficha, afinidades, economía de acciones e importación/exportación; no cubre colocar NPC en escenas, conversaciones/agendas, memoria ni combate. Esas capacidades tienen filas independientes para evitar que una implementación de fichas oculte pendientes de integración.
 
 ## Una sola autoridad por dato
 

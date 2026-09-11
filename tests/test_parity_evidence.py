@@ -302,5 +302,20 @@ class RegisterTests(unittest.TestCase):
         self.assertIn("Original → remake", output.read_text(encoding="utf-8"))
 
 
+    def test_real_inventory_reconciles_merged_npc_workbench(self):
+        inventory_path = Path(__file__).resolve().parents[1] / "docs/parity/issue32_inventory.json"
+        data = P.load_json(inventory_path)
+        by_id = {row["id"]: row for row in data["items"]}
+        self.assertEqual(data["remake_revision"], "f2015279bb7a8c307352a9526d1942a9df047ac4")
+        self.assertEqual(by_id["npc-generator"]["status"], "partial")
+        self.assertEqual(by_id["npc-generator"]["decision"], "replace")
+        self.assertTrue(any(evidence.get("path") == "game/core/npc_generator.gd"
+                            for evidence in by_id["npc-generator"]["evidence"]))
+        self.assertEqual(by_id["npc-scene-placement"]["status"], "pending")
+        self.assertEqual(by_id["npc-dialogue-agenda"]["status"], "pending")
+        self.assertEqual(by_id["npc-memory-combat"]["status"], "pending")
+        self.assertFalse(data["coverage"]["complete"])
+
+
 if __name__ == "__main__":
     unittest.main()
