@@ -1,6 +1,7 @@
 class_name Catalog
 extends RefCounted
 
+const SpaceObjectCatalog = preload("res://core/space_object_catalog.gd")
 const ROLES := ["mando", "navegacion", "ingenieria", "armas", "sensores", "comunicaciones", "enlace", "reparaciones"]
 const ROLE_NAMES := ["Mando", "Navegación", "Ingeniería", "Armas", "Sensores", "Comunicaciones", "Enlace", "Control de daños"]
 const SYSTEMS := ["reactor", "motores", "maniobra", "warp", "salto", "armas", "misiles", "escudos", "escudos_popa", "sensores"]
@@ -73,6 +74,8 @@ static func validate_mission(value: Variant) -> String:
 			return "Nombre de contacto inválido."
 		if contact.kind not in CONTACT_KINDS:
 			return "Tipo de contacto desconocido."
+		var space_object_error = SpaceObjectCatalog.validate_contact(contact)
+		if not space_object_error.is_empty(): return space_object_error
 		var physics_error = SpacePhysics.validate_contact(contact)
 		if not physics_error.is_empty(): return physics_error
 		if not contact.position is Array or contact.position.size() != 2:

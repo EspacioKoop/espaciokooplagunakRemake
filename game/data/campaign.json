@@ -27,7 +27,9 @@
             650,
             700
           ],
-          "known": true
+          "known": true,
+          "space_object_template": "small_station",
+          "visual_model": "orbita/docking_collar"
         },
         {
           "id": "izpi",
@@ -96,7 +98,9 @@
             1250,
             350
           ],
-          "known": true
+          "known": true,
+          "space_object_template": "medium_station",
+          "visual_model": "base/station"
         },
         {
           "id": "argi",
@@ -161,7 +165,9 @@
             1500,
             500
           ],
-          "known": true
+          "known": true,
+          "space_object_template": "small_station",
+          "visual_model": "orbita/docking_collar"
         },
         {
           "id": "argi",
@@ -216,7 +222,9 @@
             1650,
             350
           ],
-          "known": true
+          "known": true,
+          "space_object_template": "large_station",
+          "visual_model": "orbita/solar_array"
         },
         {
           "id": "argi",
@@ -263,7 +271,9 @@
             0
           ],
           "known": true,
-          "hull": 45
+          "hull": 45,
+          "space_object_template": "medium_station",
+          "visual_model": "base/station"
         },
         {
           "id": "gorri",
@@ -337,7 +347,9 @@
             1350,
             450
           ],
-          "known": true
+          "known": true,
+          "space_object_template": "huge_station",
+          "visual_model": "base/station"
         },
         {
           "id": "argi",

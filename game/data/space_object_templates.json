@@ -1,0 +1,74 @@
+{
+  "format": "lagunak-space-object-templates",
+  "version": 1,
+  "reference": {
+    "repository": "EspacioKoop/espaciokooplagunak",
+    "commit": "fecd0740545f485d2402c6dfe4b47d5a859cb96c",
+    "file": "scripts/shiptemplates/stations.lua",
+    "license": "MIT",
+    "note": "Only the public station properties are re-authored here; no original code or mesh is copied."
+  },
+  "templates": [
+    {
+      "id": "small_station",
+      "source_name": "Small Station",
+      "title": "Estación pequeña",
+      "kind": "station",
+      "role": "research_outpost",
+      "hull_capacity": 150,
+      "shield_quadrants": [300],
+      "radius_m": 82,
+      "visual_model": "orbita/docking_collar",
+      "decision": "include",
+      "reason": "The standalone product already supports station docking, repair, collision and authored station contacts."
+    },
+    {
+      "id": "medium_station",
+      "source_name": "Medium Station",
+      "title": "Estación mediana",
+      "kind": "station",
+      "role": "trading_post",
+      "hull_capacity": 400,
+      "shield_quadrants": [800],
+      "radius_m": 82,
+      "visual_model": "base/station",
+      "decision": "include",
+      "reason": "The standalone product already supports station docking, repair, collision and authored station contacts."
+    },
+    {
+      "id": "large_station",
+      "source_name": "Large Station",
+      "title": "Estación grande",
+      "kind": "station",
+      "role": "permanent_base",
+      "hull_capacity": 500,
+      "shield_quadrants": [1000, 1000, 1000],
+      "radius_m": 82,
+      "visual_model": "orbita/solar_array",
+      "decision": "include",
+      "reason": "The standalone product supports a station contact and a three-sector authored stat profile; visual geometry is an original substitution."
+    },
+    {
+      "id": "huge_station",
+      "source_name": "Huge Station",
+      "title": "Estación enorme",
+      "kind": "station",
+      "role": "regional_capital",
+      "hull_capacity": 800,
+      "shield_quadrants": [1200, 1200, 1200, 1200],
+      "radius_m": 82,
+      "visual_model": "base/station",
+      "decision": "include",
+      "reason": "The four-sector profile is representable as authored content; the current spatial collision envelope remains the shared station radius."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "defense_platform",
+      "source_name": "Defense platform",
+      "source_file": "scripts/shiptemplates/corvette.lua",
+      "decision": "exclude",
+      "reason": "It requires six shield sections, dock-class semantics and independent turret behavior. The standalone contact contract has neither six-sector station durability nor a turret-authority path; it is not marked green by reducing it to a plain station."
+    }
+  ]
+}
