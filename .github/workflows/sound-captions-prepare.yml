@@ -1,0 +1,31 @@
+name: Prepare isolated sound captions workbench
+on:
+  push:
+    branches: [agent/32-sound-captions-s6]
+    paths: [.github/workflows/sound-captions-prepare.yml]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/agent/32-sound-captions-s6'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 tools/bootstrap.py
+      - name: Archive tracked public sources and verified test engine only
+        run: |
+          mkdir -p build/captions-workbench
+          git archive --format=tar HEAD | gzip > build/captions-workbench/source.tar.gz
+          cp .toolchain/godot build/captions-workbench/godot
+          git rev-parse HEAD > build/captions-workbench/revision.txt
+          cd build/captions-workbench
+          sha256sum source.tar.gz godot > SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sound-captions-workbench
+          path: build/captions-workbench/
+          if-no-files-found: error
+          retention-days: 1
