@@ -1,7 +1,6 @@
 extends SceneTree
 
 const AccessibilitySettingsScript = preload("res://core/accessibility_settings.gd")
-const SubtitleBusScript = preload("res://ui/accessibility/subtitle_bus.gd")
 const RedundantSignalScript = preload("res://ui/accessibility/redundant_signal.gd")
 
 var failures: Array[String] = []
@@ -17,7 +16,8 @@ func _init() -> void:
 	check(settings.transition_duration(0.4) == 0.0, "reduced motion removes transition")
 	check(settings.snapshot()["reduced_motion"] == true, "snapshot exposes reduced motion")
 
-	var bus = SubtitleBusScript.new()
+	var bus_script = load("res://ui/accessibility/subtitle_bus.gd")
+	var bus = bus_script.new()
 	bus.settings = settings
 	var received := []
 	bus.subtitle_emitted.connect(func(text: String, source: String, duration: float): received.append([text, source, duration]))

@@ -27,6 +27,7 @@ func _ready() -> void:
 	process_physics_priority = -20
 	_session.joined.connect(_hello_host)
 	_session.updated.connect(_session_changed)
+	_session.transport_reset.connect(_sync_transport)
 	multiplayer.peer_disconnected.connect(_peer_left)
 	_sync_transport()
 
