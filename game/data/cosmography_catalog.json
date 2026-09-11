@@ -1,0 +1,64 @@
+{
+  "format": "espaciokoop-cosmography",
+  "version": 1,
+  "entries": [
+    {
+      "id": "real",
+      "type": "plane",
+      "name": {"es": "Espacio real", "en": "Real space"},
+      "summary": {"es": "Continuidad propia de Espaciokoop Lagunak.", "en": "Espaciokoop Lagunak original continuity."},
+      "continuity": "original",
+      "provenance": {"kind": "original", "source": "Espaciokoop Lagunak Remake", "license": "GPL-2.0-or-later"}
+    },
+    {
+      "id": "itsasargi",
+      "type": "star_system",
+      "parent_id": "real",
+      "name": {"es": "Itsasargi", "en": "Itsasargi"},
+      "summary": {"es": "Sistema de origen de la Itsaso.", "en": "Home system of the Itsaso."},
+      "continuity": "original",
+      "provenance": {"kind": "original", "source": "Espaciokoop Lagunak Remake", "license": "GPL-2.0-or-later"},
+      "map_ref": "map_itsasargi"
+    },
+    {
+      "id": "itsasargi-principal",
+      "type": "planet",
+      "parent_id": "itsasargi",
+      "name": {"es": "Itsasargi principal", "en": "Itsasargi Prime"},
+      "summary": {"es": "Mundo de partida y puerto de la Itsaso.", "en": "Starting world and port of the Itsaso."},
+      "continuity": "original",
+      "provenance": {"kind": "original", "source": "Espaciokoop Lagunak Remake", "license": "GPL-2.0-or-later"},
+      "map_ref": "map_itsasargi_prime"
+    },
+    {
+      "id": "egunsenti",
+      "type": "star_system",
+      "parent_id": "real",
+      "name": {"es": "Egunsenti", "en": "Egunsenti"},
+      "summary": {"es": "Sistema de las cartas compartidas.", "en": "System of the shared charts."},
+      "continuity": "homebrew",
+      "provenance": {"kind": "original", "source": "Espaciokoop Lagunak Remake", "license": "GPL-2.0-or-later"},
+      "map_ref": "map_egunsenti"
+    },
+    {
+      "id": "egunsenti-puerto",
+      "type": "planet",
+      "parent_id": "egunsenti",
+      "name": {"es": "Puerto Egunsenti", "en": "Egunsenti Port"},
+      "summary": {"es": "Destino de comercio y diplomacia.", "en": "Trade and diplomacy destination."},
+      "continuity": "homebrew",
+      "provenance": {"kind": "original", "source": "Espaciokoop Lagunak Remake", "license": "GPL-2.0-or-later"},
+      "map_ref": "map_egunsenti_port"
+    },
+    {
+      "id": "izarren-bidea",
+      "type": "star_system",
+      "parent_id": "real",
+      "name": {"es": "Izarren bidea", "en": "Starway"},
+      "summary": {"es": "Sistema de frontera para futuras expediciones.", "en": "Frontier system for future expeditions."},
+      "continuity": "homebrew",
+      "provenance": {"kind": "original", "source": "Espaciokoop Lagunak Remake", "license": "GPL-2.0-or-later"},
+      "map_ref": "map_starway"
+    }
+  ]
+}

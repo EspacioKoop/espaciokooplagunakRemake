@@ -23,6 +23,16 @@ func run() -> void:
 	app._new_game()
 	await settle()
 	check(session.role == "navegacion", "new game selects navigation")
+	var accessibility = root.get_node("Controls").readability
+	var accessibility_before: Dictionary = accessibility.acc_profile.duplicate(true)
+	var text_before: Dictionary = accessibility.profile.duplicate(true)
+	for mode in AccessibilityProfile.COLORBLIND_MODES:
+		check(accessibility.commit_accessibility(mode, true).is_empty(), "accessibility mode commits: " + mode)
+		await settle()
+		check(app._colorblind_filter.visible == (mode != "none"), "colorblind overlay applies: " + mode)
+	check(accessibility.commit_accessibility(str(accessibility_before["colorblind_mode"]), bool(accessibility_before["global_reduced_motion"])).is_empty(), "accessibility profile restores")
+	check(accessibility.commit_text_percent(int(text_before["text_percent"])).is_empty(), "text scale profile restores")
+	await settle()
 	var autopilot: Button
 	for button in app.find_children("*", "Button", true, false):
 		if button.text == "Piloto automático": autopilot = button

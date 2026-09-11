@@ -1,6 +1,7 @@
 class_name GMHotConsole
 extends Window
 ## Host-local, run-bound editor. A client receives neither this view nor its audit.
+const TriggerSystem = preload("res://core/interior_triggers.gd")
 var session: Node
 var run_id = ""
 var notice: Label
@@ -19,10 +20,20 @@ var pacified: CheckButton
 var visual: OptionButton
 var event_kind: OptionButton
 var event_value: LineEdit
+var trigger_listing: ItemList
+var trigger_id: LineEdit
+var trigger_zone: OptionButton
+var trigger_event_type: OptionButton
+var trigger_action: OptionButton
+var trigger_value: LineEdit
+var trigger_target: LineEdit
+var trigger_one_shot: CheckButton
 var audit: Label
 var _selected_id = ""
+var _selected_trigger_id = ""
 var _initial_values: Dictionary = {}
 var _ids: Array = []
+var _trigger_ids: Array = []
 var _confirmation: ConfirmationDialog
 var _pending: Callable
 
@@ -117,6 +128,50 @@ func _ready() -> void:
 	event_kind.item_selected.connect(func(index):
 		event_value.placeholder_text = ["verde / ambar / roja", "Texto público · hasta 240 caracteres", "Cantidad: 0,001–1000", "Cantidad: 0,001–1000", "Cantidad entera: 1–12"][index])
 	event_row.add_child(ConsoleUI.button("Ejecutar", _trigger_event))
+	form.add_child(HSeparator.new())
+	form.add_child(ConsoleUI.label("TRIGGERS DE INTERIOR · HOST", 18, ConsoleUI.TEAL))
+	trigger_listing = ItemList.new()
+	trigger_listing.name = "GMInteriorTriggers"
+	trigger_listing.custom_minimum_size.y = 120
+	trigger_listing.item_selected.connect(_select_trigger)
+	form.add_child(trigger_listing)
+	var trigger_grid = GridContainer.new()
+	trigger_grid.columns = 2
+	trigger_grid.add_theme_constant_override("h_separation", 14)
+	trigger_grid.add_theme_constant_override("v_separation", 7)
+	form.add_child(trigger_grid)
+	trigger_id = _field(trigger_grid, "Identificador")
+	trigger_id.name = "GMTriggerID"
+	trigger_zone = OptionButton.new()
+	trigger_zone.add_item("Cualquier zona")
+	trigger_zone.set_item_metadata(0, -1)
+	for zone_index in WorldDeck.ZONES.size():
+		trigger_zone.add_item(WorldDeck.ZONES[zone_index].name)
+		trigger_zone.set_item_metadata(trigger_zone.item_count - 1, zone_index)
+	_row(trigger_grid, "Zona", trigger_zone)
+	trigger_event_type = OptionButton.new()
+	for event_type in TriggerSystem.TRIGGER_EVENTS: trigger_event_type.add_item(event_type)
+	_row(trigger_grid, "Evento", trigger_event_type)
+	trigger_action = OptionButton.new()
+	var trigger_actions = ["alert", "message", "damage", "repair", "reinforcements", "fact", "custom"]
+	var trigger_action_labels = ["Alerta", "Mensaje público", "Daño", "Reparación", "Refuerzos", "Registrar hecho", "Personalizado"]
+	for index in trigger_actions.size():
+		trigger_action.add_item(trigger_action_labels[index])
+		trigger_action.set_item_metadata(index, trigger_actions[index])
+	_row(trigger_grid, "Consecuencia", trigger_action)
+	trigger_value = _field(trigger_grid, "Valor")
+	trigger_value.name = "GMTriggerValue"
+	trigger_target = _field(trigger_grid, "Interacción (opcional)")
+	trigger_target.name = "GMTriggerTarget"
+	trigger_one_shot = CheckButton.new()
+	trigger_one_shot.text = "Sólo una vez por partida"
+	trigger_one_shot.button_pressed = true
+	_row(trigger_grid, "Repetición", trigger_one_shot)
+	var trigger_buttons = ConsoleUI.row(form, 8)
+	trigger_buttons.add_child(ConsoleUI.button("Nuevo trigger", _new_trigger))
+	trigger_buttons.add_child(ConsoleUI.button("Crear / aplicar", _save_trigger))
+	trigger_buttons.add_child(ConsoleUI.button("Retirar trigger", _remove_trigger))
+	form.add_child(ConsoleUI.paragraph("Los triggers se validan en el anfitrión, se guardan con la partida y disparan al entrar, salir, interactuar o sentarse. Un cliente nunca ejecuta ni ve la auditoría privada.", 14))
 	audit = ConsoleUI.paragraph("", 13, ConsoleUI.MUTED)
 	audit.name = "GMAudit"
 	form.add_child(audit)
@@ -238,6 +293,87 @@ func _refresh_list() -> void:
 	for item in session.sim.state.get("gm_live", {}).get("audit", []).slice(-6):
 		lines.append("#%d · %s · %s" % [item.seq, item.operation, item.target])
 	audit.text = "\n".join(lines)
+	_refresh_triggers()
+
+func _refresh_triggers() -> void:
+	if trigger_listing == null or not _authorized(): return
+	_trigger_ids.clear()
+	trigger_listing.clear()
+	for trigger in TriggerSystem.list_triggers(session.sim):
+		_trigger_ids.append(str(trigger.id))
+		var zone_name = "Cualquier zona" if int(trigger.zone) < 0 else WorldDeck.ZONES[int(trigger.zone)].name
+		trigger_listing.add_item("%s · %s · %s%s" % [trigger.id, zone_name, trigger.event_type, " ✓" if trigger.fired else ""])
+		if trigger.id == _selected_trigger_id: trigger_listing.select(trigger_listing.item_count - 1)
+
+func _new_trigger() -> void:
+	_selected_trigger_id = ""
+	if trigger_listing != null: trigger_listing.deselect_all()
+	if trigger_id == null: return
+	var serial := int(session.sim.state.sequence)
+	var proposed := "interior_%d" % serial
+	while TriggerSystem.list_triggers(session.sim).any(func(item): return str(item.get("id", "")) == proposed):
+		serial += 1
+		proposed = "interior_%d" % serial
+	trigger_id.text = proposed
+	trigger_zone.select(0)
+	trigger_event_type.select(0)
+	trigger_action.select(0)
+	trigger_value.text = ""
+	trigger_target.text = ""
+	trigger_one_shot.button_pressed = true
+
+func _select_trigger(index: int) -> void:
+	if index < 0 or index >= _trigger_ids.size() or not _authorized(): return
+	var wanted = _trigger_ids[index]
+	for trigger in TriggerSystem.list_triggers(session.sim):
+		if str(trigger.get("id", "")) != wanted: continue
+		_selected_trigger_id = wanted
+		trigger_id.text = wanted
+		for zone_index in trigger_zone.item_count:
+			if int(trigger_zone.get_item_metadata(zone_index)) == int(trigger.zone): trigger_zone.select(zone_index)
+		trigger_event_type.select(maxi(0, TriggerSystem.TRIGGER_EVENTS.find(str(trigger.event_type))))
+		for action_index in trigger_action.item_count:
+			if str(trigger_action.get_item_metadata(action_index)) == str(trigger.consequence.action): trigger_action.select(action_index)
+		trigger_value.text = str(trigger.consequence.value)
+		trigger_target.text = str(trigger.get("target_id", ""))
+		trigger_one_shot.button_pressed = bool(trigger.one_shot)
+		return
+
+func _trigger_payload() -> Dictionary:
+	var action = str(trigger_action.get_selected_metadata())
+	var raw_value = trigger_value.text.strip_edges()
+	var value: Variant = raw_value
+	if action in ["damage", "repair"]: value = raw_value.to_float()
+	elif action == "reinforcements": value = raw_value.to_int()
+	var payload: Dictionary = {
+		"id": trigger_id.text.strip_edges(),
+		"zone": int(trigger_zone.get_selected_metadata()),
+		"event_type": str(trigger_event_type.get_item_text(trigger_event_type.selected)),
+		"consequence": {"action": action, "value": value},
+		"one_shot": trigger_one_shot.button_pressed
+	}
+	if not trigger_target.text.strip_edges().is_empty(): payload.target_id = trigger_target.text.strip_edges()
+	return payload
+
+func _save_trigger() -> void:
+	if not _authorized(): return
+	var payload = _trigger_payload()
+	var result: Dictionary
+	if _selected_trigger_id.is_empty():
+		result = GMLiveActions.dispatch(session, "add_interior_trigger", payload, run_id)
+	else:
+		var changes = payload.duplicate(true)
+		changes.erase("id")
+		result = GMLiveActions.dispatch(session, "modify_interior_trigger", {"id": _selected_trigger_id, "changes": changes}, run_id)
+	notice.text = ("✓ " if result.ok else "✕ ") + result.message
+	if result.ok: _selected_trigger_id = str(payload.id)
+	_refresh_list()
+
+func _remove_trigger() -> void:
+	if _selected_trigger_id.is_empty(): return
+	_dispatch("remove_interior_trigger", {"id": _selected_trigger_id})
+	_selected_trigger_id = ""
+	_new_trigger()
 
 func _dispatch(operation: String, args: Dictionary) -> void:
 	if not _authorized():

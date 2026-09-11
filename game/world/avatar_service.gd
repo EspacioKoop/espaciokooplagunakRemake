@@ -25,6 +25,7 @@ func _ready() -> void:
 	if _session != null:
 		_session.updated.connect(_sync_session)
 		_session.joined.connect(func(): _pending = true)
+		_session.transport_reset.connect(_transport_reset)
 	if not InputMap.has_action("avatar_editor"):
 		InputMap.add_action("avatar_editor")
 		var key = InputEventKey.new()
@@ -103,6 +104,14 @@ func _sync_session() -> void:
 			_rates.erase(peer_id)
 			dirty = true
 	if dirty: _publish()
+
+func _transport_reset() -> void:
+	profiles.clear()
+	_subscribers.clear()
+	_rates.clear()
+	_pending = true
+	_refresh_bound()
+	changed.emit()
 
 func _process(delta: float) -> void:
 	_sync_session()

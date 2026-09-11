@@ -4,10 +4,13 @@ signal updated
 signal notice(text: String, ok: bool)
 signal joined
 signal disconnected
+signal transport_reset
 
 const DEFAULT_PORT = 27840
 const PROTOCOL = 5
+const CosmographyServiceScript = preload("res://core/cosmography_service.gd")
 var sim = Simulation.new()
+var cosmography: Node
 var lounge = ShipLounge.new()
 var _lounge_peers: Dictionary = {}
 var _lounge_tickets: Dictionary = {}
@@ -34,6 +37,10 @@ var _previous_status = ""
 var suppress_saves = false
 
 func _ready() -> void:
+	cosmography = CosmographyServiceScript.new()
+	cosmography.name = "Cosmography"
+	add_child(cosmography)
+	cosmography.bind_session(self)
 	# Clients exchange orders and views only with the host. Avoid transport peer
 	# announcements to connections that are still authenticating or closing.
 	multiplayer.server_relay = false
@@ -95,6 +102,9 @@ func start_mission(index: int, custom: Dictionary = {}) -> Dictionary:
 	sim.start(mission, carry)
 	if not document.is_empty(): sim.state.campaign_document = document
 	sim.state.run_id = Crypto.new().generate_random_bytes(12).hex_encode()
+	if cosmography != null:
+		var cosmography_result: Dictionary = cosmography.restore_from_state(sim.state)
+		if not cosmography_result.get("ok", false): return cosmography_result
 	paused = false
 	_refresh_view()
 	save_game()
@@ -109,15 +119,39 @@ func resume_game() -> Dictionary:
 		backup = loaded.has("state")
 	if not loaded.has("state"): return {"ok": false, "message": loaded.get("error", "Sin guardado.")}
 	sim.state = loaded.state
+	if cosmography != null:
+		var cosmography_result: Dictionary = cosmography.restore_from_state(sim.state)
+		if not cosmography_result.get("ok", false): return cosmography_result
 	paused = false
 	_refresh_view()
 	return {"ok": true, "message": "Copia anterior recuperada." if backup else "Expedición recuperada."}
 
 func save_game() -> Dictionary:
 	if suppress_saves or mode == "client" or sim.state.is_empty(): return {"ok": false, "message": "No hay una partida local que guardar."}
+	if cosmography != null: cosmography.sync_to_state(sim.state)
 	var error = LocalStorage.save_state(sim.state)
 	save_status = "Guardado · " + Time.get_time_string_from_system() if error.is_empty() else error
 	return {"ok": error.is_empty(), "message": save_status}
+
+func restore_named_save(id: String, expected_digest: String) -> Dictionary:
+	if mode == "client": return {"ok": false, "message": "Sólo el anfitrión puede cargar guardados."}
+	if mode == "host": return {"ok": false, "message": "Cierra la sesión de red antes de cargar un guardado."}
+	var selected = NamedSaveStore.read_slot(id)
+	if not selected.ok or selected.digest != expected_digest: return {"ok": false, "message": "El guardado seleccionado ha cambiado o no es válido."}
+	var recovery = NamedSaveStore.capture(self, get_node_or_null("/root/Expedition"), "Recuperación antes de cargar")
+	if recovery.ok:
+		var preserved = NamedSaveStore.preserve_recovery(recovery.checkpoint)
+		if not preserved.ok: return preserved
+	var installed = NamedSaveStore.install(selected.checkpoint)
+	if not installed.ok: return installed
+	sim.state = installed.state
+	var expedition = get_node_or_null("/root/Expedition")
+	if expedition != null:
+		var restored = expedition.restore_checkpoint(selected.checkpoint.expedition)
+		if not restored.ok: return restored
+	paused = false
+	_refresh_view()
+	return {"ok": true, "message": "Guardado cargado. La copia anterior queda en recuperación."}
 
 func order(operation: String, args: Dictionary = {}) -> Dictionary:
 	if operation.begins_with("table_"): return table_order(operation, args)
@@ -190,6 +224,7 @@ func close_session() -> void:
 	poses.clear()
 	connection_status = "Partida local"
 	_refresh_view()
+	transport_reset.emit()
 
 func _peer_connected(id: int) -> void:
 	if mode != "host": return
@@ -343,7 +378,8 @@ func _refresh_view() -> void:
 		view.roster = roster.duplicate(true)
 		view.poses = poses.duplicate(true)
 		view.lounge = lounge.snapshot("self", role == "mando")
-	updated.emit()
+		if cosmography != null: view.cosmography = cosmography.snapshot()
+		updated.emit()
 
 func _physics_process(delta: float) -> void:
 	if mode == "client": return

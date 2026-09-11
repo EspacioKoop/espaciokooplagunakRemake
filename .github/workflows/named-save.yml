@@ -1,0 +1,32 @@
+name: named-save-integration
+
+on:
+  push:
+    paths:
+      - 'game/core/campaign_checkpoint.gd'
+      - 'game/core/named_save_store.gd'
+      - 'game/core/expedition_systems.gd'
+      - 'game/net/session.gd'
+      - 'game/ui/app.gd'
+      - 'game/ui/named_save_window.gd'
+      - 'tests/test_named_save_integration.py'
+      - 'docs/NAMED_SAVES.md'
+      - '.github/workflows/named-save.yml'
+  pull_request:
+    paths:
+      - 'game/core/**'
+      - 'game/net/session.gd'
+      - 'game/ui/**'
+      - 'tests/test_named_save_integration.py'
+      - 'docs/NAMED_SAVES.md'
+      - '.github/workflows/named-save.yml'
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python -m unittest discover -s tests -p 'test_named_save_integration.py' -v

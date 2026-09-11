@@ -1,0 +1,688 @@
+{
+  "schema_version": 1,
+  "source": {
+    "repository": "EspacioKoop/espaciokooplagunak",
+    "revision": "fecd0740545f485d2402c6dfe4b47d5a859cb96c",
+    "tree_scope": "scripts/scenario_*.lua",
+    "selection": "Todos los scripts scenario_*.lua presentes en el árbol fijado; metadatos limitados a cabecera y blob."
+  },
+  "remake_snapshot": {
+    "repository": "EspacioKoop/espaciokooplagunakRemake",
+    "revision": "8b1dcf27683a00972b03d5203606eab12f31fe2d",
+    "path": "game/data/campaign.json",
+    "mission_ids": [
+      "itsasoratu",
+      "oihartzuna",
+      "aterpe",
+      "zaindari",
+      "berpiztu",
+      "elkarlana"
+    ]
+  },
+  "coverage": {
+    "complete": false,
+    "scope": "escenarios originales frente al catálogo de campañas del remake",
+    "recorded_records": 38,
+    "original_scenario_count": 38,
+    "remake_catalog_count": 6
+  },
+  "mapping_policy": {
+    "statuses": [
+      "unmapped_in_current_catalog",
+      "candidate_only"
+    ],
+    "parity_claim": false,
+    "human_review_required": true,
+    "rule": "El editor o una misión con un nombre distinto no se cuenta como equivalencia sin objetivos, fases, desenlaces, dependencias y recompensas contrastados."
+  },
+  "records": [
+    {
+      "id": "scenario:00",
+      "original": {
+        "number": 0,
+        "name": "Basic Battle",
+        "declared_type": "Basic",
+        "path": "scripts/scenario_00_basic.lua",
+        "blob_sha1": "37826a1ac7e77e73bd451368224a05349b24d8d7"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:02",
+      "original": {
+        "number": 2,
+        "name": "Surrounded",
+        "declared_type": "Basic",
+        "path": "scripts/scenario_02_surrounded.lua",
+        "blob_sha1": "ad88dc33ea0038be35d8dcf30676563a9c6db1b3"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:03",
+      "original": {
+        "number": 3,
+        "name": "Waves",
+        "declared_type": "Basic",
+        "path": "scripts/scenario_03_waves.lua",
+        "blob_sha1": "7c8ed757e5e4a351f0932547860a042a245baeab"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:05",
+      "original": {
+        "number": 5,
+        "name": "Beacon of Light series",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_05_beacon.lua",
+        "blob_sha1": "821e1345d4f0b6fffc45aabd234e2c96607cff0c"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:06",
+      "original": {
+        "number": 6,
+        "name": "The Edge-of-Space",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_06_edgeofspace.lua",
+        "blob_sha1": "35707ad1588eb32118cdcdcd2c2836f9102dd456"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:07",
+      "original": {
+        "number": 7,
+        "name": "Ghost from the Past",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_07_gftp.lua",
+        "blob_sha1": "ab83d727c9f4d95577cc0119096bb4cd9852aa38"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:08",
+      "original": {
+        "number": 8,
+        "name": "Birth of the Atlantis",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_08_atlantis.lua",
+        "blob_sha1": "b0afd1eb464e1f48f1da2cc816b1742ff9ff196f"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:10",
+      "original": {
+        "number": 10,
+        "name": "Empty space",
+        "declared_type": "Development",
+        "path": "scripts/scenario_10_empty.lua",
+        "blob_sha1": "84993998b0a45bfa406a107d8a4bbe147a727e19"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:20",
+      "original": {
+        "number": 20,
+        "name": "Training: Cruiser",
+        "declared_type": "Basic",
+        "path": "scripts/scenario_20_training1.lua",
+        "blob_sha1": "dca7f499a54003bf098394982fecabb57fcce9a5"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:27",
+      "original": {
+        "number": 27,
+        "name": "Liberation Day",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_27_liberation.lua",
+        "blob_sha1": "44bbaacbc0f6f5baa8af86836796a36c836434a1"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:29",
+      "original": {
+        "number": 29,
+        "name": "Surf's Up!",
+        "declared_type": "Basic",
+        "path": "scripts/scenario_29_surf.lua",
+        "blob_sha1": "bb814ddeaa1844f196a827e739cc6c06af36e9ed"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:30",
+      "original": {
+        "number": 30,
+        "name": "Broken Glass",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_30_brokenglass.lua",
+        "blob_sha1": "85b11e5d3aaf438a02e866364f896b525b749458"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:31",
+      "original": {
+        "number": 31,
+        "name": "Push The Payload",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_31_payload.lua",
+        "blob_sha1": "84e3dfbe711335ff28d0d62326efd05f3ea08a83"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:32",
+      "original": {
+        "number": 32,
+        "name": "Planet Devourer",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_32_devour.lua",
+        "blob_sha1": "637ab26957734a00283b470543cce68135aca201"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:33",
+      "original": {
+        "number": 33,
+        "name": "Early Evaluation Exercise",
+        "declared_type": "Basic",
+        "path": "scripts/scenario_33_early.lua",
+        "blob_sha1": "b63c78ded6a44830d897a30bd97d4ae678fa91b3"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:34",
+      "original": {
+        "number": 34,
+        "name": "Cadet Patrol",
+        "declared_type": "Basic",
+        "path": "scripts/scenario_34_cadet.lua",
+        "blob_sha1": "85a7ad8d0856cf58c563b99e401023373950a360"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:39",
+      "original": {
+        "number": 39,
+        "name": "Locust Swarm",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_39_locusts.lua",
+        "blob_sha1": "9a6bbf3340c4939f4a163bc4ea6f2d28a84efa87"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:44",
+      "original": {
+        "number": 44,
+        "name": "Doomed Outpost",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_44_outpost.lua",
+        "blob_sha1": "94a6026098f867ee129bf762907ec7f58b10cf8f"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:47",
+      "original": {
+        "number": 47,
+        "name": "Scurvy Scavenger",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_47_scavenger.lua",
+        "blob_sha1": "d5d6c65140f75820cd72c9fd792f6daa179bbd27"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:48",
+      "original": {
+        "number": 48,
+        "name": "Unwanted Visitors",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_48_visitors.lua",
+        "blob_sha1": "add1c327fb569adae6719b8908f833a721e21e1f"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:49",
+      "original": {
+        "number": 49,
+        "name": "Allies and Enemies",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_49_allies.lua",
+        "blob_sha1": "a20ca3e8f92191c1d0bf7fd50a492404a56f7db5"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:50",
+      "original": {
+        "number": 50,
+        "name": "Close the Gaps",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_50_gaps.lua",
+        "blob_sha1": "3e645b0e284b8bf58e169eb79eebbbc21536bb18"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:51",
+      "original": {
+        "number": 51,
+        "name": "Deliver Ambassador Gremus",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_51_deliverAmbassador.lua",
+        "blob_sha1": "80f9acf964190e8608b62942ce1d80c2e0af100d"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:53",
+      "original": {
+        "number": 53,
+        "name": "Escape",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_53_escape.lua",
+        "blob_sha1": "a8fe7bb0d9fbf5196031fefc034cb646e3c8ae48"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:54",
+      "original": {
+        "number": 54,
+        "name": "Delta quadrant patrol duty",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_54_PatrolDuty.lua",
+        "blob_sha1": "601df5f4fafdbb063a6168861d414eb7c2c4a58c"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:55",
+      "original": {
+        "number": 55,
+        "name": "Defender Hunter",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_55_defenderHunter.lua",
+        "blob_sha1": "43e14f46a29454e4009137b14be6f205ffc7fc1e"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:56",
+      "original": {
+        "number": 56,
+        "name": "Carrier and Fighters",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_56_carrierTurret.lua",
+        "blob_sha1": "f9981cce8b548c5055e6bc447c7302352bbf8347"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:57",
+      "original": {
+        "number": 57,
+        "name": "Shoreline",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_57_shoreline.lua",
+        "blob_sha1": "057dff540c7bfa80eae7ecedb244b9edfebefba1"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:58",
+      "original": {
+        "number": 58,
+        "name": "Fermi 500",
+        "declared_type": "Race",
+        "path": "scripts/scenario_58_race.lua",
+        "blob_sha1": "92dd73baa11aa623f1ea1ca0ae6f6573739e07ae"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:59",
+      "original": {
+        "number": 59,
+        "name": "Borderline Fever",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_59_border.lua",
+        "blob_sha1": "df3bdd46da718f3d0a9e03e44f2e2a375b0256fb"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:60",
+      "original": {
+        "number": 60,
+        "name": "Capture the Flag",
+        "declared_type": null,
+        "path": "scripts/scenario_60_captureFlag.lua",
+        "blob_sha1": "55f2c8151038c60afa8bd704981c189f1d75ae5d"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:62",
+      "original": {
+        "number": 62,
+        "name": "What the Dickens",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_62_whatTheDickens.lua",
+        "blob_sha1": "1a293ec9df17f34f79009259402926678c150281"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:74",
+      "original": {
+        "number": 74,
+        "name": "The Omicron Plague",
+        "declared_type": "Replayable Mission",
+        "path": "scripts/scenario_74_omicron.lua",
+        "blob_sha1": "954e962983f6d31aa485073b8e83506324f3efd7"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:79",
+      "original": {
+        "number": 79,
+        "name": "Kessler",
+        "declared_type": "Mission",
+        "path": "scripts/scenario_79_kessler.lua",
+        "blob_sha1": "bf03b71c2cffc63b378f38bd4d030bb07b0b4973"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:81",
+      "original": {
+        "number": 81,
+        "name": "Clash in Shangri-La (PVP)",
+        "declared_type": null,
+        "path": "scripts/scenario_81_pvp.lua",
+        "blob_sha1": "85ddfa7af89f4ddb491f50a32580da00fcf9f5d9"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:88",
+      "original": {
+        "number": 88,
+        "name": "Chaos of War",
+        "declared_type": "PvP",
+        "path": "scripts/scenario_88_chaos.lua",
+        "blob_sha1": "8f9fe2425938d08058af973358a2310703fb279b"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:90",
+      "original": {
+        "number": 90,
+        "name": "Lagunak: Primera guardia",
+        "declared_type": "Basic",
+        "path": "scripts/scenario_90_lagunak_primera_guardia.lua",
+        "blob_sha1": "5cc366cf9afd4728b200922e720bcc5d6bf448f3"
+      },
+      "remake": {
+        "status": "candidate_only",
+        "mission_ids": [
+          "itsasoratu"
+        ],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    },
+    {
+      "id": "scenario:99",
+      "original": {
+        "number": 99,
+        "name": "Battlefield",
+        "declared_type": "Development",
+        "path": "scripts/scenario_99_battlefield.lua",
+        "blob_sha1": "933cab2c965e502248c344f1c0ff288fa9b49de8"
+      },
+      "remake": {
+        "status": "unmapped_in_current_catalog",
+        "mission_ids": [],
+        "evidence_path": "game/data/campaign.json"
+      },
+      "decision": "human_review",
+      "note": "Registro de origen y contraste de catálogo; no demuestra equivalencia jugable ni paridad individual."
+    }
+  ]
+}

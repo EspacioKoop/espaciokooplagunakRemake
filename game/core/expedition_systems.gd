@@ -31,6 +31,19 @@ var _broadcast_clock = 0.0
 var _save_clock = 0.0
 var _window: Window
 
+func checkpoint_cursor() -> Dictionary:
+	return {"run": str(data.get("run_id", "")), "sequence": _last_seq}
+
+func restore_checkpoint(snapshot: Dictionary) -> Dictionary:
+	var error = CampaignCheckpoint.validate_expedition(snapshot)
+	if not error.is_empty(): return {"ok": false, "message": error}
+	data = snapshot.duplicate(true)
+	_last_seq = int(data.get("_event_cursor", {}).get("sequence", 0))
+	data.erase("_event_cursor")
+	save()
+	updated.emit()
+	return {"ok": true, "message": "Expedición restaurada."}
+
 func _ready() -> void:
 	_load()
 	set_process_unhandled_key_input(true)
