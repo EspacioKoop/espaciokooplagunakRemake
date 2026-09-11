@@ -36,7 +36,7 @@ def gh(*args):
 
 def publish(directory, repository, commit, run_id):
     # A future version requires an explicit publication change; never auto-release 1.0.
-    if VERSION not in ("0.9.0", "0.9.1"):
+    if VERSION not in ("0.9.0", "0.9.1", "0.9.2"):
         print("No automatic publication requested for", VERSION)
         return
     run = json.loads(gh("api", f"repos/{repository}/actions/runs/{run_id}"))

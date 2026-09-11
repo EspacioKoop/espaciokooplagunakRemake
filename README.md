@@ -15,22 +15,22 @@ Juego nativo de exploración espacial cooperativa construido en **Godot**, con g
 
 ## Estado del proyecto
 
-**Última publicación comprobada: [v0.9.1](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/tag/v0.9.1), del 10 de septiembre de 2026.** Hay paquetes para Linux y Windows. Es una versión para pruebas de jugadores; **la paridad funcional completa de la 1.0 sigue abierta**.
+**Versión preparada: [v0.9.2](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/tag/v0.9.2), 11 de septiembre de 2026.** La publicación de los paquetes Linux/Windows está condicionada a la CI del commit final; la sección [Releases](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases) es la autoridad sobre su disponibilidad. Es una entrega para pruebas de jugadores; **la paridad funcional completa de la 1.0 sigue abierta**.
 
-La 0.9.1 incorpora la corrección de las conexiones físicas entre compartimentos, controles táctiles, servidor dedicado con Docker/Compose, suministros y artefactos recogibles y un selector de **38 variantes adaptadas de nave**. El alcance y las conversiones de estas variantes se explican en [Plantillas de nave](docs/SHIP_TEMPLATES.md); no equivalen al catálogo original íntegro.
+La 0.9.2 reúne correcciones de terminales, escuela de tripulación, combate táctico con modelos 3D, consola GM, taller de NPC, dossier local de sesión, subtítulos de avisos y mejoras de guardados/validación. Incluye también los recursos Itsasargi/Bizi/Portu y el catálogo visual, sin presentarlos como vuelo o aterrizaje de campaña. [Novedades y límites](docs/RELEASE_NOTES.md) · [Guía para probar la 0.9.2](docs/RELEASE_0_9_2.md).
 
 `main` es la rama de desarrollo y puede contener cambios posteriores a los paquetes publicados. Un PR abierto, una captura o una prueba aislada no convierten una función en parte de una release. Consulta las [notas de publicación](docs/RELEASE_NOTES.md), la [matriz de paridad](docs/FEATURE_PARITY.md) y el [plan maestro](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1) para distinguir entregas, avances y pendientes.
 
-> **Incidencia conocida:** sigue abierto el [fallo de interacción con terminales en Linux — #29](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/29). La corrección de pasillos de la 0.9.1 no debe interpretarse como confirmación de que ese crash esté resuelto.
+> **Seguimiento de terminales:** las correcciones de transición de #35/#42 están incluidas, pero [#29](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/29) conserva pendiente la confirmación en el equipo afectado. La aceptación del ZIP usa pruebas gráficas y perfiles sintéticos; no sustituye esa comprobación humana.
 
 ## Descargar y ejecutar
 
 Los paquetes incluyen el juego, sus recursos e instrucciones. **No necesitas instalar Godot, Blender ni Node.js para jugar.** Descomprime el ZIP completo antes de ejecutarlo.
 
-| Plataforma | Paquete v0.9.1 | Ejecutable |
+| Plataforma | Paquete v0.9.2 | Ejecutable |
 | --- | --- | --- |
-| Linux x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.1/EspaciokoopLagunak-0.9.1-linux-x86_64.zip) | `EspaciokoopLagunak.x86_64` |
-| Windows x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.1/EspaciokoopLagunak-0.9.1-windows-x86_64.zip) | `EspaciokoopLagunak.exe` |
+| Linux x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.2/EspaciokoopLagunak-0.9.2-linux-x86_64.zip) | `EspaciokoopLagunak.x86_64` |
+| Windows x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.2/EspaciokoopLagunak-0.9.2-windows-x86_64.zip) | `EspaciokoopLagunak.exe` |
 
 En Linux, si se ha perdido el permiso de ejecución, abre una terminal en la carpeta descomprimida:
 
@@ -39,7 +39,7 @@ chmod +x EspaciokoopLagunak.x86_64
 ./EspaciokoopLagunak.x86_64
 ```
 
-Las sumas de comprobación están en [SHA256SUMS](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.1/SHA256SUMS). En Linux, desde la carpeta que contiene ese archivo y los ZIP descargados:
+Las sumas de comprobación están en [SHA256SUMS](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.2/SHA256SUMS). En Linux, desde la carpeta que contiene ese archivo y los ZIP descargados:
 
 ```sh
 sha256sum --check --ignore-missing SHA256SUMS
