@@ -1,9 +1,13 @@
 name: Verify native GM live console
 on:
   pull_request:
-    paths: ['game/**', 'tests/**', '.github/workflows/gm-live.yml']
+    paths:
+      - 'game/**'
+      - 'tests/**'
+      - 'tools/runtime_asset_catalog.py'
+      - '.github/workflows/gm-live.yml'
   push:
-    branches: [agent/32-gm-live-n4]
+    branches: [main, agent/32-gm-live-n4]
   workflow_dispatch:
 permissions:
   contents: read
@@ -13,29 +17,42 @@ concurrency:
 jobs:
   gm-live:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Install display runtime
-        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Install display and image verification
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          python3 -m pip install 'Pillow==11.3.0'
+      - name: Validate registry and runner negative cases
+        run: |
+          python3 tools/runtime_asset_catalog.py --check
+          python3 tests/test_runtime_asset_catalog.py
+          python3 tests/test_gm_live_runner.py
       - name: Download verified engine
         run: python3 tools/bootstrap.py
       - name: Import resources
         run: .toolchain/godot --headless --editor --path game --quit
-      - name: Exercise GM state invariants
-        run: python3 tests/run_gm_live.py
-      - name: Preserve reproducible tracked source and pinned engine for diagnosis
-        if: always()
+      - name: Export resource pack to verify packaged assets
         run: |
           mkdir -p build/gm-live
-          git archive --format=tar HEAD | gzip > build/gm-live/tracked-source.tar.gz
-          tar czf build/gm-live/verified-editor.tar.gz -C .toolchain godot
+          .toolchain/godot --headless --path game --export-pack Linux "$PWD/build/gm-live/runtime.pck"
+      - name: Exercise rules, persistence, all models, real UI and ENet
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/gm-live
+          python3 tests/run_gm_live.py --pack build/gm-live/runtime.pck --graphical --capture-dir build/gm-live 2>&1 | tee build/gm-live/result.log
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: gm-live-reproduction
-          path: build/gm-live/*.tar.gz
+          name: gm-live-evidence
+          path: |
+            build/gm-live/*.log
+            build/gm-live/*.png
+            build/gm-live/*.json
           if-no-files-found: error
-          retention-days: 2
+          retention-days: 14

@@ -1,0 +1,161 @@
+name: Preserve tested GM implementation on agent branch
+on:
+  push:
+    branches: [agent/32-gm-live-n4]
+    paths: ['tools/gm-live-delivery.b64*', '.github/workflows/gm-delivery.yml']
+permissions:
+  contents: read
+concurrency:
+  group: gm-delivery-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  preserve:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/agent/32-gm-live-n4'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - name: Verify bounded transport and apply exact reviewed source changes
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, hashlib, json, lzma, re, subprocess
+          from pathlib import Path
+          root = Path.cwd()
+          names = ('tools/gm-live-delivery.b64', 'tools/gm-live-delivery.b64.1', 'tools/gm-live-delivery.b64.2')
+          text = ''.join((root / name).read_text().strip() for name in names)
+          assert len(text) == 42208
+          raw = base64.b64decode(text, validate=True)
+          assert hashlib.sha256(raw).hexdigest() == 'b3f09732873ae48169bb65114144b50ad6ac4df24a97925de17376bbe29fcad2'
+          decoder = lzma.LZMADecompressor(memlimit=128 * 1024 * 1024)
+          decoded = decoder.decompress(raw, max_length=200000)
+          assert decoder.eof and not decoder.unused_data
+          delivery = json.loads(decoded)
+          assert delivery['base_commit'] == '70345d091c974d182b1eb8c0dc501398bc0eef21'
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD^'], text=True).strip() == delivery['base_commit']
+          allowed = set('''.github/workflows/gm-live.yml
+          docs/GM_HOT_CONSOLE.md
+          docs/RUNTIME_ASSET_LIBRARY.md
+          game/core/gm_live_actions.gd
+          game/core/gm_live_state.gd
+          game/core/runtime_asset_library.gd
+          game/core/simulation.gd
+          game/core/storage.gd
+          game/ui/app.gd
+          game/ui/asset_library_window.gd
+          game/ui/gm_hot_console.gd
+          game/world/asset_preview.gd
+          game/world/space_view.gd
+          tests/run_gm_live.py
+          tests/test_gm_hot_console.gd
+          tests/test_gm_live.gd
+          tests/test_gm_live_network.gd
+          tests/test_gm_live_runner.py
+          tests/test_gm_live_ui.gd
+          tests/test_runtime_asset_catalog.py
+          tests/test_runtime_assets.gd
+          tools/runtime_asset_catalog.py
+          game/data/runtime_asset_library.json'''.splitlines())
+          assert set(delivery['sha256']) == allowed
+          assert set(delivery['before']) <= allowed
+          workflow = '.github/workflows/gm-live.yml'
+          for name, expected in delivery['before'].items():
+              path = root / name
+              assert path.is_file() and not path.is_symlink(), name
+              if name == workflow:
+                  expected = delivery['sha256'][name]
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
+          pairs = re.findall(r'^diff --git a/(\S+) b/(\S+)$', delivery['patch'], re.M)
+          assert len(pairs) == 22 and all(a == b and a in allowed for a, b in pairs)
+          assert {a for a, _ in pairs} == allowed - {'game/data/runtime_asset_library.json'}
+          output = root / 'build/gm-live'
+          output.mkdir(parents=True, exist_ok=True)
+          patch = output / 'delivery.patch'
+          patch.write_text(delivery['patch'], encoding='utf-8')
+          subprocess.run(['git', 'apply', '--check', '--unidiff-zero', '--exclude=' + workflow, str(patch)], check=True)
+          subprocess.run(['git', 'apply', '--unidiff-zero', '--exclude=' + workflow, str(patch)], check=True)
+          subprocess.run(['python3', 'tools/runtime_asset_catalog.py'], check=True)
+          for name, expected in delivery['sha256'].items():
+              assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+          (output / 'delivery-hashes.json').write_text(json.dumps(delivery['sha256'], sort_keys=True, indent=2) + '\n')
+          print('GM_DELIVERY_SOURCE_OK files=23')
+          PY
+      - name: Install display and image verification
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          python3 -m pip install 'Pillow==11.3.0'
+      - name: Verify deterministic registry and negative runner cases
+        run: |
+          set -euo pipefail
+          python3 tools/runtime_asset_catalog.py --check
+          python3 tests/test_runtime_asset_catalog.py
+          python3 tests/test_gm_live_runner.py
+      - name: Download verified repository-pinned engine and import
+        run: |
+          set -euo pipefail
+          python3 tools/bootstrap.py
+          .toolchain/godot --headless --editor --path game --quit
+      - name: Export and test actual packaged resources, UI and ENet
+        run: |
+          set -euo pipefail
+          .toolchain/godot --headless --path game --export-pack Linux "$PWD/build/gm-live/runtime.pck"
+          python3 tests/run_gm_live.py --pack build/gm-live/runtime.pck --graphical --capture-dir build/gm-live 2>&1 | tee build/gm-live/result.log
+      - name: Preserve exact source and fresh screenshots on unchanged agent branch only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_HEAD: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git fetch origin agent/32-gm-live-n4
+          test "$(git rev-parse origin/agent/32-gm-live-n4)" = "$EXPECTED_HEAD" || { echo 'Branch advanced; refusing stale publication'; exit 1; }
+          python3 - <<'PY'
+          import hashlib, json, shutil, subprocess
+          from pathlib import Path
+          root = Path.cwd()
+          evidence = root / 'build/gm-live'
+          hashes = json.loads((evidence / 'delivery-hashes.json').read_text())
+          for name, expected in hashes.items():
+              assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+          captures = json.loads((evidence / 'captures.json').read_text())
+          assert set(captures) == {'gm-live.png', 'runtime-asset-library.png'}
+          images = []
+          for name, expected in captures.items():
+              source = evidence / name
+              assert hashlib.sha256(source.read_bytes()).hexdigest() == expected, name
+              target = root / 'docs/images' / name
+              target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, target)
+              images.append(str(target.relative_to(root)))
+          paths = [name for name in hashes if not name.startswith('.github/')] + images
+          subprocess.run(['git', 'add', '--', *paths], check=True)
+          transient = ['tools/gm-live-delivery.b64', 'tools/gm-live-delivery.b64.1', 'tools/gm-live-delivery.b64.2']
+          subprocess.run(['git', 'rm', '--', *transient], check=True)
+          changed = subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines()
+          assert changed and set(changed) <= set(paths + transient)
+          assert not any(name.startswith('.github/') for name in changed)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'feat(gm): preserve tested live direction and 78 integrated library resources'
+          git -c credential.helper='!f() { printf "username=x-access-token\npassword=%s\n" "$GH_TOKEN"; }; f' push origin HEAD:refs/heads/agent/32-gm-live-n4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: gm-live-delivery-evidence
+          path: |
+            build/gm-live/*.log
+            build/gm-live/*.png
+            build/gm-live/*hashes.json
+            build/gm-live/captures.json
+          if-no-files-found: error
+          retention-days: 14
