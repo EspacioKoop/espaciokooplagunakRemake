@@ -14,6 +14,14 @@ Antes de editar cualquier archivo, lee:
 
 El **último SHA completamente verde** está siempre escrito en la cabecera del issue #1. No asumas que el HEAD de `main` está verde si la sesión coordinadora está integrando algo en ese momento.
 
+### Normas Platino adoptadas
+
+Este proyecto adopta `EspacioKoop/normas_platino@b5e01a2b2060a31268507797708a92a7d14ffc52`.
+Antes de editar, lee también [`docs/NORMAS_PLATINO.md`](docs/NORMAS_PLATINO.md),
+[`docs/normas-platino/COOPERACION_AUTONOMA.md`](docs/normas-platino/COOPERACION_AUTONOMA.md)
+y [`docs/normas-platino/PLANIFICACION_Y_ENTREGAS.md`](docs/normas-platino/PLANIFICACION_Y_ENTREGAS.md).
+La adopción refuerza este contrato; no reemplaza las reservas, excepciones ni decisiones específicas del remake.
+
 ## 1. Prohibido trabajar sin reserva
 
 Antes de modificar nada:
