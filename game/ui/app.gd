@@ -85,6 +85,10 @@ func _build_shell() -> void:
 	header.add_child(spacer)
 	_session_label = ConsoleUI.label("● LOCAL", 12, ConsoleUI.TEAL)
 	header.add_child(_session_label)
+	var gm_button = ConsoleUI.button("Dirección GM", _open_gm_console)
+	gm_button.name = "GMConsoleButton"
+	_refs.gm_button = gm_button
+	header.add_child(gm_button)
 	header.add_child(ConsoleUI.button("?", _show_help))
 	header.add_child(ConsoleUI.button("Ajustes", _go.bind("settings")))
 	var line = HSeparator.new()
@@ -93,7 +97,7 @@ func _build_shell() -> void:
 	_content = ConsoleUI.column(root, 16)
 	ConsoleUI.expand(_content)
 	var footer_row = ConsoleUI.row(root)
-	_footer = ConsoleUI.label("F1 · Guía     F5 · Guardar     F11 · Pantalla completa", 13, ConsoleUI.MUTED)
+	_footer = ConsoleUI.label("F1 · Guía     F5 · Guardar     F8 · Dirección GM     F11 · Pantalla completa", 13, ConsoleUI.MUTED)
 	_footer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_footer.clip_text = true
 	footer_row.add_child(_footer)
@@ -935,6 +939,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
 	if event.keycode == KEY_F1: _show_help()
 	elif event.keycode == KEY_F5: _manual_save()
+	elif event.keycode == KEY_F8:
+		if GMLiveActions.can_direct(Session): _open_gm_console()
 	elif event.keycode == KEY_F11:
 		_preferences.fullscreen = DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_FULLSCREEN
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if _preferences.fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)

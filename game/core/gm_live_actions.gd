@@ -25,6 +25,10 @@ static func dispatch(session: Node, operation: String, args: Dictionary, expecte
 		"remove":
 			if args.size() != 1 or not args.get("id") is String: return _reply(false, "Retirada inválida.")
 			result = remove_contact(session.sim, args.id)
+		"add_interior_trigger":
+			result = InteriorTriggers.register_trigger(session.sim, args)
+		"remove_interior_trigger":
+			result = InteriorTriggers.remove_trigger(session.sim, str(args.get("id", "")))
 		_: result = trigger_event(session.sim, operation, args)
 	if result.ok: session._refresh_view()
 	return result

@@ -51,3 +51,19 @@ Entrada de mando ya asignada.,Entrada de mando ya asignada.,Gamepad input is alr
 No se pudo leer el perfil de controles.,No se pudo leer el perfil de controles.,Could not read the control profile.
 No se pudieron guardar los controles.,No se pudieron guardar los controles.,Could not save controls.
 Botón %d,Botón %d,Button %d
+Inicio,Inicio,Home
+Puente,Puente,Bridge
+Cubierta,Cubierta,Deck
+Atlas,Atlas,Atlas
+Campaña,Campaña,Campaign
+Editor,Editor,Editor
+Sesión,Sesión,Session
+Ajustes,Ajustes,Settings
+Dirección GM,Dirección GM,GM Direction
+Dirección en vivo,Dirección en vivo,Live Direction
+Navegación,Navegación,Navigation
+Sensores,Sensores,Sensors
+Armas,Armas,Weapons
+Ingeniería,Ingeniería,Engineering
+Comunicaciones,Comunicaciones,Comms
+Puesto de mando,Puesto de mando,Command station

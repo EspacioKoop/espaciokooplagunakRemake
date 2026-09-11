@@ -134,14 +134,15 @@ La Itsaso mantiene cargados simultáneamente sus siete compartimentos principale
 | Atlas por sector y marcadores | **Hecho base** |
 | Dirección: tempo | **Hecho** |
 | Dirección: amenaza/encuentros automáticos | **Hecho** |
-| Dirección: convocatoria manual | **Hecho** |
+| Dirección: convocatoria manual y consola GM | **Hecho**: consola GM integrada en shell (`app.gd` + F8, `test_gm_integration.gd`) |
+| Dirección: triggers en interiores | **Hecho**: `interior_triggers.gd`, `gm_live_actions.gd`, `test_interior_triggers.gd` |
 | Dirección: reposición | **Hecho** |
-| Cosmografía jerárquica `plane → star_system → planet` | **Pendiente** |
-| Importación HYG / JSON cosmográfico | **Pendiente** |
-| Procedencia/licencia por entrada | **Pendiente** |
-| Conexiones, `map_ref` y navegación entre sistemas/sectores | **Pendiente** |
-| Continuidades original/homebrew/Spelljammer | **Pendiente** |
-| Parlamento y controles GM/escena restantes | **Pendiente** |
+| Cosmografía jerárquica `plane → star_system → planet` | **Pendiente** (P1) |
+| Importación HYG / JSON cosmográfico | **Pendiente** (P1) |
+| Procedencia/licencia por entrada | **Pendiente** (P1) |
+| Conexiones, `map_ref` y navegación entre sistemas/sectores | **Pendiente** (P1) |
+| Continuidades original/homebrew/Spelljammer | **Pendiente** (P1) |
+| Parlamento y controles GM/escena restantes | **Pendiente** (P1) |
 
 La referencia original ya definía el formato `espaciokoop-cosmography` v1 y un importador HYG/JSON. En el remake se reimplementará como componente standalone, no como dependencia de Foundry.
 
@@ -172,7 +173,7 @@ La referencia original ya definía el formato `espaciokoop-cosmography` v1 y un 
 | Distribución | release0.9 Linux/Windows; exportador macOS Universal2 y preflight Android (#14) | APK real y validación física macOS/Android; periféricos relevantes |
 | Servidor dedicado / Docker | **Hecho** (#23, posterior a0.9): host observador, autenticación, volumen persistente y reinicio; Docker/Compose real probado en CI | acceso remoto Foundry y periféricos según requisitos verificados |
 | Herramientas externas | no son necesarias para la campaña nueva | bot Discord, netboot, packs y utilidades de la referencia que sigan teniendo sentido |
-| Accesibilidad | remapeo de movimiento, mando, ajustes y panel ES/EN (#11); táctil de cubierta y menús (#22, posterior a0.9) | atajos de pantallas restantes, traducción completa y validación táctil en dispositivo |
+| Accesibilidad y Localización | **Hecho**: gate de localización 100% ES/EN (`check_locale_coverage.py`), daltonismo (`protanopia`, `deuteranopia`, `tritanopia`), movimiento reducido global (`accessibility_profile.gd`, `test_accessibility.gd`) | atajos de pantallas restantes y validación táctil en dispositivo |
 
 ## Regla de mantenimiento
 
