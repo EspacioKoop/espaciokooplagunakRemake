@@ -25,6 +25,8 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
       - name: Validate release package publishing
         run: python3 -m unittest discover -s tests -p test_publish_release.py
+      - name: Verify exported acceptance runner negative controls
+        run: python3 -m unittest discover -s tests/release_092 -p test_runner.py -v
       - name: Download verified Godot toolchain
         run: python3 tools/bootstrap.py --templates
       - name: Import resources
@@ -75,6 +77,15 @@ jobs:
           python3 tools/package_downloads.py
           python3 tools/verify_artifacts.py
           cp docs/RELEASE_NOTES.md dist/RELEASE_NOTES.md
+      - name: Verify the actual Linux download and terminal interactions
+        run: python3 tests/release_092/run.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: exported-release-acceptance
+          path: build/release-092/
+          if-no-files-found: warn
+          retention-days: 30
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: standalone-downloads
