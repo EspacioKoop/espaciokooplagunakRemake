@@ -1,5 +1,26 @@
 {
   "schema_version": 1,
   "repository": "EspacioKoop/espaciokooplagunakRemake",
-  "milestones": []
+  "milestones": [
+    {
+      "title": "1.0 — Paridad funcional",
+      "description": "Cerrar la paridad funcional pendiente del remake con una campaña standalone verificable, conservando el plan maestro #1 como autoridad y sin presentar un check histórico como certificación de 1.0.",
+      "issues": [29, 32]
+    },
+    {
+      "title": "Cosmografía y navegación",
+      "description": "Construir la cosmografía standalone y la navegación espacial pendiente, con aterrizaje, atraque, desembarco, conexiones, procedencia y pruebas reproducibles cuando el alcance quede aprobado.",
+      "issues": [56, 59]
+    },
+    {
+      "title": "Contenido y catálogo",
+      "description": "Completar el inventario de contenido y catálogo pendiente, incluyendo editores, avatares y NPC, interiores, arte, audio y la biblioteca 3D, con consumo verificable desde el ejecutable.",
+      "issues": [2, 3, 6, 52]
+    },
+    {
+      "title": "Plataforma y publicación",
+      "description": "Completar la distribución, los controles, la accesibilidad, los idiomas y las integraciones de plataforma que sigan pendientes, con paquetes y validación reproducibles.",
+      "issues": [4, 5, 30]
+    }
+  ]
 }
