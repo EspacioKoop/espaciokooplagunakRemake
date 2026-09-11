@@ -119,6 +119,26 @@ func save_game() -> Dictionary:
 	save_status = "Guardado · " + Time.get_time_string_from_system() if error.is_empty() else error
 	return {"ok": error.is_empty(), "message": save_status}
 
+func restore_named_save(id: String, expected_digest: String) -> Dictionary:
+	if mode == "client": return {"ok": false, "message": "Sólo el anfitrión puede cargar guardados."}
+	if mode == "host": return {"ok": false, "message": "Cierra la sesión de red antes de cargar un guardado."}
+	var selected = NamedSaveStore.read_slot(id)
+	if not selected.ok or selected.digest != expected_digest: return {"ok": false, "message": "El guardado seleccionado ha cambiado o no es válido."}
+	var recovery = NamedSaveStore.capture(self, get_node_or_null("/root/Expedition"), "Recuperación antes de cargar")
+	if recovery.ok:
+		var preserved = NamedSaveStore.preserve_recovery(recovery.checkpoint)
+		if not preserved.ok: return preserved
+	var installed = NamedSaveStore.install(selected.checkpoint)
+	if not installed.ok: return installed
+	sim.state = installed.state
+	var expedition = get_node_or_null("/root/Expedition")
+	if expedition != null:
+		var restored = expedition.restore_checkpoint(selected.checkpoint.expedition)
+		if not restored.ok: return restored
+	paused = false
+	_refresh_view()
+	return {"ok": true, "message": "Guardado cargado. La copia anterior queda en recuperación."}
+
 func order(operation: String, args: Dictionary = {}) -> Dictionary:
 	if operation.begins_with("table_"): return table_order(operation, args)
 	if mode == "client":

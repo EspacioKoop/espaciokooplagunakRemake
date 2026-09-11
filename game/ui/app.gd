@@ -29,6 +29,7 @@ var _toast_until = 0.0
 var _capture_mode = false
 var _new_confirmation: ConfirmationDialog
 var _help: AcceptDialog
+var _named_save_window: Window
 
 func _ready() -> void:
 	var args = OS.get_cmdline_user_args()
@@ -841,6 +842,7 @@ func _settings() -> void:
 		_go("settings"))
 	options.add_child(ConsoleUI.button("Subtítulos de avisos sonoros…", _sound_captions.open_settings))
 	options.add_child(ConsoleUI.button("Guardar partida ahora", _manual_save, true))
+	options.add_child(ConsoleUI.button("Guardados de campaña…", _open_named_saves))
 	options.add_child(ConsoleUI.button("Salir del juego", _quit))
 	var help_card = ConsoleUI.card(body, "CONTROL Y ACCESIBILIDAD")
 	help_card.get_parent().size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -934,6 +936,15 @@ func _show_help() -> void:
 func _manual_save() -> void:
 	var result = Session.save_game()
 	_notice(result.message, result.ok)
+
+func _open_named_saves() -> void:
+	if is_instance_valid(_named_save_window):
+		_named_save_window.grab_focus()
+		return
+	_named_save_window = NamedSaveWindow.new()
+	add_child(_named_save_window)
+	_named_save_window.tree_exited.connect(func(): _named_save_window = null)
+	_named_save_window.popup_centered_clamped(Vector2i(1080, 780), 0.95)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
