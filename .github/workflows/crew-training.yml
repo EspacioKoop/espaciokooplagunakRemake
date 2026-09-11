@@ -1,0 +1,72 @@
+name: Crew station school
+
+on:
+  push:
+    branches: [agent/32-crew-training-t5]
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tests/*crew_training*'
+      - 'tests/*assistance_training*'
+      - 'tools/bootstrap.py'
+      - '.github/workflows/crew-training.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crew-training-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  school:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Install graphical runtime and pinned PNG decoder
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          python3 -m pip install 'Pillow==11.3.0'
+      - name: Verify evidence runner including negative controls
+        run: python3 -m unittest discover -s tests -p test_crew_training_runner.py -v
+      - name: Download repository-pinned verified Godot
+        run: python3 tools/bootstrap.py
+      - name: Complete first mission and all eight station lessons
+        run: python3 tests/run_crew_training.py --output build/crew-training/headless
+      - name: Exercise actual native school UI and capture a fresh frame
+        run: xvfb-run -a python3 tests/run_crew_training.py --graphical --output build/crew-training/graphical
+      - name: Preserve existing assistance and minigame regression
+        run: |
+          python3 -m unittest discover -s tests -p test_assistance_training_runner.py -v
+          python3 tests/run_assistance_training.py --output build/crew-training/assistance
+      - name: Package public reproduction inputs only on failure
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, zipfile
+          from pathlib import Path
+          root = Path.cwd()
+          output = root / 'build/crew-training'
+          output.mkdir(parents=True, exist_ok=True)
+          files = subprocess.check_output(['git', 'ls-files', '-z', '--', 'game', 'tests', 'tools', 'integrations/foundry', 'LICENSE', 'third_party']).decode().split('\0')
+          with zipfile.ZipFile(output / 'reproduction.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
+              for name in filter(None, files):
+                  path = root / name
+                  if path.is_file() and not path.is_symlink(): archive.write(path, name)
+              binary = root / '.toolchain/godot'
+              if binary.is_file(): archive.write(binary, '.toolchain/godot')
+              archive.writestr('REPRODUCTION.json', json.dumps({'commit': subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(), 'source': 'tracked public repository files; no profiles or credentials'}))
+          PY
+      - name: Preserve logs and actual rendered evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: crew-training-evidence
+          path: build/crew-training/
+          if-no-files-found: error
+          retention-days: 14
