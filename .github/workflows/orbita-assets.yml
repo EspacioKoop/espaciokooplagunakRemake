@@ -1,0 +1,159 @@
+name: Orbita Blender library
+
+on:
+  push:
+    branches: [agent/52-orbita-library]
+    paths:
+      - 'art/blender/orbita_pack/**'
+      - 'game/asset_lab/orbita_pack/**'
+      - 'tests/orbita_pack/**'
+      - 'docs/ASSET_LIBRARY.md'
+      - 'docs/asset_library.json'
+      - 'docs/ORBITA_PLAYER_BATCH.md'
+      - '.github/workflows/orbita-assets.yml'
+  pull_request:
+    paths:
+      - 'art/blender/orbita_pack/**'
+      - 'game/assets/models/orbita_pack/**'
+      - 'game/asset_lab/orbita_pack/**'
+      - 'tests/orbita_pack/**'
+      - 'docs/ASSET_LIBRARY.md'
+      - 'docs/asset_library.json'
+      - 'docs/ORBITA_PLAYER_BATCH.md'
+      - '.github/workflows/orbita-assets.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: orbita-assets-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  orbita:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Install Blender module and display runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri libegl1 libxi6 libxrender1 libxfixes3 libxxf86vm1 fonts-dejavu-core
+          python -m pip install 'bpy==4.5.3' 'Pillow==11.3.0'
+      - name: Preserve and verify the twelve original models
+        run: |
+          set -euo pipefail
+          python -m compileall -q art/blender/orbita_pack tests/orbita_pack
+          mkdir -p build/orbita
+          python tests/orbita_pack/validate.py 2>&1 | tee build/orbita/validate.log
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          root=Path.cwd()
+          m=json.loads((root/'game/assets/models/orbita_pack/manifest.json').read_text())
+          paths=[e[k] for e in m['assets'] for k in ('source','runtime')]
+          data={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths}
+          (root/'build/orbita/original-hashes.json').write_text(json.dumps(data,indent=2)+'\n')
+          PY
+      - name: Build ten player models without overwriting edited sources
+        run: |
+          set -euo pipefail
+          python -u art/blender/orbita_pack/player_batch.py build 2>&1 | tee build/orbita/player-build.log
+          python -u art/blender/orbita_pack/player_batch.py build 2>&1 | tee build/orbita/player-preservation.log
+          grep -q 'ORBITA_PLAYER_SOURCES_PASS created=0 preserved=10' build/orbita/player-preservation.log
+      - name: Export ten GLB and render the reimported models
+        run: |
+          set -euo pipefail
+          python -u art/blender/orbita_pack/player_batch.py export --render 2>&1 | tee build/orbita/player-export.log
+      - name: Verify 6 tools, 2 weapons, 2 ships and negative contracts
+        run: |
+          set -euo pipefail
+          python tests/orbita_pack/validate_player_batch.py 2>&1 | tee build/orbita/player-validate.log
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          root=Path.cwd()
+          for p,expected in json.loads((root/'build/orbita/original-hashes.json').read_text()).items():
+              assert hashlib.sha256((root/p).read_bytes()).hexdigest()==expected, 'Original asset changed: '+p
+          print('ORBITA_ORIGINAL_PRESERVATION_PASS files=24')
+          PY
+      - name: Download repository-pinned verified Godot
+        run: python tools/bootstrap.py
+      - name: Test both batches and the 22-model viewer in real Godot
+        run: |
+          python tests/orbita_pack/run.py
+          python tests/orbita_pack/run_player_batch.py
+          cp build/orbita/player-argi_worklight.png docs/images/orbita_pack/player_batch/godot_equipment.png
+          cp build/orbita/player-uhina_arc_emitter.png docs/images/orbita_pack/player_batch/godot_weapon.png
+          cp build/orbita/player-balea_rescue_ship.png docs/images/orbita_pack/player_batch/godot_ship.png
+      - name: Package all twenty-two sources, models and evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root=Path.cwd(); out=root/'build/orbita'; out.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out/'Orbita_Biblioteca_22_Modelos.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for directory in ['art/blender/orbita_pack','game/assets/models/orbita_pack','game/asset_lab/orbita_pack','docs/images/orbita_pack','tests/orbita_pack']:
+                  for p in sorted((root/directory).rglob('*')):
+                      if p.is_file() and '__pycache__' not in p.parts and p.suffix not in {'.pyc','.blend1','.import','.uid'}:
+                          z.write(p,p.relative_to(root))
+              for name in ['docs/ORBITA_ASSET_PACK.md','docs/ORBITA_PLAYER_BATCH.md','docs/ASSET_LIBRARY.md','docs/asset_library.json','LICENSE']:
+                  p=root/name
+                  if p.is_file(): z.write(p,name)
+              for p in sorted(out.glob('*')):
+                  if p.suffix in {'.log','.json'}: z.write(p,p.relative_to(root))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: orbita-library-evidence
+          path: |
+            build/orbita/*.log
+            build/orbita/*.json
+            build/orbita/*.png
+            build/orbita/Orbita_Biblioteca_22_Modelos.zip
+            docs/images/orbita_pack/player_batch/overview.png
+          if-no-files-found: error
+          retention-days: 14
+      - name: Publish validated files only to the unchanged agent branch
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/agent/52-orbita-library'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin agent/52-orbita-library
+          remote_sha=$(git rev-parse origin/agent/52-orbita-library)
+          test "$remote_sha" = "$GITHUB_SHA" || { echo 'Branch advanced: refusing stale generated files'; exit 1; }
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          paths=[str(p) for p in Path('art/blender/orbita_pack/player_batch').glob('*.blend')]
+          paths += [str(p) for p in Path('game/assets/models/orbita_pack/player_batch').rglob('*') if p.is_file() and p.suffix in {'.glb','.json','.import'}]
+          paths += [str(p) for p in Path('docs/images/orbita_pack/player_batch').glob('*.png')]
+          if not paths: raise SystemExit('No generated delivery files')
+          subprocess.run(['git','add','--',*paths],check=True)
+          changed=subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines()
+          for p in changed:
+              allowed=(p.startswith('art/blender/orbita_pack/player_batch/') and p.endswith('.blend')) or p.startswith('game/assets/models/orbita_pack/player_batch/') or (p.startswith('docs/images/orbita_pack/player_batch/') and p.endswith('.png'))
+              if not allowed: raise SystemExit('Refusing unexpected publication path: '+p)
+          PY
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'build(art): publish ten validated player-support Blender models and GLB'
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" push origin HEAD:refs/heads/agent/52-orbita-library

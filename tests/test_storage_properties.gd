@@ -133,13 +133,14 @@ func test_four_system_migration(state: Dictionary) -> void:
 		return
 	check(restored.ship.systems.size() == Catalog.SYSTEMS.size(), "legacy ship gains the native systems")
 	for system in ShipModel.LEGACY_SYSTEMS:
-		check(restored.ship.systems[system] == legacy.ship.systems[system], "legacy system preserved: " + system)
+		check(restored.ship.systems[system] == json_copy(legacy.ship.systems[system]), "legacy system preserved: " + system)
 	check(is_equal_approx(float(restored.ship.shield), float(legacy.ship.shield)), "legacy shield percentage preserved")
 	for field in ["mission", "campaign", "facts", "events", "contacts"]:
 		check(restored[field] == json_copy(legacy[field]), "legacy migration preserves " + field)
 	check(restored.operations.coolant.size() == Catalog.SYSTEMS.size(), "migration initializes all coolant channels")
 	var again = round_trip(restored, directory + "/four-systems-again.json")
-	check(again == restored, "four-system migration is idempotent")
+	# Migration inserts native int defaults; JSON represents all numbers as floats.
+	check(json_copy(again) == json_copy(restored), "four-system migration is idempotent")
 
 func reject_without_mutation(state: Dictionary, label: String, check_disk: bool = true) -> void:
 	var before = var_to_bytes(state)
@@ -233,6 +234,12 @@ func test_json_limits() -> void:
 	for number in [NAN, INF, -INF]:
 		check(not LocalStorage.validate_json(number, 0), "nonfinite JSON number rejected")
 
+func test_numeric_contract() -> void:
+	check(json_copy({"n": 2}) == json_copy({"n": 2.0}), "JSON numeric representations are equivalent")
+	check(json_copy({"n": 2}) != json_copy({"n": "2"}), "numeric string never equals JSON number")
+	check(json_copy({"n": 2}) != json_copy({"n": 2.125}), "changed numeric value never compares equal")
+	check(json_copy({"n": 2}) != json_copy({"n": true}), "boolean never equals JSON number")
+
 func test_envelope_integrity() -> void:
 	var path = directory + "/integrity.json"
 	var valid = envelope(fresh())
@@ -254,6 +261,12 @@ func test_envelope_integrity() -> void:
 	tampered.payload = JSON.stringify(payload, "", true, true)
 	if write_text(path, JSON.stringify(tampered)):
 		check(LocalStorage.read_state(path).has("error"), "changed payload with stale hash rejected")
+	for text in ["{", "[", "", "not-json", "null", "[]"]:
+		var broken: Dictionary = JSON.parse_string(valid)
+		broken.payload = text
+		broken.sha256 = text.sha256_text()
+		if write_text(path, JSON.stringify(broken)):
+			check(LocalStorage.read_state(path).has("error"), "invalid payload with valid hash rejected")
 	check(LocalStorage.read_state(directory + "/absent.json").has("error"), "missing save returns error")
 
 func test_backup_and_transients() -> void:
@@ -286,7 +299,7 @@ func test_backup_and_transients() -> void:
 	transient.cooperation = {"next_id": 123, "tasks": {"synthetic": {"pending": true}}, "tokens": {"synthetic": {"bonus": 1}}, "cooldowns": {"synthetic": 10.0}}
 	var restored = round_trip(transient, directory + "/transient.json")
 	if not restored.is_empty():
-		check(restored.cooperation == {"next_id": 123, "tasks": {}, "tokens": {}, "cooldowns": {}}, "restore cancels transient assistance but preserves next_id")
+		check(restored.cooperation == json_copy({"next_id": 123, "tasks": {}, "tokens": {}, "cooldowns": {}}), "restore cancels transient assistance but preserves next_id")
 		var expected = json_copy(transient)
 		expected.cooperation = restored.cooperation.duplicate(true)
 		check(restored == expected, "cancelling assistance changes no durable fields")
@@ -329,6 +342,7 @@ func run() -> void:
 		test_invalid_quadrants()
 		test_invalid_structure()
 		test_json_limits()
+		test_numeric_contract()
 		test_envelope_integrity()
 		test_backup_and_transients()
 		test_reachable_state()

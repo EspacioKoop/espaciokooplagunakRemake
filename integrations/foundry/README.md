@@ -4,7 +4,7 @@ Consulta la nave, tu ficha de tripulación y las órdenes básicas que te conced
 
 ## Instalar y conectar
 
-1. Instala el ZIP del módulo o copia `module.json`, `main.mjs`, `client.mjs`, `style.css`, `README.md` y `LICENSE` a `Data/modules/espaciokoop-lagunak/`. Activa el módulo en tu mundo Foundry 13.
+1. Instala el ZIP del módulo o copia `module.json`, `main.mjs`, `client.mjs`, `workspace.mjs`, `style.css`, `README.md` y `LICENSE` a `Data/modules/espaciokoop-lagunak/`. Activa el módulo en tu mundo Foundry 13.
 2. Abre el botón de nave en las herramientas de fichas. Está disponible para GM y jugadores. El panel muestra tu ID de usuario y el origen exacto que debes autorizar.
 3. En el ejecutable Lagunak, inicia una campaña local o una sesión como anfitrión. Abre **Sesión → Enlace con Foundry**, introduce el origen de tu página (por ejemplo `http://localhost:30000`, sin ruta ni barra final) y activa la consulta.
 4. Se abre la ventana nativa **Accesos por usuario**. El anfitrión escribe tu ID de Foundry, selecciona tu tripulante nativo activo y concede lectura de ficha o también órdenes del puesto. Copia el nuevo token y pégalo en Foundry con **Acceso personal** seleccionado.
@@ -17,6 +17,10 @@ También puedes abrir el panel mediante una macro:
 ```js
 game.modules.get("espaciokoop-lagunak").api.open();
 ```
+
+## Resumen operativo
+
+El panel muestra la alerta del anfitrión, sector, posición, rumbo actual/ordenado, velocidad, piloto automático y atraque. El mapa relativo numera únicamente los contactos recibidos y tiene una lista textual alternativa. Un destino que no aparece en esa proyección nunca se muestra por su ID; los contactos sin identificar siguen siendo ecos. No calcula ETA ni objetivos detallados y no sustituye al Atlas. Más detalles y pruebas manuales en `docs/FOUNDRY_WORKSPACE.md` del repositorio.
 
 ## Qué se comparte
 

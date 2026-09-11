@@ -43,3 +43,23 @@ La validación ahora examina los cuadrantes recibidos sin modificarlos. Sólo la
 `.github/workflows/storage-properties.yml` ejecuta los diez tests del runner y dos semillas de 64 muestras. Es un workflow aditivo: no elimina ni rebaja ninguna prueba de `.github/workflows/release.yml`. Los resultados y el SHA comprobado quedan en los logs de GitHub Actions y en el PR asociado.
 
 Estas propiedades son pruebas deterministas con muestras y casos frontera explícitos, no una exploración exhaustiva ni un sistema de reducción automática de contraejemplos. El checksum detecta corrupción accidental; no es autenticación ni firma. La recuperación de `.bak` aquí se realiza de forma explícita: no se afirma que exista recuperación automática en la interfaz. Tampoco se simulan cortes eléctricos, fallos reales de disco, concurrencia entre escritores o todos los permisos y sistemas de archivos. La ejecución headless no sustituye una prueba manual del flujo visual de guardar/cargar.
+
+## Diagnóstico reproducible y contrato numérico
+
+`test_storage_runtime.gd` verifica que la clase global `LocalStorage`, la carga explícita
+y el archivo del checkout son el mismo recurso, comparando SHA-256. Prueba por
+separado arrays y diccionarios de 0, 1, 599, 600, 601 y 4096 elementos, tanto nativos
+como decodificados. El límite sigue siendo 600: no se amplía ni se retiran negativos.
+La CI conserva el SHA de checkout, los hashes de fuentes y los registros de ambas
+semillas.
+
+JSON no conserva la distinción entre `int` y `float` de los diccionarios GDScript.
+Las comparaciones de migración normalizan ambos lados mediante el mismo round-trip
+JSON; no descartan campos ni toleran cambios de valor. Hay controles independientes
+que distinguen números de cadenas, booleanos y números diferentes. La ausencia de
+cuadrantes y los cuatro sistemas antiguos se siguen migrando, sin mutar la entrada.
+
+La lectura usa `JSON.parse` y comprueba su resultado antes de acceder a `data`, en
+la cabecera y en el payload. Un archivo truncado o un payload inválido con checksum
+correcto devuelve un error de guardado controlado, sin emitir un error del motor ni
+sustituir la copia válida. El checksum continúa siendo integridad, no autenticación.

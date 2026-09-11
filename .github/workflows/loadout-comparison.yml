@@ -1,0 +1,30 @@
+name: Verify native loadout comparison
+
+on:
+  pull_request:
+  push:
+    branches: [main, agent/32-loadout-comparison-q86]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: loadout-comparison-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  loadout-comparison:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Test strict isolated runner
+        run: python3 -m unittest discover -s tests -p 'test_loadout_comparison_runner.py' -v
+      - run: python3 tools/bootstrap.py
+      - name: Install display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Compare documents and verify native astillero graphically
+        run: xvfb-run -a python3 tests/run_loadout_comparison.py

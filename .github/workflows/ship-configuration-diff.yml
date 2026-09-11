@@ -1,0 +1,46 @@
+name: Verify ship structural comparison
+
+on:
+  pull_request:
+  push:
+    branches: [main, agent/32-ship-diff-d73]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ship-configuration-diff-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ship-configuration-diff:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify strict runner and data isolation
+        run: python3 -m unittest discover -s tests -p test_ship_diff_runner.py -v
+      - run: python3 tools/bootstrap.py
+      - name: Install display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Import resources without script errors
+        shell: bash
+        run: |
+          set -o pipefail
+          .toolchain/godot --headless --editor --path game --quit 2>&1 | tee ship-diff-import.log
+          if grep -E '^(SCRIPT ERROR|ERROR):' ship-diff-import.log; then exit 1; fi
+      - name: Compare structures, validate local files and exercise native UI
+        shell: bash
+        run: |
+          set -o pipefail
+          xvfb-run -a python3 tests/run_ship_configuration_diff.py 2>&1 | tee ship-diff-tests.log
+      - name: Regress existing ship editor and import-export behavior
+        shell: bash
+        run: |
+          set -o pipefail
+          timeout 90 xvfb-run -a .toolchain/godot --audio-driver Dummy --path game --script ../tests/test_loadout_editor.gd -- --test 2>&1 | tee ship-diff-loadout-regression.log
+          if grep -E '^(SCRIPT ERROR|ERROR):' ship-diff-loadout-regression.log; then exit 1; fi
+          grep -E '^LOADOUT_EDITOR_TESTS [1-9][0-9]* checks; 0 failures$' ship-diff-loadout-regression.log

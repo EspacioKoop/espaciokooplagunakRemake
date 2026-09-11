@@ -1,0 +1,35 @@
+name: Verify local session report
+
+on:
+  pull_request:
+  push:
+    branches: [main, agent/32-session-export]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: session-report-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  session-report:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify Python runner
+        run: |
+          python3 -m py_compile tests/run_session_report.py
+          python3 tests/run_session_report.py --self-test
+      - name: Fetch verified Godot toolchain
+        run: python3 tools/bootstrap.py
+      - name: Install isolated display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Report projection, privacy, filesystem and UI logic
+        run: python3 tests/run_session_report.py
+      - name: Graphical F2 console and local save dialog
+        run: xvfb-run -a python3 tests/run_session_report.py --graphics

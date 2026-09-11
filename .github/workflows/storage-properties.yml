@@ -20,7 +20,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          fetch-depth: 0
       - name: Verify failure detection and isolation
         run: python3 tests/run_storage_properties.py --self-test
       - name: Download verified Godot
@@ -66,14 +65,6 @@ jobs:
         run: |
           set -euo pipefail
           python3 tests/run_storage_properties.py --seed 641709 --samples 64 2>&1 | tee build/storage/seed-641709.log
-      - name: Preserve tracked-source reproduction on the repair branch
-        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/agent/32-save-properties'
-        run: |
-          mkdir -p build/storage
-          git archive --format=zip --output=build/storage/checkout.zip HEAD
-          git archive --format=zip --output=build/storage/main.zip origin/main
-          git rev-parse origin/main > build/storage/main-sha.txt
-          if test -f .toolchain/godot; then cp .toolchain/godot build/storage/godot; sha512sum build/storage/godot > build/storage/engine.sha512; fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
