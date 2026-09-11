@@ -73,6 +73,33 @@ class PublicationTests(unittest.TestCase):
             self.assertIn("--draft", cli.call_args_list[-2].args)
             self.assertEqual(cli.call_args_list[-1].args[:2], ("release", "edit"))
 
+    def test_future_versions_never_auto_publish(self):
+        for version in ("0.9.3", "1.0.0", "1.1.0", "garbage"):
+            with self.subTest(version=version), patch.object(release, "VERSION", version), patch.object(release, "gh") as cli:
+                release.publish(self.root, "owner/repo", "a" * 40, 1)
+                cli.assert_not_called()
+
+    def test_092_explicitly_enabled_and_module_metadata_consistent(self):
+        self.assertEqual(release.VERSION, "0.9.2")
+        root = Path(__file__).resolve().parents[1]
+        module = json.loads((root / "integrations/foundry/module.json").read_text())
+        self.assertEqual(module["version"], release.VERSION)
+        self.assertIn("/releases/download/v" + release.VERSION + "/", module["download"])
+        self.assertIn("EspacioKoop/espaciokooplagunakRemake", module["manifest"])
+        self.assertIn("# Espaciokoop Lagunak " + release.VERSION, (root / "docs/RELEASE_NOTES.md").read_text())
+
+    def test_existing_draft_requires_review(self):
+        with patch.object(release, "gh", side_effect=[json.dumps(self.run), json.dumps({"draft": True})]) as cli:
+            with self.assertRaises(ValueError): release.publish(self.root, "owner/repo", "a" * 40, 1)
+            self.assertEqual(cli.call_count, 2)
+
+    def test_foreign_tag_is_not_reused(self):
+        missing = subprocess.CalledProcessError(1, "gh", stderr="HTTP 404")
+        for obj in ({"type": "commit", "sha": "b" * 40}, {"type": "tag", "sha": "a" * 40}):
+            with self.subTest(obj=obj), patch.object(release, "gh", side_effect=[json.dumps(self.run), missing, json.dumps({"object": obj})]) as cli:
+                with self.assertRaises(ValueError): release.publish(self.root, "owner/repo", "a" * 40, 1)
+                self.assertEqual(cli.call_count, 3)
+
     def test_existing_published_release_is_immutable(self):
         with patch.object(release, "gh", side_effect=[json.dumps(self.run), json.dumps({"draft": False, "html_url": "fixture"})]) as cli:
             release.publish(self.root, "owner/repo", "a" * 40, 1)

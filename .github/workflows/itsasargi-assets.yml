@@ -1,0 +1,123 @@
+name: Itsasargi and Bizi Blender models
+
+on:
+  push:
+    branches: [agent/52-itsasargi-models]
+    paths:
+      - 'art/blender/itsasargi_pack/**'
+      - 'art/blender/bizi_planets/**'
+      - 'game/asset_lab/itsasargi_pack/**'
+      - 'game/asset_lab/bizi_planets/**'
+      - 'tests/itsasargi_pack/**'
+      - 'tests/bizi_planets/**'
+      - '.github/workflows/itsasargi-assets.yml'
+  pull_request:
+    paths:
+      - 'art/blender/itsasargi_pack/**'
+      - 'art/blender/bizi_planets/**'
+      - 'game/assets/models/itsasargi_pack/**'
+      - 'game/assets/models/bizi_planets/**'
+      - 'game/asset_lab/itsasargi_pack/**'
+      - 'game/asset_lab/bizi_planets/**'
+      - 'tests/itsasargi_pack/**'
+      - 'tests/bizi_planets/**'
+      - '.github/workflows/itsasargi-assets.yml'
+
+concurrency:
+  group: itsasargi-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  models:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Install pinned Blender and display runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri libegl1 libxi6 libxrender1 libxfixes3 libxxf86vm1 fonts-dejavu-core
+          python -m pip install 'bpy==4.5.3' 'Pillow==11.3.0'
+      - name: Author missing editable sources without overwriting existing art
+        run: |
+          mkdir -p build/itsasargi
+          python -m compileall -q art/blender/itsasargi_pack art/blender/bizi_planets tests/itsasargi_pack tests/bizi_planets
+          python -u art/blender/itsasargi_pack/build.py --missing-only 2>&1 | tee build/itsasargi/build-tools.log
+          python -u art/blender/bizi_planets/generate.py --missing-only 2>&1 | tee build/itsasargi/build-planets.log
+      - name: Export GLBs and render only the delivered models
+        run: |
+          python -u art/blender/itsasargi_pack/export.py --render 2>&1 | tee build/itsasargi/export-tools.log
+          python -u art/blender/bizi_planets/export_planets.py --render 2>&1 | tee build/itsasargi/export-planets.log
+      - name: Validate geometry metadata negative cases and entire spherical topology
+        run: |
+          python tests/itsasargi_pack/validate.py 2>&1 | tee build/itsasargi/validate.log
+          python tests/bizi_planets/validate_spheres.py 2>&1 | tee build/itsasargi/spheres.log
+      - name: Download repository-pinned verified Godot
+        run: python tools/bootstrap.py
+      - name: Execute model mechanisms and real planetary collision and teleport tests
+        run: python tests/itsasargi_pack/run.py
+      - name: Package models sources and actual evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root=Path.cwd(); out=root/'build/itsasargi';out.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out/'Itsasargi_y_Bizi_Modelos_3D.zip','w',zipfile.ZIP_DEFLATED) as z:
+              folders=['art/blender/itsasargi_pack','art/blender/bizi_planets','game/assets/models/itsasargi_pack','game/assets/models/bizi_planets','game/asset_lab/itsasargi_pack','game/asset_lab/bizi_planets','tests/itsasargi_pack','tests/bizi_planets','docs/images/itsasargi_pack','docs/images/bizi_planets']
+              for folder in folders:
+                  for p in sorted((root/folder).rglob('*')):
+                      if p.is_file() and '__pycache__' not in p.parts and p.suffix not in {'.pyc','.blend1','.import'}:
+                          z.write(p,p.relative_to(root))
+              for p in [root/'LICENSE',root/'docs/ITSASARGI_ASSET_PACK.md',root/'docs/BIZI_HABITABLE_PLANETS.md',*out.glob('*.log'),*out.glob('*.json')]:
+                  if p.is_file():z.write(p,p.relative_to(root))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: itsasargi-bizi-evidence
+          path: |
+            build/itsasargi/*.log
+            build/itsasargi/*.json
+            build/itsasargi/*.png
+            build/itsasargi/Itsasargi_y_Bizi_Modelos_3D.zip
+          retention-days: 14
+          if-no-files-found: error
+      - name: Preserve validated binary models only on this agent branch
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/agent/52-itsasargi-models'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" fetch origin agent/52-itsasargi-models
+          changed=$(git diff --name-only HEAD..origin/agent/52-itsasargi-models -- art/blender/itsasargi_pack art/blender/bizi_planets game/asset_lab/itsasargi_pack game/asset_lab/bizi_planets tests/itsasargi_pack tests/bizi_planets .github/workflows/itsasargi-assets.yml)
+          if [ -n "$changed" ]; then echo 'Source inputs changed while validating; refusing stale publication'; exit 1; fi
+          git merge --ff-only origin/agent/52-itsasargi-models
+          git add -- art/blender/itsasargi_pack/*.blend art/blender/bizi_planets/*.blend game/assets/models/itsasargi_pack game/assets/models/bizi_planets docs/images/itsasargi_pack docs/images/bizi_planets
+          if git diff --cached --quiet; then exit 0; fi
+          python - <<'PY'
+          import subprocess
+          for p in subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines():
+              allowed=(any(p.startswith('art/blender/'+s+'/') for s in ('itsasargi_pack','bizi_planets')) and p.endswith('.blend')) or any(p.startswith(prefix+s+'/') for prefix in ('game/assets/models/','docs/images/') for s in ('itsasargi_pack','bizi_planets'))
+              if not allowed:raise SystemExit('Refusing unreserved publication path '+p)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'build(art): preserve validated Itsasargi models and habitable Bizi planets'
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" push origin HEAD:refs/heads/agent/52-itsasargi-models

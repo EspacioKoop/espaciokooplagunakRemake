@@ -1,0 +1,107 @@
+name: Portu reusable station destinations
+
+on:
+  push:
+    branches: [agent/52-portu-environments]
+    paths:
+      - 'art/blender/portu_environments/**'
+      - 'game/asset_lab/portu_environments/**'
+      - 'tests/portu_environments/**'
+      - '.github/workflows/portu-environments.yml'
+  pull_request:
+    paths:
+      - 'art/blender/portu_environments/**'
+      - 'game/asset_lab/portu_environments/**'
+      - 'game/assets/models/portu_environments/**'
+      - 'tests/portu_environments/**'
+      - '.github/workflows/portu-environments.yml'
+
+concurrency:
+  group: portu-${{ github.ref }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  destinations:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Install pinned Blender and display runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri libegl1 libxi6 libxrender1 libxfixes3 libxxf86vm1
+          python -m pip install 'bpy==4.5.3' 'Pillow==11.3.0'
+      - name: Create missing sources, export and photograph actual GLBs
+        run: |
+          mkdir -p build/portu
+          python -m compileall -q art/blender/portu_environments tests/portu_environments
+          python -u art/blender/portu_environments/models.py --missing-only --render 2>&1 | tee build/portu/blender.log
+      - name: Verify exported geometry and source hashes
+        run: python tests/portu_environments/validate.py 2>&1 | tee build/portu/validation.log
+      - name: Install repository-pinned verified Godot
+        run: python tools/bootstrap.py
+      - name: Test physical traversal, safe doors and sixteen real engine photos
+        run: python tests/portu_environments/run.py
+      - name: Package editable models and reproducible evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root=Path.cwd();out=root/'build/portu';out.mkdir(parents=True,exist_ok=True)
+          folders=['art/blender/portu_environments','game/assets/models/portu_environments','game/asset_lab/portu_environments','tests/portu_environments','docs/images/portu_environments']
+          with zipfile.ZipFile(out/'Portu_Entornos_Reutilizables.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for folder in folders:
+                  for p in sorted((root/folder).rglob('*')):
+                      if p.is_file() and '__pycache__' not in p.parts and p.suffix not in {'.pyc','.blend1','.import'}:
+                          z.write(p,p.relative_to(root))
+              for p in [root/'LICENSE',root/'docs/PORTU_ENVIRONMENTS.md',*out.glob('*.log'),*out.glob('*.json')]:
+                  if p.is_file():z.write(p,p.relative_to(root))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: portu-environment-evidence
+          path: |
+            build/portu/*.log
+            build/portu/*.json
+            build/portu/*.png
+            build/portu/Portu_Entornos_Reutilizables.zip
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve completed models, scenes and photos only in the author branch
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/agent/52-portu-environments'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" fetch origin agent/52-portu-environments
+          changed=$(git diff --name-only HEAD..origin/agent/52-portu-environments -- art/blender/portu_environments game/asset_lab/portu_environments tests/portu_environments .github/workflows/portu-environments.yml)
+          if [ -n "$changed" ]; then echo 'Authoring inputs changed during validation; refusing stale publication'; exit 1; fi
+          git merge --ff-only origin/agent/52-portu-environments
+          git add -- art/blender/portu_environments/*.blend game/assets/models/portu_environments game/asset_lab/portu_environments/instances docs/images/portu_environments
+          if git diff --cached --quiet; then exit 0; fi
+          python - <<'PY'
+          import subprocess
+          for p in subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines():
+              allowed=(p.startswith('art/blender/portu_environments/') and p.endswith('.blend')) or any(p.startswith(prefix) for prefix in ('game/assets/models/portu_environments/','game/asset_lab/portu_environments/instances/','docs/images/portu_environments/'))
+              if not allowed:raise SystemExit('Refusing unexpected path '+p)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'build(art): preserve eight validated Portu environments and real photographs'
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" push origin HEAD:refs/heads/agent/52-portu-environments

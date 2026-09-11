@@ -1,0 +1,1729 @@
+{
+  "schema": "espaciokoop-portu-environments",
+  "schema_version": 1,
+  "pack": "portu",
+  "library_issue": 52,
+  "assets": [
+    {
+      "id": "portu/quarantine_clinic",
+      "version": 1,
+      "title": "Osasun · clínica de cuarentena",
+      "category": "medical",
+      "description": "Camas, descontaminación, sala de observación y dispensarios.",
+      "source": "art/blender/portu_environments/quarantine_clinic.blend",
+      "runtime": "game/assets/models/portu_environments/quarantine_clinic.glb",
+      "scene": "game/asset_lab/portu_environments/instances/quarantine_clinic.tscn",
+      "preview": "docs/images/portu_environments/quarantine_clinic.png",
+      "source_sha256": "1ad94bee47e28a794ebb8d5487b144960c775b2fb74aeb55ce785e9521e50bcf",
+      "sha256": "17b30a49aee82ba781f8b055208fc8774153891e39946f4ca36ecdf66bc5d1a4",
+      "bytes": 2432420,
+      "triangles": 29680,
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "footprint_m": [
+        24.8,
+        36.0
+      ],
+      "ceiling_m": 6,
+      "sockets": [
+        {
+          "name": "socket_arrival",
+          "role": "arrival",
+          "position": [
+            0.0,
+            1.0,
+            14.0
+          ]
+        },
+        {
+          "name": "socket_connect_back",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            -16.0
+          ]
+        },
+        {
+          "name": "socket_connect_front",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            16.0
+          ]
+        },
+        {
+          "name": "socket_door_use",
+          "role": "door",
+          "position": [
+            0.0,
+            1.1,
+            12.0
+          ]
+        },
+        {
+          "name": "socket_npc_0",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_1",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_2",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_npc_3",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_objective",
+          "role": "future_objective",
+          "position": [
+            0.0,
+            0.06,
+            -12.0
+          ]
+        },
+        {
+          "name": "socket_resource_0",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_1",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_2",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_resource_3",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_return",
+          "role": "return",
+          "position": [
+            0.0,
+            0.15,
+            13.0
+          ]
+        },
+        {
+          "name": "socket_route_0",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            7.0
+          ]
+        },
+        {
+          "name": "socket_route_1",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            2.0
+          ]
+        },
+        {
+          "name": "socket_route_2",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -4.0
+          ]
+        },
+        {
+          "name": "socket_route_3",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -10.0
+          ]
+        },
+        {
+          "name": "socket_route_4",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -14.0
+          ]
+        }
+      ],
+      "materials": [
+        "Portu_titanium",
+        "Portu_ceramic",
+        "Portu_blue_glass",
+        "Portu_safety_amber",
+        "Portu_deck",
+        "Portu_graphite",
+        "Portu_warm_light",
+        "Portu_teal_fabric",
+        "Portu_cyan"
+      ],
+      "door": {
+        "left": "door_left",
+        "right": "door_right",
+        "travel_m": 2.12,
+        "opening_m": 4.1
+      },
+      "license": "MIT",
+      "status": "exported; validation state in PR",
+      "limits": "Reusable furnished environment, not campaign missions, NPC AI, economy or medical/engineering simulation."
+    },
+    {
+      "id": "portu/hydroponic_garden",
+      "version": 1,
+      "title": "Hosto · invernadero hidropónico",
+      "category": "botany",
+      "description": "Bancales, iluminación de cultivo, depósitos y pasillos de mantenimiento.",
+      "source": "art/blender/portu_environments/hydroponic_garden.blend",
+      "runtime": "game/assets/models/portu_environments/hydroponic_garden.glb",
+      "scene": "game/asset_lab/portu_environments/instances/hydroponic_garden.tscn",
+      "preview": "docs/images/portu_environments/hydroponic_garden.png",
+      "source_sha256": "78cff96463d22919353979173f28109140912b3d3d6fbaf739a72412ff70a45f",
+      "sha256": "3a21333cf6a72826d8eda6abf962f210633812dcf9a86743592c9e1bf798d567",
+      "bytes": 4317536,
+      "triangles": 50836,
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "footprint_m": [
+        24.8,
+        36.0
+      ],
+      "ceiling_m": 6,
+      "sockets": [
+        {
+          "name": "socket_arrival",
+          "role": "arrival",
+          "position": [
+            0.0,
+            1.0,
+            14.0
+          ]
+        },
+        {
+          "name": "socket_connect_back",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            -16.0
+          ]
+        },
+        {
+          "name": "socket_connect_front",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            16.0
+          ]
+        },
+        {
+          "name": "socket_door_use",
+          "role": "door",
+          "position": [
+            0.0,
+            1.1,
+            12.0
+          ]
+        },
+        {
+          "name": "socket_npc_0",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_1",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_2",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_npc_3",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_objective",
+          "role": "future_objective",
+          "position": [
+            0.0,
+            0.06,
+            -12.0
+          ]
+        },
+        {
+          "name": "socket_resource_0",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_1",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_2",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_resource_3",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_return",
+          "role": "return",
+          "position": [
+            0.0,
+            0.15,
+            13.0
+          ]
+        },
+        {
+          "name": "socket_route_0",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            7.0
+          ]
+        },
+        {
+          "name": "socket_route_1",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            2.0
+          ]
+        },
+        {
+          "name": "socket_route_2",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -4.0
+          ]
+        },
+        {
+          "name": "socket_route_3",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -10.0
+          ]
+        },
+        {
+          "name": "socket_route_4",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -14.0
+          ]
+        }
+      ],
+      "materials": [
+        "Portu_titanium",
+        "Portu_ceramic",
+        "Portu_blue_glass",
+        "Portu_safety_amber",
+        "Portu_deck",
+        "Portu_graphite",
+        "Portu_warm_light",
+        "Portu_soil",
+        "Portu_leaf",
+        "Portu_leaf_tip",
+        "Portu_violet",
+        "Portu_cyan"
+      ],
+      "door": {
+        "left": "door_left",
+        "right": "door_right",
+        "travel_m": 2.12,
+        "opening_m": 4.1
+      },
+      "license": "MIT",
+      "status": "exported; validation state in PR",
+      "limits": "Reusable furnished environment, not campaign missions, NPC AI, economy or medical/engineering simulation."
+    },
+    {
+      "id": "portu/residential_lounge",
+      "version": 1,
+      "title": "Etxe · salón residencial",
+      "category": "residential",
+      "description": "Sofás, mesas, literas, cocina y espacio social de tripulación.",
+      "source": "art/blender/portu_environments/residential_lounge.blend",
+      "runtime": "game/assets/models/portu_environments/residential_lounge.glb",
+      "scene": "game/asset_lab/portu_environments/instances/residential_lounge.tscn",
+      "preview": "docs/images/portu_environments/residential_lounge.png",
+      "source_sha256": "a456ba016ccab10224b8f691d64d7d0af8082ff505e51345806c85ffae5c6298",
+      "sha256": "b6589e44481ba19693011200b387d0176b81b938a19a97a6530d2a9768123b2a",
+      "bytes": 2377388,
+      "triangles": 29252,
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "footprint_m": [
+        24.8,
+        36.0
+      ],
+      "ceiling_m": 6,
+      "sockets": [
+        {
+          "name": "socket_arrival",
+          "role": "arrival",
+          "position": [
+            0.0,
+            1.0,
+            14.0
+          ]
+        },
+        {
+          "name": "socket_connect_back",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            -16.0
+          ]
+        },
+        {
+          "name": "socket_connect_front",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            16.0
+          ]
+        },
+        {
+          "name": "socket_door_use",
+          "role": "door",
+          "position": [
+            0.0,
+            1.1,
+            12.0
+          ]
+        },
+        {
+          "name": "socket_npc_0",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_1",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_2",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_npc_3",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_objective",
+          "role": "future_objective",
+          "position": [
+            0.0,
+            0.06,
+            -12.0
+          ]
+        },
+        {
+          "name": "socket_resource_0",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_1",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_2",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_resource_3",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_return",
+          "role": "return",
+          "position": [
+            0.0,
+            0.15,
+            13.0
+          ]
+        },
+        {
+          "name": "socket_route_0",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            7.0
+          ]
+        },
+        {
+          "name": "socket_route_1",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            2.0
+          ]
+        },
+        {
+          "name": "socket_route_2",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -4.0
+          ]
+        },
+        {
+          "name": "socket_route_3",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -10.0
+          ]
+        },
+        {
+          "name": "socket_route_4",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -14.0
+          ]
+        }
+      ],
+      "materials": [
+        "Portu_titanium",
+        "Portu_ceramic",
+        "Portu_blue_glass",
+        "Portu_safety_amber",
+        "Portu_deck",
+        "Portu_graphite",
+        "Portu_warm_light",
+        "Portu_teal_fabric",
+        "Portu_wood",
+        "Portu_cyan"
+      ],
+      "door": {
+        "left": "door_left",
+        "right": "door_right",
+        "travel_m": 2.12,
+        "opening_m": 4.1
+      },
+      "license": "MIT",
+      "status": "exported; validation state in PR",
+      "limits": "Reusable furnished environment, not campaign missions, NPC AI, economy or medical/engineering simulation."
+    },
+    {
+      "id": "portu/memory_archive",
+      "version": 1,
+      "title": "Oroimen · archivo y museo",
+      "category": "archive",
+      "description": "Vitrinas, piezas originales, estanterías y consulta documental.",
+      "source": "art/blender/portu_environments/memory_archive.blend",
+      "runtime": "game/assets/models/portu_environments/memory_archive.glb",
+      "scene": "game/asset_lab/portu_environments/instances/memory_archive.tscn",
+      "preview": "docs/images/portu_environments/memory_archive.png",
+      "source_sha256": "2fa6ac32f0f20075cee728280d32ef71b22dc336a0a095f9b007a68f7cc02e7b",
+      "sha256": "a94d5f662a6ebbee12cd7c777d77df6f663a911706f9a90f1a65be6cecaa457f",
+      "bytes": 3396628,
+      "triangles": 41192,
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "footprint_m": [
+        24.8,
+        36.0
+      ],
+      "ceiling_m": 6,
+      "sockets": [
+        {
+          "name": "socket_arrival",
+          "role": "arrival",
+          "position": [
+            0.0,
+            1.0,
+            14.0
+          ]
+        },
+        {
+          "name": "socket_connect_back",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            -16.0
+          ]
+        },
+        {
+          "name": "socket_connect_front",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            16.0
+          ]
+        },
+        {
+          "name": "socket_door_use",
+          "role": "door",
+          "position": [
+            0.0,
+            1.1,
+            12.0
+          ]
+        },
+        {
+          "name": "socket_npc_0",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_1",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_2",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_npc_3",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_objective",
+          "role": "future_objective",
+          "position": [
+            0.0,
+            0.06,
+            -12.0
+          ]
+        },
+        {
+          "name": "socket_resource_0",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_1",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_2",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_resource_3",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_return",
+          "role": "return",
+          "position": [
+            0.0,
+            0.15,
+            13.0
+          ]
+        },
+        {
+          "name": "socket_route_0",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            7.0
+          ]
+        },
+        {
+          "name": "socket_route_1",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            2.0
+          ]
+        },
+        {
+          "name": "socket_route_2",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -4.0
+          ]
+        },
+        {
+          "name": "socket_route_3",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -10.0
+          ]
+        },
+        {
+          "name": "socket_route_4",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -14.0
+          ]
+        }
+      ],
+      "materials": [
+        "Portu_titanium",
+        "Portu_ceramic",
+        "Portu_blue_glass",
+        "Portu_safety_amber",
+        "Portu_deck",
+        "Portu_graphite",
+        "Portu_warm_light",
+        "Portu_wood",
+        "Portu_cyan"
+      ],
+      "door": {
+        "left": "door_left",
+        "right": "door_right",
+        "travel_m": 2.12,
+        "opening_m": 4.1
+      },
+      "license": "MIT",
+      "status": "exported; validation state in PR",
+      "limits": "Reusable furnished environment, not campaign missions, NPC AI, economy or medical/engineering simulation."
+    },
+    {
+      "id": "portu/communications_hub",
+      "version": 1,
+      "title": "Lotura · centro de comunicaciones",
+      "category": "communications",
+      "description": "Puestos de control, matriz de enlaces y nodos de comunicaciones.",
+      "source": "art/blender/portu_environments/communications_hub.blend",
+      "runtime": "game/assets/models/portu_environments/communications_hub.glb",
+      "scene": "game/asset_lab/portu_environments/instances/communications_hub.tscn",
+      "preview": "docs/images/portu_environments/communications_hub.png",
+      "source_sha256": "41f486d71d3ef4bb711235d0f2b08cbf6fb4a4f1a14fd47c05590d0e6adc28c1",
+      "sha256": "20cfe70717baabf229861455200f7f7856febcd3640d4a11ee7558d993ff7560",
+      "bytes": 3575632,
+      "triangles": 43544,
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "footprint_m": [
+        24.8,
+        36.0
+      ],
+      "ceiling_m": 6,
+      "sockets": [
+        {
+          "name": "socket_arrival",
+          "role": "arrival",
+          "position": [
+            0.0,
+            1.0,
+            14.0
+          ]
+        },
+        {
+          "name": "socket_connect_back",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            -16.0
+          ]
+        },
+        {
+          "name": "socket_connect_front",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            16.0
+          ]
+        },
+        {
+          "name": "socket_door_use",
+          "role": "door",
+          "position": [
+            0.0,
+            1.1,
+            12.0
+          ]
+        },
+        {
+          "name": "socket_npc_0",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_1",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_2",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_npc_3",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_objective",
+          "role": "future_objective",
+          "position": [
+            0.0,
+            0.06,
+            -12.0
+          ]
+        },
+        {
+          "name": "socket_resource_0",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_1",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_2",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_resource_3",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_return",
+          "role": "return",
+          "position": [
+            0.0,
+            0.15,
+            13.0
+          ]
+        },
+        {
+          "name": "socket_route_0",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            7.0
+          ]
+        },
+        {
+          "name": "socket_route_1",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            2.0
+          ]
+        },
+        {
+          "name": "socket_route_2",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -4.0
+          ]
+        },
+        {
+          "name": "socket_route_3",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -10.0
+          ]
+        },
+        {
+          "name": "socket_route_4",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -14.0
+          ]
+        }
+      ],
+      "materials": [
+        "Portu_titanium",
+        "Portu_ceramic",
+        "Portu_blue_glass",
+        "Portu_safety_amber",
+        "Portu_deck",
+        "Portu_graphite",
+        "Portu_warm_light",
+        "Portu_cyan",
+        "Portu_teal_fabric"
+      ],
+      "door": {
+        "left": "door_left",
+        "right": "door_right",
+        "travel_m": 2.12,
+        "opening_m": 4.1
+      },
+      "license": "MIT",
+      "status": "exported; validation state in PR",
+      "limits": "Reusable furnished environment, not campaign missions, NPC AI, economy or medical/engineering simulation."
+    },
+    {
+      "id": "portu/cargo_lift_dock",
+      "version": 1,
+      "title": "Karga · plataforma de carga",
+      "category": "logistics",
+      "description": "Plataforma de transferencia, guías, carros y racks; sin ascensor de campaña.",
+      "source": "art/blender/portu_environments/cargo_lift_dock.blend",
+      "runtime": "game/assets/models/portu_environments/cargo_lift_dock.glb",
+      "scene": "game/asset_lab/portu_environments/instances/cargo_lift_dock.tscn",
+      "preview": "docs/images/portu_environments/cargo_lift_dock.png",
+      "source_sha256": "1e9c8d371eb62d3ea500b562300a19cb95d023328ef9005450a617d440bf58b5",
+      "sha256": "ca3472a75f9f70e16cda3b3ac7c463836be7695646f8d4f859334cda19224953",
+      "bytes": 2267500,
+      "triangles": 27928,
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "footprint_m": [
+        24.8,
+        36.0
+      ],
+      "ceiling_m": 6,
+      "sockets": [
+        {
+          "name": "socket_arrival",
+          "role": "arrival",
+          "position": [
+            0.0,
+            1.0,
+            14.0
+          ]
+        },
+        {
+          "name": "socket_connect_back",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            -16.0
+          ]
+        },
+        {
+          "name": "socket_connect_front",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            16.0
+          ]
+        },
+        {
+          "name": "socket_door_use",
+          "role": "door",
+          "position": [
+            0.0,
+            1.1,
+            12.0
+          ]
+        },
+        {
+          "name": "socket_npc_0",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_1",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_2",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_npc_3",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_objective",
+          "role": "future_objective",
+          "position": [
+            0.0,
+            0.06,
+            -12.0
+          ]
+        },
+        {
+          "name": "socket_resource_0",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_1",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_2",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_resource_3",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_return",
+          "role": "return",
+          "position": [
+            0.0,
+            0.15,
+            13.0
+          ]
+        },
+        {
+          "name": "socket_route_0",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            7.0
+          ]
+        },
+        {
+          "name": "socket_route_1",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            2.0
+          ]
+        },
+        {
+          "name": "socket_route_2",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -4.0
+          ]
+        },
+        {
+          "name": "socket_route_3",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -10.0
+          ]
+        },
+        {
+          "name": "socket_route_4",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -14.0
+          ]
+        }
+      ],
+      "materials": [
+        "Portu_titanium",
+        "Portu_ceramic",
+        "Portu_blue_glass",
+        "Portu_safety_amber",
+        "Portu_deck",
+        "Portu_graphite",
+        "Portu_warm_light",
+        "Portu_cyan"
+      ],
+      "door": {
+        "left": "door_left",
+        "right": "door_right",
+        "travel_m": 2.12,
+        "opening_m": 4.1
+      },
+      "license": "MIT",
+      "status": "exported; validation state in PR",
+      "limits": "Reusable furnished environment, not campaign missions, NPC AI, economy or medical/engineering simulation."
+    },
+    {
+      "id": "portu/reactor_service",
+      "version": 1,
+      "title": "Bero · servicio del reactor",
+      "category": "engineering",
+      "description": "Módulos de energía, refrigeración, cuadros y espacios de inspección.",
+      "source": "art/blender/portu_environments/reactor_service.blend",
+      "runtime": "game/assets/models/portu_environments/reactor_service.glb",
+      "scene": "game/asset_lab/portu_environments/instances/reactor_service.tscn",
+      "preview": "docs/images/portu_environments/reactor_service.png",
+      "source_sha256": "52ba25c85bcef53c49c292385e476156a891eb691bf46a15bca761fb1a1962de",
+      "sha256": "094c694faf3dff40a257d3fbaf8eaacde04820b13f6a6e4c8e303719567420d5",
+      "bytes": 2855612,
+      "triangles": 37198,
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "footprint_m": [
+        24.8,
+        36.0
+      ],
+      "ceiling_m": 6,
+      "sockets": [
+        {
+          "name": "socket_arrival",
+          "role": "arrival",
+          "position": [
+            0.0,
+            1.0,
+            14.0
+          ]
+        },
+        {
+          "name": "socket_connect_back",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            -16.0
+          ]
+        },
+        {
+          "name": "socket_connect_front",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            16.0
+          ]
+        },
+        {
+          "name": "socket_door_use",
+          "role": "door",
+          "position": [
+            0.0,
+            1.1,
+            12.0
+          ]
+        },
+        {
+          "name": "socket_npc_0",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_1",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_2",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_npc_3",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_objective",
+          "role": "future_objective",
+          "position": [
+            0.0,
+            0.06,
+            -12.0
+          ]
+        },
+        {
+          "name": "socket_resource_0",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_1",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_2",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_resource_3",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_return",
+          "role": "return",
+          "position": [
+            0.0,
+            0.15,
+            13.0
+          ]
+        },
+        {
+          "name": "socket_route_0",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            7.0
+          ]
+        },
+        {
+          "name": "socket_route_1",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            2.0
+          ]
+        },
+        {
+          "name": "socket_route_2",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -4.0
+          ]
+        },
+        {
+          "name": "socket_route_3",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -10.0
+          ]
+        },
+        {
+          "name": "socket_route_4",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -14.0
+          ]
+        }
+      ],
+      "materials": [
+        "Portu_titanium",
+        "Portu_ceramic",
+        "Portu_blue_glass",
+        "Portu_safety_amber",
+        "Portu_deck",
+        "Portu_graphite",
+        "Portu_warm_light",
+        "Portu_cyan"
+      ],
+      "door": {
+        "left": "door_left",
+        "right": "door_right",
+        "travel_m": 2.12,
+        "opening_m": 4.1
+      },
+      "license": "MIT",
+      "status": "exported; validation state in PR",
+      "limits": "Reusable furnished environment, not campaign missions, NPC AI, economy or medical/engineering simulation."
+    },
+    {
+      "id": "portu/repair_drydock",
+      "version": 1,
+      "title": "Kaia · dique de reparación",
+      "category": "repair",
+      "description": "Bastidor de servicio vacío, grúas, brazos y bancos para reparar futuras naves.",
+      "source": "art/blender/portu_environments/repair_drydock.blend",
+      "runtime": "game/assets/models/portu_environments/repair_drydock.glb",
+      "scene": "game/asset_lab/portu_environments/instances/repair_drydock.tscn",
+      "preview": "docs/images/portu_environments/repair_drydock.png",
+      "source_sha256": "9f42a816cad232f48e6b4c152378d712b44eb750d47560a82a3718e539d1e458",
+      "sha256": "e8a721303275956dc346b99ff68d32dcdb8ba4d275cc4663a994be561c300ba9",
+      "bytes": 2434120,
+      "triangles": 30176,
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "footprint_m": [
+        24.8,
+        36.0
+      ],
+      "ceiling_m": 6,
+      "sockets": [
+        {
+          "name": "socket_arrival",
+          "role": "arrival",
+          "position": [
+            0.0,
+            1.0,
+            14.0
+          ]
+        },
+        {
+          "name": "socket_connect_back",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            -16.0
+          ]
+        },
+        {
+          "name": "socket_connect_front",
+          "role": "connector",
+          "position": [
+            0.0,
+            0.0,
+            16.0
+          ]
+        },
+        {
+          "name": "socket_door_use",
+          "role": "door",
+          "position": [
+            0.0,
+            1.1,
+            12.0
+          ]
+        },
+        {
+          "name": "socket_npc_0",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_1",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_npc_2",
+          "role": "future_npc",
+          "position": [
+            -3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_npc_3",
+          "role": "future_npc",
+          "position": [
+            3.0,
+            0.06,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_objective",
+          "role": "future_objective",
+          "position": [
+            0.0,
+            0.06,
+            -12.0
+          ]
+        },
+        {
+          "name": "socket_resource_0",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_1",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "name": "socket_resource_2",
+          "role": "future_resource",
+          "position": [
+            -6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_resource_3",
+          "role": "future_resource",
+          "position": [
+            6.0,
+            0.8,
+            -6.0
+          ]
+        },
+        {
+          "name": "socket_return",
+          "role": "return",
+          "position": [
+            0.0,
+            0.15,
+            13.0
+          ]
+        },
+        {
+          "name": "socket_route_0",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            7.0
+          ]
+        },
+        {
+          "name": "socket_route_1",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            2.0
+          ]
+        },
+        {
+          "name": "socket_route_2",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -4.0
+          ]
+        },
+        {
+          "name": "socket_route_3",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -10.0
+          ]
+        },
+        {
+          "name": "socket_route_4",
+          "role": "walk_route",
+          "position": [
+            0.0,
+            0.06,
+            -14.0
+          ]
+        }
+      ],
+      "materials": [
+        "Portu_titanium",
+        "Portu_ceramic",
+        "Portu_blue_glass",
+        "Portu_safety_amber",
+        "Portu_deck",
+        "Portu_graphite",
+        "Portu_warm_light",
+        "Portu_cyan"
+      ],
+      "door": {
+        "left": "door_left",
+        "right": "door_right",
+        "travel_m": 2.12,
+        "opening_m": 4.1
+      },
+      "license": "MIT",
+      "status": "exported; validation state in PR",
+      "limits": "Reusable furnished environment, not campaign missions, NPC AI, economy or medical/engineering simulation."
+    }
+  ]
+}

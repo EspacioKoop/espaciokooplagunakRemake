@@ -1,0 +1,15 @@
+{
+  "main_revision": "9e2401d7dcb4719dc831fd84093a6f9640453687",
+  "sources": {
+    "base": "9e2401d7dcb4719dc831fd84093a6f9640453687",
+    "bizi": "cae594662d17157b296b6d4c79a881b666093ee1",
+    "fieldkit": "9e2401d7dcb4719dc831fd84093a6f9640453687",
+    "frontier": "9e2401d7dcb4719dc831fd84093a6f9640453687",
+    "itsasargi": "cae594662d17157b296b6d4c79a881b666093ee1",
+    "leisure": "9e2401d7dcb4719dc831fd84093a6f9640453687",
+    "memory": "9e2401d7dcb4719dc831fd84093a6f9640453687",
+    "orbita": "9e2401d7dcb4719dc831fd84093a6f9640453687",
+    "orbita_player_support": "9e2401d7dcb4719dc831fd84093a6f9640453687"
+  },
+  "version": 1
+}

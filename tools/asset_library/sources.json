@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "packs": [
+    {
+      "id": "base", "title": "Itsaso · modelos base", "adapter": "base", "expected_count": 20,
+      "manifest": "game/assets/models/manifest.json", "source": "art/blender/lagunak_assets.blend", "guide": "docs/AUTHORING.md",
+      "models": ["anomaly","asteroid","beacon","bridge_room","cargo_room","chair","console","crate","crew","engineering_room","hallway","itsaso","medbay_room","mess_room","planet","quarters_room","reactor","sentinel","station","transport"],
+      "titles": {"anomaly":"Anomalía espacial","asteroid":"Asteroide","beacon":"Baliza espacial","bridge_room":"Puente de la Itsaso","cargo_room":"Bodega de carga","chair":"Asiento de tripulación","console":"Consola de control","crate":"Caja de suministros","crew":"Tripulante base","engineering_room":"Sala de ingeniería","hallway":"Pasillo de la nave","itsaso":"Itsaso · nave principal","medbay_room":"Enfermería","mess_room":"Comedor","planet":"Planeta de representación espacial","quarters_room":"Camarotes","reactor":"Reactor","sentinel":"Sentinel · nave","station":"Estación espacial exterior","transport":"Nave de transporte"},
+      "limits": "Recursos base: consultar sus consumidores actuales. Las fotos muestran el GLB aislado, no todos los efectos y shaders del juego. No se altera ninguna mecánica."
+    },
+    {
+      "id": "leisure", "title": "Ocio · seis entornos", "adapter": "groups", "category": "environments",
+      "manifest": "game/assets/models/manifest.json", "source": "art/blender/leisure_assets.blend", "runtime": "game/assets/models/leisure_bundle.glb", "guide": "docs/AUTHORING.md",
+      "groups": ["museum_hall","cantina","terrace","studio","memories_hall","beach"],
+      "titles": {"museum_hall":"Sala del museo","cantina":"Cantina","terrace":"Terraza","studio":"Estudio","memories_hall":"Corredor de recuerdos","beach":"Playa"},
+      "limits": "Seis submodelos dentro de un único GLB. Cada foto aísla el grupo correspondiente sin modificar ni duplicar geometría. Conservar nombres y consumidores de ocio existentes."
+    },
+    {
+      "id": "memory", "title": "Guardianes del recuerdo", "adapter": "groups", "category": "props", "pull_request": 17,
+      "manifest": "game/assets/models/memory_guardians.manifest.json", "source": "art/blender/memory_guardians.blend", "runtime": "game/assets/models/memory_guardians.glb", "guide": "docs/MEMORY_GUARDIANS.md",
+      "groups": ["memory_keeper","memory_sentinel","memory_prism"],
+      "titles": {"memory_keeper":"Guardiana del recuerdo","memory_sentinel":"Centinela del recuerdo","memory_prism":"Prisma del recuerdo"},
+      "limits": "Tres grupos de galería en un GLB compartido; no son tres archivos ni IA de combate. Cada imagen aísla una pieza real."
+    },
+    {
+      "id": "orbita", "title": "Órbita · industria y robótica", "expected_count": 12, "pull_request": 54,
+      "refs": ["origin/agent/52-orbita-library"], "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "guide": "docs/ORBITA_ASSET_PACK.md", "viewer": "game/asset_lab/orbita_pack/viewer.tscn",
+      "limits": "Modelos originales y articulaciones rígidas. No incorporan automáticamente IA, inventario, daño, colisiones, LOD, vuelo ni planetas caminables."
+    },
+    {
+      "id": "orbita_player_support", "title": "Órbita · equipo y apoyo", "expected_count": 10, "pull_request": 54,
+      "refs": ["origin/agent/52-orbita-library"], "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "guide": "docs/ORBITA_PLAYER_BATCH.md", "viewer": "game/asset_lab/orbita_pack/player_batch.tscn",
+      "limits": "Seis herramientas, dos armas ficticias y dos naves. Montaje visual a escala no equivale a inventario, disparo, oxígeno, escudo o vuelo de campaña."
+    },
+    {
+      "id": "frontier", "title": "Frontera · expedición", "expected_count": 24, "pull_request": 55,
+      "refs": ["origin/agent/41-frontier-assets"], "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "guide": "docs/FRONTIER_ASSET_PACK.md", "preview_directory": "docs/images/frontier_pack",
+      "limits": "Biblioteca de expedición. El prefijo frontier/ es documental y no cambia IDs originales. Consultar su PR para rigs, animaciones, pruebas y consumidores pendientes."
+    },
+    {
+      "id": "fieldkit", "title": "Fieldkit · herramientas de jugador", "expected_count": 10, "pull_request": 58,
+      "refs": ["origin/agent/52-fieldkit-models"], "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "guide": "docs/FIELDKIT_ASSET_PACK.md", "viewer": "game/asset_lab/fieldkit_pack/viewer.tscn",
+      "limits": "Seis herramientas, dos armas ficticias y dos naves. Inspección y vista equipada; no añade hackeo, curación, daño, vuelo, IK ni inventario de campaña."
+    },
+    {
+      "id": "itsasargi", "title": "Itsasargi · equipo y naves", "expected_count": 10, "pull_request": 57,
+      "refs": ["origin/agent/52-itsasargi-models"], "manifest": "game/assets/models/itsasargi_pack/manifest.json",
+      "guide": "docs/ITSASARGI_ASSET_PACK.md", "viewer": "game/asset_lab/itsasargi_pack/viewer.tscn",
+      "limits": "Seis herramientas, dos armas ficticias y dos naves. Articulación e inspección visual; no se añaden reglas de combate, vuelo, simulación de cuerda u oxígeno."
+    },
+    {
+      "id": "bizi", "title": "Bizi · dos planetas HABITABLES", "expected_count": 4, "pull_request": 57,
+      "refs": ["origin/agent/52-itsasargi-models"], "manifest": "game/assets/models/bizi_planets/manifest.json",
+      "guide": "docs/BIZI_HABITABLE_PLANETS.md", "viewer": "game/asset_lab/bizi_planets/viewer.tscn",
+      "limits": "Dos mundos, Ametz/Uharte, y cuatro representaciones: órbita y superficie por planeta. Habitabilidad ficticia. El laboratorio usa teletransporte y gravedad radial; no implementa aterrizaje seamless ni misiones, batallas o inventario persistente. Agua visual."
+    }
+  ]
+}
