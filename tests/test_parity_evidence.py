@@ -309,7 +309,7 @@ class RegisterTests(unittest.TestCase):
         self.assertEqual(data["remake_revision"], "f2015279bb7a8c307352a9526d1942a9df047ac4")
         self.assertEqual(by_id["npc-generator"]["status"], "partial")
         self.assertEqual(by_id["npc-generator"]["decision"], "replace")
-        self.assertTrue(any("pull/50" in evidence.get("url", "")
+        self.assertTrue(any(evidence.get("path") == "game/core/npc_generator.gd"
                             for evidence in by_id["npc-generator"]["evidence"]))
         self.assertEqual(by_id["npc-scene-placement"]["status"], "pending")
         self.assertEqual(by_id["npc-dialogue-agenda"]["status"], "pending")
