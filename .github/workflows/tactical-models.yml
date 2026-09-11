@@ -1,0 +1,79 @@
+name: Verify playable tactical models
+on:
+  pull_request:
+  push:
+    branches: [main, agent/32-tactical-models-s3]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tactical-models-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Install display runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri libxrandr2 libxi6 libxcursor1 libxinerama1
+      - name: Check runner negatives and canonical asset bindings
+        run: python3 tests/test_tactical_models_runner.py
+      - name: Download verified Godot
+        run: python3 tools/bootstrap.py
+      - name: Import without inherited cache and run affected regressions
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,re,shutil,subprocess,sys,tempfile
+          from pathlib import Path
+          sys.path.insert(0, 'tests')
+          from run_tactical_models import environment,ANSI,ROOT
+          evidence=ROOT/'build/tactical-models/evidence'
+          evidence.mkdir(parents=True,exist_ok=True)
+          (evidence/'checkout.txt').write_text(subprocess.check_output(['git','rev-parse','HEAD'],text=True))
+          sources=['game/world/tactical_models.gd','game/ui/tactical_board_3d.gd','game/ui/tactical_combat_window.gd','game/world/pickup_model.gd','tests/test_tactical_models.gd','tests/run_tactical_models.py','tests/test_tactical_models_runner.py','docs/TACTICAL_MODELS.md','.github/workflows/tactical-models.yml']
+          (evidence/'sources.sha256.json').write_text(json.dumps({name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in sources},indent=2))
+          shutil.rmtree(ROOT/'game/.godot',ignore_errors=True)
+          commands=[('import',['--editor','--quit'],None)]
+          for name,pattern in [('core',r'LAGUNAK_TESTS (\d+) checks; 0 failures'),('ground_combat',r'GROUND_COMBAT_TESTS (\d+) checks; 0 failures'),('space_pickups',r'SPACE_PICKUPS_RESULT checks=(\d+) failures=0'),('ui',r'UI_OK (\d+) checks; 0 failures')]:
+              commands.append((name,['--script',str(ROOT/f'tests/test_{name}.gd'),'--','--test'],pattern))
+          for name,args,pattern in commands:
+              with tempfile.TemporaryDirectory(prefix='tactical-regression-') as temporary:
+                  result=subprocess.run([str(ROOT/'.toolchain/godot'),'--headless','--audio-driver','Dummy','--path',str(ROOT/'game'),*args],env=environment(Path(temporary)),text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=180)
+              output=ANSI.sub('',result.stdout)
+              (evidence/f'{name}.log').write_text(output,encoding='utf-8')
+              print(output[-1800:],flush=True)
+              assert result.returncode==0 and not re.search(r'(?m)^\s*(?:SCRIPT ERROR|ERROR):',output),name
+              if pattern:
+                  reports=re.findall(pattern,output)
+                  assert len(reports)==1 and int(reports[0])>0,name
+          PY
+      - name: Exercise 3D geometry, native GUI input and limits
+        run: |
+          set -euo pipefail
+          python3 tests/run_tactical_models.py 2>&1 | tee build/tactical-models/evidence/native.log
+      - name: Export and test the self-contained resource pack
+        run: |
+          set -euo pipefail
+          .toolchain/godot --headless --audio-driver Dummy --path game --export-pack Linux ../build/tactical-models/game.pck > build/tactical-models/evidence/export.log 2>&1
+          if grep -E 'SCRIPT ERROR:|^ERROR:' build/tactical-models/evidence/export.log; then exit 1; fi
+          python3 tests/run_tactical_models.py --pack build/tactical-models/game.pck 2>&1 | tee build/tactical-models/evidence/exported.log
+          sha256sum build/tactical-models/game.pck > build/tactical-models/evidence/pack.sha256
+      - name: Render the exported game and preserve a real screenshot
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1600x1100x24' python3 tests/run_tactical_models.py --pack build/tactical-models/game.pck --capture build/tactical-models/evidence/tactical-models.png 2>&1 | tee build/tactical-models/evidence/graphics.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: tactical-model-evidence-${{ github.run_id }}
+          path: build/tactical-models/evidence/
+          if-no-files-found: error
+          retention-days: 7

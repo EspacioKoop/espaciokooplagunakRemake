@@ -5,7 +5,9 @@ extends Window
 var combat: Node
 var selected = ""
 var root_box: VBoxContainer
-var board: TacticalBoard
+var board: Control
+var use_3d = true
+var _rebuild_queued = false
 var status: Label
 
 func _ready() -> void:
@@ -19,12 +21,16 @@ func _ready() -> void:
 	add_child(margin)
 	root_box = ConsoleUI.column(margin, 10)
 	if combat != null:
-		combat.updated.connect(_rebuild)
+		combat.updated.connect(_schedule_rebuild)
 		combat.notice.connect(_notice)
 	_rebuild()
 
 func _rebuild() -> void:
+	_rebuild_queued = false
 	if root_box == null or combat == null: return
+	# Preserve the viewport/models when only the action panel changes.
+	if is_instance_valid(board) and board.get_parent() != null:
+		board.get_parent().remove_child(board)
 	ConsoleUI.clear(root_box)
 	var header = ConsoleUI.row(root_box)
 	var heading = ConsoleUI.label("EXPEDICIÓN TÁCTICA", 25, ConsoleUI.TEAL)
@@ -34,8 +40,11 @@ func _rebuild() -> void:
 		var button = ConsoleUI.button(mode[0], combat.set_camera.bind(mode[1]))
 		button.disabled = combat.state.is_empty()
 		header.add_child(button)
+	header.add_child(ConsoleUI.button("Ver 2D" if use_3d else "Ver 3D", _toggle_renderer))
 	header.add_child(ConsoleUI.label("F6 · cerrar", 12, ConsoleUI.MUTED))
 	if combat.state.is_empty():
+		if is_instance_valid(board): board.queue_free()
+		board = null
 		var empty = ConsoleUI.card(root_box, "PREPARAR INCURSIÓN")
 		empty.add_child(ConsoleUI.paragraph("Combate por cuadrícula integrado con las fichas de tripulación. La condición, experiencia y recompensas vuelven al estado persistente de la expedición.", 17))
 		var row = ConsoleUI.row(empty)
@@ -64,10 +73,11 @@ func _rebuild() -> void:
 	var board_panel = PanelContainer.new()
 	ConsoleUI.expand(board_panel)
 	content.add_child(board_panel)
-	board = TacticalBoard.new()
-	board.combat = combat
-	board.cell_pressed.connect(_cell)
-	board.unit_pressed.connect(_select_unit)
+	if not is_instance_valid(board):
+		board = TacticalBoard3D.new() if use_3d else TacticalBoard.new()
+		board.combat = combat
+		board.cell_pressed.connect(_cell)
+		board.unit_pressed.connect(_select_unit)
 	board_panel.add_child(board)
 	var side_scroll = ScrollContainer.new()
 	side_scroll.custom_minimum_size.x = 390
@@ -128,7 +138,7 @@ func _rebuild() -> void:
 func _select_unit(id: String) -> void:
 	selected = id
 	if not combat.state.is_empty(): combat.state.selected = id
-	_rebuild()
+	_schedule_rebuild()
 
 func _cell(x: int, y: int) -> void:
 	if combat.state.is_empty(): return
@@ -137,7 +147,18 @@ func _cell(x: int, y: int) -> void:
 	combat.command("move", {"x": x, "y": y})
 
 func _notice(text: String, ok: bool) -> void:
-	if status != null:
+	if is_instance_valid(status):
 		status.text = text
 		status.add_theme_color_override("font_color", ConsoleUI.TEAL if ok else ConsoleUI.RED)
+	_schedule_rebuild()
+
+func _toggle_renderer() -> void:
+	use_3d = not use_3d
+	if is_instance_valid(board): board.queue_free()
+	board = null
+	_schedule_rebuild()
+
+func _schedule_rebuild() -> void:
+	if _rebuild_queued: return
+	_rebuild_queued = true
 	call_deferred("_rebuild")
