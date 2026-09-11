@@ -49,6 +49,8 @@ func run() -> void:
 	window.contact_id.text = "gm_ui_contact"
 	window.contact_name.text = "Nave de apoyo"
 	window.identified.button_pressed = true
+	window.jammed.button_pressed = true
+	window.pacified.button_pressed = true
 	for index in window.visual.item_count:
 		if window.visual.get_item_metadata(index) == "frontier/haizea_scout": window.visual.select(index)
 	window.find_child("GMSpawn", true, false).pressed.emit()
@@ -58,6 +60,7 @@ func run() -> void:
 		quit(1)
 		return
 	check(session.sim.contact("gm_ui_contact").visual_model == "frontier/haizea_scout", "UI preserves selected model ID")
+	check(session.sim.contact("gm_ui_contact").jammed and session.sim.contact("gm_ui_contact").pacified, "create button applies visible authoring toggles")
 	app._space._process(0.0)
 	check(app._space.contacts["gm_ui_contact"].visual_model == "frontier/haizea_scout", "space renderer uses library skin")
 	check(LocalStorage.validate_state(session.sim.state).is_empty(), "UI-authored state is saveable")

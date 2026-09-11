@@ -3,7 +3,7 @@ extends RefCounted
 ## Host-local authoring, never a network command or a replacement mission source.
 const KINDS = ["station", "friendly", "hostile", "derelict", "anomaly", "beacon", "asteroid", "nebula", "planet", "blackhole", "wormhole"]
 const EVENTS = ["alert", "message", "damage", "repair", "reinforcements"]
-const SPAWN_FIELDS = ["id", "name", "kind", "x", "y", "identified", "hull", "survivors", "frequency", "visual_model"]
+const SPAWN_FIELDS = ["id", "name", "kind", "x", "y", "identified", "jammed", "pacified", "hull", "survivors", "frequency", "visual_model"]
 const EDIT_FIELDS = ["name", "kind", "x", "y", "hull", "identified", "jammed", "pacified", "frequency", "survivors", "visual_model"]
 
 static func _reply(ok: bool, message: String) -> Dictionary:
@@ -74,9 +74,9 @@ static func spawn_contact(sim: Simulation, args: Dictionary) -> Dictionary:
 		return _reply(false, "Se ha alcanzado el límite de contactos de escena.")
 	var contact = {"id": args.id, "name": args.name.strip_edges(), "kind": args.kind,
 		"position": [float(args.x), float(args.y)], "known": false,
-		"identified": args.get("identified", false), "jammed": false,
+		"identified": args.get("identified", false), "jammed": args.get("jammed", false),
 		"hull": float(args.get("hull", 100.0)), "hailed": false, "negotiated": false,
-		"rescued": false, "salvaged": false, "probed": false, "pacified": false,
+		"rescued": false, "salvaged": false, "probed": false, "pacified": args.get("pacified", false),
 		"attack_at": 0.0, "survivors": int(args.get("survivors", 0)),
 		"frequency": int(args.get("frequency", posmod(args.id.hash(), 21)))}
 	if args.has("visual_model"):

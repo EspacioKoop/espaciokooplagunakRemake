@@ -253,7 +253,8 @@ func _values() -> Dictionary:
 	return {"name": contact_name.text, "kind": str(contact_kind.get_selected_metadata()),
 		"x": pos_x.value, "y": pos_y.value, "hull": hull.value,
 		"survivors": survivors.value, "frequency": frequency.value,
-		"identified": identified.button_pressed, "visual_model": str(visual.get_selected_metadata())}
+		"identified": identified.button_pressed, "jammed": jammed.button_pressed,
+		"pacified": pacified.button_pressed, "visual_model": str(visual.get_selected_metadata())}
 
 func _spawn() -> void:
 	if not _selected_id.is_empty():

@@ -28,7 +28,7 @@ func run() -> void:
 	var before = var_to_bytes(sim.state)
 	check(not GMLiveActions.modify_contact(sim, "gm_contact", {"name": "MUST_NOT_COMMIT", "x": INF}).ok, "invalid position is rejected")
 	check(var_to_bytes(sim.state) == before, "failed multi-field modification is atomic")
-	for field in ["hull", "frequency", "survivors", "identified"]:
+	for field in ["hull", "frequency", "survivors", "identified", "jammed", "pacified"]:
 		for invalid in [null, "7", [], {}, INF]:
 			var candidate = contact_args()
 			candidate[field] = invalid
@@ -65,10 +65,13 @@ func _extended() -> void:
 	var source = var_to_bytes(sim.state.mission)
 	var args = contact_args()
 	args.visual_model = "frontier/haizea_scout"
+	args.jammed = true
+	args.pacified = true
 	var response = GMLiveActions.spawn_contact(sim, args)
 	check(response.ok, "spawn curated visual: " + response.message)
 	if not response.ok: return
 	check(sim.contact("gm_contact").visual_model == args.visual_model, "model selected by stable ID")
+	check(sim.contact("gm_contact").jammed and sim.contact("gm_contact").pacified, "initial authoring flags survive creation")
 	check(var_to_bytes(sim.state.mission) == source, "source mission is immutable")
 	var before = var_to_bytes(sim.state)
 	check(not GMLiveActions.modify_contact(sim, "gm_contact", {"visual_model": "user://private.glb"}).ok, "arbitrary paths rejected")
