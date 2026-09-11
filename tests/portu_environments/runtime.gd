@@ -36,6 +36,8 @@ func run() -> void:
 	await process_frame
 	lab.walker.controls_enabled = false
 	var capturing := OS.get_cmdline_user_args().has("--capture")
+	var physics_rate := Engine.physics_ticks_per_second
+	check(physics_rate > 0, "positive actual project physics rate")
 	check(lab.entries.size() == 8, "eight destination templates")
 	check(not lab.select_environment(-1) and not lab.select_environment(8), "invalid selection is rejected")
 	for i in range(8):
@@ -55,9 +57,9 @@ func run() -> void:
 			await screenshot("overview_" + str(i))
 			lab.enter_walk()
 			room.toggle_door(Vector3(0, 0.1, 12))
-			await tick(40)
+			await tick(physics_rate)
 			lab.walker.place(Vector3(0, 1, 7))
-			await tick(45)
+			await tick(physics_rate * 2)
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			await screenshot("walk_" + str(i))
 			continue
@@ -65,23 +67,35 @@ func run() -> void:
 		check(not room.toggle_door(Vector3(NAN, 0, 0)), "non-finite interaction rejected")
 		check(not lab.walker.place(Vector3(0, -5, 0)), "invalid floor spawn rejected")
 		lab.enter_walk()
-		await tick(60)
+		await tick(physics_rate * 2)
 		check(lab.walker.is_on_floor(), "arrival grounded")
 		check(not room.door_open, "arrival door closed")
 		lab.walker.test_motion = Vector2(0, -1)
-		await tick(120)
+		await tick(physics_rate * 2)
 		lab.walker.test_motion = Vector2.ZERO
 		check(lab.walker.position.z>=10.15 and lab.walker.position.z<11.5, "closed door blocks actual walking")
 		check(room.toggle_door(lab.walker.global_position), "nearby door opens")
-		await tick(40)
+		await tick(physics_rate)
 		check(room.door_open, "open state")
 		check(absf(room.doors[0].position.x-room.rest_x[0])>2.0, "left leaf moved")
 		check(absf(room.doors[1].position.x-room.rest_x[1])>2.0, "right leaf moved")
 		check(not room.toggle_door(Vector3(0, .1, 10)), "closure refuses occupied aperture")
+		# This project runs at 30 physics Hz, independently of --fixed-fps 60.
+		# Walk until the far route marker, with a measured ten-second deadline.
+		# The old 300-tick assumption walked 40 m and continued out of the exit.
+		var destination = room.marker("route_4")
+		check(destination != null, "far destination anchor exists")
+		var destination_z: float = destination.global_position.z if destination != null else -14.0
 		lab.walker.test_motion = Vector2(0, -1)
-		await tick(300)
+		var elapsed_ticks: int = 0
+		while lab.walker.global_position.z > destination_z and elapsed_ticks < physics_rate * 10:
+			await physics_frame
+			elapsed_ticks += 1
 		lab.walker.test_motion = Vector2.ZERO
-		check(lab.walker.position.z < -8.5, "walk through open door and central aisle")
+		await tick(1)
+		print("PORTU_TRAVERSE id=", lab.entries[i].id, " physics_hz=", physics_rate, " ticks=", elapsed_ticks, " end=", lab.walker.global_position, " rescues=", lab.walker.rescued)
+		check(lab.walker.global_position.z <= destination_z + 0.05, "walk through door to far destination")
+		check(lab.walker.global_position.z > -16.5, "stop inside the exit, not outside the room")
 		check(lab.walker.is_on_floor(), "traversal grounded")
 		check(lab.walker.rescued == 0, "no out-of-world rescue")
 		for route in range(5):
@@ -89,7 +103,7 @@ func run() -> void:
 			check(anchor != null, "route marker")
 			if anchor != null:
 				check(lab.walker.place(anchor.global_position+Vector3.UP*.5), "route entry")
-				await tick(35)
+				await tick(physics_rate)
 				check(lab.walker.is_on_floor(), "route has supporting floor")
 		lab.enter_overview()
 		check(not lab.walker.is_physics_processing(), "walker disabled in overview")
