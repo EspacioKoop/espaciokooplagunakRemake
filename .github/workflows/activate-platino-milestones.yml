@@ -1,0 +1,106 @@
+name: Activate Platino milestones (one-shot)
+
+on:
+  push:
+    branches:
+      - agent/72-platino-milestone-activation
+    paths:
+      - .github/workflows/activate-platino-milestones.yml
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: platino-milestone-activation
+  cancel-in-progress: false
+
+jobs:
+  activate:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Create and assign declared milestones
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          desired="$(cat <<'JSON'
+          [
+            {
+              "title": "1.0 — Paridad funcional",
+              "description": "Cerrar la paridad funcional pendiente del remake con una campaña standalone verificable, conservando el plan maestro #1 como autoridad y sin presentar un check histórico como certificación de 1.0.",
+              "issues": [29, 32]
+            },
+            {
+              "title": "Cosmografía y navegación",
+              "description": "Construir la cosmografía standalone y la navegación espacial pendiente, con aterrizaje, atraque, desembarco, conexiones, procedencia y pruebas reproducibles cuando el alcance quede aprobado.",
+              "issues": [56, 59]
+            },
+            {
+              "title": "Contenido y catálogo",
+              "description": "Completar el inventario de contenido y catálogo pendiente, incluyendo editores, avatares y NPC, interiores, arte, audio y la biblioteca 3D, con consumo verificable desde el ejecutable.",
+              "issues": [2, 3, 6, 52]
+            },
+            {
+              "title": "Plataforma y publicación",
+              "description": "Completar la distribución, los controles, la accesibilidad, los idiomas y las integraciones de plataforma que sigan pendientes, con paquetes y validación reproducibles.",
+              "issues": [4, 5, 30]
+            }
+          ]
+          JSON
+          )"
+
+          milestones="$(gh api --hostname github.com --method GET --paginate --slurp "repos/${GH_REPO}/milestones?state=all&per_page=100")"
+
+          milestone_number() {
+            local title="$1"
+            jq -r --arg title "$title" '
+              [.[][] | select(.title == $title)] |
+              if length == 0 then ""
+              elif length == 1 then .[0].number
+              else error("Hay milestones duplicadas con el mismo título")
+              end
+            ' <<<"$milestones"
+          }
+
+          while IFS= read -r item; do
+            title="$(jq -r '.title' <<<"$item")"
+            description="$(jq -r '.description' <<<"$item")"
+            number="$(milestone_number "$title")"
+
+            if [[ -z "$number" ]]; then
+              number="$(gh api --hostname github.com --method POST "repos/${GH_REPO}/milestones" \
+                -f title="$title" -f description="$description" -f state=open --jq '.number')"
+              echo "Created milestone #${number}: ${title}"
+            else
+              current="$(jq -c --arg title "$title" '[.[][] | select(.title == $title)] | .[0]' <<<"$milestones")"
+              test "$(jq -r '.state' <<<"$current")" = open
+              test "$(jq -r '.description // ""' <<<"$current")" = "$description"
+              echo "Reusing matching milestone #${number}: ${title}"
+            fi
+
+            while IFS= read -r issue_number; do
+              issue="$(gh api --hostname github.com --method GET "repos/${GH_REPO}/issues/${issue_number}")"
+              if jq -e 'has("pull_request")' >/dev/null <<<"$issue"; then
+                echo "Issue #${issue_number} is a PR; refusing automatic assignment" >&2
+                exit 1
+              fi
+              test "$(jq -r '.state' <<<"$issue")" = open
+              current_number="$(jq -r '.milestone.number // empty' <<<"$issue")"
+              if [[ -z "$current_number" ]]; then
+                gh api --hostname github.com --method PATCH "repos/${GH_REPO}/issues/${issue_number}" \
+                  -F milestone="$number" >/dev/null
+                echo "Assigned issue #${issue_number} to milestone #${number}"
+              else
+                test "$current_number" = "$number"
+                echo "Issue #${issue_number} already belongs to milestone #${number}"
+              fi
+            done < <(jq -r '.issues[]' <<<"$item")
+          done < <(jq -c '.[]' <<<"$desired")
+
+          echo "All declared Platino milestones are active and assignments are idempotent."
