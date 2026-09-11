@@ -1,6 +1,6 @@
 # #32 — Inventario inicial y evidencia pendiente
 
-**Referencia original:** `fecd0740545f485d2402c6dfe4b47d5a859cb96c`. **Lectura del remake:** `8b1dcf27683a00972b03d5203606eab12f31fe2d`. Este documento recoge el bloque P0 de inventario/evidencias de [#32](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/32); no cierra ese issue ni certifica la 1.0.
+**Referencia original:** `fecd0740545f485d2402c6dfe4b47d5a859cb96c`. **Candidato de remake auditado:** `f2015279bb7a8c307352a9526d1942a9df047ac4` (release 0.9.2). Este documento recoge el bloque P0 de inventario/evidencias de [#32](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/32); no cierra ese issue ni certifica la 1.0.
 
 La fuente editable es [issue32_inventory.json](issue32_inventory.json). El [comprobador](../../tools/check_parity_evidence.py) genera la tabla completa, incluida una fila por declaración de nave del catálogo actual, sin duplicar los datos numéricos. [Uso y reglas de evidencia](README.md).
 
@@ -18,7 +18,7 @@ Esta tabla es una vista del alcance inicial, no el inventario exhaustivo de cada
 | «Lagunak: Primera guardia» | Seis misiones nuevas no acreditan equivalencia individual | Pendiente | Reimplementar con contenido propio | #2: objetivos, fases, desenlaces y recompensas contrastados |
 | Resto de escenarios y dependencias | Editor nativo multi-misión | Parcial | Reimplementar el corpus | #2: inventario por escenario y dependencia; editor no equivale a migración |
 | Bestiario/inventario/libros/hitos/conjuros | Sistemas persistentes base | Parcial; consumidores originales por auditar | Reimplementar lo perteneciente al producto | #2: recurso por recurso, procedencia, uso, progresión y guardado |
-| Generador NPC semilla/desafío | Fichas y NPC de ocio no acreditan el motor equivalente | Pendiente | Reimplementar | #2: determinismo, límites, afinidades, acciones y uso por GM |
+| Generador NPC semilla/desafío | Taller standalone fusionado en #50: semilla, desafío, ficha, afinidades, economía de acciones e importación/exportación; no instancia NPC | Parcial: taller cubierto, integración pendiente | Sustituir por integración propia | #2: ejecución sobre candidato y, después, colocación/agendas/memoria |
 | Jerarquía cosmográfica, HYG, rutas y continuidades | Atlas base por sector | Parcial | Reimplementar | #1: carril Atlas reservado; prueba de viaje, importación y persistencia |
 | Plantillas nominales de nave | Catálogo actual de adaptaciones y exclusiones | Parcial/pendiente por declaración | Reimplementar diferencias | #2: filas automáticas con método no soportado o motivo de exclusión |
 | Cargueros dinámicos/expresiones no enumeradas | Fuera del alcance probado del catálogo actual | Pendiente | Reimplementar tras inventario | #2: configuraciones efectivas e IDs; no deducir completitud del recuento nominal |
@@ -35,6 +35,18 @@ Esta tabla es una vista del alcance inicial, no el inventario exhaustivo de cada
 | Integración en una mesa Foundry real | Contratos automáticos del cliente/HTTP | Parcial | Completar comprobación de producto | #5: versión real, permisos, navegador remoto, Journal y autonomía standalone |
 
 Las propuestas de dossier de sesión, replay/métricas, euskera, modo foto, triggers interiores y segunda pantalla están separadas como `scope: proposal`. No se usan para inflar el porcentaje de paridad ni para aumentar automáticamente el cierre de #1. Las demás ideas de §3 de #32 siguen en su issue; este inventario inicial no afirma haberlas desglosado todas.
+
+## Actualización del inventario NPC en 0.9.2
+
+El estado anterior de `npc-generator` como `pending` era obsoleto: el PR [#50](https://github.com/EspacioKoop/espaciokooplagunakRemake/pull/50) está fusionado e incorpora el taller standalone. El registro lo deja en `partial`, porque la evidencia enlazada al candidato no certifica por sí sola una ejecución específica del taller ni sus integraciones.
+
+Se separan tres capacidades que el taller no cubre y que no deben desaparecer dentro de una fila genérica:
+
+- `npc-scene-placement`: colocar NPC en escenas y conservar identidad.
+- `npc-dialogue-agenda`: conversaciones, agendas y decisiones.
+- `npc-memory-combat`: memoria, combate y consecuencias autoritativas.
+
+La frontera coincide con `docs/NPC_GENERADOR.md` y con la documentación de #50: generar/exportar una ficha no instancia actores, no ejecuta acciones, no modifica contactos ni añade memoria. Por eso no se marca `verified` ni se cierra la paridad del NPC sin ejecución sobre el SHA candidato y pruebas de esas integraciones.
 
 ## Catálogo de naves: evitar una falsa equivalencia
 
