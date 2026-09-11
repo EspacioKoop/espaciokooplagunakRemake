@@ -1,4 +1,4 @@
-name: Preview reconciled milestones (temporary)
+name: Apply separately reviewed milestones (temporary)
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: read
-  issues: read
+  issues: write
 
 concurrency:
   group: platino-milestones
@@ -17,17 +17,18 @@ env:
   PYTHONDONTWRITEBYTECODE: '1'
 
 jobs:
-  preview:
+  apply:
     if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/agent/72-platino-adoption'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: ${{ github.sha }}
+          ref: 1195c2575e8ee77c6108a4684679944026f0c1e0
           persist-credentials: false
-      - name: Verify reviewed source and reconciled configuration
+      - name: Verify immutable reviewed sources and reconciled plan
         run: |
+          test "$(git rev-parse HEAD)" = 1195c2575e8ee77c6108a4684679944026f0c1e0
           python3 - <<'PY'
           from pathlib import Path
           import hashlib, json
@@ -41,14 +42,25 @@ jobs:
           PY
           python3 -m unittest discover -s docs/platino/upstream/tests -v
           python3 tools/platino.py check .platino.json
-      - name: Read the reconciled plan without any write permission
+      - name: Apply only the five actions approved independently in issue 72 comment 5638604229
         env:
           GH_TOKEN: ${{ github.token }}
           GH_DEBUG: ''
-        run: python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake > "$RUNNER_TEMP/platino-preview.json"
+        run: |
+          mkdir -p "$RUNNER_TEMP/platino-applied"
+          python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake --apply --approve adc786ebef18aea2f1612e41b75816fd3836227791825f835daed9692481fee9 > "$RUNNER_TEMP/platino-applied/applied.json"
+          python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake > "$RUNNER_TEMP/platino-applied/after.json"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, os
+          after = json.loads((Path(os.environ['RUNNER_TEMP']) / 'platino-applied/after.json').read_text())
+          assert after['actions'] == [], 'Post-apply plan is not empty'
+          print('Verified: no remaining milestone actions. No game or release changes.')
+          PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
         with:
-          name: platino-preview-72
-          path: ${{ runner.temp }}/platino-preview.json
+          name: platino-applied-72
+          path: ${{ runner.temp }}/platino-applied/
           retention-days: 7
-          if-no-files-found: error
+          if-no-files-found: warn

@@ -217,6 +217,10 @@ Los resultados se consultan **por commit** en [Actions](https://github.com/Espac
 
 Antes de contribuir, lee [CONTRIBUTING.md](CONTRIBUTING.md) y [AGENTS.md](AGENTS.md). El trabajo paralelo se coordina mediante reservas en [#7](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/7), ramas propias y PR hacia `main`.
 
+## Normas y planificación
+
+La colaboración adopta [Normas Platino](docs/PLATINO_ADOPTION.md), con una revisión fijada y copia local. El [roadmap](docs/ROADMAP.md) separa paridad 1.0, gobernanza y propuestas futuras; las [milestones](https://github.com/EspacioKoop/espaciokooplagunakRemake/milestones) agrupan alcance, no certifican calidad ni publican versiones automáticamente. [Mapa e inventario del repositorio](docs/REPOSITORY_REVIEW.md).
+
 ## Documentación
 
 | Para… | Referencias |
