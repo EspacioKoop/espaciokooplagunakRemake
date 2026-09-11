@@ -1,4 +1,4 @@
-name: Preview reviewed milestones (temporary)
+name: Preview reconciled milestones (temporary)
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - name: Verify reviewed source and explicit configuration
+      - name: Verify reviewed source and reconciled configuration
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -37,34 +37,18 @@ jobs:
               raw = (Path('docs/platino/upstream') / item['path']).read_bytes()
               assert hashlib.sha256(raw).hexdigest() == item['sha256']
           assert hashlib.sha256(Path('docs/platino/upstream/scripts/platino.py').read_bytes()).hexdigest() == '62c9ea38a39d8bd7f994a1695f0e38ab2e7e0a3ef06cf1efba179034945f91b9'
-          assert hashlib.sha256(Path('.platino.json').read_bytes()).hexdigest() == '23bf27425059e339b48c1b54ba409898823d366d1541c5aba8bc97b7b65e632b'
+          assert hashlib.sha256(Path('.platino.json').read_bytes()).hexdigest() == '86fb4b9b1c6cbf0e5e73da82275bb50053e339ae44be89a33ee0aa2a81014b9c'
           PY
           python3 -m unittest discover -s docs/platino/upstream/tests -v
           python3 tools/platino.py check .platino.json
-      - name: Preserve only public milestone and issue-state metadata for conflict review
+      - name: Read the reconciled plan without any write permission
         env:
           GH_TOKEN: ${{ github.token }}
           GH_DEBUG: ''
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import json, os, runpy
-          ns = runpy.run_path('docs/platino/upstream/scripts/platino.py')
-          config = ns['load'](Path('.platino.json'))
-          state = ns['snapshot'](ns['GitHub']('EspacioKoop/espaciokooplagunakRemake'), config)
-          directory = Path(os.environ['RUNNER_TEMP']) / 'platino-preview'
-          directory.mkdir()
-          (directory / 'remote-state.json').write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-          PY
-      - name: Read the proposed plan without any write permission
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_DEBUG: ''
-        run: python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake > "$RUNNER_TEMP/platino-preview/platino-preview.json"
+        run: python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake > "$RUNNER_TEMP/platino-preview.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
         with:
           name: platino-preview-72
-          path: ${{ runner.temp }}/platino-preview/
+          path: ${{ runner.temp }}/platino-preview.json
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: error
