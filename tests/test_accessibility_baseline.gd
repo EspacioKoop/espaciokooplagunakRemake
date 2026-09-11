@@ -17,7 +17,8 @@ func _init() -> void:
 	check(settings.transition_duration(0.4) == 0.0, "reduced motion removes transition")
 	check(settings.snapshot()["reduced_motion"] == true, "snapshot exposes reduced motion")
 
-	var bus := SubtitleBusScript.new(settings)
+	var bus = SubtitleBusScript.new()
+	bus.settings = settings
 	var received := []
 	bus.subtitle_emitted.connect(func(text: String, source: String, duration: float): received.append([text, source, duration]))
 	check(bus.emit_notice("Puerta abierta", "Nave", 2.0), "subtitle notice accepted")
