@@ -41,14 +41,30 @@ jobs:
           PY
           python3 -m unittest discover -s docs/platino/upstream/tests -v
           python3 tools/platino.py check .platino.json
+      - name: Preserve only public milestone and issue-state metadata for conflict review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: ''
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, os, runpy
+          ns = runpy.run_path('docs/platino/upstream/scripts/platino.py')
+          config = ns['load'](Path('.platino.json'))
+          state = ns['snapshot'](ns['GitHub']('EspacioKoop/espaciokooplagunakRemake'), config)
+          directory = Path(os.environ['RUNNER_TEMP']) / 'platino-preview'
+          directory.mkdir()
+          (directory / 'remote-state.json').write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
       - name: Read the proposed plan without any write permission
         env:
           GH_TOKEN: ${{ github.token }}
           GH_DEBUG: ''
-        run: python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake > "$RUNNER_TEMP/platino-preview.json"
+        run: python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake > "$RUNNER_TEMP/platino-preview/platino-preview.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
         with:
           name: platino-preview-72
-          path: ${{ runner.temp }}/platino-preview.json
+          path: ${{ runner.temp }}/platino-preview/
           retention-days: 7
-          if-no-files-found: error
+          if-no-files-found: warn
