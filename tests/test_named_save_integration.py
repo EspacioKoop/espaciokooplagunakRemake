@@ -1,18 +1,26 @@
 from pathlib import Path
+import unittest
 
 
-def test_named_save_integration_contract():
-    root = Path(__file__).parents[1]
-    session = (root / "game/net/session.gd").read_text()
-    expedition = (root / "game/core/expedition_systems.gd").read_text()
-    app = (root / "game/ui/app.gd").read_text()
-    assert "restore_named_save" in session
-    assert "NamedSaveStore.capture" in session
-    assert "checkpoint_cursor" in expedition
-    assert "Guardados de campaña" in app
+class NamedSaveIntegrationTests(unittest.TestCase):
+    def setUp(self):
+        self.root = Path(__file__).parents[1]
+
+    def test_named_save_integration_contract(self):
+        session = (self.root / "game/net/session.gd").read_text()
+        expedition = (self.root / "game/core/expedition_systems.gd").read_text()
+        app = (self.root / "game/ui/app.gd").read_text()
+
+        self.assertIn("restore_named_save", session)
+        self.assertIn("NamedSaveStore.capture", session)
+        self.assertIn("checkpoint_cursor", expedition)
+        self.assertIn("Guardados de campaña", app)
+
+    def test_named_save_never_loads_on_client_or_host(self):
+        text = (self.root / "game/net/session.gd").read_text()
+        self.assertIn('if mode == "client"', text)
+        self.assertIn('if mode == "host"', text)
 
 
-def test_named_save_never_loads_on_client_or_host():
-    text = (Path(__file__).parents[1] / "game/net/session.gd").read_text()
-    assert 'if mode == "client"' in text
-    assert 'if mode == "host"' in text
+if __name__ == "__main__":
+    unittest.main()

@@ -29,6 +29,10 @@ jobs:
         run: python3 tools/check_locale_coverage.py --require-complete
       - name: Verify parity evidence registry
         run: python3 tools/check_parity_evidence.py
+      - name: Download verified Godot toolchain
+        run: python3 tools/bootstrap.py --templates
+      - name: Import resources
+        run: .toolchain/godot --headless --editor --path game --quit
       - name: Verify issue 32 closeout feature runners
         run: |
           python3 tests/test_scenario_corpus.py
@@ -43,10 +47,6 @@ jobs:
         run: |
           python3 tests/release_092/prepare.py --check
           python3 -m unittest discover -s tests/release_092 -p test_runner.py -v
-      - name: Download verified Godot toolchain
-        run: python3 tools/bootstrap.py --templates
-      - name: Import resources
-        run: .toolchain/godot --headless --editor --path game --quit
       - name: Verify embedded acceptance dispatch and inactive normal startup
         run: python3 -m unittest discover -s tests/release_092 -p test_dispatch.py -v
       - name: Complete campaign and validate saves
