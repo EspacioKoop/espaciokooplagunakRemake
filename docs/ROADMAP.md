@@ -1,83 +1,55 @@
 # Roadmap de Espaciokoop Lagunak Remake
 
-[Inicio](../README.md) · [Normas adoptadas](PLATINO_ADOPTION.md) · [Paridad](FEATURE_PARITY.md) · [Registro de evidencias](parity/README.md)
+[Inicio](../README.md) · [Normas adoptadas](PLATINO_ADOPTION.md) · [Paridad](FEATURE_PARITY.md) · [Evidencias](parity/README.md)
 
-**Decisión de planificación: 11/09/2026, #72, a petición de Varo.** No es una segunda cola diaria ni un porcentaje de calidad. [#1](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1) prioriza, [#7](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/7) reserva y cada issue mantiene su aceptación íntegra. La asignación de una tarea a un hito no cambia su estado ni autoriza editarla.
+**Planificación del 11/09/2026, #72, a petición de Varo.** [#1](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1) prioriza, [#7](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/7) reserva y cada issue conserva su aceptación. El roadmap no es una segunda cola ni un porcentaje de calidad.
 
-## Base publicada, no una promesa de paridad
+## Reconciliación con los hitos existentes
 
-[v0.9.2](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/tag/v0.9.2), commit `f2015279bb7a8c307352a9526d1942a9df047ac4`, es el checkpoint utilizado por esta revisión. La publicación del 11/09/2026 y sus comprobaciones se registran en [#67](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/67). La CI canónica de ese main es [34615686998](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/34615686998); no acredita una revisión posterior.
+La lectura inicial estaba vacía. Durante esta adopción otra sesión creó cuatro milestones y asignó issues. La [vista previa](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/34628977620) abortó sin escrituras ante ese cambio. La [lectura posterior](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/34629465154) permitió conservar sus títulos, descripciones y asignaciones, sin imponer la propuesta anterior de `v1.0.0` ni duplicar hitos.
 
-Linux y Windows son líneas de empaquetado existentes. macOS/Android y Foundry real conservan sus criterios de validación física. La capacidad de exportar debe estar lista **antes** de comprometer la primera release de una plataforma; no se promete un APK por existir un preset.
+[`.platino.json`](../.platino.json) reproduce las cuatro descripciones manuales exactamente; no añade marcador ni toma su propiedad. Sólo añade dos hitos faltantes y asignaciones aún vacías. Otros issues ya asociados a los hitos permanecen intactos aunque no estén enumerados en el manifiesto. El estado efectivo y la aplicación verificada se registran en [#72](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/72).
 
-No se crean milestones retrospectivos vacíos para simular seguimiento histórico. Las releases previas se conservan sin reetiquetar. Una siguiente versión de pruebas requiere su propio corte y decisión: este roadmap no inventa una 0.9.3 ni fecha para la 1.0.
+| Milestone | Ámbito y asignaciones contempladas por el manifiesto | Exclusiones y salida |
+| --- | --- | --- |
+| **1.0 — Paridad funcional** (existente #1) | Objetivo global, aceptación del conjunto y regresión de terminales #29. Los issues #1/#32 siguen siendo las referencias transversales. | No basta cerrar estos issues ni ver una barra al 100 %. Salida G0–G3, candidato exacto, aceptación y publicación autorizada. |
+| **Cosmografía y navegación** (existente #2) | Catálogo jerárquico, persistencia, navegación y decisiones de #59; conserva su asignación. | Un parser, modelo o laboratorio no demuestra navegación integrada. Salida: contratos aprobados, integración y pruebas; la discusión 6DOF no aprueba todas sus propuestas. |
+| **Contenido y catálogo** (existente #3) | #2: edición, dependencias, formatos y migración; #3: avatar, poses, presencia y mesas; #6: interiores/social/arte/audio. | No rehacer funciones ya integradas ni dar por migrado todo el original. Salida: aceptación de cada issue, recursos utilizables y evidencia de consumo desde el ejecutable. |
+| **Plataforma y publicación** (existente #4) | #4: controles, localización, accesibilidad y plataformas; #5: integraciones opcionales; #30: decisiones de segunda pantalla Android. | Foundry no se convierte en núcleo. APK/preset/segunda pantalla no equivalen a port validado. Salida por alcance aprobado, paquetes y validación física exigida; #30 no impone una release. |
+| **Adopción Normas Platino** (nuevo) | #72: copia revisada, instrucciones, roadmap, sincronización explícita, pruebas e inventario. | Sin cambios de juego, release ni Projects. Salida: PR revisado e integrado, validación del candidato y sincronización remota verificada. |
+| **Diseño futuro — decisiones sin release** (nuevo) | #33: Big Walk; #71: PULSAR. Son debates aún sin hito, no compromisos de implementación. | Sin fecha/versiones, copia de recursos ajenos ni requisitos nuevos impuestos a 1.0. Salida: decisiones explícitas, riesgos/dependencias y tareas de seguimiento aprobadas o aplazadas. |
 
-## Fase A — Adopción Normas Platino
+Los números de milestone e issue son espacios distintos: «milestone #1» no significa «issue #1». Los dos hitos nuevos no reciben número supuesto antes de crearse. La asignación de #30/#59 a hitos temáticos se respeta y **no convierte sus ideas en funciones aprobadas**.
 
-**Milestone:** `Adopción Normas Platino`. **Tipo:** gobernanza, sin release del juego. **Issue:** [#72](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/72).
+## Base publicada y secuencia
 
-Incluye revisión central fijada, copia local íntegra, instrucciones coherentes para humanos/agentes, este roadmap, configuración explícita, sincronizador con aprobación, pruebas y mapa/inventario del repositorio. Depende de las reservas y del examen de fuentes; no bloquea el trabajo independiente de jugabilidad.
+[v0.9.2](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/tag/v0.9.2), commit `f2015279bb7a8c307352a9526d1942a9df047ac4`, es el corte estudiado. Su entrega está registrada en [#67](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/67), con CI canónica [34615686998](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/34615686998). Esa ejecución no acredita un candidato posterior; main y release pueden diferir.
 
-Excluye cambiar mecánicas, renunciar a requisitos del original, modificar paquetes publicados, activar Projects o otorgar autorización de merge/publicación.
+Primero se completa el inventario original→remake y se resuelven decisiones de modelo/contenido. Después se integran capacidades jugables con evidencia; finalmente se acepta y distribuye el conjunto. Se permite avanzar en paralelo sólo con archivos y contratos independientes. Cosmografía depende de catálogo, persistencia, navegación y proyecciones; plataformas e integraciones pueden validarse en paralelo sin declarar completo el núcleo. Gobernanza no bloquea esos carriles independientes.
 
-**Salida observable:** PR revisado e integrado, pruebas identificadas sobre el candidato, normas y rutas accesibles, plan de milestones revisado y aplicación remota verificada. Una rama con archivos preparados es una entrega propuesta, no la finalización de la adopción.
+Linux/Windows tienen líneas de empaquetado existentes. macOS/Android y Foundry real conservan sus criterios físicos. La capacidad de exportar debe estar preparada antes de comprometer la primera release de una plataforma. No se crean hitos retrospectivos vacíos, una 0.9.3 ficticia ni fechas para completar el tablero. Las releases publicadas son inmutables.
 
-## Fase B — v1.0.0: paridad funcional demostrable
+## Criterios de salida de la 1.0: G0–G3
 
-**Milestone:** `v1.0.0`. **Tipo:** objetivo de producto/release, sin fecha comprometida.
-
-La asignación inicial usa los carriles que ya describen aceptación de paridad, no búsquedas por palabras en títulos:
-
-| Issue | Trabajo que aporta al objetivo, conservando lo ya integrado |
+| Gate | Evidencia del candidato exacto |
 | --- | --- |
-| [#2](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/2) | Edición, contenido, dependencias, importación/exportación y migración pendiente |
-| [#3](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/3) | Avatar, poses, presencia y mesas; no rehacer asientos/autenticación ya integrados |
-| [#4](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/4) | Controles y remapeo restantes, localización, accesibilidad y plataformas con validación real |
-| [#5](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/5) | Integraciones opcionales y sus criterios pendientes; Foundry nunca es el núcleo |
-| [#6](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/6) | Interiores/social/arte/audio restantes, interacción real y recursos editables |
-| [#29](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/29) | Regresión de terminales y confirmación humana pendiente; la CI de #68 no inventa el playtest del informante |
+| G0 — Integridad de plataforma | Build, importación, suites, red, guardados y paquetes de cada plataforma comprometida; ningún fallo ocultado. |
+| G1 — Paridad de modelo | Inventario completo del original, equivalencias y decisiones autorizadas; esquemas, dependencias, migraciones y round-trip. |
+| G2 — Paridad jugable | Capacidades utilizables de punta a punta desde el standalone; positivos y negativos reproducibles, no sólo botones, modelos o pruebas de un parser. |
+| G3 — Paridad de producto | Contenido/arte/audio, localización/accesibilidad, integraciones opcionales reales y validaciones físicas/humanas exigidas. |
 
-**No es un inventario exhaustivo de paridad.** #1 y #32 conservan los pendientes transversales de cosmografía, navegación, dirección, contenido y modelo. Al subdividirlos se añaden tareas independientes a la versión mediante decisión registrada, sin mover una tarea previamente asignada a escondidas. El porcentaje de estas seis asignaciones no mide el estado completo de la 1.0.
-
-La secuencia técnica prioriza inventario original→remake y decisiones de contenido/modelo; después, integración jugable y su evidencia; por último, aceptación del conjunto y distribución. Se puede avanzar en paralelo sólo con archivos y contratos independientes. La cosmografía enlaza persistencia, catálogo y navegación; un parser aislado no completa esos contratos. Las plataformas e integraciones se pueden validar en paralelo sin declarar terminado el núcleo.
-
-### Criterios de salida G0–G3
-
-| Gate | Evidencia necesaria en el candidato exacto |
-| --- | --- |
-| G0 — Integridad de plataforma | Build, importación, suites, red, guardados, paquetes y validaciones de cada plataforma comprometida, sin ocultar fallos |
-| G1 — Paridad de modelo | Inventario completo del original, equivalencias y decisiones autorizadas, esquemas/dependencias/migraciones y round-trip |
-| G2 — Paridad jugable | Capacidades accesibles y utilizables de punta a punta desde el standalone; interacciones y negativos reproducibles, no sólo botones o modelos |
-| G3 — Paridad de producto | Contenido/arte/audio, localización/accesibilidad, integraciones opcionales reales y validaciones físicas/humanas exigidas |
-
-Los gates proceden de [la revisión de #1](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1#issuecomment-5622983070) y del seguimiento #32. El verificador existente se usa así:
+Los gates proceden de [la revisión de #1](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1#issuecomment-5622983070) y #32. No se sustituyen por las agrupaciones temáticas de milestones. La aceptación íntegra de #2–#6 y los requisitos transversales siguen vigentes; esta adopción no concede renuncias.
 
 ```sh
 python3 tools/check_parity_evidence.py --require-complete --candidate SHA_COMPLETO_DEL_CANDIDATO
 ```
 
-El registro debe tener cobertura completa y evidencia consistente; además se comprueban los resultados reales de las pruebas, no sólo la forma de sus enlaces. Un `0` estructural no reemplaza CI, revisión, instalación o playtest. `coverage.complete=false` bloquea el cierre global.
+Se comprueba la cobertura y también las evidencias reales, no sólo la forma de los enlaces. `coverage.complete=false` bloquea el cierre global. Una salida estructural correcta no sustituye CI, instalación ni playtest. #29 conserva la confirmación del informante aunque pase la aceptación automatizada del ZIP.
 
-Después de G0–G3: revisión del alcance/exclusiones, autorización de publicación, artefactos identificados y verificables, notas/compatibilidad y comprobación de la release realmente publicada. **No se cierra #1, #32 o el milestone por suma de PRs, una barra al 100 % o la existencia de un tag.** Una renuncia de producto necesita aprobación explícita; esta adopción no concede ninguna.
+Después de G0–G3 se revisan alcance y exclusiones, autorización de publicación, artefactos/hashes, notas y compatibilidad, instalación/recorrido y la release realmente publicada. **Ni una barra al 100 %, ni un tag, ni una suma de PRs autoriza cerrar la paridad.**
 
-## Fase C — Diseño futuro: decisiones sin release
+## Referencias permanentes, triaje y mantenimiento
 
-**Milestone:** `Diseño futuro — decisiones sin release`. **Tipo:** investigación y decisiones, no compromiso de implementar todas las ideas ni de publicar una versión.
+#1/#32 conservan plan y análisis transversales; #7 sigue siendo el registro único; [#52](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/52) es la biblioteca permanente. No se cierran ni reasignan por esta adopción. [#56](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/56) necesita reconciliar su aceptación con los packs/laboratorios; no se declara terminado ni se le inventa versión. Los PR #69/#70 no se tratan como issues de planificación ni se atribuyen al corte 0.9.2.
 
-Incluye [#30](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/30) (segunda pantalla Android), [#33](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/33) (ideas de cooperación de Big Walk), [#59](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/59) (navegación 3D/6DOF) y [#71](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/71) (inspiración PULSAR). Sus cuerpos separan propuestas y funcionalidades aprobadas; esta agrupación conserva esa distinción.
-
-Dependencias: decisiones de arquitectura/autoridad/UX de cada debate, límites actuales del juego y compatibilidad con la paridad. La navegación 6DOF requiere revisar el modelo planar, persistencia, proyecciones y colisiones; modelos 3D o laboratorios planetarios no aportan por sí solos ese sistema. Android de segunda pantalla tampoco equivale al port completo.
-
-Excluye imponer estas mecánicas a 1.0, copiar recursos ajenos, cambiar los ocho puestos por los de otro juego, crear fechas o ejecutar cambios sin un issue de implementación y su reserva.
-
-**Salida observable:** cada debate deja decisión explícita (aceptar alcance concreto, posponer o descartar con motivo), riesgos/dependencias y seguimiento enlazado. Cerrar un debate de diseño no acredita implementación. Una idea aprobada pasa a una tarea y entrega decididas aparte.
-
-## Referencias permanentes y triaje pendiente
-
-#1 y #32 son plan/análisis transversales; #7 es el registro; [#52](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/52) es el índice permanente de biblioteca. No se utilizan para inflar milestones ni se cierran por esta adopción.
-
-[#56](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/56), laboratorio/pack planetario, necesita reconciliar su aceptación con las entregas ya publicadas. Se deja sin versión nueva, no descartado ni declarado terminado. Los PR #69/#70 no se asignan como si fueran issues de planificación y no se atribuyen al corte 0.9.2. Cualquier estado posterior se consulta en GitHub.
-
-## Mantenimiento
-
-[`.platino.json`](../.platino.json) es la lista técnica de estas decisiones; las reglas de aplicación viven en [la ficha](PLATINO_ADOPTION.md). Añadir/cambiar alcance necesita reserva y una justificación en el issue; un cambio de versión ya asignada se resuelve manualmente, no por heurísticas. Las fechas son opcionales y sólo se añaden si se han comprometido. La coherencia entre fuentes importa más que rellenar todo el tablero.
+La [ficha de adopción](PLATINO_ADOPTION.md) explica preview, aprobación por huella y escritor único. Cambiar alcance requiere reserva y decisión registrada. Cambiar una asignación existente se resuelve de forma explícita, no mediante heurísticas; quitarla del manifiesto no la elimina del remoto. Las fechas sólo se añaden cuando exista un compromiso real. Revertir archivos no revierte automáticamente los metadatos.

@@ -1,13 +1,25 @@
-name: Apply separately reviewed milestones (temporary)
+name: Sync explicitly approved milestones
 
 on:
-  push:
-    branches: [agent/72-platino-adoption]
-    paths: [.github/workflows/platino-sync.yml]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Preview is read-only; apply requires a separately reviewed approval
+        type: choice
+        options: [preview, apply]
+        default: preview
+        required: true
+      expected_sha:
+        description: Exact reviewed main commit (40 hexadecimal characters)
+        type: string
+        required: true
+      approval:
+        description: SHA-256 approval from the reviewed preview; empty for preview
+        type: string
+        required: false
 
 permissions:
   contents: read
-  issues: write
 
 concurrency:
   group: platino-milestones
@@ -15,52 +27,83 @@ concurrency:
 
 env:
   PYTHONDONTWRITEBYTECODE: '1'
+  TARGET_REPO: EspacioKoop/espaciokooplagunakRemake
+  EXPECTED_SHA: ${{ inputs.expected_sha }}
+  APPROVAL: ${{ inputs.approval }}
 
 jobs:
-  apply:
-    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/agent/72-platino-adoption'
+  preview:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/main' && inputs.mode == 'preview'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: 1195c2575e8ee77c6108a4684679944026f0c1e0
+          ref: ${{ github.sha }}
           persist-credentials: false
-      - name: Verify immutable reviewed sources and reconciled plan
+      - name: Require exact reviewed main and no approval in preview
         run: |
-          test "$(git rev-parse HEAD)" = 1195c2575e8ee77c6108a4684679944026f0c1e0
-          python3 - <<'PY'
-          from pathlib import Path
-          import hashlib, json
-          lock = json.loads(Path('docs/platino/upstream-lock.json').read_text())
-          assert lock['commit'] == 'b5e01a2b2060a31268507797708a92a7d14ffc52'
-          for item in lock['files']:
-              raw = (Path('docs/platino/upstream') / item['path']).read_bytes()
-              assert hashlib.sha256(raw).hexdigest() == item['sha256']
-          assert hashlib.sha256(Path('docs/platino/upstream/scripts/platino.py').read_bytes()).hexdigest() == '62c9ea38a39d8bd7f994a1695f0e38ab2e7e0a3ef06cf1efba179034945f91b9'
-          assert hashlib.sha256(Path('.platino.json').read_bytes()).hexdigest() == '86fb4b9b1c6cbf0e5e73da82275bb50053e339ae44be89a33ee0aa2a81014b9c'
-          PY
+          python3 - <<'PYCODE'
+          import os, re, subprocess
+          sha = os.environ['EXPECTED_SHA']
+          assert re.fullmatch('[0-9a-f]{40}', sha), 'Invalid expected SHA'
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == sha, 'Candidate changed'
+          assert not os.environ['APPROVAL'], 'Preview must not approve a write'
+          PYCODE
           python3 -m unittest discover -s docs/platino/upstream/tests -v
+          python3 -m unittest discover -s tests/platino -v
           python3 tools/platino.py check .platino.json
-      - name: Apply only the five actions approved independently in issue 72 comment 5638604229
+      - name: Read explicit plan (no writes)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: ''
+        run: python3 tools/platino.py sync .platino.json --repo "$TARGET_REPO" > "$RUNNER_TEMP/platino-preview.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: platino-preview
+          path: ${{ runner.temp }}/platino-preview.json
+          retention-days: 7
+          if-no-files-found: error
+  apply:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/main' && inputs.mode == 'apply'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Check candidate and separately supplied approval before any write
+        run: |
+          python3 - <<'PYCODE'
+          import os, re, subprocess
+          sha = os.environ['EXPECTED_SHA']
+          assert re.fullmatch('[0-9a-f]{40}', sha), 'Invalid expected SHA'
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == sha, 'Candidate changed'
+          assert re.fullmatch('[0-9a-f]{64}', os.environ['APPROVAL']), 'A reviewed preview approval is required'
+          PYCODE
+          python3 -m unittest discover -s docs/platino/upstream/tests -v
+          python3 -m unittest discover -s tests/platino -v
+          python3 tools/platino.py check .platino.json
+      - name: Re-read, apply approved plan and verify remote state
         env:
           GH_TOKEN: ${{ github.token }}
           GH_DEBUG: ''
         run: |
-          mkdir -p "$RUNNER_TEMP/platino-applied"
-          python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake --apply --approve adc786ebef18aea2f1612e41b75816fd3836227791825f835daed9692481fee9 > "$RUNNER_TEMP/platino-applied/applied.json"
-          python3 tools/platino.py sync .platino.json --repo EspacioKoop/espaciokooplagunakRemake > "$RUNNER_TEMP/platino-applied/after.json"
-          python3 - <<'PY'
-          from pathlib import Path
-          import json, os
-          after = json.loads((Path(os.environ['RUNNER_TEMP']) / 'platino-applied/after.json').read_text())
-          assert after['actions'] == [], 'Post-apply plan is not empty'
-          print('Verified: no remaining milestone actions. No game or release changes.')
-          PY
+          python3 tools/platino.py sync .platino.json --repo "$TARGET_REPO" --apply --approve "$APPROVAL" > "$RUNNER_TEMP/platino-applied.json"
+          python3 tools/platino.py sync .platino.json --repo "$TARGET_REPO" > "$RUNNER_TEMP/platino-after.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: platino-applied-72
-          path: ${{ runner.temp }}/platino-applied/
+          name: platino-sync-result
+          path: |
+            ${{ runner.temp }}/platino-applied.json
+            ${{ runner.temp }}/platino-after.json
           retention-days: 7
           if-no-files-found: warn

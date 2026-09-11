@@ -1,0 +1,41 @@
+name: Validar Normas Platino
+
+on:
+  push:
+    paths:
+      - '.platino.json'
+      - 'scripts/platino.py'
+      - 'tests/test_platino.py'
+      - 'docs/NORMAS_PLATINO.md'
+      - 'docs/normas-platino/**'
+      - 'templates/**'
+      - '.github/workflows/validar-normas-platino.yml'
+  pull_request:
+    paths:
+      - '.platino.json'
+      - 'scripts/platino.py'
+      - 'tests/test_platino.py'
+      - 'docs/NORMAS_PLATINO.md'
+      - 'docs/normas-platino/**'
+      - 'templates/**'
+      - '.github/workflows/validar-normas-platino.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Validar manifiesto sin red
+        run: python3 scripts/platino.py check .platino.json
+      - name: Ejecutar pruebas del validador
+        run: python3 -m unittest tests/test_platino.py -v
+      - name: Comprobar espacios en blanco
+        run: git diff --check

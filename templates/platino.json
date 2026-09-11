@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "repository": "equipo/demo",
+  "milestones": [
+    {
+      "title": "v1.0.0",
+      "description": "Entrega comprobable.",
+      "issues": [10]
+    }
+  ]
+}

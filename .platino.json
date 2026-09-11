@@ -6,13 +6,15 @@
       "title": "1.0 — Paridad funcional",
       "description": "Cerrar la paridad funcional pendiente del remake con una campaña standalone verificable, conservando el plan maestro #1 como autoridad y sin presentar un check histórico como certificación de 1.0.",
       "issues": [
-        29
+        29,
+        32
       ]
     },
     {
       "title": "Cosmografía y navegación",
       "description": "Construir la cosmografía standalone y la navegación espacial pendiente, con aterrizaje, atraque, desembarco, conexiones, procedencia y pruebas reproducibles cuando el alcance quede aprobado.",
       "issues": [
+        56,
         59
       ]
     },
@@ -22,7 +24,8 @@
       "issues": [
         2,
         3,
-        6
+        6,
+        52
       ]
     },
     {

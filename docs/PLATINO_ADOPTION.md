@@ -55,9 +55,9 @@ La referencia del juego continúa siendo [Verify and package standalone](../.git
 
 La [release v0.9.2](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/tag/v0.9.2) tiene como referencia histórica `f2015279bb7a8c307352a9526d1942a9df047ac4`. La adopción no modifica esos paquetes ni convierte un main posterior en una release. Para una publicación nueva se requiere alcance aceptado, candidato exacto, controles exigidos, paquetes/hashes, instalación y recorrido requeridos, limitaciones y autorización.
 
-## Milestones: uso explícito, no un bot de aceptación
+## Sincronizar milestones
 
-Configuración: [`.platino.json`](../.platino.json). Las asignaciones y exclusiones se explican en el [roadmap](ROADMAP.md). La sincronización sólo escribe en este repositorio. El único escritor es quien tenga el CLAIM vigente para esos metadatos en #7; no se crea un propietario perpetuo.
+Configuración: [`.platino.json`](../.platino.json). Las asignaciones y exclusiones se explican en el [roadmap](ROADMAP.md). El plan inicial de tres hitos se sustituyó al detectar cuatro milestones creadas por otra sesión: se conservan sus metadatos y asignaciones, y sólo se añaden gobernanza y debates aún sin hito. Las cuatro existentes siguen siendo manuales; la herramienta no añade su marcador ni toma su propiedad. La sincronización sólo escribe en este repositorio. El único escritor es quien tenga el CLAIM vigente para esos metadatos en #7; no se crea un propietario perpetuo.
 
 ```sh
 # Validación sin red ni gh.

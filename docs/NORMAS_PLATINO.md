@@ -1,0 +1,7 @@
+# Adopción de Normas Platino
+
+La ficha completa y vigente está en [PLATINO_ADOPTION.md](PLATINO_ADOPTION.md); el alcance y los seis hitos en [ROADMAP.md](ROADMAP.md), y el mapa técnico y sus límites en [REPOSITORY_REVIEW.md](REPOSITORY_REVIEW.md). El plan sigue siendo el issue #1 y el único registro de reservas el #7. Esta ruta conserva los enlaces de la adopción inicial integrada en `5f032f60122be6d53c4b6b505678e6c585ad0eb1`.
+
+Se mantiene la misma revisión central: `EspacioKoop/normas_platino@b5e01a2b2060a31268507797708a92a7d14ffc52`. La [copia íntegra](platino/README.md) contiene los 13 archivos originales con hashes verificables. Las rutas iniciales `docs/normas-platino/`, `scripts/platino.py`, `tests/test_platino.py`, sus plantillas y su workflow se conservan para no romper consumidores existentes; no son otra fuente de decisiones. Las pruebas locales comprueban que el CLI inicial sigue siendo idéntico al de la copia fijada.
+
+La ampliación de #72 aporta instrucciones coherentes, inventario reproducible, pruebas adicionales y un workflow manual con SHA esperado y aprobación separada. No concede permiso de merge/publicación ni certifica paridad 1.0. La aplicación verificada de los hitos #5/#6 está registrada en la [ejecución 34630623628](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/34630623628); los cuatro hitos anteriores y sus asignaciones se conservaron sin modificaciones. El manifiesto final conserva también #32/#56/#52 de la adopción inicial: agrupar referencias permanentes no autoriza cerrarlas automáticamente.

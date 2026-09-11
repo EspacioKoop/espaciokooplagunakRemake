@@ -9,7 +9,7 @@ Juego nativo de exploración espacial cooperativa construido en **Godot**, con g
 
 **Standalone-first:** jugar, guardar, editar contenido y alojar partidas no requiere Foundry, una cuenta externa ni servicios de nube. Foundry es un adaptador opcional.
 
-[Descargar](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/latest) · [Primeros pasos](#primeros-pasos) · [Capturas](#capturas-reales) · [Documentación](#documentación) · [Plan de desarrollo](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1)
+[Descargar](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/latest) · [Primeros pasos](#primeros-pasos) · [Capturas](#capturas-reales) · [Documentación](#documentación) · [Plan de desarrollo](docs/ROADMAP.md) · [Normas Platino](docs/NORMAS_PLATINO.md)
 
 ![Puente tridimensional de la Itsaso, con puestos de control y espacio recorrible](docs/images/04_cubierta.png)
 
@@ -216,10 +216,6 @@ El [workflow canónico](.github/workflows/release.yml) comprueba campaña, guard
 Los resultados se consultan **por commit** en [Actions](https://github.com/EspacioKoop/espaciokooplagunakRemake/actions); esta página no sustituye los registros de CI ni da por aprobada una revisión nueva. [Comandos y límites de validación](docs/VALIDATION.md).
 
 Antes de contribuir, lee [CONTRIBUTING.md](CONTRIBUTING.md) y [AGENTS.md](AGENTS.md). El trabajo paralelo se coordina mediante reservas en [#7](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/7), ramas propias y PR hacia `main`.
-
-## Normas y planificación
-
-La colaboración adopta [Normas Platino](docs/PLATINO_ADOPTION.md), con una revisión fijada y copia local. El [roadmap](docs/ROADMAP.md) separa paridad 1.0, gobernanza y propuestas futuras; las [milestones](https://github.com/EspacioKoop/espaciokooplagunakRemake/milestones) agrupan alcance, no certifican calidad ni publican versiones automáticamente. [Mapa e inventario del repositorio](docs/REPOSITORY_REVIEW.md).
 
 ## Documentación
 
