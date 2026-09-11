@@ -22,6 +22,7 @@ var _last_role = ""
 var _target_menu: OptionButton
 var _ambient: AudioStreamPlayer
 var _effects: AudioStreamPlayer
+var _sound_captions: SoundCaptions
 var _preferences = {"volume": 65.0, "motion": false, "text_scale": 1.0, "fullscreen": false}
 var _clock = 0.0
 var _toast_until = 0.0
@@ -46,6 +47,8 @@ func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	_make_audio()
 	_build_shell()
+	_sound_captions = SoundCaptions.new()
+	add_child(_sound_captions)
 	Session.notice.connect(_notice)
 	Session.updated.connect(_refresh)
 	Session.joined.connect(func():
@@ -832,6 +835,7 @@ func _settings() -> void:
 		theme = ConsoleUI.make_theme()
 		_save_preferences()
 		_go("settings"))
+	options.add_child(ConsoleUI.button("Subtítulos de avisos sonoros…", _sound_captions.open_settings))
 	options.add_child(ConsoleUI.button("Guardar partida ahora", _manual_save, true))
 	options.add_child(ConsoleUI.button("Salir del juego", _quit))
 	var help_card = ConsoleUI.card(body, "CONTROL Y ACCESIBILIDAD")
@@ -959,9 +963,13 @@ func _make_audio() -> void:
 	_apply_audio()
 
 func _play_effect(name: String) -> void:
+	var cue = name if SoundCaptionQueue.CUES.has(name) else "confirm"
+	var path = "res://assets/audio/" + cue + ".wav"
+	if not ResourceLoader.exists(path):
+		cue = "confirm"
+		path = "res://assets/audio/confirm.wav"
+	if _sound_captions != null: _sound_captions.present(cue)
 	if _effects == null or "--test" in OS.get_cmdline_user_args(): return
-	var path = "res://assets/audio/" + name + ".wav"
-	if not ResourceLoader.exists(path): path = "res://assets/audio/confirm.wav"
 	_effects.stream = load(path)
 	_effects.play()
 
