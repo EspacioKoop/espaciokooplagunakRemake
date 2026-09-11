@@ -2,11 +2,11 @@
   "version": 1,
   "source_repository": "EspacioKoop/espaciokooplagunak",
   "source_revision": "fecd0740545f485d2402c6dfe4b47d5a859cb96c",
-  "remake_revision": "d7e5f300a8ca053b1b67fb394828e53934ae592c",
+  "remake_revision": "457756db2257fc887146d793a9c2352f94904b29",
   "coverage": {
     "complete": false,
     "review": "https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/32",
-    "note": "Registro reconciliado contra candidato@d7e5f300: implementaciones y pruebas locales presentes, pero el inventario original no es exhaustivo y quedan filas parciales/pending y playtest humano pendiente."
+    "note": "Registro reconciliado contra candidato@457756db: implementaciones y pruebas locales presentes, pero el inventario original no es exhaustivo y quedan filas parciales/pending y playtest humano pendiente."
   },
   "catalogs": [
     {
