@@ -1,0 +1,22 @@
+name: Accessibility baseline
+
+on:
+  pull_request:
+    paths:
+      - "game/core/accessibility_settings.gd"
+      - "game/ui/accessibility/**"
+      - "tests/test_accessibility_baseline.gd"
+      - "docs/ACCESSIBILITY_BASELINE.md"
+      - ".github/workflows/accessibility-baseline.yml"
+  workflow_dispatch:
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.3.0
+          includeถึง: true
+      - run: godot --headless --path game --script res://../tests/test_accessibility_baseline.gd
