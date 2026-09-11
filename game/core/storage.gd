@@ -32,7 +32,7 @@ static func validate_state(value: Variant) -> String:
 		if not authored.any(func(mission): return mission == value.mission): return "La misión no pertenece al documento de campaña guardado."
 	for k in ["campaign", "facts", "ship", "scan", "repair"]:
 		if not value[k] is Dictionary: return "Objeto inválido: " + k
-	if not value.contacts is Array or value.contacts.size() != value.mission.contacts.size() or not value.events is Array or value.events.size() > 200: return "Contactos o bitácora inválidos."
+	if not value.contacts is Array or not value.events is Array or value.events.size() > 200: return "Contactos o bitácora inválidos."
 	if not Catalog.finite_number(value.objective) or value.objective < 0 or value.objective > value.mission.objectives.size() or value.objective != floorf(value.objective): return "Objetivo inválido."
 	for k in ["time", "sequence"]:
 		if not Catalog.finite_number(value[k]) or value[k] < 0: return "Contador inválido."
@@ -95,8 +95,8 @@ static func validate_state(value: Variant) -> String:
 		if c.kind not in Catalog.CONTACT_KINDS or not SpacePhysics.validate_contact(c).is_empty(): return "Objeto espacial dañado."
 	var pickup_error = SpacePickups.validate_state(value)
 	if not pickup_error.is_empty(): return pickup_error
-	for original in value.mission.contacts:
-		if original.id not in ids: return "Contacto de misión ausente."
+	var scene_error = GMLiveState.validate(value)
+	if not scene_error.is_empty(): return scene_error
 	for id in [ship.autopilot, ship.docked, value.scan.target]:
 		if not id.is_empty() and id not in ids: return "Referencia de contacto inválida."
 	if value.repair.system != "" and value.repair.system not in Catalog.SYSTEMS: return "Reparación inválida."
@@ -135,11 +135,15 @@ static func read_state(path: String = "user://campaign.json") -> Dictionary:
 	if file.get_length() > MAX_BYTES:
 		file.close()
 		return {"error": "Guardado demasiado grande."}
-	var envelope = JSON.parse_string(file.get_as_text())
+	var parser = JSON.new()
+	var parse_error = parser.parse(file.get_as_text())
 	file.close()
+	if parse_error != OK: return {"error": "Cabecera de guardado inválida."}
+	var envelope = parser.data
 	if not envelope is Dictionary or envelope.get("format") != "lagunak-save" or envelope.get("version") != 1 or not envelope.get("payload") is String or not envelope.get("sha256") is String: return {"error": "Cabecera de guardado inválida."}
 	if envelope.payload.sha256_text() != envelope.sha256: return {"error": "La integridad del guardado no coincide."}
-	var state = JSON.parse_string(envelope.payload)
+	if parser.parse(envelope.payload) != OK: return {"error": "Contenido de guardado inválido."}
+	var state = parser.data
 	var issue = validate_state(state)
 	if issue.is_empty():
 		ShipModel.initialize(state)

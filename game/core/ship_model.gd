@@ -145,11 +145,24 @@ static func validate_ship(ship: Dictionary) -> String:
  if not error.is_empty(): return error
  if not ship.get("shield_segments") is Dictionary: return "Escudos segmentados incompletos."
  if not ShipOperations.number(ship.shield_segments, "front", 0, ship.design.front_shield) or not ShipOperations.number(ship.shield_segments, "rear", 0, ship.design.rear_shield): return "Escudo segmentado fuera de rango."
- ensure_quadrants(ship)
+ # Validate the supplied values without coercing, clamping or changing the caller.
+ var quadrants: Dictionary = {}
+ if ship.has("shield_quadrants"):
+  if not ship.shield_quadrants is Dictionary: return "Cuadrantes de escudo inválidos."
+  quadrants = ship.shield_quadrants
+ else:
+  # Older two-segment saves have no quadrant field. Derive a read-only view;
+  # initialize() performs the migration only after the whole save is valid.
+  quadrants = {
+   "front_left": float(ship.shield_segments.front) * 0.5,
+   "front_right": float(ship.shield_segments.front) * 0.5,
+   "rear_left": float(ship.shield_segments.rear) * 0.5,
+   "rear_right": float(ship.shield_segments.rear) * 0.5
+  }
  for quadrant in QUADRANTS:
-  if not ShipOperations.number(ship.shield_quadrants, quadrant, 0, quadrant_capacity(ship, quadrant)): return "Cuadrante de escudo fuera de rango: " + quadrant
- var expected_front = float(ship.shield_quadrants.front_left) + float(ship.shield_quadrants.front_right)
- var expected_rear = float(ship.shield_quadrants.rear_left) + float(ship.shield_quadrants.rear_right)
+  if not ShipOperations.number(quadrants, quadrant, 0, quadrant_capacity(ship, quadrant)): return "Cuadrante de escudo fuera de rango: " + quadrant
+ var expected_front = float(quadrants.front_left) + float(quadrants.front_right)
+ var expected_rear = float(quadrants.rear_left) + float(quadrants.rear_right)
  if absf(float(ship.shield_segments.front) - expected_front) > 0.001 or absf(float(ship.shield_segments.rear) - expected_rear) > 0.001: return "Escudos agregados incoherentes con sus cuadrantes."
  var capacity = ship.design.front_shield + ship.design.rear_shield
  var expected = 100.0 * (ship.shield_segments.front + ship.shield_segments.rear) / capacity if capacity > 0 else 0.0
