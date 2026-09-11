@@ -26,11 +26,15 @@ jobs:
       - name: Validate release package publishing
         run: python3 -m unittest discover -s tests -p test_publish_release.py
       - name: Verify exported acceptance runner negative controls
-        run: python3 -m unittest discover -s tests/release_092 -p test_runner.py -v
+        run: |
+          python3 tests/release_092/prepare.py --check
+          python3 -m unittest discover -s tests/release_092 -p test_runner.py -v
       - name: Download verified Godot toolchain
         run: python3 tools/bootstrap.py --templates
       - name: Import resources
         run: .toolchain/godot --headless --editor --path game --quit
+      - name: Verify embedded acceptance dispatch and inactive normal startup
+        run: python3 -m unittest discover -s tests/release_092 -p test_dispatch.py -v
       - name: Complete campaign and validate saves
         run: .toolchain/godot --headless --path game --script ../tests/test_core.gd -- --test
       - name: Verify native station operations and skill assistance
