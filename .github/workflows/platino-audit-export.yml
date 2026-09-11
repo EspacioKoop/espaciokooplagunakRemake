@@ -50,9 +50,9 @@ jobs:
           GH_DEBUG: ''
         run: |
           set -euo pipefail
-          gh api --hostname github.com --method GET --paginate --slurp 'repos/EspacioKoop/espaciokooplagunakRemake/milestones?state=all&per_page=100' --jq '[.[][] | {number,title,state,description,due_on,html_url,open_issues,closed_issues}]' > audit/milestones.json
-          gh api --hostname github.com --method GET --paginate --slurp 'repos/EspacioKoop/espaciokooplagunakRemake/issues?state=all&per_page=100' --jq '[.[][] | {number,title,body,state,html_url,milestone:(.milestone | if . == null then null else {number,title} end),is_pr:has("pull_request")}]' > audit/issues.json
-          gh api --hostname github.com --method GET --paginate --slurp 'repos/EspacioKoop/espaciokooplagunakRemake/issues/7/comments?per_page=100' --jq '[.[][] | {id,created_at,updated_at,html_url,body}]' > audit/coordination.json
+          gh api --hostname github.com --method GET --paginate --slurp 'repos/EspacioKoop/espaciokooplagunakRemake/milestones?state=all&per_page=100' | jq '[.[][] | {number,title,state,description,due_on,html_url,open_issues,closed_issues}]' > audit/milestones.json
+          gh api --hostname github.com --method GET --paginate --slurp 'repos/EspacioKoop/espaciokooplagunakRemake/issues?state=all&per_page=100' | jq '[.[][] | {number,title,body,state,html_url,milestone:(.milestone | if . == null then null else {number,title} end),is_pr:has("pull_request")}]' > audit/issues.json
+          gh api --hostname github.com --method GET --paginate --slurp 'repos/EspacioKoop/espaciokooplagunakRemake/issues/7/comments?per_page=100' | jq '[.[][] | {id,created_at,updated_at,html_url,body}]' > audit/coordination.json
           cd audit
           sha256sum game-source.tar.gz rules-source.tar.gz game-tree.txt rules-tree.txt revisions.txt milestones.json issues.json coordination.json > SHA256SUMS
       - name: Preserve public source snapshot for offline inspection
