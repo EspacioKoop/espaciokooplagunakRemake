@@ -1,0 +1,19 @@
+name: Issue 32 benchmark evidence
+on:
+  push:
+    paths: ["tools/issue32_benchmark.py","tests/test_issue32_benchmark.py","docs/ISSUE32_BENCHMARK.md",".github/workflows/issue32-benchmark.yml"]
+  pull_request:
+    paths: ["tools/issue32_benchmark.py","tests/test_issue32_benchmark.py","docs/ISSUE32_BENCHMARK.md",".github/workflows/issue32-benchmark.yml"]
+  workflow_dispatch:
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.x"}
+      - run: python tools/issue32_benchmark.py --profile all --rounds 1 --json issue32-benchmark.json
+      - run: python -m unittest discover -s tests -p "test_issue32_benchmark.py"
+      - uses: actions/upload-artifact@v4
+        with: {name: issue32-benchmark-evidence, path: issue32-benchmark.json}
