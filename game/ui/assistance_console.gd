@@ -22,6 +22,9 @@ func _ready() -> void:
   var practice_button = ConsoleUI.button("Entrenamiento seguro · sin órdenes a la partida", _open_training)
   practice_button.name = "OpenAssistanceTraining"
   add_child(practice_button)
+  var school_button = ConsoleUI.button("Escuela de tripulación · primera misión y ocho puestos", _open_crew_school)
+  school_button.name = "OpenCrewTraining"
+  add_child(school_button)
  var options = ConsoleUI.row(self)
  chooser = OptionButton.new()
  for label in ["Temporización", "Secuencia", "Precisión", "Puzle de circuitos"]: chooser.add_item(label)
@@ -55,6 +58,17 @@ func _ready() -> void:
  add_child(consume_button)
  if training == null: Session.notice.connect(_notice)
  _refresh()
+
+func _open_crew_school() -> void:
+ if training != null: return
+ var existing = get_node_or_null("CrewSchool")
+ if is_instance_valid(existing) and not existing.is_queued_for_deletion():
+  existing.popup_centered()
+  return
+ var window = load("res://ui/crew_training_window.gd").new()
+ window.name = "CrewSchool"
+ add_child(window)
+ window.popup_centered()
 
 func _open_training() -> void:
  if training != null: return
