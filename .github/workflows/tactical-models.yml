@@ -29,13 +29,15 @@ jobs:
       - name: Import without inherited cache and run affected regressions
         run: |
           python3 - <<'PY'
-          import re,shutil,subprocess,sys,tempfile
+          import hashlib,json,re,shutil,subprocess,sys,tempfile
           from pathlib import Path
           sys.path.insert(0, 'tests')
           from run_tactical_models import environment,ANSI,ROOT
           evidence=ROOT/'build/tactical-models/evidence'
           evidence.mkdir(parents=True,exist_ok=True)
           (evidence/'checkout.txt').write_text(subprocess.check_output(['git','rev-parse','HEAD'],text=True))
+          sources=['game/world/tactical_models.gd','game/ui/tactical_board_3d.gd','game/ui/tactical_combat_window.gd','game/world/pickup_model.gd','tests/test_tactical_models.gd','tests/run_tactical_models.py','tests/test_tactical_models_runner.py','docs/TACTICAL_MODELS.md','.github/workflows/tactical-models.yml']
+          (evidence/'sources.sha256.json').write_text(json.dumps({name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in sources},indent=2))
           shutil.rmtree(ROOT/'game/.godot',ignore_errors=True)
           commands=[('import',['--editor','--quit'],None)]
           for name,pattern in [('core',r'LAGUNAK_TESTS (\d+) checks; 0 failures'),('ground_combat',r'GROUND_COMBAT_TESTS (\d+) checks; 0 failures'),('space_pickups',r'SPACE_PICKUPS_RESULT checks=(\d+) failures=0'),('ui',r'UI_OK (\d+) checks; 0 failures')]:
@@ -75,46 +77,3 @@ jobs:
           path: build/tactical-models/evidence/
           if-no-files-found: error
           retention-days: 7
-  # Temporary, branch-only conservation job; removed after the verified PNG is committed.
-  preserve-preview:
-    needs: verify
-    if: github.event_name == 'push' && github.ref == 'refs/heads/agent/32-tactical-models-s3'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          ref: ${{ github.sha }}
-      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
-        with:
-          name: tactical-model-evidence-${{ github.run_id }}
-          path: build/tactical-preview/
-      - name: Preserve only the tested screenshot on this unchanged branch
-        env:
-          EXPECTED_HEAD: ${{ github.sha }}
-        run: |
-          set -euo pipefail
-          branch=refs/heads/agent/32-tactical-models-s3
-          test "$(git ls-remote origin "$branch" | cut -f1)" = "$EXPECTED_HEAD"
-          python3 - <<'PY'
-          import json,struct
-          from pathlib import Path
-          evidence=Path('build/tactical-preview')
-          reports=[json.loads(line.partition(' ')[2]) for line in (evidence/'graphics.log').read_text().splitlines() if line.startswith('TACTICAL_MODELS_RESULT ')]
-          assert len(reports)==1 and reports[0]['passed'] is True and reports[0]['capture'] is True and reports[0]['failures']==0
-          source=evidence/'tactical-models.png'
-          data=source.read_bytes()
-          assert data[:8]==b'\x89PNG\r\n\x1a\n' and len(data)>1024
-          width,height=struct.unpack('>II',data[16:24])
-          assert 600<=width<=4096 and 400<=height<=4096
-          destination=Path('docs/images/tactical-models.png')
-          destination.parent.mkdir(parents=True,exist_ok=True)
-          destination.write_bytes(data)
-          PY
-          git add -- docs/images/tactical-models.png
-          if git diff --cached --quiet; then exit 0; fi
-          test "$(git diff --cached --name-only)" = docs/images/tactical-models.png
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'docs(tactical): preserve actual exported-game screenshot'
-          git push origin "HEAD:$branch"

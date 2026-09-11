@@ -27,8 +27,12 @@ func click(view: TacticalBoard3D, point: Vector3) -> void:
 	var event = InputEventMouseButton.new()
 	event.button_index = MOUSE_BUTTON_LEFT
 	event.pressed = true
-	event.position = screen_point(view, point)
-	view.gui_input.emit(event)
+	event.position = view.get_global_transform_with_canvas() * screen_point(view, point)
+	event.global_position = event.position
+	view.get_viewport().push_input(event, true)
+	var release = event.duplicate()
+	release.pressed = false
+	view.get_viewport().push_input(release, true)
 
 func geometry_tests() -> void:
 	for pair in [["crew", "pistola"], ["crew", "carabina"], ["crew", "escopeta"], ["enemy", "pistola"], ["enemy", "carabina"]]:
@@ -56,6 +60,18 @@ func geometry_tests() -> void:
 					pawn.position = Vector3(10, 2, -7)
 					check(grip.global_transform.is_equal_approx(hand.global_transform), "attachment survives world translation/rotation")
 					check(weapon.basis.get_scale().is_equal_approx(Vector3.ONE), "equipment remains 1:1")
+					check(hand.get_parent() is BoneAttachment3D, "hand socket belongs to the imported bone attachment")
+					var attachment = hand.get_parent() as BoneAttachment3D
+					if attachment != null:
+						var skeleton = attachment.get_parent() as Skeleton3D
+						check(skeleton != null and attachment.bone_idx >= 0, "attachment resolves a real skeleton bone")
+						if skeleton != null and attachment.bone_idx >= 0:
+							var original_hand = hand.global_transform
+							var pose = skeleton.get_bone_pose_rotation(attachment.bone_idx)
+							skeleton.set_bone_pose_rotation(attachment.bone_idx, pose * Quaternion(Vector3.FORWARD, 0.3))
+							await wait_frames()
+							check(not hand.global_transform.is_equal_approx(original_hand), "bone motion moves the authored hand socket")
+							check(grip.global_transform.is_equal_approx(hand.global_transform), "equipment follows bone motion without detaching")
 				check(pawn.get_meta("weapon_resource") == TacticalModels.WEAPONS[unit.weapon], "correct compatible weapon bound")
 		pawn.free()
 	var drone = TacticalModels.create_unit(sample("enemy_0_enjambre", "enemy", "escopeta", [8, 1]))
@@ -143,6 +159,10 @@ func view_tests() -> void:
 	state.units[1].position = [3, 3]
 	board.present(state)
 	check(board.pawns.enemy_0_centinela.node.visible, "POV reveals an in-range enemy")
+	state.obstacles = [[2, 3]]
+	board.present(state)
+	check(board.pick(screen_point(board, board.pawns.enemy_0_centinela.node.position + Vector3.UP * 1.2)).get("unit", "") != "enemy_0_centinela", "cover blocks selecting a model behind it")
+	state.obstacles = [[4, 2], [4, 4]]
 	state.units[1].down = true
 	board.present(state)
 	check(not board.pawns.enemy_0_centinela.node.visible, "downed unit is not interactive")
