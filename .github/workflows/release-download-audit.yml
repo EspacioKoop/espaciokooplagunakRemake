@@ -1,8 +1,6 @@
 name: Audit published release downloads
 
 on:
-  push:
-    branches: [agent/67-release-download-audit]
   pull_request:
     paths:
       - tools/release_download_audit.py
@@ -37,33 +35,6 @@ jobs:
         with:
           persist-credentials: false
       - run: python3 -m unittest discover -s tests -p test_release_download_audit.py -v
-
-  baseline:
-    if: github.event_name == 'push'
-    needs: tests
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      actions: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Compare already published 0.9.1 against its canonical artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-        run: >-
-          python3 tools/release_download_audit.py --repository "$REPOSITORY"
-          --tag v0.9.1 --expected-commit cddb1d63d3f5022bceec156f183489092019add7
-          --run-id 34510742629 --output release-download-audit.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: published-download-audit-baseline
-          path: release-download-audit.json
-          if-no-files-found: error
-          retention-days: 30
 
   published:
     if: github.event_name == 'workflow_dispatch'
