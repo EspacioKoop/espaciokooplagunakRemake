@@ -72,7 +72,7 @@ static func _localized(value: Variant, path: String, maximum: int) -> String:
  for language in ["es", "en"]:
   var text = value[language]
   if not text is String or text.is_empty() or text.length() > maximum or text != text.strip_edges(): return path + "." + language + ": texto inválido."
-  if "<" in text or ">" in text or "\u0000" in text: return path + "." + language + ": texto inseguro."
+  if "<" in text or ">" in text or text.to_utf8_buffer().has(0): return path + "." + language + ": texto inseguro."
  return ""
 
 static func _provenance(value: Variant, path: String) -> String:
