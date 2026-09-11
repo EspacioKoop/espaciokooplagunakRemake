@@ -1,0 +1,37 @@
+name: Verify local sound captions
+on:
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'tests/*sound_captions*'
+      - 'tools/bootstrap.py'
+      - '.github/workflows/sound-captions.yml'
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sound-captions-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  sound-captions:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 -m unittest discover -s tests -p test_sound_captions_runner.py -v
+      - run: sudo apt-get update -qq && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - run: python3 tools/bootstrap.py
+      - run: .toolchain/godot --headless --editor --path game --quit
+      - run: python3 tests/run_sound_captions.py --graphical --output build/sound-captions
+      - name: Existing text accessibility regression
+        run: python3 tests/run_readability.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sound-captions-evidence
+          path: build/sound-captions/
+          if-no-files-found: error
+          retention-days: 14
