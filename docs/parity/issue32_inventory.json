@@ -216,7 +216,7 @@
       "evidence": [
         {
           "kind": "document",
-          "path": "docs/NPC_GENERADOR.md"
+          "path": "docs/NPC_WORKBENCH.md"
         },
         {
           "kind": "implementation",
@@ -255,7 +255,7 @@
       "evidence": [
         {
           "kind": "document",
-          "path": "docs/NPC_GENERADOR.md"
+          "path": "docs/NPC_WORKBENCH.md"
         },
         {
           "kind": "document",
@@ -279,7 +279,7 @@
       "evidence": [
         {
           "kind": "document",
-          "path": "docs/NPC_GENERADOR.md"
+          "path": "docs/NPC_WORKBENCH.md"
         }
       ]
     },
@@ -299,7 +299,7 @@
       "evidence": [
         {
           "kind": "document",
-          "path": "docs/NPC_GENERADOR.md"
+          "path": "docs/NPC_WORKBENCH.md"
         }
       ]
     },
