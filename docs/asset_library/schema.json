@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Espaciokoop visual asset library v2",
+  "description": "Derived documentation; pack manifests remain authoritative. Not gameplay state.",
+  "type": "object",
+  "required": ["schema", "version", "issue", "repository", "inventory_base_commit", "packs", "assets", "pending"],
+  "properties": {
+    "schema": {"const": "espaciokoop-asset-library"},
+    "version": {"const": 2},
+    "issue": {"const": 52},
+    "repository": {"const": "EspacioKoop/espaciokooplagunakRemake"},
+    "inventory_base_commit": {"$ref": "#/$defs/commit"},
+    "packs": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "title", "manifest", "revision", "asset_ids"], "properties": {"id": {"type": "string"}, "title": {"type": "string"}, "manifest": {"type": "string"}, "revision": {"$ref": "#/$defs/commit"}, "asset_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}}}},
+    "assets": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/asset"}},
+    "pending": {"type": "array"}
+  },
+  "$defs": {
+    "commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "asset": {
+      "type": "object",
+      "required": ["id", "pack", "source_id", "title", "version", "category", "source", "runtime", "resource", "group", "revision", "manifest", "preview", "links", "card", "availability", "source_sha256", "runtime_sha256", "runtime_bytes", "statistics", "known_limits", "habitable"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-zA-Z0-9_-]+(?:/[a-zA-Z0-9_-]+)+$"},
+        "pack": {"type": "string", "minLength": 1},
+        "source_id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "version": {"type": "integer", "minimum": 1},
+        "category": {"enum": ["tools", "weapons", "ships", "avatars", "enemies", "planets", "environments", "props", "other"]},
+        "source": {"type": "string", "pattern": "^art/blender/.+\\.blend$"},
+        "runtime": {"type": "string", "pattern": "^game/assets/models/.+\\.glb$"},
+        "resource": {"type": "string", "pattern": "^res://assets/models/"},
+        "group": {"type": ["string", "null"]},
+        "revision": {"$ref": "#/$defs/commit"},
+        "card": {"type": "string", "pattern": "^docs/asset_library/models/.+\\.md$"},
+        "source_sha256": {"$ref": "#/$defs/hash"},
+        "runtime_sha256": {"$ref": "#/$defs/hash"},
+        "runtime_bytes": {"type": "integer", "minimum": 28},
+        "known_limits": {"type": "string", "minLength": 1},
+        "habitable": {"type": "boolean"},
+        "representation": {"type": ["string", "null"]},
+        "radius_m": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "manifest": {"type": "object", "required": ["path", "revision", "record_pointer", "record_is_adapter"], "properties": {"path": {"type": "string"}, "revision": {"$ref": "#/$defs/commit"}, "record_pointer": {"type": ["string", "null"]}, "record_is_adapter": {"type": "boolean"}}},
+        "preview": {
+          "type": "object", "required": ["path", "revision", "url", "kind", "sha256", "size_px"],
+          "properties": {
+            "path": {"type": "string", "pattern": "^docs/images/"},
+            "revision": {"oneOf": [{"$ref": "#/$defs/commit"}, {"type": "null"}]},
+            "url": {"type": ["string", "null"]},
+            "kind": {"enum": ["repository_model_render", "blender_glb_render"]},
+            "sha256": {"$ref": "#/$defs/hash"},
+            "size_px": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 64, "maximum": 8192}}
+          }
+        },
+        "links": {"type": "object", "required": ["source", "runtime", "manifest"], "additionalProperties": {"type": "string", "pattern": "^https://github.com/EspacioKoop/espaciokooplagunakRemake/blob/[a-f0-9]{40}/"}},
+        "availability": {
+          "type": "object", "required": ["files_present", "in_main_at_snapshot", "catalogue_validation", "godot_validation", "gameplay_integration"],
+          "properties": {"files_present": {"const": true}, "in_main_at_snapshot": {"type": "boolean"}, "catalogue_validation": {"const": "files_glb_header_hashes_and_real_photo_checked"}, "godot_validation": {"const": "consult_pack_pr_and_evidence"}, "gameplay_integration": {"const": "not_inferred"}}
+        },
+        "statistics": {
+          "type": "object", "required": ["triangles", "triangle_scope", "materials", "sockets", "animations_gltf", "has_skin"],
+          "properties": {"triangles": {"type": "integer", "minimum": 1}, "triangle_scope": {"enum": ["selected_submodel", "unique_referenced_meshes"]}, "materials": {"type": "array", "items": {"type": "string"}}, "sockets": {"type": "array", "items": {"type": "string"}}, "animations_gltf": {"type": "array", "items": {"type": "string"}}, "has_skin": {"type": "boolean"}}
+        }
+      }
+    }
+  }
+}
