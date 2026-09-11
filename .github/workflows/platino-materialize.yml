@@ -1,0 +1,91 @@
+name: Materialize reviewed Platino sources (temporary)
+
+on:
+  push:
+    branches: [agent/72-platino-adoption]
+    paths: [.github/workflows/platino-materialize.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: platino-materialize-72
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/agent/72-platino-adoption'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          path: target
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: EspacioKoop/normas_platino
+          ref: b5e01a2b2060a31268507797708a92a7d14ffc52
+          path: source
+          persist-credentials: false
+      - name: Copy exact tracked text blobs into the reserved branch (no source execution)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: ''
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import PurePosixPath
+          repo = 'EspacioKoop/espaciokooplagunakRemake'
+          branch = 'agent/72-platino-adoption'
+          selected = 'b5e01a2b2060a31268507797708a92a7d14ffc52'
+          source_tree = 'c16e37e1ecdc65e1edf43edc8e66985a534b0a6e'
+          allowed = {'.github/workflows/validar.yml', '.gitignore', 'AGENTS.md', 'README.md', 'docs/AUTOMATIZACION.md', 'docs/COOPERACION_AUTONOMA.md', 'docs/PLANIFICACION_Y_ENTREGAS.md', 'scripts/platino.py', 'templates/ADOPCION.md', 'templates/ROADMAP.md', 'templates/platino.json', 'tests/test_docs.py', 'tests/test_platino.py'}
+          def git(root, *args):
+              return subprocess.check_output(['git', '-C', root, *args], stderr=subprocess.PIPE)
+          def api(method, path, value=None):
+              command = ['gh', 'api', '--hostname', 'github.com', '--method', method,
+                         '-H', 'X-GitHub-Api-Version: 2026-03-10', 'repos/' + repo + path]
+              payload = None
+              if value is not None:
+                  command += ['--input', '-']
+                  payload = json.dumps(value, ensure_ascii=False).encode()
+              result = subprocess.run(command, input=payload, capture_output=True, timeout=60)
+              if result.returncode:
+                  raise RuntimeError('GitHub operation failed; no credentials or response payload logged.')
+              return json.loads(result.stdout)
+          head = git('target', 'rev-parse', 'HEAD').decode().strip()
+          assert head == os.environ['GITHUB_SHA']
+          assert git('source', 'rev-parse', 'HEAD').decode().strip() == selected
+          assert git('source', 'rev-parse', 'HEAD^{tree}').decode().strip() == source_tree
+          assert api('GET', '/git/ref/heads/' + branch)['object']['sha'] == head, 'Branch changed'
+          records = git('source', 'ls-tree', '-r', '-z', 'HEAD').split(b'\0')
+          entries = []
+          seen = set()
+          for record in records:
+              if not record:
+                  continue
+              metadata, name = record.split(b'\t', 1)
+              mode, kind, oid = metadata.decode().split()
+              path = name.decode('utf-8')
+              assert path in allowed and path not in seen and '..' not in PurePosixPath(path).parts
+              assert mode == '100644' and kind == 'blob'
+              raw = git('source', 'cat-file', 'blob', oid)
+              assert hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest() == oid
+              entries.append({'path': 'docs/platino/upstream/' + path, 'mode': mode,
+                              'type': 'blob', 'content': raw.decode('utf-8')})
+              seen.add(path)
+          assert seen == allowed and len(entries) == 13
+          assert not git('target', 'ls-tree', '-r', 'HEAD', '--', 'docs/platino/upstream'), 'Snapshot already exists'
+          tree = api('POST', '/git/trees', {'base_tree': git('target', 'rev-parse', 'HEAD^{tree}').decode().strip(), 'tree': entries})
+          commit = api('POST', '/git/commits', {'message': 'docs(platino): conservar los 13 archivos centrales revisados de b5e01a2 (#72)', 'tree': tree['sha'], 'parents': [head]})
+          assert api('GET', '/git/ref/heads/' + branch)['object']['sha'] == head, 'Concurrent branch change'
+          api('PATCH', '/git/refs/heads/' + branch, {'sha': commit['sha'], 'force': False})
+          assert api('GET', '/git/ref/heads/' + branch)['object']['sha'] == commit['sha']
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+              summary.write('Copied 13 reviewed public source files without executing them.\n\nCommit: `' + commit['sha'] + '`\n\nSource tree: `' + source_tree + '`\n\nTemporary workflow removal is performed by the authorized connector, not GITHUB_TOKEN.\n')
+          print('Verified snapshot commit:', commit['sha'])
+          PY
