@@ -1,0 +1,1051 @@
+{
+  "format": "lagunak-runtime-assets",
+  "version": 1,
+  "sources": [
+    {
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "ab4230b8ac4c5dffa7a578684a8d8b06d6fb51d64d6e24db648fd2de2bb0f17c"
+    },
+    {
+      "manifest": "game/assets/models/memory_guardians.manifest.json",
+      "sha256": "7b56cc97c5e85e63cf29014aef853cf90574289a4c11c6d13095aa2aa41080e3"
+    },
+    {
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "fe675a2e6e2bcecf82c51f807e2d5116951fb1e693aba8fc6f6cbbe1be6fc15d"
+    },
+    {
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "a20ad3927e1b6069d9dd5d61c9e4738f1326ed02905126b80d3eed0bb5db26d3"
+    },
+    {
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "76dff8766f3b1664a3719f297d040a9c7c2b81077f8055724c9da8242a2e74f3"
+    },
+    {
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "02deda6c6459f10b0a1c61f35d920c1e1b2a4f7121ec3e22782b8a647fe6e51f"
+    }
+  ],
+  "assets": [
+    {
+      "id": "base/anomaly",
+      "title": "Anomaly",
+      "category": "props",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/anomaly.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "ff1485bc1b713760661d3cbdf821d38f0b3ca41411184b37701da874be0a38e4",
+      "license": "MIT",
+      "contact_kinds": [
+        "anomaly",
+        "blackhole",
+        "wormhole",
+        "nebula"
+      ]
+    },
+    {
+      "id": "base/asteroid",
+      "title": "Asteroid",
+      "category": "props",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/asteroid.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "b8ce9831eb4f792d835b3ceda9e6b0520b19de8acef1d3df983bc0e539d0de47",
+      "license": "MIT",
+      "contact_kinds": [
+        "asteroid"
+      ]
+    },
+    {
+      "id": "base/beacon",
+      "title": "Beacon",
+      "category": "props",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/beacon.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "12ebcf941385237220343c074b603bf6351d00ca8b550b868d22c7ff468fdd45",
+      "license": "MIT",
+      "contact_kinds": [
+        "beacon"
+      ]
+    },
+    {
+      "id": "base/bridge_room",
+      "title": "Bridge room",
+      "category": "environments",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/bridge_room.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "2a52d8f4dd4f5752835409dacbc2e3e8929216b6c84c3b3094dfa06bc2995cf3",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/cargo_room",
+      "title": "Cargo room",
+      "category": "environments",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/cargo_room.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "360d0e91484c20b0a512483723d3d1e0533f9c0cb367715a7358d11eeffdab58",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/chair",
+      "title": "Chair",
+      "category": "props",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/chair.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "9fdbe940753ce68d6e2aa78ed5315a418c3d209d029ddc67e3eb194a730f65c4",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/console",
+      "title": "Console",
+      "category": "props",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/console.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "3e26cbae687110b1fe6a00323501f4812e043907fa6ee6dad48c74e865efdf9d",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/crate",
+      "title": "Crate",
+      "category": "props",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/crate.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "48fd9ab13c1814e369ce375e1ddab24f0315c887b4eae16a2cca00ad41adb3bd",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/crew",
+      "title": "Crew",
+      "category": "props",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/crew.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "35a3faa4e012cfc90c76987c42fadee70951e47432f38fbdfa26428f54cf539d",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/engineering_room",
+      "title": "Engineering room",
+      "category": "environments",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/engineering_room.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "f1c0d32dd4095a7d310d79abe0bd85509d5ded614723d36fffaae1981baa85a2",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/hallway",
+      "title": "Hallway",
+      "category": "environments",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/hallway.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "28158f3b17ee919a84497969d4902da049801a0a7f395da81e0f228bcf94c6e4",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/itsaso",
+      "title": "Itsaso",
+      "category": "ships",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/itsaso.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "a257bee97a82e8348df1e26fced20ab943730dc0a27d3ff108a6dc183bf2280d",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "base/leisure_bundle",
+      "title": "Leisure bundle",
+      "category": "environments",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/leisure_bundle.glb",
+      "source": "art/blender/leisure_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "6e7d8442c9253d7eb8bc2269db997fa90acea3270f2d5bcd4c2238f5afedfcae",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/medbay_room",
+      "title": "Medbay room",
+      "category": "environments",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/medbay_room.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "6dd83b246fd66d8eb90e20aaa502c37eb63546a6b1c692bd3c8a74159033141e",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/mess_room",
+      "title": "Mess room",
+      "category": "environments",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/mess_room.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "affa82439ae2e13416de76aebc48dad31f6ddd249f7cee6636215ee718a7e300",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/planet",
+      "title": "Planet",
+      "category": "worlds",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/planet.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "9a150d2178678ae9282a5d1f936c98b1128783d3960a98b13df6f9627444b9c0",
+      "license": "MIT",
+      "contact_kinds": [
+        "planet"
+      ]
+    },
+    {
+      "id": "base/quarters_room",
+      "title": "Quarters room",
+      "category": "environments",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/quarters_room.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "cca3d548f3782cc50739a2053f17813a356b003fcbb35e552f9411b5999fdcba",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/reactor",
+      "title": "Reactor",
+      "category": "props",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/reactor.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "8c979d52c686fecd06e785d13f5ee951d4fdf7ecbd7f639205e1146cf6615b68",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "base/sentinel",
+      "title": "Sentinel",
+      "category": "ships",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/sentinel.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "e328be7fe0c8ac004dc204a087f975908933dd9da5c36a9de38f34665b4c8054",
+      "license": "MIT",
+      "contact_kinds": [
+        "hostile"
+      ]
+    },
+    {
+      "id": "base/station",
+      "title": "Station",
+      "category": "props",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/station.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "2d558112a5312d2b0749419587053b45307d433d12fa1e24dc2d5a36aabe110a",
+      "license": "MIT",
+      "contact_kinds": [
+        "station"
+      ]
+    },
+    {
+      "id": "base/transport",
+      "title": "Transport",
+      "category": "ships",
+      "description": "Recurso original de la aplicación.",
+      "resource": "res://assets/models/transport.glb",
+      "source": "art/blender/lagunak_assets.blend",
+      "manifest": "game/assets/models/manifest.json",
+      "sha256": "f3b79e925a013f93ec257d76b79ff259ad355c6bbb78c070a2ab11fbe32869fe",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "fieldkit/argi_scanner",
+      "title": "Argi · escáner de campo",
+      "category": "tools",
+      "description": "Escáner de mano con pantalla, aro sensor y antenas plegables.",
+      "resource": "res://assets/models/fieldkit_pack/argi_scanner.glb",
+      "source": "art/blender/fieldkit_pack/argi_scanner.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "e7ade3a09ae732eaecdec653fff389a6311c1ca065bda905d7b36c3de3134aae",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "fieldkit/ebaki_cutter",
+      "title": "Ebaki · cortador de campo",
+      "category": "tools",
+      "description": "Cortador industrial ficticio de anillo, resguardo y dos empuñaduras.",
+      "resource": "res://assets/models/fieldkit_pack/ebaki_cutter.glb",
+      "source": "art/blender/fieldkit_pack/ebaki_cutter.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "0ff8bbd7057f2a2eae1afbb172f98a5701b5f8ddac4459aa3fbc951900ec492a",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "fieldkit/enara_shuttle",
+      "title": "Enara · lanzadera de expedición",
+      "category": "ships",
+      "description": "Lanzadera compacta con alas cortas, tren y rampa posterior articulada.",
+      "resource": "res://assets/models/fieldkit_pack/enara_shuttle.glb",
+      "source": "art/blender/fieldkit_pack/enara_shuttle.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "c903c28b0bf22a6c1a283c947b51d55b89b895e47589d6265d903b0642435a87",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "fieldkit/giltza_hack_tool",
+      "title": "Giltza · interfaz de hackeo",
+      "category": "tools",
+      "description": "Brazalete abierto con consola abatible, contactos y microproyector.",
+      "resource": "res://assets/models/fieldkit_pack/giltza_hack_tool.glb",
+      "source": "art/blender/fieldkit_pack/giltza_hack_tool.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "6b19030506b1bbbb97104fdf6a0cd04f60a4d136725e41cd1bb6a6d1c2ad252a",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "fieldkit/hontz_corvette",
+      "title": "Hontz · corbeta de patrulla",
+      "category": "ships",
+      "description": "Corbeta de doble góndola con puente elevado y antena orientable.",
+      "resource": "res://assets/models/fieldkit_pack/hontz_corvette.glb",
+      "source": "art/blender/fieldkit_pack/hontz_corvette.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "d26df35d012a6de30a40d189615d166fcb41d7eae9bf450ab3b8152b857aeb26",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "fieldkit/jostun_repair",
+      "title": "Jostun · reparador",
+      "category": "tools",
+      "description": "Herramienta de reparación ficticia con pinzas y cartucho de servicio.",
+      "resource": "res://assets/models/fieldkit_pack/jostun_repair.glb",
+      "source": "art/blender/fieldkit_pack/jostun_repair.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "84a03922b25c0c118ec9819942a7922666ffa31d60bdaa465c7d82c5f8ffe4ce",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "fieldkit/kako_tether",
+      "title": "Kako · gancho magnético",
+      "category": "tools",
+      "description": "Herramienta de mano con carrete y garra magnética articulada.",
+      "resource": "res://assets/models/fieldkit_pack/kako_tether.glb",
+      "source": "art/blender/fieldkit_pack/kako_tether.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "6ebc6d96a0cece82b0e2d41a57877433042634ae1832ab74aa3a39523b06a7ba",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "fieldkit/soros_medkit",
+      "title": "Soros · botiquín de campaña",
+      "category": "tools",
+      "description": "Maletín médico de asa central, tapa abatible y módulos extraíbles.",
+      "resource": "res://assets/models/fieldkit_pack/soros_medkit.glb",
+      "source": "art/blender/fieldkit_pack/soros_medkit.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "af3e11c5a921ce61dd1aee1b424be89e8a6871fc4732154cb6557d17410c6abe",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "fieldkit/tximista_carbine",
+      "title": "Tximista · carabina de pulsos",
+      "category": "weapons",
+      "description": "Carabina ficticia con cámara de energía, culata y visor.",
+      "resource": "res://assets/models/fieldkit_pack/tximista_carbine.glb",
+      "source": "art/blender/fieldkit_pack/tximista_carbine.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "2007c0402abb539654110f2e714f7560a08078b9253654e153123d48a906eca0",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "fieldkit/txinparta_sidearm",
+      "title": "Txinparta · pistola iónica",
+      "category": "weapons",
+      "description": "Arma corta ficticia con bobina visible y corredera mecánica.",
+      "resource": "res://assets/models/fieldkit_pack/txinparta_sidearm.glb",
+      "source": "art/blender/fieldkit_pack/txinparta_sidearm.blend",
+      "manifest": "game/assets/models/fieldkit_pack/manifest.json",
+      "sha256": "ee5110f7e92e9be3229aece112aa3cda5b2481f56ed9a31bc294e35650352558",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/argi_sidearm",
+      "title": "Argi / pistola de pulso",
+      "category": "weapons",
+      "description": "Equipo ficticio compacto con celda extraíble y emisor.",
+      "resource": "res://assets/models/frontier_pack/argi_sidearm.glb",
+      "source": "art/blender/frontier_pack/sources/argi_sidearm.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "c64b6abaea48c9ad29523b429fdaabdd496055c87becd1767e1b929fd60c9f35",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/basajaun_hauler",
+      "title": "Basajaun / carguera",
+      "category": "ships",
+      "description": "Transporte industrial con seis contenedores externos.",
+      "resource": "res://assets/models/frontier_pack/basajaun_hauler.glb",
+      "source": "art/blender/frontier_pack/sources/basajaun_hauler.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "47ba098f860e8b6c90e1b445dd91c432f56b6903ce8fb273756acb4634f86998",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "frontier/cargo_crate",
+      "title": "Caja modular",
+      "category": "props",
+      "description": "Contenedor con tapa articulada, cierres y cantoneras.",
+      "resource": "res://assets/models/frontier_pack/cargo_crate.glb",
+      "source": "art/blender/frontier_pack/sources/cargo_crate.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "f893b43f376db0282f008e9d732d7cf2928244c0d6f57d0d86edeffdc5b40d70",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/crew_engineer",
+      "title": "Ingeniera de cubierta",
+      "category": "avatars",
+      "description": "Traje de mantenimiento, hombreras y mochila técnica.",
+      "resource": "res://assets/models/frontier_pack/crew_engineer.glb",
+      "source": "art/blender/frontier_pack/sources/crew_engineer.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "d76a344835db04fda099f6e4df0b915ba9939b26c9026debd1e5f663d46904f9",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/crew_navigator",
+      "title": "Navegante",
+      "category": "avatars",
+      "description": "Traje naval ligero, casco y arnés de navegación.",
+      "resource": "res://assets/models/frontier_pack/crew_navigator.glb",
+      "source": "art/blender/frontier_pack/sources/crew_navigator.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "77f54fcf638ad9afa082304f1586abd8efdb330fe3d4b661e95af723f4a8396e",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/crew_synthetic",
+      "title": "Tripulante sintético",
+      "category": "avatars",
+      "description": "Androide segmentado, ópticas y núcleo torácico.",
+      "resource": "res://assets/models/frontier_pack/crew_synthetic.glb",
+      "source": "art/blender/frontier_pack/sources/crew_synthetic.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "f318771a9c132a107b0b74feff199536e73a2bb2c8c6848d643d320579399e8c",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/ekaitz_interceptor",
+      "title": "Ekaitz / interceptora",
+      "category": "ships",
+      "description": "Silueta hostil con alas barridas y emisores gemelos.",
+      "resource": "res://assets/models/frontier_pack/ekaitz_interceptor.glb",
+      "source": "art/blender/frontier_pack/sources/ekaitz_interceptor.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "7e6dcd4ff4d5a276c9d19a174006c5c931c849b6078bcbd340dfd9c61d8447c3",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "frontier/enemy_crawler",
+      "title": "Armiarma / caminante",
+      "category": "enemies",
+      "description": "Autómata cuadrúpedo con patas articuladas y núcleo.",
+      "resource": "res://assets/models/frontier_pack/enemy_crawler.glb",
+      "source": "art/blender/frontier_pack/sources/enemy_crawler.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "3c90a9235b7d67f3b2d88a78ae9f60f649fdd54fbedf4b0e43e4c962a1adb835",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/enemy_warden",
+      "title": "Harri / centinela",
+      "category": "enemies",
+      "description": "Guardián bípedo de placas minerales y cristales.",
+      "resource": "res://assets/models/frontier_pack/enemy_warden.glb",
+      "source": "art/blender/frontier_pack/sources/enemy_warden.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "7784c5255670ac421780397cd3f3b744239d0cb52d582f492013c93e37f50187",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/enemy_watcher",
+      "title": "Vigía / dron",
+      "category": "enemies",
+      "description": "Explorador flotante con óptica central y estabilizadores.",
+      "resource": "res://assets/models/frontier_pack/enemy_watcher.glb",
+      "source": "art/blender/frontier_pack/sources/enemy_watcher.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "8840d774df9275179bab76ed3c4adecc433a7ca2157a19e440b2706599053de9",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/field_scanner",
+      "title": "Escáner de campo",
+      "category": "props",
+      "description": "Herramienta de exploración con pantalla y sonda.",
+      "resource": "res://assets/models/frontier_pack/field_scanner.glb",
+      "source": "art/blender/frontier_pack/sources/field_scanner.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "7c09e0db89ead762a2f7c83e9e2af9486640bddfbe602e776ccbada2d8a6ce06",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/haizea_scout",
+      "title": "Haizea / exploradora",
+      "category": "ships",
+      "description": "Reconocimiento, doble motor y sensores de proa.",
+      "resource": "res://assets/models/frontier_pack/haizea_scout.glb",
+      "source": "art/blender/frontier_pack/sources/haizea_scout.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "034bedb521c28f151daa4d8e4f2aa9d49038dfed4a9c205536ef848a627b0255",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "frontier/izar_science",
+      "title": "Izar / científica",
+      "category": "ships",
+      "description": "Laboratorio de largo alcance con anillos instrumentales.",
+      "resource": "res://assets/models/frontier_pack/izar_science.glb",
+      "source": "art/blender/frontier_pack/sources/izar_science.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "81a5f6a9038af4370ba9cb9157588f071b313f406e275cdd084046cad631ac4b",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "frontier/medical_capsule",
+      "title": "Cápsula de auxilio",
+      "category": "props",
+      "description": "Suministro reconocible por paneles blancos y cruz turquesa.",
+      "resource": "res://assets/models/frontier_pack/medical_capsule.glb",
+      "source": "art/blender/frontier_pack/sources/medical_capsule.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "d1920760fc081e961617259352ab6a5d20a5fbe9fc0d34f52c0882b6f6193f0b",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/mineral_cluster",
+      "title": "Veta de cristales",
+      "category": "props",
+      "description": "Recurso mineral con cinco cristales y base rocosa.",
+      "resource": "res://assets/models/frontier_pack/mineral_cluster.glb",
+      "source": "art/blender/frontier_pack/sources/mineral_cluster.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "00b13bad248b36609a8ab92966a839ca1bdb408f021907f514ef0b3996fdfba1",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/navigation_beacon",
+      "title": "Baliza de navegación",
+      "category": "props",
+      "description": "Nodo orbital con paneles y anillo emisor.",
+      "resource": "res://assets/models/frontier_pack/navigation_beacon.glb",
+      "source": "art/blender/frontier_pack/sources/navigation_beacon.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "ac03319f49a80c82c2545cc66fdd9e5f8d0ed7d33f480c448cc079899500bf75",
+      "license": "MIT",
+      "contact_kinds": [
+        "beacon"
+      ]
+    },
+    {
+      "id": "frontier/orbain_turret",
+      "title": "Orbain / torreta",
+      "category": "weapons",
+      "description": "Montaje externo con pivote de giro y dos bocas.",
+      "resource": "res://assets/models/frontier_pack/orbain_turret.glb",
+      "source": "art/blender/frontier_pack/sources/orbain_turret.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "ae378f13c59ded4b239a88d49c0396b435f5680c3337b93aadc35ecc80c504b6",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/sugar_lance",
+      "title": "Sugar / lanza de plasma",
+      "category": "weapons",
+      "description": "Equipo ficticio pesado de doble horquilla energética.",
+      "resource": "res://assets/models/frontier_pack/sugar_lance.glb",
+      "source": "art/blender/frontier_pack/sources/sugar_lance.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "b2318a773ac7ad9a6aa4c7a7bca0b0d575a8b6115fc7f60f540808ee7d67af2e",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/tximista_carbine",
+      "title": "Tximista / carabina",
+      "category": "weapons",
+      "description": "Arma ficticia de inducción con culata, visor y bobinas.",
+      "resource": "res://assets/models/frontier_pack/tximista_carbine.glb",
+      "source": "art/blender/frontier_pack/sources/tximista_carbine.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "191c6f19ae618fb513f6c1a889dffaeaeb05a9f487d69e88f80a804f58a60c59",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "frontier/world_desert",
+      "title": "Harea / desértico",
+      "category": "worlds",
+      "description": "Globo de estratos cálidos y mesetas erosionadas.",
+      "resource": "res://assets/models/frontier_pack/world_desert.glb",
+      "source": "art/blender/frontier_pack/sources/world_desert.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "564621b93434ff73fbc78e01fc84ea36f6f61659efee9289b3b12115660c67c9",
+      "license": "MIT",
+      "contact_kinds": [
+        "planet"
+      ]
+    },
+    {
+      "id": "frontier/world_gas",
+      "title": "Ortzadar / gigante",
+      "category": "worlds",
+      "description": "Globo bandeado con sistema de anillos independiente.",
+      "resource": "res://assets/models/frontier_pack/world_gas.glb",
+      "source": "art/blender/frontier_pack/sources/world_gas.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "a6acb7e521dc76c601725c18362c19e9e1c186ca9d1a50e526877239a7d2351d",
+      "license": "MIT",
+      "contact_kinds": [
+        "planet"
+      ]
+    },
+    {
+      "id": "frontier/world_ice",
+      "title": "Izotz / helado",
+      "category": "worlds",
+      "description": "Globo de casquetes, hielo azul y fracturas.",
+      "resource": "res://assets/models/frontier_pack/world_ice.glb",
+      "source": "art/blender/frontier_pack/sources/world_ice.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "fd45ffac3c1fd44eb81c3ce5edfd485b5b005e611ff4aeba36ed50ae7b2fa3e6",
+      "license": "MIT",
+      "contact_kinds": [
+        "planet"
+      ]
+    },
+    {
+      "id": "frontier/world_lava",
+      "title": "Labe / volcánico",
+      "category": "worlds",
+      "description": "Globo de costra oscura y fisuras incandescentes.",
+      "resource": "res://assets/models/frontier_pack/world_lava.glb",
+      "source": "art/blender/frontier_pack/sources/world_lava.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "dd91f0e61076ec398edb90408bcc03d437b1ec36c60ba26cddca8ae4d9c05621",
+      "license": "MIT",
+      "contact_kinds": [
+        "planet"
+      ]
+    },
+    {
+      "id": "frontier/world_ocean",
+      "title": "Urdin / oceánico",
+      "category": "worlds",
+      "description": "Globo de océanos, archipiélagos y nubes estilizadas.",
+      "resource": "res://assets/models/frontier_pack/world_ocean.glb",
+      "source": "art/blender/frontier_pack/sources/world_ocean.blend",
+      "manifest": "game/assets/models/frontier_pack/manifest.json",
+      "sha256": "0c65d790a1e0a3b257ae21cb7ca7372d9826d05f901008f8dbec2379d854708a",
+      "license": "MIT",
+      "contact_kinds": [
+        "planet"
+      ]
+    },
+    {
+      "id": "memory/guardians",
+      "title": "Guardianes · colección",
+      "category": "avatars",
+      "description": "Conjunto de la galería de recuerdos.",
+      "resource": "res://assets/models/memory_guardians.glb",
+      "source": "art/blender/memory_guardians.blend",
+      "manifest": "game/assets/models/memory_guardians.manifest.json",
+      "sha256": "ee8e1da9fe19ae3a1c855df33192ef777c5410f25bb40b998d36ababb842a18d",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/aingira_probe",
+      "title": "Aingira · sonda hostil",
+      "category": "enemies",
+      "description": "Sonda segmentada con aletas y articulación de la cola.",
+      "resource": "res://assets/models/orbita_pack/aingira_probe.glb",
+      "source": "art/blender/orbita_pack/aingira_probe.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "debd87afc6a67b8434e1f09279e8216cff33e1001c0c7f18b91e04b2bde8e4cf",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/argi_worklight",
+      "title": "Argi · lámpara magnética",
+      "category": "tools",
+      "description": "Lámpara portátil con base magnética, asa y cabezal orientable.",
+      "resource": "res://assets/models/orbita_pack/player_batch/argi_worklight.glb",
+      "source": "art/blender/orbita_pack/player_batch/argi_worklight.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "64175ea2ca2ce6bfa5e41bbc11972ca46adf8d705a37c24f813d35c03c7ddc4c",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/arnasa_eva_pack",
+      "title": "Arnasa · mochila de soporte EVA",
+      "category": "tools",
+      "description": "Mochila espacial de doble depósito, arnés, manguera, máscara acoplada y filtro articulado.",
+      "resource": "res://assets/models/orbita_pack/player_batch/arnasa_eva_pack.glb",
+      "source": "art/blender/orbita_pack/player_batch/arnasa_eva_pack.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "2e0579c9e7b578f228885c12a976541c7ea2b583bf81fe93607f6839c02e016a",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/babes_shield",
+      "title": "Babes · escudo desplegable",
+      "category": "tools",
+      "description": "Emisor portátil ficticio con pétalos articulados, batería y apoyos. No incluye lógica de escudo.",
+      "resource": "res://assets/models/orbita_pack/player_batch/babes_shield.glb",
+      "source": "art/blender/orbita_pack/player_batch/babes_shield.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "0030e4d3cdc8ad0f4fc575022efe13fb034053418a79d181126f206d454775c7",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/balea_rescue_ship",
+      "title": "Balea · nave de evacuación",
+      "category": "ships",
+      "description": "Nave de apoyo con seis cápsulas de evacuación, brazos de recuperación, puente y atraque dorsal.",
+      "resource": "res://assets/models/orbita_pack/player_batch/balea_rescue_ship.glb",
+      "source": "art/blender/orbita_pack/player_batch/balea_rescue_ship.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "cf9853aae5e2266d39bfd03dac47b4cab093c25e9ec4dfe2c4c6be841566b6ad",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "orbita/containment_projector",
+      "title": "Lotura · proyector de contención",
+      "category": "equipment",
+      "description": "Equipo ficticio de campo, cámara central y tres antenas.",
+      "resource": "res://assets/models/orbita_pack/containment_projector.glb",
+      "source": "art/blender/orbita_pack/containment_projector.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "91046c1a59dc9a8c7d68022ea714f0427e0517aa3b9d0b73fc287713572e5f6b",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/docking_collar",
+      "title": "Kaia · collar de atraque",
+      "category": "infrastructure",
+      "description": "Módulo abierto con anclajes frontal y posterior.",
+      "resource": "res://assets/models/orbita_pack/docking_collar.glb",
+      "source": "art/blender/orbita_pack/docking_collar.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "e42762c1325f3fece93c53459e2f12b58197fb0e5aeeeeb0bb240793c360faaf",
+      "license": "MIT",
+      "contact_kinds": [
+        "station"
+      ]
+    },
+    {
+      "id": "orbita/eraztun_giant",
+      "title": "Eraztun · gigante anillado",
+      "category": "worlds",
+      "description": "Planeta bandeado con anillos de geometría de doble cara.",
+      "resource": "res://assets/models/orbita_pack/eraztun_giant.glb",
+      "source": "art/blender/orbita_pack/eraztun_giant.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "3f411501886894b14d6f74793c03f55baf6847e0ce8e58d41dc7fa4c04809560",
+      "license": "MIT",
+      "contact_kinds": [
+        "planet"
+      ]
+    },
+    {
+      "id": "orbita/erlea_miner",
+      "title": "Erlea · nave minera",
+      "category": "ships",
+      "description": "Nave minera de cuatro depósitos y cabezal de extracción ficticio.",
+      "resource": "res://assets/models/orbita_pack/erlea_miner.glb",
+      "source": "art/blender/orbita_pack/erlea_miner.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "735cd07167500cd08fb01caf524da462e09d9a463a330af2ddc212d6f45b191a",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "orbita/ezpal_coil_dispenser",
+      "title": "Ezpal · dispersor de bobinas",
+      "category": "weapons",
+      "description": "Arma ficticia de tres emisores en carrusel, carcasa compacta y agarre auxiliar; sólo recurso visual.",
+      "resource": "res://assets/models/orbita_pack/player_batch/ezpal_coil_dispenser.glb",
+      "source": "art/blender/orbita_pack/player_batch/ezpal_coil_dispenser.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "d1fa05a937830822cfd920a05474c5a5fe87a4aec9f7380072b689b7bdc2c418",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/harri_moon",
+      "title": "Harri · luna de cráteres",
+      "category": "worlds",
+      "description": "Mundo estilizado con relieve de cráteres modelado y color en materiales.",
+      "resource": "res://assets/models/orbita_pack/harri_moon.glb",
+      "source": "art/blender/orbita_pack/harri_moon.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "887b9c1ff2c6692e70436d52abb96cce201719bf4b2bda3cd07f62d60bc5badf",
+      "license": "MIT",
+      "contact_kinds": [
+        "planet"
+      ]
+    },
+    {
+      "id": "orbita/izpi_binoculars",
+      "title": "Izpi · prismáticos multiespectrales",
+      "category": "tools",
+      "description": "Óptica portátil de dos objetivos extensibles, rueda de enfoque y correa.",
+      "resource": "res://assets/models/orbita_pack/player_batch/izpi_binoculars.glb",
+      "source": "art/blender/orbita_pack/player_batch/izpi_binoculars.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "81e4e078cc2f0aa9cf137f5920656ccb4331b8255e76a6bce1b7705d35eef712",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/karramarro_tug",
+      "title": "Karramarro · remolcador orbital",
+      "category": "ships",
+      "description": "Nave industrial con horquillas de remolque y dos motores.",
+      "resource": "res://assets/models/orbita_pack/karramarro_tug.glb",
+      "source": "art/blender/orbita_pack/karramarro_tug.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "5a0a60a84bf4e5bf0246997c591e0221bb54586aa90e061ce5612b98b9510811",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "orbita/kimu_survey_ship",
+      "title": "Kimu · exploradora cartográfica",
+      "category": "ships",
+      "description": "Nave de exploración de alas barridas, antena orientable, dos motores y soportes de carga científica.",
+      "resource": "res://assets/models/orbita_pack/player_batch/kimu_survey_ship.glb",
+      "source": "art/blender/orbita_pack/player_batch/kimu_survey_ship.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "76f238258e14bbe2c47f214b1c0f7f9768d179cf0c29ce968045390d88e9ce04",
+      "license": "MIT",
+      "contact_kinds": [
+        "friendly",
+        "hostile",
+        "derelict"
+      ]
+    },
+    {
+      "id": "orbita/lagin_sampler",
+      "title": "Lagin · recolector geológico",
+      "category": "tools",
+      "description": "Herramienta de muestreo con sonda extensible y carrusel de recipientes sellados.",
+      "resource": "res://assets/models/orbita_pack/player_batch/lagin_sampler.glb",
+      "source": "art/blender/orbita_pack/player_batch/lagin_sampler.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "22f406a2c144585cd0dc93b5cb976618b0b476006a0c324b20f4eae0268e12ab",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/lapa_drone",
+      "title": "Lapa · dron parásito",
+      "category": "enemies",
+      "description": "Dron de seis patas, caparazón y sensor orientable.",
+      "resource": "res://assets/models/orbita_pack/lapa_drone.glb",
+      "source": "art/blender/orbita_pack/lapa_drone.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "d22beacd66be8f686c4c3a95acff45e718030352f4f06775ca848bd1f2cc5c0f",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/medic_robot",
+      "title": "Osasun · asistente sanitario",
+      "category": "avatars",
+      "description": "Robot de tripulación compacto con pantalla y brazos articulados.",
+      "resource": "res://assets/models/orbita_pack/medic_robot.glb",
+      "source": "art/blender/orbita_pack/medic_robot.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "f62cc5747b71768e1b6d4f0233cc918759a40b6653d6e816ee455aae454a2f22",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/oreka_gravity_tool",
+      "title": "Oreka · manipulador gravitatorio",
+      "category": "tools",
+      "description": "Herramienta ficticia de dos horquillas móviles alrededor de un núcleo de campo.",
+      "resource": "res://assets/models/orbita_pack/player_batch/oreka_gravity_tool.glb",
+      "source": "art/blender/orbita_pack/player_batch/oreka_gravity_tool.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "79e6bdf4ca1ab8d8ef621f01031e9b136ef12adb731eac0d527e6a20b1cd8ec9",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/pulse_turret",
+      "title": "Begi · torreta de pulso",
+      "category": "equipment",
+      "description": "Equipo ficticio de doble emisor con pivote de orientación.",
+      "resource": "res://assets/models/orbita_pack/pulse_turret.glb",
+      "source": "art/blender/orbita_pack/pulse_turret.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "459430e23b0f4de34158788b40f283267e65b5582908b18ea2b7c103b79d1ff2",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/solar_array",
+      "title": "Eguzki · módulo solar",
+      "category": "infrastructure",
+      "description": "Bus orbital de dos alas, paneles separados y antena.",
+      "resource": "res://assets/models/orbita_pack/solar_array.glb",
+      "source": "art/blender/orbita_pack/solar_array.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "efde93229b318378714f96598695c1fe525d5cc2a96585f86c88593a6f18e5db",
+      "license": "MIT",
+      "contact_kinds": [
+        "station"
+      ]
+    },
+    {
+      "id": "orbita/technician_robot",
+      "title": "Torlo · técnico mecánico",
+      "category": "avatars",
+      "description": "Tripulante robótico con articulaciones rígidas y anclajes de equipo.",
+      "resource": "res://assets/models/orbita_pack/technician_robot.glb",
+      "source": "art/blender/orbita_pack/technician_robot.blend",
+      "manifest": "game/assets/models/orbita_pack/manifest.json",
+      "sha256": "788e4bd06a9e0e77ea0d82cdb8bd7a57d6efb6eef7d7f7c147b53beae77f1719",
+      "license": "MIT",
+      "contact_kinds": []
+    },
+    {
+      "id": "orbita/uhina_arc_emitter",
+      "title": "Uhina · emisor de arco",
+      "category": "weapons",
+      "description": "Arma de ciencia ficción con raíles abiertos, celda extraíble y dos agarres; sólo recurso visual.",
+      "resource": "res://assets/models/orbita_pack/player_batch/uhina_arc_emitter.glb",
+      "source": "art/blender/orbita_pack/player_batch/uhina_arc_emitter.blend",
+      "manifest": "game/assets/models/orbita_pack/player_batch/manifest.json",
+      "sha256": "76e1e9da10f338bd6dd9bb86f841bae6939e88920f121535830c5302febded82",
+      "license": "MIT",
+      "contact_kinds": []
+    }
+  ]
+}

@@ -325,6 +325,7 @@ func snapshot(for_role: String = "", principal: String = "") -> Dictionary:
 	if safe.is_empty(): return safe
 	# Authored future missions and unidentified contacts are host-only content.
 	safe.erase("campaign_document")
+	safe.erase("gm_live")
 	ShipOperations.redact(safe, for_role)
 	Cooperation.redact(safe, principal)
 	safe.mission.erase("contacts")

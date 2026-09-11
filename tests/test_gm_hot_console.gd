@@ -15,6 +15,7 @@ func check(value: bool, label: String) -> void:
 func mission() -> Dictionary:
 	return {
 		"id": "gm-live-test",
+		"sector": "Synthetic",
 		"title": "GM Live Test",
 		"briefing": "Prueba de dirección en vivo",
 		"contacts": [

@@ -169,16 +169,20 @@ func _process(delta: float) -> void:
 	var active: Array = []
 	for c in data.contacts:
 		active.append(c.id)
-		if contacts.has(c.id) and contacts[c.id].kind != c.kind:
+		var visual_id = c.get("visual_model", "") if c.get("identified", false) else ""
+		if not visual_id is String or not RuntimeAssetLibrary.compatible(visual_id, c.kind): visual_id = ""
+		if contacts.has(c.id) and (contacts[c.id].kind != c.kind or contacts[c.id].get("visual_model", "") != visual_id):
 			contacts[c.id].node.queue_free()
 			contacts.erase(c.id)
 		if not contacts.has(c.id):
 			var mapped = {"station": "station", "friendly": "transport", "hostile": "sentinel", "derelict": "transport", "anomaly": "anomaly", "beacon": "beacon", "unknown": "beacon", "asteroid": "asteroid", "planet": "planet", "blackhole": "anomaly", "wormhole": "anomaly", "nebula": "anomaly"}
 			var node = Node3D.new()
-			var object = PickupModel.create(c.kind) if c.kind in SpacePickups.KINDS else model(mapped[c.kind])
+			var object = RuntimeAssetLibrary.contact_model(visual_id, c.kind, SpacePhysics.radius(c))
+			var from_library = object != null
+			if object == null: object = PickupModel.create(c.kind) if c.kind in SpacePickups.KINDS else model(mapped.get(c.kind, "beacon"))
 			var scale_value = {"station": 0.7, "beacon": 0.35, "unknown": 0.20}.get(c.kind, 0.7)
 			if c.kind in SpacePhysics.KINDS: scale_value = SpacePhysics.radius(c) * 0.04
-			object.scale = Vector3.ONE * scale_value
+			if not from_library: object.scale = Vector3.ONE * scale_value
 			node.add_child(object)
 			var title = Label3D.new()
 			title.text = c.name
@@ -190,7 +194,7 @@ func _process(delta: float) -> void:
 			title.no_depth_test = true
 			node.add_child(title)
 			world.add_child(node)
-			contacts[c.id] = {"node": node, "kind": c.kind, "label": title}
+			contacts[c.id] = {"node": node, "kind": c.kind, "label": title, "visual_model": visual_id}
 		var node: Node3D = contacts[c.id].node
 		node.position = Vector3(c.position[0] - data.ship.position[0], 0, c.position[1] - data.ship.position[1]) * 0.04
 		node.visible = c.hull > 0 and node.position.length() < 300

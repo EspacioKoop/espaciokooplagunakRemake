@@ -10,6 +10,8 @@ var _deck: WorldDeck
 var _radar: Radar
 var _editor: MissionEditor
 var _campaign_window: CampaignEditor
+var _gm_window: GMHotConsole
+var _asset_window: AssetLibraryWindow
 var _draft: Dictionary = {}
 var _refs: Dictionary = {}
 var _action_refs: Dictionary = {}
@@ -199,6 +201,11 @@ func _bridge() -> void:
 	var pause = ConsoleUI.button("Pausa local", func(): Session.paused = not Session.paused)
 	pause.disabled = Session.mode != "offline"
 	headline.add_child(pause)
+	var gm_button = ConsoleUI.button("Dirección en vivo", _open_gm_console)
+	gm_button.name = "GMConsoleLauncher"
+	gm_button.disabled = not GMLiveActions.can_direct(Session)
+	_refs.gm_button = gm_button
+	headline.add_child(gm_button)
 	var body = ConsoleUI.row(_content, 16)
 	ConsoleUI.expand(body)
 	var stations = ConsoleUI.card(body, "PUESTOS DE LA TRIPULACIÓN")
@@ -688,6 +695,9 @@ func _upgrade() -> void:
 	_notice(result.message, result.ok)
 
 func _mission_editor() -> void:
+	var library_button = ConsoleUI.button("Biblioteca 3D · inspeccionar recursos", _open_asset_library)
+	library_button.name = "AssetLibraryLauncher"
+	_content.add_child(library_button)
 	_editor = MissionEditor.new()
 	_editor.mission = _draft.duplicate(true)
 	ConsoleUI.expand(_editor)
@@ -835,6 +845,7 @@ func _refresh() -> void:
 	_session_label.text = "● " + {"offline": "LOCAL", "host": "ANFITRIÓN", "client": "TRIPULANTE"}.get(Session.mode, "LOCAL")
 	if _refs.has("connection"): _refs.connection.text = Session.connection_status
 	if _refs.has("deck_prompt") and _deck != null: _refs.deck_prompt.text = _deck.prompt
+	if _refs.has("gm_button"): _refs.gm_button.disabled = not GMLiveActions.can_direct(Session)
 	var data: Dictionary = Session.view
 	if data.is_empty(): return
 	var ship: Dictionary = data.ship
@@ -1125,3 +1136,36 @@ func _take(path: String, filename: String) -> void:
 		push_error("No se pudo guardar la captura: " + filename)
 		get_tree().quit(1)
 	else: print("CAPTURE ", filename)
+
+
+func _open_gm_console() -> void:
+	if not GMLiveActions.can_direct(Session): return
+	if is_instance_valid(_gm_window):
+		_gm_window.grab_focus()
+		return
+	var old_focus = get_viewport().gui_get_focus_owner()
+	var focus_ref = weakref(old_focus) if old_focus != null else null
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_gm_window = GMHotConsole.new()
+	_gm_window.setup(Session)
+	add_child(_gm_window)
+	_gm_window.tree_exited.connect(_restore_modal_focus.bind(focus_ref))
+	_gm_window.popup_centered_clamped(Vector2i(1060, 740), 0.95)
+
+func _open_asset_library() -> void:
+	if is_instance_valid(_asset_window):
+		_asset_window.grab_focus()
+		return
+	var old_focus = get_viewport().gui_get_focus_owner()
+	var focus_ref = weakref(old_focus) if old_focus != null else null
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_asset_window = AssetLibraryWindow.new()
+	add_child(_asset_window)
+	_asset_window.tree_exited.connect(_restore_modal_focus.bind(focus_ref))
+	_asset_window.popup_centered_clamped(Vector2i(1140, 720), 0.95)
+
+func _restore_modal_focus(reference: WeakRef) -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var control = reference.get_ref() if reference != null else null
+	if is_instance_valid(control) and control.is_inside_tree() and control.is_visible_in_tree():
+		control.call_deferred("grab_focus")
