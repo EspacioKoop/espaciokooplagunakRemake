@@ -1,0 +1,2499 @@
+{
+  "schema": "espaciokoop-habitable-planets",
+  "schema_version": 1,
+  "pack": "bizi",
+  "version": 1,
+  "library_issue": 52,
+  "habitable": true,
+  "units": "metres",
+  "axes": "+X right / +Y up / -Z forward",
+  "coordinate_contract": "Both representations use the SAME planet-centred reference frame, metre scale and terrain field. No arbitrary surface scaling.",
+  "assets": [
+    {
+      "id": "bizi/ametz/orbit",
+      "version": 1,
+      "source": "art/blender/bizi_planets/ametz.blend",
+      "runtime": "game/assets/models/bizi_planets/ametz_orbit.glb",
+      "source_sha256": "db6f8ee45f706d0388acff48017d718137f6268137f1effa21deded006090c35",
+      "sha256": "102b7182103e08c4e5b7e2fff02e747a3bf22d8087ed20b985d3e2e271f1a8fa",
+      "bytes": 339712,
+      "triangles": 3920,
+      "mesh_nodes": 16,
+      "aabb": {
+        "min": [
+          -121.112885,
+          -122.081909,
+          -121.691063
+        ],
+        "max": [
+          121.087128,
+          120.118095,
+          120.508942
+        ]
+      },
+      "dimensions": [
+        242.200012,
+        242.200005,
+        242.200005
+      ],
+      "materials": [
+        "B_ametz_grass",
+        "B_ametz_grass_light",
+        "B_ametz_rock",
+        "B_ametz_sand",
+        "B_ametz_soil",
+        "I_ceramic_ivory",
+        "B_ametz_wood",
+        "I_deep_petrol",
+        "B_ametz_water"
+      ],
+      "sockets": [],
+      "animations": [],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "category": "habitable_planets",
+      "title": "Ametz · mundo habitable de bosques / orbit",
+      "habitable": true,
+      "representation": "orbit",
+      "radius_m": 120.0,
+      "pivot": "planet centre; same unscaled metres in both representations",
+      "preview": "docs/images/bizi_planets/ametz_orbit.png"
+    },
+    {
+      "id": "bizi/ametz/surface",
+      "version": 1,
+      "source": "art/blender/bizi_planets/ametz.blend",
+      "runtime": "game/assets/models/bizi_planets/ametz_surface.glb",
+      "source_sha256": "db6f8ee45f706d0388acff48017d718137f6268137f1effa21deded006090c35",
+      "sha256": "e2c2279429cd2c0fddc9f8c7b480ea2590559f7d084923463ebbbb94881d5f6a",
+      "bytes": 13884720,
+      "triangles": 157684,
+      "mesh_nodes": 240,
+      "aabb": {
+        "min": [
+          -122.380363,
+          -126.089554,
+          -124.703812
+        ],
+        "max": [
+          126.528618,
+          122.889442,
+          120.814194
+        ]
+      },
+      "dimensions": [
+        248.908981,
+        248.978996,
+        245.518005
+      ],
+      "materials": [
+        "B_ametz_leaves_light",
+        "B_ametz_wood",
+        "B_ametz_leaves",
+        "B_ametz_rock",
+        "B_ametz_sand",
+        "I_amber_indicator",
+        "B_ametz_cloth",
+        "I_deep_petrol",
+        "B_ametz_soil",
+        "I_titanium",
+        "I_safety_amber",
+        "I_ceramic_ivory",
+        "I_cyan_emitter",
+        "B_ametz_water",
+        "B_ametz_grass",
+        "B_ametz_grass_light"
+      ],
+      "sockets": [
+        {
+          "name": "socket_encounter_0",
+          "position": [
+            22.886255,
+            -82.778229,
+            -89.671532
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_encounter_1",
+          "position": [
+            32.427895,
+            -82.778229,
+            -86.678688
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_encounter_2",
+          "position": [
+            24.425428,
+            -76.650345,
+            -94.578667
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_encounter_3",
+          "position": [
+            33.967072,
+            -76.650345,
+            -91.585823
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_landing",
+          "position": [
+            56.701294,
+            112.220879,
+            1e-06
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_arch",
+          "position": [
+            38.14743,
+            -119.272804,
+            8.386605
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_arena",
+          "position": [
+            27.174047,
+            -86.645744,
+            -86.635139
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_camp",
+          "position": [
+            44.279057,
+            -69.5532,
+            94.621773
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_greenhouse",
+          "position": [
+            -32.58073,
+            0.966864,
+            -121.1987
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_grove",
+          "position": [
+            68.430923,
+            55.696796,
+            -89.25602
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_landing",
+          "position": [
+            53.915577,
+            113.334343,
+            0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_observatory",
+          "position": [
+            8.837222,
+            74.389969,
+            100.695587
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_quarry",
+          "position": [
+            104.671944,
+            19.025118,
+            66.583717
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_relay",
+          "position": [
+            -57.317772,
+            -16.925995,
+            110.361893
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_reservoir",
+          "position": [
+            -61.596661,
+            -103.359436,
+            35.696526
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_ruins",
+          "position": [
+            -118.014839,
+            37.259747,
+            20.875162
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_sanctuary",
+          "position": [
+            -105.497955,
+            -52.20454,
+            -43.548023
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_village",
+          "position": [
+            -61.765007,
+            93.462006,
+            -56.58181
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_wreck",
+          "position": [
+            113.306839,
+            -34.653454,
+            -41.379478
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_arch_0",
+          "position": [
+            49.282139,
+            -114.307961,
+            3.667371
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_arch_1",
+          "position": [
+            49.561275,
+            -114.307961,
+            2.397692
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_arena_0",
+          "position": [
+            22.393478,
+            -77.609184,
+            -94.783104
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_arena_1",
+          "position": [
+            21.153065,
+            -77.609184,
+            -95.172173
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_camp_0",
+          "position": [
+            52.601646,
+            -59.551926,
+            95.89122
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_camp_1",
+          "position": [
+            53.779099,
+            -59.551926,
+            95.340225
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_greenhouse_0",
+          "position": [
+            -38.890766,
+            11.87091,
+            -117.707611
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_greenhouse_1",
+          "position": [
+            -40.146194,
+            11.870911,
+            -117.370125
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_grove_0",
+          "position": [
+            59.028725,
+            64.748077,
+            -88.497383
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_grove_1",
+          "position": [
+            57.997044,
+            64.748077,
+            -89.288353
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_landing_0",
+          "position": [
+            43.348698,
+            116.534889,
+            -7.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_landing_1",
+          "position": [
+            43.348698,
+            116.534889,
+            -8.3
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_observatory_0",
+          "position": [
+            15.128575,
+            82.205101,
+            92.314354
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_observatory_1",
+          "position": [
+            16.423597,
+            82.205101,
+            92.200699
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_quarry_0",
+          "position": [
+            105.657242,
+            29.566029,
+            58.914242
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_quarry_1",
+          "position": [
+            106.354988,
+            29.566029,
+            57.81736
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_relay_0",
+          "position": [
+            -51.031033,
+            -5.886235,
+            113.444603
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_relay_1",
+          "position": [
+            -49.87735,
+            -5.886235,
+            114.043777
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_reservoir_0",
+          "position": [
+            -65.056252,
+            -95.808517,
+            45.791939
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_reservoir_1",
+          "position": [
+            -64.404427,
+            -95.808517,
+            46.916714
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_ruins_0",
+          "position": [
+            -112.053268,
+            47.195007,
+            26.929312
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_ruins_1",
+          "position": [
+            -111.826828,
+            47.195007,
+            28.20944
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_sanctuary_0",
+          "position": [
+            -110.979996,
+            -41.590714,
+            -38.238007
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_sanctuary_1",
+          "position": [
+            -111.476021,
+            -41.590714,
+            -37.036358
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_village_0",
+          "position": [
+            -59.687145,
+            99.52005,
+            -45.185097
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_village_1",
+          "position": [
+            -60.565285,
+            99.52005,
+            -44.226521
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_wreck_0",
+          "position": [
+            112.248055,
+            -23.705402,
+            -48.445
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_wreck_1",
+          "position": [
+            111.802109,
+            -23.705402,
+            -49.666119
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_return",
+          "position": [
+            54.398766,
+            111.8489,
+            0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_ship_parking",
+          "position": [
+            45.993374,
+            115.068573,
+            0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "category": "habitable_planets",
+      "title": "Ametz · mundo habitable de bosques / surface",
+      "habitable": true,
+      "representation": "surface",
+      "radius_m": 120.0,
+      "pivot": "planet centre; same unscaled metres in both representations",
+      "preview": "docs/images/bizi_planets/ametz_surface.png"
+    },
+    {
+      "id": "bizi/uharte/orbit",
+      "version": 1,
+      "source": "art/blender/bizi_planets/uharte.blend",
+      "runtime": "game/assets/models/bizi_planets/uharte_orbit.glb",
+      "source_sha256": "2d5d0bafa538a87f6b1c9f0d7e55df42c11f970d42df85187e9bb52f6c68970a",
+      "sha256": "0a446d675cc8e49fd4ed9bfc6133f7f828e58d161549d67f29ff923a1afc4ef8",
+      "bytes": 338504,
+      "triangles": 3920,
+      "mesh_nodes": 16,
+      "aabb": {
+        "min": [
+          -98.650002,
+          -102.024124,
+          -102.18837
+        ],
+        "max": [
+          98.828918,
+          100.085922,
+          98.876617
+        ]
+      },
+      "dimensions": [
+        197.47892,
+        202.110046,
+        201.064987
+      ],
+      "materials": [
+        "B_uharte_grass",
+        "B_uharte_grass_light",
+        "B_uharte_sand",
+        "B_uharte_soil",
+        "I_ceramic_ivory",
+        "I_deep_petrol",
+        "B_uharte_water"
+      ],
+      "sockets": [],
+      "animations": [],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "category": "habitable_planets",
+      "title": "Uharte · mundo habitable de islas / orbit",
+      "habitable": true,
+      "representation": "orbit",
+      "radius_m": 100.0,
+      "pivot": "planet centre; same unscaled metres in both representations",
+      "preview": "docs/images/bizi_planets/uharte_orbit.png"
+    },
+    {
+      "id": "bizi/uharte/surface",
+      "version": 1,
+      "source": "art/blender/bizi_planets/uharte.blend",
+      "runtime": "game/assets/models/bizi_planets/uharte_surface.glb",
+      "source_sha256": "2d5d0bafa538a87f6b1c9f0d7e55df42c11f970d42df85187e9bb52f6c68970a",
+      "sha256": "1aee76746e402e081c3a744785553b5cd2cc57f5b4f45ab8a64a93985ea5eec3",
+      "bytes": 6296960,
+      "triangles": 72752,
+      "mesh_nodes": 132,
+      "aabb": {
+        "min": [
+          -102.161545,
+          -104.927612,
+          -105.438828
+        ],
+        "max": [
+          99.822662,
+          101.945381,
+          100.254951
+        ]
+      },
+      "dimensions": [
+        201.984207,
+        206.872993,
+        205.693779
+      ],
+      "materials": [
+        "B_uharte_leaves_light",
+        "B_uharte_wood",
+        "B_uharte_leaves",
+        "B_uharte_rock",
+        "B_uharte_sand",
+        "I_cyan_emitter",
+        "B_uharte_cloth",
+        "I_deep_petrol",
+        "I_amber_indicator",
+        "B_uharte_soil",
+        "I_titanium",
+        "I_safety_amber",
+        "I_ceramic_ivory",
+        "B_uharte_water",
+        "B_uharte_grass",
+        "B_uharte_grass_light"
+      ],
+      "sockets": [
+        {
+          "name": "socket_encounter_0",
+          "position": [
+            18.30131,
+            -69.921082,
+            -75.054001
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_encounter_1",
+          "position": [
+            27.842951,
+            -69.921082,
+            -72.061157
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_encounter_2",
+          "position": [
+            19.840483,
+            -63.793198,
+            -79.961136
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_encounter_3",
+          "position": [
+            29.382124,
+            -63.793198,
+            -76.968292
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_landing",
+          "position": [
+            49.278217,
+            93.649445,
+            1e-06
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_arch",
+          "position": [
+            30.897491,
+            -100.70137,
+            6.792726
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_arena",
+          "position": [
+            22.589102,
+            -73.788597,
+            -72.017609
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_camp",
+          "position": [
+            36.937828,
+            -59.553204,
+            78.93399
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_greenhouse",
+          "position": [
+            -27.401909,
+            -0.461708,
+            -101.933731
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_grove",
+          "position": [
+            57.892456,
+            45.696796,
+            -75.510445
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_landing",
+          "position": [
+            46.4925,
+            94.762909,
+            0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_observatory",
+          "position": [
+            7.497883,
+            61.532825,
+            85.434517
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_quarry",
+          "position": [
+            88.188828,
+            14.739403,
+            56.098515
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_relay",
+          "position": [
+            -48.12318,
+            -15.497423,
+            92.658257
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_reservoir",
+          "position": [
+            -50.892445,
+            -87.645149,
+            29.493216
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_ruins",
+          "position": [
+            -99.619415,
+            30.116888,
+            17.621271
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_sanctuary",
+          "position": [
+            -88.230255,
+            -45.061684,
+            -36.42017
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_village",
+          "position": [
+            -52.642433,
+            77.747719,
+            -48.224785
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_poi_wreck",
+          "position": [
+            94.956802,
+            -30.367741,
+            -34.678074
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_arch_0",
+          "position": [
+            42.0322,
+            -95.736526,
+            2.073492
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_arch_1",
+          "position": [
+            42.311337,
+            -95.736526,
+            0.803814
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_arena_0",
+          "position": [
+            17.808533,
+            -64.752037,
+            -80.165573
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_arena_1",
+          "position": [
+            16.568119,
+            -64.752037,
+            -80.554642
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_camp_0",
+          "position": [
+            45.260418,
+            -49.551926,
+            80.203438
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_camp_1",
+          "position": [
+            46.43787,
+            -49.551926,
+            79.652443
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_greenhouse_0",
+          "position": [
+            -33.711945,
+            10.442338,
+            -98.442642
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_greenhouse_1",
+          "position": [
+            -34.967373,
+            10.442338,
+            -98.105156
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_grove_0",
+          "position": [
+            48.490257,
+            54.748077,
+            -74.751808
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_grove_1",
+          "position": [
+            47.458576,
+            54.748077,
+            -75.542778
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_landing_0",
+          "position": [
+            35.925621,
+            97.963455,
+            -7.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_landing_1",
+          "position": [
+            35.925621,
+            97.963455,
+            -8.3
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_observatory_0",
+          "position": [
+            13.789237,
+            69.347954,
+            77.053284
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_observatory_1",
+          "position": [
+            15.08426,
+            69.347954,
+            76.939629
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_quarry_0",
+          "position": [
+            89.174126,
+            25.280313,
+            48.429035
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_quarry_1",
+          "position": [
+            89.871872,
+            25.280313,
+            47.332153
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_relay_0",
+          "position": [
+            -41.836441,
+            -4.457663,
+            95.740967
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_relay_1",
+          "position": [
+            -40.682758,
+            -4.457663,
+            96.340141
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_reservoir_0",
+          "position": [
+            -54.352043,
+            -80.094231,
+            39.588631
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_reservoir_1",
+          "position": [
+            -53.700211,
+            -80.094231,
+            40.713406
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_ruins_0",
+          "position": [
+            -93.657845,
+            40.052151,
+            23.675421
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_ruins_1",
+          "position": [
+            -93.431404,
+            40.052151,
+            24.955549
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_sanctuary_0",
+          "position": [
+            -93.712296,
+            -34.447857,
+            -31.110151
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_sanctuary_1",
+          "position": [
+            -94.208321,
+            -34.447857,
+            -29.908503
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_village_0",
+          "position": [
+            -50.564571,
+            83.805763,
+            -36.828072
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_village_1",
+          "position": [
+            -51.442711,
+            83.805763,
+            -35.869495
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_wreck_0",
+          "position": [
+            93.898018,
+            -19.419687,
+            -41.743595
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_resource_wreck_1",
+          "position": [
+            93.452072,
+            -19.419685,
+            -42.964714
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_return",
+          "position": [
+            46.975689,
+            93.277466,
+            0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        },
+        {
+          "name": "socket_ship_parking",
+          "position": [
+            38.570297,
+            96.497139,
+            0.0
+          ],
+          "forward_axis": "-Z",
+          "lookup": "find_child(name, true, false)"
+        }
+      ],
+      "animations": [],
+      "units": "metres",
+      "axes": "+X right / +Y up / -Z forward",
+      "license": "MIT",
+      "status": "exported",
+      "authoring_blender": "4.5.3 LTS",
+      "category": "habitable_planets",
+      "title": "Uharte · mundo habitable de islas / surface",
+      "habitable": true,
+      "representation": "surface",
+      "radius_m": 100.0,
+      "pivot": "planet centre; same unscaled metres in both representations",
+      "preview": "docs/images/bizi_planets/uharte_surface.png"
+    }
+  ],
+  "planets": [
+    {
+      "id": "ametz",
+      "title": "Ametz · mundo habitable de bosques",
+      "habitable": true,
+      "radius_m": 120.0,
+      "pois": [
+        {
+          "id": "ametz/landing",
+          "node": "poi_landing",
+          "title": "Puerto del Claro",
+          "roles": [
+            "arrival",
+            "return",
+            "ship_parking"
+          ],
+          "entry_socket": "socket_poi_landing",
+          "source_normal": [
+            0.37115374207496643,
+            0.0,
+            0.9285714030265808
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            53.915577,
+            113.334343,
+            0.0
+          ],
+          "links": [
+            "ametz/arch",
+            "ametz/village"
+          ]
+        },
+        {
+          "id": "ametz/village",
+          "node": "poi_village",
+          "title": "Aldea de las Raíces",
+          "roles": [
+            "dialogue",
+            "trade"
+          ],
+          "entry_socket": "socket_poi_village",
+          "source_normal": [
+            -0.45612868666648865,
+            0.4178512394428253,
+            0.7857142686843872
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -61.765007,
+            93.462006,
+            -56.58181
+          ],
+          "links": [
+            "ametz/landing",
+            "ametz/observatory"
+          ]
+        },
+        {
+          "id": "ametz/observatory",
+          "node": "poi_observatory",
+          "title": "Observatorio del Viento",
+          "roles": [
+            "survey",
+            "mission_clue"
+          ],
+          "entry_socket": "socket_poi_observatory",
+          "source_normal": [
+            0.06696689128875732,
+            -0.7630531787872314,
+            0.6428571343421936
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            8.837222,
+            74.389969,
+            100.695587
+          ],
+          "links": [
+            "ametz/village",
+            "ametz/grove"
+          ]
+        },
+        {
+          "id": "ametz/grove",
+          "node": "poi_grove",
+          "title": "Árbol de los Ecos",
+          "roles": [
+            "biomass",
+            "exploration"
+          ],
+          "entry_socket": "socket_poi_grove",
+          "source_normal": [
+            0.5269235372543335,
+            0.6872783899307251,
+            0.5
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            68.430923,
+            55.696796,
+            -89.25602
+          ],
+          "links": [
+            "ametz/observatory",
+            "ametz/ruins"
+          ]
+        },
+        {
+          "id": "ametz/ruins",
+          "node": "poi_ruins",
+          "title": "Ruinas del Círculo",
+          "roles": [
+            "archaeology",
+            "mission_clue"
+          ],
+          "entry_socket": "socket_poi_ruins",
+          "source_normal": [
+            -0.9197714328765869,
+            -0.16269461810588837,
+            0.3571428656578064
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -118.014839,
+            37.259747,
+            20.875162
+          ],
+          "links": [
+            "ametz/grove",
+            "ametz/quarry"
+          ]
+        },
+        {
+          "id": "ametz/quarry",
+          "node": "poi_quarry",
+          "title": "Cantera de Ámbar",
+          "roles": [
+            "minerals",
+            "gathering"
+          ],
+          "entry_socket": "socket_poi_quarry",
+          "source_normal": [
+            0.8241557478904724,
+            -0.524260401725769,
+            0.2142857164144516
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            104.671944,
+            19.025118,
+            66.583717
+          ],
+          "links": [
+            "ametz/ruins",
+            "ametz/greenhouse"
+          ]
+        },
+        {
+          "id": "ametz/greenhouse",
+          "node": "poi_greenhouse",
+          "title": "Jardín de Semillas",
+          "roles": [
+            "botany",
+            "gathering"
+          ],
+          "entry_socket": "socket_poi_greenhouse",
+          "source_normal": [
+            -0.2589412033557892,
+            0.9632483720779419,
+            0.0714285746216774
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -32.58073,
+            0.966864,
+            -121.1987
+          ],
+          "links": [
+            "ametz/quarry",
+            "ametz/relay"
+          ]
+        },
+        {
+          "id": "ametz/relay",
+          "node": "poi_relay",
+          "title": "Torre del Horizonte",
+          "roles": [
+            "repair",
+            "communications"
+          ],
+          "entry_socket": "socket_poi_relay",
+          "source_normal": [
+            -0.45972973108291626,
+            -0.8851816058158875,
+            -0.0714285746216774
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -57.317772,
+            -16.925995,
+            110.361893
+          ],
+          "links": [
+            "ametz/greenhouse",
+            "ametz/wreck"
+          ]
+        },
+        {
+          "id": "ametz/wreck",
+          "node": "poi_wreck",
+          "title": "Sonda Silenciosa",
+          "roles": [
+            "salvage",
+            "mission_clue"
+          ],
+          "entry_socket": "socket_poi_wreck",
+          "source_normal": [
+            0.9175018072128296,
+            0.3350701928138733,
+            -0.2142857164144516
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            113.306839,
+            -34.653454,
+            -41.379478
+          ],
+          "links": [
+            "ametz/relay",
+            "ametz/sanctuary"
+          ]
+        },
+        {
+          "id": "ametz/sanctuary",
+          "node": "poi_sanctuary",
+          "title": "Santuario del Musgo",
+          "roles": [
+            "lore",
+            "exploration"
+          ],
+          "entry_socket": "socket_poi_sanctuary",
+          "source_normal": [
+            -0.8633847832679749,
+            0.35639268159866333,
+            -0.3571428656578064
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -105.497955,
+            -52.20454,
+            -43.548023
+          ],
+          "links": [
+            "ametz/wreck",
+            "ametz/camp"
+          ]
+        },
+        {
+          "id": "ametz/camp",
+          "node": "poi_camp",
+          "title": "Campamento del Sur",
+          "roles": [
+            "rest",
+            "mission_start"
+          ],
+          "entry_socket": "socket_poi_camp",
+          "source_normal": [
+            0.36706140637397766,
+            -0.7843888998031616,
+            -0.5
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            44.279057,
+            -69.5532,
+            94.621773
+          ],
+          "links": [
+            "ametz/sanctuary",
+            "ametz/arena"
+          ]
+        },
+        {
+          "id": "ametz/arena",
+          "node": "poi_arena",
+          "title": "Patio de los Guardianes",
+          "roles": [
+            "encounter",
+            "cover"
+          ],
+          "entry_socket": "socket_poi_arena",
+          "source_normal": [
+            0.22924727201461792,
+            0.7308764457702637,
+            -0.6428571343421936
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            27.174047,
+            -86.645744,
+            -86.635139
+          ],
+          "links": [
+            "ametz/camp",
+            "ametz/reservoir"
+          ]
+        },
+        {
+          "id": "ametz/reservoir",
+          "node": "poi_reservoir",
+          "title": "Depósito del Rocío",
+          "roles": [
+            "water",
+            "repair"
+          ],
+          "entry_socket": "socket_poi_reservoir",
+          "source_normal": [
+            -0.5352106094360352,
+            -0.31016549468040466,
+            -0.7857142686843872
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -61.596661,
+            -103.359436,
+            35.696526
+          ],
+          "links": [
+            "ametz/arena",
+            "ametz/arch"
+          ]
+        },
+        {
+          "id": "ametz/arch",
+          "node": "poi_arch",
+          "title": "Arco de Piedra",
+          "roles": [
+            "landmark",
+            "traversal"
+          ],
+          "entry_socket": "socket_poi_arch",
+          "source_normal": [
+            0.36249688267707825,
+            -0.07969392091035843,
+            -0.9285714030265808
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            38.14743,
+            -119.272804,
+            8.386605
+          ],
+          "links": [
+            "ametz/reservoir",
+            "ametz/landing"
+          ]
+        }
+      ],
+      "arrival_socket": "socket_landing",
+      "return_socket": "socket_return",
+      "arrival_position": [
+        56.701294,
+        112.220879,
+        1e-06
+      ],
+      "arrival_clearance_m": 1.85,
+      "resources": [
+        {
+          "socket": "socket_resource_arch_0",
+          "position": [
+            49.282139,
+            -114.307961,
+            3.667371
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_arch_1",
+          "position": [
+            49.561275,
+            -114.307961,
+            2.397692
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_arena_0",
+          "position": [
+            22.393478,
+            -77.609184,
+            -94.783104
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_arena_1",
+          "position": [
+            21.153065,
+            -77.609184,
+            -95.172173
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_camp_0",
+          "position": [
+            52.601646,
+            -59.551926,
+            95.89122
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_camp_1",
+          "position": [
+            53.779099,
+            -59.551926,
+            95.340225
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_greenhouse_0",
+          "position": [
+            -38.890766,
+            11.87091,
+            -117.707611
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_greenhouse_1",
+          "position": [
+            -40.146194,
+            11.870911,
+            -117.370125
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_grove_0",
+          "position": [
+            59.028725,
+            64.748077,
+            -88.497383
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_grove_1",
+          "position": [
+            57.997044,
+            64.748077,
+            -89.288353
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_landing_0",
+          "position": [
+            43.348698,
+            116.534889,
+            -7.0
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_landing_1",
+          "position": [
+            43.348698,
+            116.534889,
+            -8.3
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_observatory_0",
+          "position": [
+            15.128575,
+            82.205101,
+            92.314354
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_observatory_1",
+          "position": [
+            16.423597,
+            82.205101,
+            92.200699
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_quarry_0",
+          "position": [
+            105.657242,
+            29.566029,
+            58.914242
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_quarry_1",
+          "position": [
+            106.354988,
+            29.566029,
+            57.81736
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_relay_0",
+          "position": [
+            -51.031033,
+            -5.886235,
+            113.444603
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_relay_1",
+          "position": [
+            -49.87735,
+            -5.886235,
+            114.043777
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_reservoir_0",
+          "position": [
+            -65.056252,
+            -95.808517,
+            45.791939
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_reservoir_1",
+          "position": [
+            -64.404427,
+            -95.808517,
+            46.916714
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_ruins_0",
+          "position": [
+            -112.053268,
+            47.195007,
+            26.929312
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_ruins_1",
+          "position": [
+            -111.826828,
+            47.195007,
+            28.20944
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_sanctuary_0",
+          "position": [
+            -110.979996,
+            -41.590714,
+            -38.238007
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_sanctuary_1",
+          "position": [
+            -111.476021,
+            -41.590714,
+            -37.036358
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_village_0",
+          "position": [
+            -59.687145,
+            99.52005,
+            -45.185097
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_village_1",
+          "position": [
+            -60.565285,
+            99.52005,
+            -44.226521
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_wreck_0",
+          "position": [
+            112.248055,
+            -23.705402,
+            -48.445
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_wreck_1",
+          "position": [
+            111.802109,
+            -23.705402,
+            -49.666119
+          ],
+          "kind": "botanical"
+        }
+      ],
+      "sea_level_m": 118.65,
+      "gravity": "radial planet-local",
+      "surface_path": "game/assets/models/bizi_planets/ametz_surface.glb",
+      "orbit_path": "game/assets/models/bizi_planets/ametz_orbit.glb",
+      "circumference_reference_m": 753.982,
+      "habitable_definition": "Fictional breathable, temperate, vegetated world with settlements and water; not an astrophysical claim.",
+      "status": "exported; see PR for real Godot validation",
+      "future_consumers": [
+        "campaign resources",
+        "missions",
+        "encounters",
+        "ship landing",
+        "host-authoritative persistence"
+      ]
+    },
+    {
+      "id": "uharte",
+      "title": "Uharte · mundo habitable de islas",
+      "habitable": true,
+      "radius_m": 100.0,
+      "pois": [
+        {
+          "id": "uharte/landing",
+          "node": "poi_landing",
+          "title": "Puerto de las Mareas",
+          "roles": [
+            "arrival",
+            "return",
+            "ship_parking"
+          ],
+          "entry_socket": "socket_poi_landing",
+          "source_normal": [
+            0.37115374207496643,
+            0.0,
+            0.9285714030265808
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            46.4925,
+            94.762909,
+            0.0
+          ],
+          "links": [
+            "uharte/arch",
+            "uharte/village"
+          ]
+        },
+        {
+          "id": "uharte/village",
+          "node": "poi_village",
+          "title": "Aldea del Coral",
+          "roles": [
+            "dialogue",
+            "trade"
+          ],
+          "entry_socket": "socket_poi_village",
+          "source_normal": [
+            -0.45612868666648865,
+            0.4178512394428253,
+            0.7857142686843872
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -52.642433,
+            77.747719,
+            -48.224785
+          ],
+          "links": [
+            "uharte/landing",
+            "uharte/observatory"
+          ]
+        },
+        {
+          "id": "uharte/observatory",
+          "node": "poi_observatory",
+          "title": "Observatorio de las Islas",
+          "roles": [
+            "survey",
+            "mission_clue"
+          ],
+          "entry_socket": "socket_poi_observatory",
+          "source_normal": [
+            0.06696689128875732,
+            -0.7630531787872314,
+            0.6428571343421936
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            7.497883,
+            61.532825,
+            85.434517
+          ],
+          "links": [
+            "uharte/village",
+            "uharte/grove"
+          ]
+        },
+        {
+          "id": "uharte/grove",
+          "node": "poi_grove",
+          "title": "Bosque de Palmeras",
+          "roles": [
+            "biomass",
+            "exploration"
+          ],
+          "entry_socket": "socket_poi_grove",
+          "source_normal": [
+            0.5269235372543335,
+            0.6872783899307251,
+            0.5
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            57.892456,
+            45.696796,
+            -75.510445
+          ],
+          "links": [
+            "uharte/observatory",
+            "uharte/ruins"
+          ]
+        },
+        {
+          "id": "uharte/ruins",
+          "node": "poi_ruins",
+          "title": "Ruinas de Sal",
+          "roles": [
+            "archaeology",
+            "mission_clue"
+          ],
+          "entry_socket": "socket_poi_ruins",
+          "source_normal": [
+            -0.9197714328765869,
+            -0.16269461810588837,
+            0.3571428656578064
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -99.619415,
+            30.116888,
+            17.621271
+          ],
+          "links": [
+            "uharte/grove",
+            "uharte/quarry"
+          ]
+        },
+        {
+          "id": "uharte/quarry",
+          "node": "poi_quarry",
+          "title": "Cantera Turquesa",
+          "roles": [
+            "minerals",
+            "gathering"
+          ],
+          "entry_socket": "socket_poi_quarry",
+          "source_normal": [
+            0.8241557478904724,
+            -0.524260401725769,
+            0.2142857164144516
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            88.188828,
+            14.739403,
+            56.098515
+          ],
+          "links": [
+            "uharte/ruins",
+            "uharte/greenhouse"
+          ]
+        },
+        {
+          "id": "uharte/greenhouse",
+          "node": "poi_greenhouse",
+          "title": "Huerto de la Laguna",
+          "roles": [
+            "botany",
+            "gathering"
+          ],
+          "entry_socket": "socket_poi_greenhouse",
+          "source_normal": [
+            -0.2589412033557892,
+            0.9632483720779419,
+            0.0714285746216774
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -27.401909,
+            -0.461708,
+            -101.933731
+          ],
+          "links": [
+            "uharte/quarry",
+            "uharte/relay"
+          ]
+        },
+        {
+          "id": "uharte/relay",
+          "node": "poi_relay",
+          "title": "Antena del Faro",
+          "roles": [
+            "repair",
+            "communications"
+          ],
+          "entry_socket": "socket_poi_relay",
+          "source_normal": [
+            -0.45972973108291626,
+            -0.8851816058158875,
+            -0.0714285746216774
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -48.12318,
+            -15.497423,
+            92.658257
+          ],
+          "links": [
+            "uharte/greenhouse",
+            "uharte/wreck"
+          ]
+        },
+        {
+          "id": "uharte/wreck",
+          "node": "poi_wreck",
+          "title": "Náufrago Celeste",
+          "roles": [
+            "salvage",
+            "mission_clue"
+          ],
+          "entry_socket": "socket_poi_wreck",
+          "source_normal": [
+            0.9175018072128296,
+            0.3350701928138733,
+            -0.2142857164144516
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            94.956802,
+            -30.367741,
+            -34.678074
+          ],
+          "links": [
+            "uharte/relay",
+            "uharte/sanctuary"
+          ]
+        },
+        {
+          "id": "uharte/sanctuary",
+          "node": "poi_sanctuary",
+          "title": "Santuario de las Conchas",
+          "roles": [
+            "lore",
+            "exploration"
+          ],
+          "entry_socket": "socket_poi_sanctuary",
+          "source_normal": [
+            -0.8633847832679749,
+            0.35639268159866333,
+            -0.3571428656578064
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -88.230255,
+            -45.061684,
+            -36.42017
+          ],
+          "links": [
+            "uharte/wreck",
+            "uharte/camp"
+          ]
+        },
+        {
+          "id": "uharte/camp",
+          "node": "poi_camp",
+          "title": "Campamento del Viajero",
+          "roles": [
+            "rest",
+            "mission_start"
+          ],
+          "entry_socket": "socket_poi_camp",
+          "source_normal": [
+            0.36706140637397766,
+            -0.7843888998031616,
+            -0.5
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            36.937828,
+            -59.553204,
+            78.93399
+          ],
+          "links": [
+            "uharte/sanctuary",
+            "uharte/arena"
+          ]
+        },
+        {
+          "id": "uharte/arena",
+          "node": "poi_arena",
+          "title": "Anfiteatro de Basalto",
+          "roles": [
+            "encounter",
+            "cover"
+          ],
+          "entry_socket": "socket_poi_arena",
+          "source_normal": [
+            0.22924727201461792,
+            0.7308764457702637,
+            -0.6428571343421936
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            22.589102,
+            -73.788597,
+            -72.017609
+          ],
+          "links": [
+            "uharte/camp",
+            "uharte/reservoir"
+          ]
+        },
+        {
+          "id": "uharte/reservoir",
+          "node": "poi_reservoir",
+          "title": "Aljibe del Oasis",
+          "roles": [
+            "water",
+            "repair"
+          ],
+          "entry_socket": "socket_poi_reservoir",
+          "source_normal": [
+            -0.5352106094360352,
+            -0.31016549468040466,
+            -0.7857142686843872
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            -50.892445,
+            -87.645149,
+            29.493216
+          ],
+          "links": [
+            "uharte/arena",
+            "uharte/arch"
+          ]
+        },
+        {
+          "id": "uharte/arch",
+          "node": "poi_arch",
+          "title": "Puente de los Dos Vientos",
+          "roles": [
+            "landmark",
+            "traversal"
+          ],
+          "entry_socket": "socket_poi_arch",
+          "source_normal": [
+            0.36249688267707825,
+            -0.07969392091035843,
+            -0.9285714030265808
+          ],
+          "arrival_clearance_m": 1.85,
+          "position": [
+            30.897491,
+            -100.70137,
+            6.792726
+          ],
+          "links": [
+            "uharte/reservoir",
+            "uharte/landing"
+          ]
+        }
+      ],
+      "arrival_socket": "socket_landing",
+      "return_socket": "socket_return",
+      "arrival_position": [
+        49.278217,
+        93.649445,
+        1e-06
+      ],
+      "arrival_clearance_m": 1.85,
+      "resources": [
+        {
+          "socket": "socket_resource_arch_0",
+          "position": [
+            42.0322,
+            -95.736526,
+            2.073492
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_arch_1",
+          "position": [
+            42.311337,
+            -95.736526,
+            0.803814
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_arena_0",
+          "position": [
+            17.808533,
+            -64.752037,
+            -80.165573
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_arena_1",
+          "position": [
+            16.568119,
+            -64.752037,
+            -80.554642
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_camp_0",
+          "position": [
+            45.260418,
+            -49.551926,
+            80.203438
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_camp_1",
+          "position": [
+            46.43787,
+            -49.551926,
+            79.652443
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_greenhouse_0",
+          "position": [
+            -33.711945,
+            10.442338,
+            -98.442642
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_greenhouse_1",
+          "position": [
+            -34.967373,
+            10.442338,
+            -98.105156
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_grove_0",
+          "position": [
+            48.490257,
+            54.748077,
+            -74.751808
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_grove_1",
+          "position": [
+            47.458576,
+            54.748077,
+            -75.542778
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_landing_0",
+          "position": [
+            35.925621,
+            97.963455,
+            -7.0
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_landing_1",
+          "position": [
+            35.925621,
+            97.963455,
+            -8.3
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_observatory_0",
+          "position": [
+            13.789237,
+            69.347954,
+            77.053284
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_observatory_1",
+          "position": [
+            15.08426,
+            69.347954,
+            76.939629
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_quarry_0",
+          "position": [
+            89.174126,
+            25.280313,
+            48.429035
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_quarry_1",
+          "position": [
+            89.871872,
+            25.280313,
+            47.332153
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_relay_0",
+          "position": [
+            -41.836441,
+            -4.457663,
+            95.740967
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_relay_1",
+          "position": [
+            -40.682758,
+            -4.457663,
+            96.340141
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_reservoir_0",
+          "position": [
+            -54.352043,
+            -80.094231,
+            39.588631
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_reservoir_1",
+          "position": [
+            -53.700211,
+            -80.094231,
+            40.713406
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_ruins_0",
+          "position": [
+            -93.657845,
+            40.052151,
+            23.675421
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_ruins_1",
+          "position": [
+            -93.431404,
+            40.052151,
+            24.955549
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_sanctuary_0",
+          "position": [
+            -93.712296,
+            -34.447857,
+            -31.110151
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_sanctuary_1",
+          "position": [
+            -94.208321,
+            -34.447857,
+            -29.908503
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_village_0",
+          "position": [
+            -50.564571,
+            83.805763,
+            -36.828072
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_village_1",
+          "position": [
+            -51.442711,
+            83.805763,
+            -35.869495
+          ],
+          "kind": "botanical"
+        },
+        {
+          "socket": "socket_resource_wreck_0",
+          "position": [
+            93.898018,
+            -19.419687,
+            -41.743595
+          ],
+          "kind": "mineral"
+        },
+        {
+          "socket": "socket_resource_wreck_1",
+          "position": [
+            93.452072,
+            -19.419685,
+            -42.964714
+          ],
+          "kind": "botanical"
+        }
+      ],
+      "sea_level_m": 98.65,
+      "gravity": "radial planet-local",
+      "surface_path": "game/assets/models/bizi_planets/uharte_surface.glb",
+      "orbit_path": "game/assets/models/bizi_planets/uharte_orbit.glb",
+      "circumference_reference_m": 628.319,
+      "habitable_definition": "Fictional breathable, temperate, vegetated world with settlements and water; not an astrophysical claim.",
+      "status": "exported; see PR for real Godot validation",
+      "future_consumers": [
+        "campaign resources",
+        "missions",
+        "encounters",
+        "ship landing",
+        "host-authoritative persistence"
+      ]
+    }
+  ],
+  "limits": [
+    "No seamless ship flight implemented",
+    "No campaign missions, battles or inventory integration",
+    "Water is visual; no swimming or survival simulation",
+    "Arrival positions are local to the planet",
+    "Surface meshes are finite closed shells, not flat maps; props are separate",
+    "Orbital silhouette is approximate at lower detail"
+  ]
+}
