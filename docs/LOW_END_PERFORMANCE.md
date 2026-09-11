@@ -80,4 +80,4 @@ Ejemplos de estados honestos:
 
 ## Rollback
 
-La entrega es aditiva: eliminar `tools/low_end_performance_profile.py`, `tools/low_end_performance_profile.gd`, `tests/test_low_end_performance_profile.py`, `docs/LOW_END_PERFORMANCE.md` y `.github/workflows/low-end-performance-profile.yml` revierte el carril sin migración de datos ni cambios en el juego. Los directorios temporales y exports generados por una ejecución local se descartan; no forman parte del informe versionado.
+La entrega es aditiva: eliminar `tools/low_end_performance_profile.py`, `tools/low_end_performance_profile.gd`, `tests/test_low_end_performance_profile.py` y `docs/LOW_END_PERFORMANCE.md` revierte el carril sin migración de datos ni cambios en el juego. Los directorios temporales y exports generados por una ejecución local se descartan; no forman parte del informe versionado.
