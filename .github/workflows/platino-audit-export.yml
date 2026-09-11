@@ -1,0 +1,64 @@
+name: Platino source audit (temporary)
+
+on:
+  push:
+    branches: [agent/72-platino-adoption]
+    paths: [.github/workflows/platino-audit-export.yml]
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: platino-audit-72
+  cancel-in-progress: false
+
+jobs:
+  export:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Read game at the published baseline
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: f2015279bb7a8c307352a9526d1942a9df047ac4
+          path: game-source
+          persist-credentials: false
+      - name: Read the selected central rules revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: EspacioKoop/normas_platino
+          ref: b5e01a2b2060a31268507797708a92a7d14ffc52
+          path: rules-source
+          persist-credentials: false
+      - name: Archive tracked public files only (never .git or player data)
+        run: |
+          set -euo pipefail
+          mkdir audit
+          test "$(git -C game-source rev-parse HEAD)" = f2015279bb7a8c307352a9526d1942a9df047ac4
+          test "$(git -C rules-source rev-parse HEAD)" = b5e01a2b2060a31268507797708a92a7d14ffc52
+          git -C game-source archive --format=tar.gz --output="$PWD/audit/game-source.tar.gz" HEAD
+          git -C rules-source archive --format=tar.gz --output="$PWD/audit/rules-source.tar.gz" HEAD
+          git -C game-source ls-tree -r --full-tree HEAD > audit/game-tree.txt
+          git -C rules-source ls-tree -r --full-tree HEAD > audit/rules-tree.txt
+          printf '%s\n' 'game=f2015279bb7a8c307352a9526d1942a9df047ac4' 'rules=b5e01a2b2060a31268507797708a92a7d14ffc52' > audit/revisions.txt
+      - name: Read only public coordination and existing milestones, with all pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: ''
+        run: |
+          set -euo pipefail
+          gh api --hostname github.com --method GET --paginate --slurp 'repos/EspacioKoop/espaciokooplagunakRemake/milestones?state=all&per_page=100' --jq '[.[][] | {number,title,state,description,due_on,html_url,open_issues,closed_issues}]' > audit/milestones.json
+          gh api --hostname github.com --method GET --paginate --slurp 'repos/EspacioKoop/espaciokooplagunakRemake/issues?state=all&per_page=100' --jq '[.[][] | {number,title,body,state,html_url,milestone:(.milestone | if . == null then null else {number,title} end),is_pr:has("pull_request")}]' > audit/issues.json
+          gh api --hostname github.com --method GET --paginate --slurp 'repos/EspacioKoop/espaciokooplagunakRemake/issues/7/comments?per_page=100' --jq '[.[][] | {id,created_at,updated_at,html_url,body}]' > audit/coordination.json
+          cd audit
+          sha256sum game-source.tar.gz rules-source.tar.gz game-tree.txt rules-tree.txt revisions.txt milestones.json issues.json coordination.json > SHA256SUMS
+      - name: Preserve public source snapshot for offline inspection
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: platino-audit-72
+          path: audit/
+          retention-days: 7
+          if-no-files-found: error
