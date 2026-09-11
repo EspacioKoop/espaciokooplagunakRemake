@@ -30,6 +30,9 @@ var _capture_mode = false
 var _new_confirmation: ConfirmationDialog
 var _help: AcceptDialog
 var _named_save_window: Window
+var _accessibility_layer: CanvasLayer
+var _colorblind_filter: ColorRect
+var _accessibility_service: Node
 
 func _ready() -> void:
 	var args = OS.get_cmdline_user_args()
@@ -38,6 +41,7 @@ func _ready() -> void:
 		return
 	_capture_mode = "--capture" in args
 	_load_preferences()
+	_bind_accessibility()
 	if _capture_mode:
 		_preferences.motion = true
 		_preferences.volume = 0.0
@@ -48,6 +52,7 @@ func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	_make_audio()
 	_build_shell()
+	_setup_accessibility_filter()
 	_sound_captions = SoundCaptions.new()
 	add_child(_sound_captions)
 	Session.notice.connect(_notice)
@@ -59,6 +64,51 @@ func _ready() -> void:
 	_go("home")
 	if _preferences.fullscreen: DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	if _capture_mode: call_deferred("_capture", args)
+
+func _bind_accessibility() -> void:
+	if not is_instance_valid(Controls): return
+	_accessibility_service = Controls.get("readability")
+	if not is_instance_valid(_accessibility_service): return
+	if not _accessibility_service.changed.is_connected(_on_accessibility_changed):
+		_accessibility_service.changed.connect(_on_accessibility_changed)
+	if _accessibility_service.is_reduced_motion(): _preferences.motion = true
+
+func _setup_accessibility_filter() -> void:
+	_accessibility_layer = CanvasLayer.new()
+	_accessibility_layer.name = "AccessibilityFilterLayer"
+	_accessibility_layer.layer = 120
+	add_child(_accessibility_layer)
+	_colorblind_filter = ColorRect.new()
+	_colorblind_filter.name = "ColorblindFilter"
+	_colorblind_filter.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_colorblind_filter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_colorblind_filter.color = Color.WHITE
+	var material := ShaderMaterial.new()
+	material.shader = load("res://ui/accessibility/colorblind_filter.gdshader")
+	_colorblind_filter.material = material
+	_accessibility_layer.add_child(_colorblind_filter)
+	_apply_visual_accessibility()
+
+func _apply_visual_accessibility() -> void:
+	var reduced: bool = bool(_preferences.motion)
+	var mode := "none"
+	if is_instance_valid(_accessibility_service):
+		reduced = _accessibility_service.is_reduced_motion()
+		mode = _accessibility_service.colorblind_filter()
+	_preferences.motion = reduced
+	if _space != null: _space.reduced_motion = reduced
+	if _deck != null: _deck.reduced_motion = reduced
+	if _radar != null: _radar.reduced_motion = reduced
+	if _colorblind_filter == null: return
+	var modes := ["none", "protanopia", "deuteranopia", "tritanopia", "grayscale"]
+	var mode_index := modes.find(mode)
+	_colorblind_filter.visible = mode_index > 0
+	var filter_material := _colorblind_filter.material as ShaderMaterial
+	if filter_material != null: filter_material.set_shader_parameter("mode", maxi(mode_index, 0))
+
+func _on_accessibility_changed() -> void:
+	_apply_visual_accessibility()
+	_save_preferences()
 
 func _build_shell() -> void:
 	var background = ColorRect.new()
@@ -820,7 +870,13 @@ func _settings() -> void:
 	motion.text = "Reducir movimiento decorativo"
 	motion.button_pressed = _preferences.motion
 	options.add_child(motion)
-	motion.toggled.connect(func(value): _preferences.motion = value; _save_preferences())
+	motion.toggled.connect(func(value):
+		_preferences.motion = value
+		if is_instance_valid(_accessibility_service):
+			var error: String = _accessibility_service.commit_accessibility(_accessibility_service.colorblind_filter(), value)
+			if not error.is_empty(): _notice(error, false)
+		_apply_visual_accessibility()
+		_save_preferences())
 	var fullscreen = CheckBox.new()
 	fullscreen.text = "Pantalla completa"
 	fullscreen.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
@@ -829,17 +885,35 @@ func _settings() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)
 		_preferences.fullscreen = value
 		_save_preferences())
+	var color_label = ConsoleUI.label("Filtro de color", 20)
+	options.add_child(color_label)
+	var color_filter = OptionButton.new()
+	var color_modes = ["none", "protanopia", "deuteranopia", "tritanopia", "grayscale"]
+	var color_labels = ["Sin filtro", "Protanopia", "Deuteranopia", "Tritanopia", "Escala de grises"]
+	for index in color_modes.size(): color_filter.add_item(color_labels[index])
+	var current_mode = _accessibility_service.colorblind_filter() if is_instance_valid(_accessibility_service) else "none"
+	color_filter.select(maxi(0, color_modes.find(current_mode)))
+	options.add_child(color_filter)
+	color_filter.item_selected.connect(func(index):
+		if is_instance_valid(_accessibility_service):
+			var error: String = _accessibility_service.commit_accessibility(color_modes[index], motion.button_pressed)
+			if not error.is_empty(): _notice(error, false)
+		_apply_visual_accessibility())
 	options.add_child(ConsoleUI.label("Tamaño del texto", 20))
 	var scale = OptionButton.new()
+	var scale_values = [90, 100, 110]
 	for caption in ["Compacto · 90 %", "Normal · 100 %", "Grande · 110 %"]: scale.add_item(caption)
-	scale.select(clampi(roundi((_preferences.text_scale - 0.9) * 10), 0, 2))
+	var selected_percent: int = roundi(_preferences.text_scale * 100.0)
+	if is_instance_valid(_accessibility_service): selected_percent = int(_accessibility_service.profile.get("text_percent", selected_percent))
+	scale.select(clampi(scale_values.find(selected_percent), 0, scale_values.size() - 1))
 	options.add_child(scale)
 	scale.item_selected.connect(func(index):
-		_preferences.text_scale = [0.9, 1.0, 1.1][index]
-		ConsoleUI.font_scale = _preferences.text_scale
-		theme = ConsoleUI.make_theme()
-		_save_preferences()
-		_go("settings"))
+		var error: String = ""
+		if is_instance_valid(_accessibility_service): error = _accessibility_service.commit_text_percent(scale_values[index])
+		if error.is_empty():
+			_preferences.text_scale = float(scale_values[index]) / 100.0
+			_save_preferences()
+		else: _notice(error, false))
 	options.add_child(ConsoleUI.button("Subtítulos de avisos sonoros…", _sound_captions.open_settings))
 	options.add_child(ConsoleUI.button("Guardar partida ahora", _manual_save, true))
 	options.add_child(ConsoleUI.button("Guardados de campaña…", _open_named_saves))

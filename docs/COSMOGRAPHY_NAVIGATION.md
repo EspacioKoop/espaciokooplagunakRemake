@@ -11,7 +11,7 @@ Esta rebanada añade `CosmographyNavigation`, un adaptador standalone de sólo l
 - Rechaza extremos inexistentes, bucles, IDs inseguros, conexiones duplicadas, dirección con tipo incorrecto y nodos conectados sin `map_ref`.
 - Devuelve copias profundas: leer o modificar la respuesta no modifica el catálogo ni las conexiones recibidas.
 
-El adaptador no escribe en Atlas, `ExpeditionSystems`, guardados, red, UI ni física. La integración de una ruta en un vuelo jugable requiere un consumidor posterior que pertenezca a esos sistemas y su propia reserva.
+El adaptador sigue siendo de sólo lectura y no escribe en Atlas, `ExpeditionSystems`, guardados, red, UI ni física. El servicio `CosmographyService` lo consume desde `Session`, persiste la ubicación seleccionada y expone el snapshot a la pestaña Atlas; integrar una ruta en un vuelo jugable requiere todavía un consumidor físico y su propia reserva.
 
 ## Documento de navegación v1
 

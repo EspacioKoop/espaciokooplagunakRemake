@@ -28,7 +28,7 @@ func run() -> void:
 	var model: CosmographyPersistence = created.model
 	check(model.select_location("sol", "tierra").ok, "valid planet selection")
 	var encoded := model.serialize()
-	var restored := CosmographyPersistence.create(catalog(), "fixture-v1").model
+	var restored: CosmographyPersistence = CosmographyPersistence.create(catalog(), "fixture-v1").model
 	check(restored.restore(encoded).ok, "round trip restores")
 	check(restored.snapshot() == model.snapshot(), "round trip preserves location")
 	check(not model.select_location("missing").ok, "unknown system rejected")
@@ -43,7 +43,7 @@ func run() -> void:
 	check(not CosmographyPersistence.create(invalid_parent, "fixture-v1").ok, "catalog parent rejected")
 	check(not restored.restore(JSON.stringify({"format": "bad"})).ok, "corrupt state rejected")
 	check(not restored.restore(JSON.stringify({"format": "lagunak-cosmography-state", "version": 1, "catalog_id": "other", "current_system_id": "sol", "current_planet_id": "tierra"})).ok, "foreign catalog rejected")
-	var before := restored.snapshot()
+	var before: Dictionary = restored.snapshot()
 	check(not restored.restore(JSON.stringify({"format": "lagunak-cosmography-state", "version": 1, "catalog_id": "fixture-v1", "current_system_id": "sol", "current_planet_id": "missing"})).ok, "invalid restored planet rejected")
 	check(restored.snapshot() == before, "failed restore does not mutate state")
 	print("COSMOGRAPHY_PERSISTENCE_RESULT ", JSON.stringify({"checks": checks, "failures": failures}))

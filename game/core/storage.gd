@@ -97,6 +97,8 @@ static func validate_state(value: Variant) -> String:
 	if not pickup_error.is_empty(): return pickup_error
 	var scene_error = GMLiveState.validate(value)
 	if not scene_error.is_empty(): return scene_error
+	var interior_error = InteriorTriggers.validate_state(value)
+	if not interior_error.is_empty(): return interior_error
 	for id in [ship.autopilot, ship.docked, value.scan.target]:
 		if not id.is_empty() and id not in ids: return "Referencia de contacto inválida."
 	if value.repair.system != "" and value.repair.system not in Catalog.SYSTEMS: return "Reparación inválida."

@@ -26,11 +26,20 @@ static func dispatch(session: Node, operation: String, args: Dictionary, expecte
 			if args.size() != 1 or not args.get("id") is String: return _reply(false, "Retirada inválida.")
 			result = remove_contact(session.sim, args.id)
 		"add_interior_trigger":
-			result = InteriorTriggers.register_trigger(session.sim, args)
+			var trigger_args = args.duplicate(true)
+			trigger_args["one_shot"] = bool(args.get("one_shot", true))
+			result = InteriorTriggers.register_trigger(session.sim, trigger_args)
+		"modify_interior_trigger":
+			if args.size() != 2 or not args.get("id") is String or not args.get("changes") is Dictionary: return _reply(false, "Modificación de trigger inválida.")
+			result = InteriorTriggers.update_trigger(session.sim, args.id, args.changes)
 		"remove_interior_trigger":
+			if args.size() != 1 or not args.get("id") is String: return _reply(false, "Retirada de trigger inválida.")
 			result = InteriorTriggers.remove_trigger(session.sim, str(args.get("id", "")))
 		_: result = trigger_event(session.sim, operation, args)
-	if result.ok: session._refresh_view()
+	if result.ok:
+		if operation in ["add_interior_trigger", "modify_interior_trigger", "remove_interior_trigger"]:
+			_audit(session.sim, operation, "", "Configuración de trigger de interior actualizada.")
+		session._refresh_view()
 	return result
 
 static func _active(sim: Simulation) -> String:

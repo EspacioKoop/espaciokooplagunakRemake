@@ -5,7 +5,7 @@ const VERSION = 1
 const MAX_CONTACTS = 48
 const MAX_ADDED = 128
 const MAX_AUDIT = 128
-const OPERATIONS = ["spawn", "modify", "remove", "alert", "message", "damage", "repair", "reinforcements"]
+const OPERATIONS = ["spawn", "modify", "remove", "alert", "message", "damage", "repair", "reinforcements", "add_interior_trigger", "modify_interior_trigger", "remove_interior_trigger", "interior_trigger"]
 
 static func defaults() -> Dictionary:
 	return {"version": VERSION, "added": [], "removed": [], "audit": []}

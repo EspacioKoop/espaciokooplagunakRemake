@@ -326,6 +326,8 @@ func snapshot(for_role: String = "", principal: String = "") -> Dictionary:
 	# Authored future missions and unidentified contacts are host-only content.
 	safe.erase("campaign_document")
 	safe.erase("gm_live")
+	# Interior triggers are GM authoring state; never expose them to clients.
+	safe.erase("interior_triggers")
 	ShipOperations.redact(safe, for_role)
 	Cooperation.redact(safe, principal)
 	safe.mission.erase("contacts")

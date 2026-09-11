@@ -6,6 +6,7 @@ signal interaction_requested(entry: Dictionary)
 
 const ZONES = ShipDeckLayout.ZONES
 const GMInteriorTrigger = preload("res://world/gm_interior_trigger.gd")
+const InteriorTriggerSystem = preload("res://core/interior_triggers.gd")
 var zone = 0
 var prompt = "Pulsa sobre la vista para mirar y caminar."
 var viewport_3d: SubViewport
@@ -194,7 +195,20 @@ func _add_door(position: Vector3, destination: int, title: String, source: int) 
 func _on_zone_changed(name: String) -> void:
 	if _gm_interior_trigger != null: _gm_interior_trigger.enter_zone(name)
 
+func _evaluate_zone_triggers(previous_zone: int, new_zone: int) -> void:
+	var session = _session()
+	if session == null or not GMLiveActions.can_direct(session): return
+	var executed: Array = InteriorTriggerSystem.evaluate_zone_movement(session.sim, previous_zone, new_zone)
+	if not executed.is_empty(): session._refresh_view()
+
+func _evaluate_interaction_trigger(interaction_id: String, event_type: String = "interact") -> void:
+	var session = _session()
+	if session == null or not GMLiveActions.can_direct(session): return
+	var executed: Array = InteriorTriggerSystem.evaluate_interaction(session.sim, int(zone), interaction_id, event_type)
+	if not executed.is_empty(): session._refresh_view()
+
 func teleport_zone(index: int) -> void:
+	var previous_zone: int = int(zone)
 	stand_up()
 	zone = clampi(index, 0, ZONES.size() - 1)
 	if body == null: return
@@ -214,6 +228,7 @@ func teleport_zone(index: int) -> void:
 	_environment.ambient_light_color = Color("b7d7ef") if zone in [9, 10] else Color("a9c5d3")
 	_environment.ambient_light_energy = 0.22 if zone in [9, 10] else 0.25
 	zone_changed.emit(ZONES[zone].name)
+	_evaluate_zone_triggers(previous_zone, int(zone))
 	var session = _session()
 	if session != null: session.update_pose(body.position, body.rotation.y)
 
@@ -286,7 +301,9 @@ func interact() -> void:
 		elif _near_interaction.kind == "lights":
 			_studio_mode = (_studio_mode + 1) % 4
 			for i in _studio_lights.size(): _studio_lights[i].visible = _studio_mode == 0 or i == _studio_mode - 1
-		else: interaction_requested.emit(_near_interaction.duplicate())
+		else:
+			interaction_requested.emit(_near_interaction.duplicate())
+			_evaluate_interaction_trigger(str(_near_interaction.get("id", "")))
 	elif _near_station: station_requested.emit(ZONES[zone].role)
 
 func _apply_look(look: Vector2) -> void:
@@ -300,8 +317,10 @@ func _seat_result(ok: bool, message: String) -> void:
 		_seat_notice_until = Time.get_ticks_msec() + 2500
 	_sync_seat()
 
-func _seat_finished(operation: String, _ok: bool, _message: String) -> void:
-	if operation == "sit": _seat_requested = false
+func _seat_finished(operation: String, ok: bool, _message: String) -> void:
+	if operation == "sit":
+		_seat_requested = false
+		if ok: _evaluate_interaction_trigger(str(_near_interaction.get("id", "")), "sit")
 	elif operation == "stand": _leaving_seat = false
 	_sync_seat()
 

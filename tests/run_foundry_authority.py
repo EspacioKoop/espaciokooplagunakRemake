@@ -5,11 +5,16 @@ import os
 import re
 import socket
 import subprocess
+import sys
 import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
 GODOT = os.environ.get("GODOT", str(ROOT / ".toolchain/godot"))
+if "--godot" in sys.argv:
+    _godot_index = sys.argv.index("--godot")
+    if _godot_index + 1 >= len(sys.argv): raise SystemExit("--godot requiere una ruta")
+    GODOT = sys.argv[_godot_index + 1]
 checks = 0
 
 def check(value, label):

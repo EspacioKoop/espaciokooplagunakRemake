@@ -65,6 +65,20 @@ func _make_atlas() -> void:
 	var root = _tab("Atlas")
 	root.add_child(ConsoleUI.label("Atlas persistente", 27))
 	root.add_child(ConsoleUI.paragraph("Los contactos identificados se conservan por sector aunque cambies de misión. Los marcadores son parte del núcleo local y se sincronizan con la sesión.", 16))
+	var session = get_tree().root.get_node_or_null("Session")
+	var cosmography: Dictionary = session.view.get("cosmography", {}) if session != null else {}
+	var cosmography_card = ConsoleUI.card(root, "CARTOGRAFÍA COSMOGRÁFICA")
+	if not cosmography.get("ready", false):
+		cosmography_card.add_child(ConsoleUI.paragraph("La cartografía cosmográfica no está disponible en esta sesión.", 15))
+	else:
+		var location: Dictionary = cosmography.get("location", {})
+		var system_id := str(location.get("current_system_id", ""))
+		var planet_id := str(location.get("current_planet_id", ""))
+		cosmography_card.add_child(ConsoleUI.label("Sistema: %s · planeta: %s" % [system_id, planet_id if not planet_id.is_empty() else "sin planeta"], 18, ConsoleUI.TEAL))
+		cosmography_card.add_child(ConsoleUI.paragraph("Catálogo %s · %d nodos con map_ref · %d conexiones navegables" % [str(cosmography.get("catalog_id", "")), cosmography.get("markers", []).size(), cosmography.get("routes", []).size()], 14, ConsoleUI.MUTED))
+		for marker in cosmography.get("markers", []):
+			if marker.get("id", "") in [system_id, planet_id]:
+				cosmography_card.add_child(ConsoleUI.label("%s · map_ref %s" % [marker.name.get("es", marker.id), marker.map_ref], 14, ConsoleUI.TEXT))
 	var current = systems._sector()
 	var sector_data: Dictionary = systems.data.atlas.sectors.get(current, {"contacts": {}})
 	var summary = ConsoleUI.card(root, "SECTOR ACTUAL")

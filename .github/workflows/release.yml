@@ -29,6 +29,16 @@ jobs:
         run: python3 tools/check_locale_coverage.py --require-complete
       - name: Verify parity evidence registry
         run: python3 tools/check_parity_evidence.py
+      - name: Verify issue 32 closeout feature runners
+        run: |
+          python3 tests/test_scenario_corpus.py
+          python3 tests/run_cosmography_navigation.py
+          python3 tests/run_cosmography_persistence.py
+          python3 tests/run_cosmography_service.py
+          python3 tests/run_readability.py
+          python3 tests/run_gm_interior_trigger.py
+          python3 tests/run_npc_workbench.py
+          python3 tests/run_foundry_authority.py
       - name: Verify exported acceptance runner negative controls
         run: |
           python3 tests/release_092/prepare.py --check
@@ -73,7 +83,7 @@ jobs:
           timeout 60 .toolchain/godot --headless --path game --script ../tests/test_leisure.gd -- --test
           timeout 60 .toolchain/godot --headless --path game --script ../tests/test_full_deck_walk.gd -- --test
           .toolchain/godot --headless --path game --script ../tests/test_gm_integration.gd -- --test
-          .toolchain/godot --headless --path game --script ../tests/test_interior_triggers.gd -- --test
+          python3 tests/run_interior_triggers.py
           .toolchain/godot --headless --path game --script ../tests/test_accessibility.gd -- --test
       - name: Play authoritative social tables and test reconnection
         run: |

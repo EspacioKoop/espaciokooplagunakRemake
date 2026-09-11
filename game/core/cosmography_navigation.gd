@@ -35,7 +35,7 @@ static func _validate_navigation(catalog_data: Dictionary, navigation_data: Vari
 	for key in ["format", "version", "connections"]:
 		if not navigation_data.has(key):
 			return "Navegación: falta " + key
-	if navigation_data.format != FORMAT or typeof(navigation_data.version) != TYPE_INT or navigation_data.version != VERSION:
+	if navigation_data.format != FORMAT or int(navigation_data.version) != VERSION:
 		return "Navegación: formato o versión no compatible."
 	if not navigation_data.connections is Array or navigation_data.connections.size() > MAX_CONNECTIONS:
 		return "Navegación: conexiones inválidas o demasiadas."

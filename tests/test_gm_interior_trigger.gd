@@ -48,7 +48,7 @@ func run() -> void:
 		check(event.source == "Dirección", "trigger event keeps the public GM source")
 		check(event.text == GM_INTERIOR_TRIGGER.PUBLIC_MESSAGE, "trigger event uses the bounded public message")
 		check(session.view.events.back().text == GM_INTERIOR_TRIGGER.PUBLIC_MESSAGE, "event reaches the session snapshot")
-		check(app._footer.text == GM_INTERIOR_TRIGGER.PUBLIC_MESSAGE, "event is visible in the main shell footer")
+		check(app._footer.text == "Dirección · " + GM_INTERIOR_TRIGGER.PUBLIC_MESSAGE, "event is visible in the main shell footer")
 	var duplicate: Dictionary = deck._gm_interior_trigger.enter_zone("Cantina")
 	check(duplicate.ok and duplicate.duplicate and not duplicate.triggered, "re-entering the same run is idempotent")
 	check(session.sim.state.events.size() == before_events + 1, "duplicate entry does not append another event")

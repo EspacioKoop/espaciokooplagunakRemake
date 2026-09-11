@@ -134,17 +134,17 @@ La Itsaso mantiene cargados simultáneamente sus siete compartimentos principale
 | Atlas por sector y marcadores | **Hecho base** |
 | Dirección: tempo | **Hecho** |
 | Dirección: amenaza/encuentros automáticos | **Hecho** |
-| Dirección: convocatoria manual y consola GM | **Hecho**: consola GM integrada en shell (`app.gd` + F8, `test_gm_integration.gd`) |
-| Dirección: triggers en interiores | **Hecho**: `interior_triggers.gd`, `gm_live_actions.gd`, `test_interior_triggers.gd` |
+| Dirección: convocatoria manual y consola GM | **Hecho base**: consola integrada en shell (`app.gd` + F8), CRUD de contactos y triggers host-only probado |
+| Dirección: triggers en interiores | **Hecho base**: `interior_triggers.gd`, integración `WorldDeck`, CRUD/auditoría/persistencia, validación de guardado y redacción host-only en snapshots; `run_interior_triggers.py` y `test_interior_triggers.gd` |
 | Dirección: reposición | **Hecho** |
-| Cosmografía jerárquica `plane → star_system → planet` | **Pendiente** (P1) |
-| Importación HYG / JSON cosmográfico | **Pendiente** (P1) |
-| Procedencia/licencia por entrada | **Pendiente** (P1) |
-| Conexiones, `map_ref` y navegación entre sistemas/sectores | **Pendiente** (P1) |
-| Continuidades original/homebrew/Spelljammer | **Pendiente** (P1) |
+| Cosmografía jerárquica `plane → star_system → planet` | **Base integrada**: catálogo JSON propio versionado, servicio de campaña y lectura en Atlas; corpus completo pendiente |
+| Importación HYG / JSON cosmográfico | **Base integrada**: validador HYG/JSON con procedencia; importación de catálogo completo pendiente |
+| Procedencia/licencia por entrada | **Base integrada** para el catálogo propio; revisión de todas las entradas originales pendiente |
+| Conexiones, `map_ref` y navegación entre sistemas/sectores | **Base integrada**: rutas y `map_ref` persistentes, expuestos en sesión y Atlas; navegación jugable completa pendiente |
+| Continuidades original/homebrew/Spelljammer | **Pendiente** (decisión de canon y corpus) |
 | Parlamento y controles GM/escena restantes | **Pendiente** (P1) |
 
-La referencia original ya definía el formato `espaciokoop-cosmography` v1 y un importador HYG/JSON. En el remake se reimplementará como componente standalone, no como dependencia de Foundry.
+La referencia original ya definía el formato `espaciokoop-cosmography` v1 y un importador HYG/JSON. El remake ya incluye un catálogo propio JSON v1, validación de importaciones y servicio de campaña con persistencia; el corpus original completo, decisiones de canon y procedencia de cada entrada siguen pendientes. Todo queda como componente standalone, no como dependencia de Foundry.
 
 ## Edición de contenido
 
@@ -173,7 +173,7 @@ La referencia original ya definía el formato `espaciokoop-cosmography` v1 y un 
 | Distribución | release0.9 Linux/Windows; exportador macOS Universal2 y preflight Android (#14) | APK real y validación física macOS/Android; periféricos relevantes |
 | Servidor dedicado / Docker | **Hecho** (#23, posterior a0.9): host observador, autenticación, volumen persistente y reinicio; Docker/Compose real probado en CI | acceso remoto Foundry y periféricos según requisitos verificados |
 | Herramientas externas | no son necesarias para la campaña nueva | bot Discord, netboot, packs y utilidades de la referencia que sigan teniendo sentido |
-| Accesibilidad y Localización | **Hecho**: gate de localización 100% ES/EN (`check_locale_coverage.py`), daltonismo (`protanopia`, `deuteranopia`, `tritanopia`), movimiento reducido global (`accessibility_profile.gd`, `test_accessibility.gd`) | atajos de pantallas restantes y validación táctil en dispositivo |
+| Accesibilidad y Localización | **Base integrada**: gate de localización, perfil persistente, tamaño de texto, cinco modos de filtro y movimiento reducido global probados localmente | inventario total de cadenas, prueba visual humana y validación táctil en dispositivo |
 
 ## Regla de mantenimiento
 

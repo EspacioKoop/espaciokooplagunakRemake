@@ -7,7 +7,9 @@ signal disconnected
 
 const DEFAULT_PORT = 27840
 const PROTOCOL = 5
+const CosmographyServiceScript = preload("res://core/cosmography_service.gd")
 var sim = Simulation.new()
+var cosmography: Node
 var lounge = ShipLounge.new()
 var _lounge_peers: Dictionary = {}
 var _lounge_tickets: Dictionary = {}
@@ -34,6 +36,10 @@ var _previous_status = ""
 var suppress_saves = false
 
 func _ready() -> void:
+	cosmography = CosmographyServiceScript.new()
+	cosmography.name = "Cosmography"
+	add_child(cosmography)
+	cosmography.bind_session(self)
 	# Clients exchange orders and views only with the host. Avoid transport peer
 	# announcements to connections that are still authenticating or closing.
 	multiplayer.server_relay = false
@@ -95,6 +101,9 @@ func start_mission(index: int, custom: Dictionary = {}) -> Dictionary:
 	sim.start(mission, carry)
 	if not document.is_empty(): sim.state.campaign_document = document
 	sim.state.run_id = Crypto.new().generate_random_bytes(12).hex_encode()
+	if cosmography != null:
+		var cosmography_result: Dictionary = cosmography.restore_from_state(sim.state)
+		if not cosmography_result.get("ok", false): return cosmography_result
 	paused = false
 	_refresh_view()
 	save_game()
@@ -109,12 +118,16 @@ func resume_game() -> Dictionary:
 		backup = loaded.has("state")
 	if not loaded.has("state"): return {"ok": false, "message": loaded.get("error", "Sin guardado.")}
 	sim.state = loaded.state
+	if cosmography != null:
+		var cosmography_result: Dictionary = cosmography.restore_from_state(sim.state)
+		if not cosmography_result.get("ok", false): return cosmography_result
 	paused = false
 	_refresh_view()
 	return {"ok": true, "message": "Copia anterior recuperada." if backup else "Expedición recuperada."}
 
 func save_game() -> Dictionary:
 	if suppress_saves or mode == "client" or sim.state.is_empty(): return {"ok": false, "message": "No hay una partida local que guardar."}
+	if cosmography != null: cosmography.sync_to_state(sim.state)
 	var error = LocalStorage.save_state(sim.state)
 	save_status = "Guardado · " + Time.get_time_string_from_system() if error.is_empty() else error
 	return {"ok": error.is_empty(), "message": save_status}
@@ -363,7 +376,8 @@ func _refresh_view() -> void:
 		view.roster = roster.duplicate(true)
 		view.poses = poses.duplicate(true)
 		view.lounge = lounge.snapshot("self", role == "mando")
-	updated.emit()
+		if cosmography != null: view.cosmography = cosmography.snapshot()
+		updated.emit()
 
 func _physics_process(delta: float) -> void:
 	if mode == "client": return

@@ -1,0 +1,8 @@
+{
+  "format": "espaciokoop-cosmography-navigation",
+  "version": 1,
+  "connections": [
+    {"id": "itsasargi-egunsenti", "from_id": "itsasargi", "to_id": "egunsenti", "map_ref": "route_itsasargi_egunsenti", "bidirectional": true},
+    {"id": "egunsenti-starway", "from_id": "egunsenti", "to_id": "izarren-bidea", "map_ref": "route_egunsenti_starway", "bidirectional": true}
+  ]
+}

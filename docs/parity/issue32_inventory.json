@@ -2,324 +2,660 @@
   "version": 1,
   "source_repository": "EspacioKoop/espaciokooplagunak",
   "source_revision": "fecd0740545f485d2402c6dfe4b47d5a859cb96c",
-  "remake_revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1",
+  "remake_revision": "ff4cf4dc00bb1f3e76698f20a57d7bc53ab92a43",
   "coverage": {
-    "complete": true,
+    "complete": false,
     "review": "https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/32",
-    "note": "Inventario completo y verificado de paridad de características de #32 para la v1.0."
+    "note": "Registro reconciliado contra main@ff4cf4d: implementaciones y pruebas locales presentes, pero el inventario original no es exhaustivo y quedan filas parciales/pending y playtest humano pendiente."
   },
   "catalogs": [
-    {"type": "ship_templates", "path": "game/data/ship_templates.json", "owner_issue": 2}
+    {
+      "type": "ship_templates",
+      "path": "game/data/ship_templates.json",
+      "owner_issue": 2
+    }
   ],
   "overrides": {},
   "items": [
     {
-      "id": "terminal-crash", "gate": "G0", "priority": "P0", "scope": "parity",
-      "original": "Paseo e interacción con terminales sin cierre inesperado", "source": "README.md",
+      "id": "terminal-crash",
+      "gate": "G0",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Paseo e interacción con terminales sin cierre inesperado",
+      "source": "README.md",
       "equivalent": "Interiores nativos y apertura de puestos; incidencia Linux #29",
-      "status": "verified", "decision": "reimplement", "owner_issue": 29,
+      "status": "partial",
+      "decision": "reimplement",
+      "owner_issue": 29,
       "acceptance": "Recorrer los 13 destinos y abrir, cerrar y reabrir terminales desde el ejecutable Linux; registrar prueba gráfica y reproducción del reporte.",
-      "note": "Recorrido verificado en los 13 destinos sin crash (Issue #29 cerrado).",
+      "note": "Recorrido verificado en los 13 destinos sin crash (Issue #29 cerrado). La ejecución pública del SHA final y el playtest humano siguen pendientes.",
       "evidence": [
-        {"kind": "document", "path": "docs/FEATURE_PARITY.md"},
-        {"kind": "implementation", "path": "game/world/interior.gd"},
-        {"kind": "test", "path": "tests/test_full_deck_walk.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "41 checks"}
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/world/interior.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_full_deck_walk.gd"
+        }
       ]
     },
     {
-      "id": "network-saves", "gate": "G0", "priority": "P0", "scope": "parity",
-      "original": "Autoridad, red y persistencia de campaña", "source": "README.md",
+      "id": "network-saves",
+      "gate": "G0",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Autoridad, red y persistencia de campaña",
+      "source": "README.md",
       "equivalent": "Session autoritativa, campaña y guardado local",
-      "status": "verified", "decision": "replace", "owner_issue": 1,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 1,
       "acceptance": "Vincular al candidato pruebas de reconexión, identidades, redacción de secretos, guardados corruptos y round-trip de versiones soportadas.",
-      "note": "Persistencia, reconexión y salvado de campaña verificado.",
+      "note": "Persistencia, reconexión y salvado de campaña verificado. La ejecución pública del SHA final y el playtest humano siguen pendientes.",
       "evidence": [
-        {"kind": "document", "path": "docs/FEATURE_PARITY.md"},
-        {"kind": "implementation", "path": "game/net/session.gd"},
-        {"kind": "test", "path": "tests/test_core.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "136 checks"}
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/net/session.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_core.gd"
+        }
       ]
     },
     {
-      "id": "linux-windows", "gate": "G0", "priority": "P0", "scope": "parity",
-      "original": "Distribución Linux y Windows", "source": "README.md",
+      "id": "linux-windows",
+      "gate": "G0",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Distribución Linux y Windows",
+      "source": "README.md",
       "equivalent": "Paquetes y smoke en CI canónica",
-      "status": "verified", "decision": "replace", "owner_issue": 4,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 4,
       "acceptance": "Adjuntar ejecución canónica del SHA candidato con build, exportación, checksum y arranque real en ambos sistemas.",
-      "note": "Exportación y ejecutable Linux/Windows verificado en CI de release.",
+      "note": "Exportación y ejecutable Linux/Windows verificado en CI de release. La ejecución pública del SHA final y el playtest humano siguen pendientes.",
       "evidence": [
-        {"kind": "document", "path": "docs/FEATURE_PARITY.md"},
-        {"kind": "implementation", "path": ".github/workflows/release.yml"},
-        {"kind": "test", "path": "tests/test_platform_exports.py"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "12 checks"}
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        },
+        {
+          "kind": "implementation",
+          "path": ".github/workflows/release.yml"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_platform_exports.py"
+        }
       ]
     },
     {
-      "id": "android-macos", "gate": "G0", "priority": "P1", "scope": "parity",
-      "original": "Plataformas Android y macOS", "source": "README.md",
+      "id": "android-macos",
+      "gate": "G0",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Plataformas Android y macOS",
+      "source": "README.md",
       "equivalent": "Exportación macOS y preflight Android documentados",
-      "status": "partial", "decision": "reimplement", "owner_issue": 4,
+      "status": "partial",
+      "decision": "reimplement",
+      "owner_issue": 4,
       "acceptance": "APK real instalado y jugado en dispositivo; ejecutable macOS probado y distribución/notarización documentada según el alcance aprobado.",
       "note": "El README original también distingue soporte heredado de validación propia. Exportado no significa ejecutado; no se declara que todas las plataformas originales estuvieran probadas.",
-      "evidence": [{"kind": "document", "path": "docs/FEATURE_PARITY.md"}]
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        }
+      ]
     },
     {
-      "id": "dedicated-host", "gate": "G0", "priority": "P1", "scope": "parity",
-      "original": "Servidor headless persistente", "source": "README.md",
+      "id": "dedicated-host",
+      "gate": "G0",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Servidor headless persistente",
+      "source": "README.md",
       "equivalent": "Host observador Docker/Compose del PR #23 integrado",
-      "status": "partial", "decision": "replace", "owner_issue": 5,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 5,
       "acceptance": "Vincular ejecución de contenedor, autenticación, reinicio y restauración al candidato; auditar por separado las órdenes GM remotas disponibles.",
       "note": "Observador describe la ocupación de un puesto, no demuestra ausencia de autoridad. No crear un segundo servidor ni declarar dirección remota completa sin probarla.",
-      "evidence": [{"kind": "document", "path": "docs/FEATURE_PARITY.md"}]
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        }
+      ]
     },
     {
-      "id": "primera-guardia", "gate": "G1", "priority": "P0", "scope": "parity",
-      "original": "Lagunak: Primera guardia / scenario_90", "source": "README.md",
+      "id": "primera-guardia",
+      "gate": "G1",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Lagunak: Primera guardia / scenario_90",
+      "source": "README.md",
       "equivalent": "Seis misiones propias; no equivalencia individual demostrada",
-      "status": "verified", "decision": "replace", "owner_issue": 2,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 2,
       "acceptance": "Inventariar objetivos, fases, condiciones de victoria/derrota y recompensas; reimplementarlos con contenido propio y completar la misión desde el ejecutable.",
-      "note": "Sustituido por las 6 misiones de campaña propia verificadas en test_core.gd.",
+      "note": "Sustituido por las 6 misiones de campaña propia verificadas en test_core.gd. La ejecución pública del SHA final y el playtest humano siguen pendientes.",
       "evidence": [
-        {"kind": "document", "path": "docs/SOURCE_REVIEW.md"},
-        {"kind": "implementation", "path": "game/core/simulation.gd"},
-        {"kind": "test", "path": "tests/test_core.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "136 checks"}
+        {
+          "kind": "document",
+          "path": "docs/SOURCE_REVIEW.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/core/simulation.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_core.gd"
+        }
       ]
     },
     {
-      "id": "scenario-corpus", "gate": "G1", "priority": "P0", "scope": "parity",
-      "original": "Resto de escenarios y dependencias de contenido", "source": "README.md",
+      "id": "scenario-corpus",
+      "gate": "G1",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Resto de escenarios y dependencias de contenido",
+      "source": "README.md",
       "equivalent": "Editor nativo multi-misión y formatos propios",
-      "status": "verified", "decision": "replace", "owner_issue": 2,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 2,
       "acceptance": "Desglosar cada escenario y dependencia del original en IDs estables; declarar equivalente, decisión y prueba de importación/progreso por elemento.",
-      "note": "Editor nativo de campañas y misiones verificado en test_campaign_editor.gd.",
+      "note": "Editor nativo multi-misión y corpus de 38 entradas verificados como estructura/importación; no se demuestra todavía equivalencia jugable individual con todos los escenarios originales.",
       "evidence": [
-        {"kind": "document", "path": "docs/FEATURE_PARITY.md"},
-        {"kind": "implementation", "path": "game/ui/campaign_editor.gd"},
-        {"kind": "test", "path": "tests/test_campaign_editor.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "123 checks"}
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/ui/campaign_editor.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_campaign_editor.gd"
+        }
       ]
     },
     {
-      "id": "content-resources", "gate": "G1", "priority": "P0", "scope": "parity",
-      "original": "Bestiario, inventario, libros, hitos y recursos de personaje", "source": "issue:32",
+      "id": "content-resources",
+      "gate": "G1",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Bestiario, inventario, libros, hitos y recursos de personaje",
+      "source": "issue:32",
       "equivalent": "Sistemas persistentes base, libro de museo y ficha nativa",
-      "status": "verified", "decision": "replace", "owner_issue": 2,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 2,
       "acceptance": "Auditar consumidores originales y desglosar cada recurso/conjuro relevante, procedencia, dependencias y acceso jugable; probar progresión y guardado.",
-      "note": "Sistemas persistentes de recursos, inventario y ficha nativa verificados.",
+      "note": "Sistemas persistentes de recursos, inventario y ficha nativa verificados; falta la auditoría exhaustiva de consumidores originales y contenido equivalente.",
       "evidence": [
-        {"kind": "document", "path": "docs/FEATURE_PARITY.md"},
-        {"kind": "implementation", "path": "game/core/storage.gd"},
-        {"kind": "test", "path": "tests/test_storage_properties.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "80 checks"}
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/core/storage.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_storage_properties.gd"
+        }
       ]
     },
     {
-      "id": "npc-generator", "gate": "G1", "priority": "P0", "scope": "parity",
-      "original": "Generador determinista de NPC, ficha y afinidades", "source": "docs/NPC_GENERADOR.md",
+      "id": "npc-generator",
+      "gate": "G1",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Generador determinista de NPC, ficha y afinidades",
+      "source": "docs/NPC_GENERADOR.md",
       "equivalent": "Generador determinista NPC y mesa de trabajo nativa",
-      "status": "verified", "decision": "reimplement", "owner_issue": 2,
+      "status": "partial",
+      "decision": "reimplement",
+      "owner_issue": 2,
       "acceptance": "Motor propio semilla/desafío, límites, afinidades, reparto de acciones y procedencia; probar determinismo y uso por GM desde el ejecutable.",
-      "note": "Generador determinista NPC y workbench verificado en test_npc_generator.gd.",
+      "note": "Generador determinista NPC y workbench verificado en test_npc_generator.gd. La ejecución pública del SHA final y el playtest humano siguen pendientes.",
       "evidence": [
-        {"kind": "document", "path": "docs/NPC_WORKBENCH.md"},
-        {"kind": "implementation", "path": "game/core/npc_generator.gd"},
-        {"kind": "test", "path": "tests/test_npc_generator.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "24262 checks"}
+        {
+          "kind": "document",
+          "path": "docs/NPC_WORKBENCH.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/core/npc_generator.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_npc_generator.gd"
+        }
       ]
     },
     {
-      "id": "cosmography", "gate": "G1", "priority": "P0", "scope": "parity",
-      "original": "Jerarquía cosmográfica, HYG, map_ref y continuidades", "source": "issue:32",
+      "id": "cosmography",
+      "gate": "G1",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Jerarquía cosmográfica, HYG, map_ref y continuidades",
+      "source": "issue:32",
       "equivalent": "Atlas base por sector y sistemas de expedición",
-      "status": "verified", "decision": "replace", "owner_issue": 1,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 1,
       "acceptance": "Probar jerarquía y rutas entre sistemas, importación validada HYG/JSON, procedencia/licencia, canon elegido y persistencia del viaje.",
-      "note": "Atlas por sector y navegación verificado en test_expedition.gd.",
+      "note": "Servicio de campaña integrado con catálogo JSON versionado, rutas/map_ref, validación HYG/JSON y persistencia de ubicación; faltan jerarquía/HYG completos y procedencia externa del original.",
       "evidence": [
-        {"kind": "document", "path": "docs/FEATURE_PARITY.md"},
-        {"kind": "implementation", "path": "game/core/expedition_systems.gd"},
-        {"kind": "test", "path": "tests/test_expedition.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "50 checks"}
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/core/expedition_systems.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_expedition.gd"
+        }
       ]
     },
     {
-      "id": "dynamic-ship-catalog", "gate": "G1", "priority": "P0", "scope": "parity",
-      "original": "Cargueros dinámicos y otras declaraciones no enumeradas", "source": "scripts/shipTemplates.lua",
+      "id": "dynamic-ship-catalog",
+      "gate": "G1",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Cargueros dinámicos y otras declaraciones no enumeradas",
+      "source": "scripts/shipTemplates.lua",
       "equivalent": "Catálogo de 38 plantillas de naves en ship_templates.json y astillero",
-      "status": "verified", "decision": "replace", "owner_issue": 2,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 2,
       "acceptance": "Inventariar configuraciones efectivas alcanzables del cargador original, incluidas expresiones y bucles, con IDs, prestaciones y decisiones individuales.",
-      "note": "Catálogo de 38 variantes y astillero verificado.",
+      "note": "Catálogo de 38 variantes y astillero verificado. La ejecución pública del SHA final y el playtest humano siguen pendientes.",
       "evidence": [
-        {"kind": "document", "path": "docs/SHIP_TEMPLATES.md"},
-        {"kind": "implementation", "path": "game/data/ship_templates.json"},
-        {"kind": "test", "path": "tests/test_core.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "136 checks"}
+        {
+          "kind": "document",
+          "path": "docs/SHIP_TEMPLATES.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/data/ship_templates.json"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_core.gd"
+        }
       ]
     },
     {
-      "id": "assistance-dnd5e", "gate": "G2", "priority": "P1", "scope": "parity",
-      "original": "Asistencia con modificadores reales de ficha dnd5e", "source": "README.md",
+      "id": "assistance-dnd5e",
+      "gate": "G2",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Asistencia con modificadores reales de ficha dnd5e",
+      "source": "README.md",
       "equivalent": "Cuatro minijuegos nativos y ficha standalone",
-      "status": "partial", "decision": "reimplement", "owner_issue": 5,
+      "status": "partial",
+      "decision": "reimplement",
+      "owner_issue": 5,
       "acceptance": "Adaptador opcional con ficha real y permisos por identidad; contrastar modificadores, caducidad y consumo exclusivo del titular; probar sin Foundry.",
       "note": "No convertir Foundry en autoridad de campaña ni distribuir contenido dnd5e importado por el usuario.",
-      "evidence": [{"kind": "document", "path": "docs/FEATURE_PARITY.md"}]
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        }
+      ]
     },
     {
-      "id": "alert-late-join", "gate": "G2", "priority": "P1", "scope": "parity",
-      "original": "Nivel de alerta visible para quien entra tarde", "source": "README.md",
+      "id": "alert-late-join",
+      "gate": "G2",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Nivel de alerta visible para quien entra tarde",
+      "source": "README.md",
       "equivalent": "Estado de nave replicado; falta prueba específica enlazada en esta fila",
-      "status": "pending", "decision": "review", "owner_issue": 5,
+      "status": "pending",
+      "decision": "review",
+      "owner_issue": 5,
       "acceptance": "Cambiar a alerta roja y conectar/reconectar un participante; verificar alerta actual por ENet y adaptador Foundry sin exponer telemetría privada.",
       "note": "Que no aparezca una fila anterior no demuestra que la mecánica falte. Auditar y probar antes de implementar un segundo estado de alerta.",
-      "evidence": [{"kind": "implementation", "path": "game/net/session.gd"}, {"kind": "document", "path": "docs/FEATURE_PARITY.md"}]
+      "evidence": [
+        {
+          "kind": "implementation",
+          "path": "game/net/session.gd"
+        },
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        }
+      ]
     },
     {
-      "id": "foundry-workspaces", "gate": "G2", "priority": "P1", "scope": "parity",
-      "original": "Espacios operativos, mapa, destino/ETA y bitácora en Foundry", "source": "README.md",
+      "id": "foundry-workspaces",
+      "gate": "G2",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Espacios operativos, mapa, destino/ETA y bitácora en Foundry",
+      "source": "README.md",
       "equivalent": "Puestos nativos y adaptador opcional con 13 controles",
-      "status": "partial", "decision": "replace", "owner_issue": 5,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 5,
       "acceptance": "Tabla control-a-control del módulo antiguo al puesto nativo o adaptador; probar identidad, consultas, Journal, destino/ETA y navegador remoto con Foundry real.",
       "note": "Sustituir la UI principal puede ser válido; cada diferencia necesita decisión y evidencia. La autonomía standalone sigue siendo obligatoria.",
-      "evidence": [{"kind": "document", "path": "docs/FEATURE_PARITY.md"}]
-    },
-    {
-      "id": "gm-live", "gate": "G2", "priority": "P0", "scope": "parity",
-      "original": "Consola caliente y edición de contactos en misión viva", "source": "issue:32",
-      "equivalent": "Dirección en vivo integrada en shell principal y consola GM",
-      "status": "verified", "decision": "reimplement", "owner_issue": 32,
-      "acceptance": "Crear, modificar y eliminar contactos desde UI accesible durante misión; probar rechazo de clientes no autorizados, límites y bitácora auditable.",
-      "note": "GM Console totalmente integrada en shell (header + F8) y verificada.",
       "evidence": [
-        {"kind": "document", "path": "docs/FEATURE_PARITY.md"},
-        {"kind": "implementation", "path": "game/ui/app.gd"},
-        {"kind": "test", "path": "tests/test_gm_integration.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "11 checks"}
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        }
       ]
     },
     {
-      "id": "parliament", "gate": "G2", "priority": "P1", "scope": "parity",
-      "original": "Parlamento e iniciativa fuera del combate táctico", "source": "issue:32",
+      "id": "gm-live",
+      "gate": "G2",
+      "priority": "P0",
+      "scope": "parity",
+      "original": "Consola caliente y edición de contactos en misión viva",
+      "source": "issue:32",
+      "equivalent": "Dirección en vivo integrada en shell principal y consola GM",
+      "status": "partial",
+      "decision": "reimplement",
+      "owner_issue": 32,
+      "acceptance": "Crear, modificar y eliminar contactos desde UI accesible durante misión; probar rechazo de clientes no autorizados, límites y bitácora auditable.",
+      "note": "Consola integrada y CRUD de contactos/triggers validado host-only; falta un run público del SHA final y playtest humano.",
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/ui/app.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_gm_integration.gd"
+        }
+      ]
+    },
+    {
+      "id": "parliament",
+      "gate": "G2",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Parlamento e iniciativa fuera del combate táctico",
+      "source": "issue:32",
       "equivalent": "Combate táctico e iniciativa de combate no prueban una escena social",
-      "status": "pending", "decision": "reimplement", "owner_issue": 1,
+      "status": "pending",
+      "decision": "reimplement",
+      "owner_issue": 1,
       "acceptance": "Desglosar controles originales y completar una escena social dirigida, con iniciativa y consecuencias persistentes autorizadas.",
       "note": "No duplicar ni sustituir la iniciativa táctica sin necesidad; auditar el contrato de la escena original.",
-      "evidence": [{"kind": "document", "path": "docs/FEATURE_PARITY.md"}]
-    },
-    {
-      "id": "tutorial", "gate": "G2", "priority": "P1", "scope": "parity",
-      "original": "Tutorial/campo de entrenamiento citado como heredado", "source": "issue:32",
-      "equivalent": "Ayuda F1; no itinerario de aprendizaje acreditado aquí",
-      "status": "pending", "decision": "review", "owner_issue": 32,
-      "acceptance": "Contrastar tutorial original y reimplementar su aprendizaje con objetivos seguros por puesto; registrar prueba de tripulación nueva y guía de ejecución.",
-      "note": "La prueba humana no se sustituye por un botón de ayuda ni se declara realizada desde un test unitario.",
-      "evidence": [{"kind": "document", "path": "README.md"}]
-    },
-    {
-      "id": "localization-accessibility", "gate": "G3", "priority": "P1", "scope": "parity",
-      "original": "Localización es-ES y accesibilidad descritas en #32", "source": "issue:32",
-      "equivalent": "Panel ES/EN, gate de catálogo, daltonismo, tamaño de texto y movimiento reducido global",
-      "status": "verified", "decision": "reimplement", "owner_issue": 4,
-      "acceptance": "Inventariar todas las pantallas y cadenas; gate de catálogo; avisos visuales, tamaño de texto, contraste/daltonismo y movimiento reducido con pruebas de uso.",
-      "note": "Gate de localización CI y paquete completo de accesibilidad verificado.",
       "evidence": [
-        {"kind": "document", "path": "docs/FEATURE_PARITY.md"},
-        {"kind": "implementation", "path": "game/ui/readability_service.gd"},
-        {"kind": "test", "path": "tests/test_accessibility.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "9 checks"}
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        }
       ]
     },
     {
-      "id": "reactive-music", "gate": "G3", "priority": "P2", "scope": "parity",
-      "original": "Música procedural determinista", "source": "README.md",
+      "id": "tutorial",
+      "gate": "G2",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Tutorial/campo de entrenamiento citado como heredado",
+      "source": "issue:32",
+      "equivalent": "Ayuda F1; no itinerario de aprendizaje acreditado aquí",
+      "status": "pending",
+      "decision": "review",
+      "owner_issue": 32,
+      "acceptance": "Contrastar tutorial original y reimplementar su aprendizaje con objetivos seguros por puesto; registrar prueba de tripulación nueva y guía de ejecución.",
+      "note": "La prueba humana no se sustituye por un botón de ayuda ni se declara realizada desde un test unitario.",
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "README.md"
+        }
+      ]
+    },
+    {
+      "id": "localization-accessibility",
+      "gate": "G3",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Localización es-ES y accesibilidad descritas en #32",
+      "source": "issue:32",
+      "equivalent": "Panel ES/EN, gate de catálogo, daltonismo, tamaño de texto y movimiento reducido global",
+      "status": "partial",
+      "decision": "reimplement",
+      "owner_issue": 4,
+      "acceptance": "Inventariar todas las pantallas y cadenas; gate de catálogo; avisos visuales, tamaño de texto, contraste/daltonismo y movimiento reducido con pruebas de uso.",
+      "note": "Catálogo y perfil persistente, tamaño de texto, movimiento reducido y cinco modos de filtro aplicados en shell y probados localmente; falta inventario total de cadenas y prueba visual humana.",
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "game/ui/readability_service.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_accessibility.gd"
+        }
+      ]
+    },
+    {
+      "id": "reactive-music",
+      "gate": "G3",
+      "priority": "P2",
+      "scope": "parity",
+      "original": "Música procedural determinista",
+      "source": "README.md",
       "equivalent": "ScoreComposer, cinco perfiles, controles locales y F12",
-      "status": "partial", "decision": "replace", "owner_issue": 6,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 6,
       "acceptance": "Adjuntar ejecución de determinismo, PCM, privacidad y preferencias al candidato; identificar diferencias de catálogo y registrar escucha humana pendiente.",
       "note": "Corrección a la premisa de #32: los perfiles contextuales y el control local ya están documentados e implementados. No se empieza otro sistema de audio.",
-      "evidence": [{"kind": "document", "path": "docs/REACTIVE_AUDIO.md"}, {"kind": "test", "path": "tests/test_reactive_score.gd"}]
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "docs/REACTIVE_AUDIO.md"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_reactive_score.gd"
+        }
+      ]
     },
     {
-      "id": "visual-arts", "gate": "G3", "priority": "P2", "scope": "parity",
-      "original": "Arte de museo, procedencia y generación decorativa", "source": "README.md",
+      "id": "visual-arts",
+      "gate": "G3",
+      "priority": "P2",
+      "scope": "parity",
+      "original": "Arte de museo, procedencia y generación decorativa",
+      "source": "README.md",
       "equivalent": "Modelos Blender propios, museo, cuadros y guardianes",
-      "status": "partial", "decision": "replace", "owner_issue": 6,
+      "status": "partial",
+      "decision": "replace",
+      "owner_issue": 6,
       "acceptance": "Inventariar cada obra/variante funcional y su sustitución propia; cartelas veraces, procedencia y capturas reales; evaluar variedad procedural sin copiar recursos.",
       "note": "El README original no impone generar todo: declara PNG prerrenderizados y escaneos CC0 con ficha. Una técnica artística distinta no prueba por sí misma una pérdida funcional.",
-      "evidence": [{"kind": "document", "path": "README.md"}, {"kind": "document", "path": "docs/FEATURE_PARITY.md"}]
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "README.md"
+        },
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        }
+      ]
     },
     {
-      "id": "npc-avatar", "gate": "G3", "priority": "P1", "scope": "parity",
-      "original": "Poses, personalidades y expresión del avatar pendientes", "source": "issue:32",
+      "id": "npc-avatar",
+      "gate": "G3",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Poses, personalidades y expresión del avatar pendientes",
+      "source": "issue:32",
       "equivalent": "Editor, retratos, presencia, asientos y poses compartidas base",
-      "status": "partial", "decision": "reimplement", "owner_issue": 3,
+      "status": "partial",
+      "decision": "reimplement",
+      "owner_issue": 3,
       "acceptance": "Auditar consumidores originales y probar las poses/gestos/mirada restantes con identidad, exclusividad de asiento y reconexión.",
       "note": "No confundir los avances ya integrados con las variantes restantes ni considerar propuestas nuevas como paridad automáticamente.",
-      "evidence": [{"kind": "document", "path": "docs/FEATURE_PARITY.md"}]
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        }
+      ]
     },
     {
-      "id": "foundry-real", "gate": "G3", "priority": "P1", "scope": "parity",
-      "original": "Validación de integración en mesa real", "source": "README.md",
+      "id": "foundry-real",
+      "gate": "G3",
+      "priority": "P1",
+      "scope": "parity",
+      "original": "Validación de integración en mesa real",
+      "source": "README.md",
       "equivalent": "Pruebas automáticas del cliente y HTTP; validación Foundry real pendiente en la matriz",
-      "status": "partial", "decision": "reimplement", "owner_issue": 5,
+      "status": "partial",
+      "decision": "reimplement",
+      "owner_issue": 5,
       "acceptance": "Documentar versión real, permisos, navegador remoto, origen autorizado, ficha propia y Journal; demostrar campaña sin adaptador y sin dependencia de sus datos.",
       "note": "Una prueba de contrato HTTP no es una sesión real de Foundry ni un playtest humano.",
-      "evidence": [{"kind": "document", "path": "docs/FEATURE_PARITY.md"}, {"kind": "document", "path": "README.md"}]
+      "evidence": [
+        {
+          "kind": "document",
+          "path": "docs/FEATURE_PARITY.md"
+        },
+        {
+          "kind": "document",
+          "path": "README.md"
+        }
+      ]
     },
     {
-      "id": "proposal-session-dossier", "gate": "G3", "priority": "P1", "scope": "proposal",
-      "original": "Exportación de crónica, briefings y guardados con nombre", "source": "issue:32",
+      "id": "proposal-session-dossier",
+      "gate": "G3",
+      "priority": "P1",
+      "scope": "proposal",
+      "original": "Exportación de crónica, briefings y guardados con nombre",
+      "source": "issue:32",
       "equivalent": "Propuesta de flujo de preparación y traslado de sesión",
-      "status": "pending", "decision": "review", "owner_issue": 32,
+      "status": "pending",
+      "decision": "review",
+      "owner_issue": 32,
       "acceptance": "Aprobar alcance y exportar Markdown/JSON con privacidad por destinatario, importación validada y prueba de traslado entre equipos.",
       "note": "No publicar partidas, fichas privadas ni credenciales en repositorios o servicios; exportación local explícita.",
       "evidence": []
     },
     {
-      "id": "proposal-replay-metrics", "gate": "G3", "priority": "P1", "scope": "proposal",
-      "original": "Replay, debriefing y métricas de sesión", "source": "issue:32",
+      "id": "proposal-replay-metrics",
+      "gate": "G3",
+      "priority": "P1",
+      "scope": "proposal",
+      "original": "Replay, debriefing y métricas de sesión",
+      "source": "issue:32",
       "equivalent": "Propuesta; no grabación nueva implantada por este registro",
-      "status": "pending", "decision": "review", "owner_issue": 32,
+      "status": "pending",
+      "decision": "review",
+      "owner_issue": 32,
       "acceptance": "Definir eventos versionados y retención local; reproducir una sesión sin revelar secretos a espectadores; medir alertas/órdenes/asistencias.",
       "note": "No activar telemetría, grabación o envío externo como efecto secundario de una auditoría.",
       "evidence": []
     },
     {
-      "id": "proposal-euskera", "gate": "G3", "priority": "P2", "scope": "proposal",
-      "original": "Localización eu-ES de menús y puestos", "source": "issue:32",
+      "id": "proposal-euskera",
+      "gate": "G3",
+      "priority": "P2",
+      "scope": "proposal",
+      "original": "Localización eu-ES de menús y puestos",
+      "source": "issue:32",
       "equivalent": "Propuesta de identidad lingüística",
-      "status": "pending", "decision": "review", "owner_issue": 32,
+      "status": "pending",
+      "decision": "review",
+      "owner_issue": 32,
       "acceptance": "Aprobar glosario, traducir menús/puestos y obtener revisión lingüística; fallback y cobertura automatizados.",
       "note": "No bloquea paridad con una traducción original no acreditada.",
       "evidence": []
     },
     {
-      "id": "proposal-photo", "gate": "G3", "priority": "P2", "scope": "proposal",
-      "original": "Modo foto y galería interna", "source": "issue:32",
+      "id": "proposal-photo",
+      "gate": "G3",
+      "priority": "P2",
+      "scope": "proposal",
+      "original": "Modo foto y galería interna",
+      "source": "issue:32",
       "equivalent": "Cámaras tácticas y capturas de CI no son todavía modo foto general",
-      "status": "pending", "decision": "review", "owner_issue": 32,
+      "status": "pending",
+      "decision": "review",
+      "owner_issue": 32,
       "acceptance": "Definir cámaras autorizadas y ocultación de datos privados; guardar capturas locales reales y probar salida segura al juego.",
       "note": "Separar cámara de combate ya existente y ampliación a interiores/ocio.",
       "evidence": []
     },
     {
-      "id": "proposal-interior-triggers", "gate": "G2", "priority": "P0", "scope": "proposal",
-      "original": "Triggers colocables en puertas, salas y mesas", "source": "issue:32",
+      "id": "proposal-interior-triggers",
+      "gate": "G2",
+      "priority": "P0",
+      "scope": "proposal",
+      "original": "Triggers colocables en puertas, salas y mesas",
+      "source": "issue:32",
       "equivalent": "Sistema InteriorTriggers con evaluación de zona, interacciones, consecuencias e integración con GMLiveActions",
-      "status": "verified", "decision": "reimplement", "owner_issue": 32,
+      "status": "partial",
+      "decision": "reimplement",
+      "owner_issue": 32,
       "acceptance": "Condiciones y efectos validados por host; entrada/apertura/asiento dispara una sola vez según reglas, con bitácora y persistencia.",
-      "note": "Sistema InteriorTriggers totalmente implementado e integrado.",
+      "note": "Motor integrado en WorldDeck y GMHotConsole: entrada/salida/interacción/sit, consecuencias validadas, CRUD, auditoría y persistencia; falta playtest humano del recorrido 3D.",
       "evidence": [
-        {"kind": "implementation", "path": "game/core/interior_triggers.gd"},
-        {"kind": "test", "path": "tests/test_interior_triggers.gd"},
-        {"kind": "run", "url": "https://github.com/EspacioKoop/espaciokooplagunakRemake/actions/runs/1000000000", "revision": "5f032f60122be6d53c4b6b505678e6c585ad0eb1", "result": "passed", "checks": "12 checks"}
+        {
+          "kind": "implementation",
+          "path": "game/core/interior_triggers.gd"
+        },
+        {
+          "kind": "test",
+          "path": "tests/test_interior_triggers.gd"
+        }
       ]
     },
     {
-      "id": "proposal-second-screen", "gate": "G3", "priority": "P1", "scope": "proposal",
-      "original": "Tablet Android como segunda pantalla de puesto", "source": "issue:30",
+      "id": "proposal-second-screen",
+      "gate": "G3",
+      "priority": "P1",
+      "scope": "proposal",
+      "original": "Tablet Android como segunda pantalla de puesto",
+      "source": "issue:30",
       "equivalent": "Petición independiente #30",
-      "status": "pending", "decision": "review", "owner_issue": 30,
+      "status": "pending",
+      "decision": "review",
+      "owner_issue": 30,
       "acceptance": "Emparejar una tablet y operar la terminal correspondiente con permisos y reconexión, sin ocupar otro puesto ni revelar secretos.",
       "note": "No confundir con disponer de APK Android. No amplía por sí sola los requisitos de cierre de #1.",
       "evidence": []
