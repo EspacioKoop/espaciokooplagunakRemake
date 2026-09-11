@@ -2,7 +2,13 @@ name: Crew station school
 
 on:
   push:
-    branches: [agent/32-crew-training-t5]
+    branches: [main, agent/32-crew-training-t5]
+    paths:
+      - 'game/**'
+      - 'tests/*crew_training*'
+      - 'tests/*assistance_training*'
+      - 'tools/bootstrap.py'
+      - '.github/workflows/crew-training.yml'
   pull_request:
     paths:
       - 'game/**'
@@ -12,6 +18,7 @@ on:
       - '.github/workflows/crew-training.yml'
   workflow_dispatch:
 
+# The one-time authoring capture is now committed. Verification never writes Git.
 permissions:
   contents: read
 
@@ -27,6 +34,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+      - name: Record the exact source revision
+        run: |
+          mkdir -p build/crew-training
+          git rev-parse HEAD > build/crew-training/checkout.txt
+          sha256sum game/core/crew_training.gd game/ui/crew_training_window.gd game/ui/assistance_console.gd game/core/cosmography_catalog.gd tests/test_crew_training.gd tests/run_crew_training.py > build/crew-training/sources.sha256
       - name: Install graphical runtime and pinned PNG decoder
         run: |
           sudo apt-get update -qq
@@ -70,46 +82,3 @@ jobs:
           path: build/crew-training/
           if-no-files-found: error
           retention-days: 14
-
-  preserve-capture:
-    needs: school
-    if: github.event_name == 'push' && github.ref == 'refs/heads/agent/32-crew-training-t5'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          ref: agent/32-crew-training-t5
-          persist-credentials: false
-      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
-        with:
-          name: crew-training-evidence
-          path: school-evidence
-      - name: Preserve only the verified school screenshot on the unchanged branch
-        env:
-          GH_TOKEN: ${{ github.token }}
-          VERIFIED_SHA: ${{ github.sha }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$VERIFIED_SHA" || { echo 'Branch advanced; refusing stale capture'; exit 1; }
-          python3 - <<'PY'
-          import hashlib, json
-          from pathlib import Path
-          directory = Path('school-evidence/graphical')
-          result = json.loads((directory / 'result.json').read_text())
-          assert result['failures'] == 0 and result['courses'] == 9 and result['first_mission'] is True and result['ui'] is True and result['graphical'] is True
-          capture = (directory / 'school.png').read_bytes()
-          assert capture.startswith(b'\x89PNG\r\n\x1a\n') and hashlib.sha256(capture).hexdigest() == result['capture_sha256']
-          target = Path('docs/images/crew-training.png')
-          target.parent.mkdir(parents=True, exist_ok=True)
-          target.write_bytes(capture)
-          PY
-          git add -- docs/images/crew-training.png
-          if git diff --cached --quiet; then exit 0; fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'docs(training): preserve verified native school screenshot'
-          git -c credential.helper='!f() { printf "username=x-access-token\npassword=%s\n" "$GH_TOKEN"; }; f' push origin HEAD:refs/heads/agent/32-crew-training-t5

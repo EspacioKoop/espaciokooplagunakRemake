@@ -1,0 +1,74 @@
+name: Verify storage properties
+on:
+  pull_request:
+  push:
+    branches: [main, agent/32-save-properties]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: storage-properties-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  storage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify failure detection and isolation
+        run: python3 tests/run_storage_properties.py --self-test
+      - name: Download verified Godot
+        run: python3 tools/bootstrap.py
+      - name: Record checkout and import resources without inherited cache
+        run: |
+          set -euo pipefail
+          mkdir -p build/storage
+          git rev-parse HEAD | tee build/storage/checkout.txt
+          sha256sum game/core/storage.gd game/core/ship_model.gd tests/test_storage_properties.gd | tee build/storage/sources.sha256
+          rm -rf game/.godot
+          .toolchain/godot --headless --editor --path game --quit 2>&1 | tee build/storage/import.log
+      - name: Verify registered storage source and independent boundary controls
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,re,subprocess,sys,tempfile
+          from pathlib import Path
+          sys.path.insert(0, 'tests')
+          from run_storage_properties import isolated_environment
+          root=Path.cwd()
+          with tempfile.TemporaryDirectory(prefix='storage-runtime-') as temporary:
+              env=isolated_environment(Path(temporary))
+              expected=hashlib.sha256((root/'game/core/storage.gd').read_bytes()).hexdigest()
+              env['STORAGE_EXPECTED_SHA256']=expected
+              result=subprocess.run([str(root/'.toolchain/godot'),'--headless','--path',str(root/'game'),'--script',str(root/'tests/test_storage_runtime.gd'),'--','--test'],env=env,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=90)
+          output=result.stdout
+          (root/'build/storage/runtime.log').write_text(output,encoding='utf-8')
+          print(output,flush=True)
+          clean=re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]','',output)
+          lines=[line for line in clean.splitlines() if line.startswith('STORAGE_RUNTIME_RESULT ')]
+          assert result.returncode==0 and not re.search(r'(?m)^\s*(?:SCRIPT ERROR|ERROR):',clean), 'Engine/runtime failure'
+          assert len(lines)==1, 'Missing/ambiguous runtime result'
+          report=json.loads(lines[0].partition(' ')[2])
+          assert report['passed'] is True and type(report['checks']) is int and report['checks']>0 and report['failures']==0 and report['source_sha256']==expected, report
+          PY
+      - name: Check save properties and legacy migrations
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          python3 tests/run_storage_properties.py --seed 3204301 --samples 64 2>&1 | tee build/storage/seed-3204301.log
+      - name: Check an independent deterministic seed
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          python3 tests/run_storage_properties.py --seed 641709 --samples 64 2>&1 | tee build/storage/seed-641709.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: storage-property-evidence-${{ github.run_id }}
+          path: build/storage/
+          if-no-files-found: error
+          retention-days: 3
