@@ -188,6 +188,12 @@ func _test_ui() -> void:
 	captions.duration_control.value = 9
 	check(captions.status_label.text.contains("este equipo"), "local persistence acknowledged in UI")
 	await frames()
+	check(captions.status_label.get_global_rect().end.y <= captions.settings.size.y - 55, "save status stays outside the scroll and above Close")
+	check(readability.commit_text_percent(150).is_empty(), "enlarge settings to 150 percent")
+	await frames(8)
+	check(captions.status_label.get_global_rect().end.y <= captions.settings.size.y - 55, "save status remains visible at 150 percent")
+	check(readability.commit_text_percent(100).is_empty(), "restore settings text")
+	await frames()
 	await _capture("sound-caption-settings.png")
 	var original_dialog = captions.settings.get_instance_id()
 	captions.settings.hide()

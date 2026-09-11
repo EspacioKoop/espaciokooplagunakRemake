@@ -88,18 +88,21 @@ func open_settings() -> void:
 	settings.title = _text("Subtítulos de avisos sonoros", "Sound captions")
 	settings.ok_button_text = _text("Cerrar", "Close")
 	settings.min_size = Vector2i(400, 330)
-	settings.size = Vector2i(590, 420)
+	settings.size = Vector2i(640, 520)
 	settings.transient = true
 	settings.exclusive = true
 	add_child(settings)
+	var body = VBoxContainer.new()
+	body.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	body.offset_left = 16
+	body.offset_right = -16
+	body.offset_top = 16
+	body.offset_bottom = -56
+	settings.add_child(body)
 	var scroll = ScrollContainer.new()
-	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	scroll.offset_left = 16
-	scroll.offset_right = -16
-	scroll.offset_top = 16
-	scroll.offset_bottom = -56
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	settings.add_child(scroll)
+	body.add_child(scroll)
 	var column = VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.add_theme_constant_override("separation", 12)
@@ -130,7 +133,8 @@ func open_settings() -> void:
 	column.add_child(reset)
 	status_label = Label.new()
 	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	column.add_child(status_label)
+	# Keep persistence errors visible even when enlarged controls need scrolling.
+	body.add_child(status_label)
 	enabled_control.toggled.connect(func(value):
 		profile.enabled = value
 		clear()
