@@ -9,7 +9,7 @@ Juego nativo de exploración espacial cooperativa construido en **Godot**, con g
 
 **Standalone-first:** jugar, guardar, editar contenido y alojar partidas no requiere Foundry, una cuenta externa ni servicios de nube. Foundry es un adaptador opcional.
 
-[Descargar](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/latest) · [Primeros pasos](#primeros-pasos) · [Capturas](#capturas-reales) · [Documentación](#documentación) · [Plan de desarrollo](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1)
+[Descargar](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/latest) · [Primeros pasos](#primeros-pasos) · [Capturas](#capturas-reales) · [Documentación](#documentación) · [Plan de desarrollo](docs/ROADMAP.md) · [Normas Platino](docs/NORMAS_PLATINO.md)
 
 ![Puente tridimensional de la Itsaso, con puestos de control y espacio recorrible](docs/images/04_cubierta.png)
 
