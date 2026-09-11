@@ -76,7 +76,7 @@ Ejemplos de estados honestos:
 - El perfil no sustituye playtest humano, prueba en el equipo afectado ni la validación completa del paquete publicado.
 - La build medida es un export Linux solicitado explícitamente; no se afirma un export Windows ni una release por ejecutar este runner.
 - Los recorridos usan las entradas deterministas existentes de las pruebas de ocio para llegar a zonas, y después observan frames del código de producción. No se presenta esto como un recorrido humano libre.
-- Este carril no modifica `project.godot`, `README.md`, `docs/FEATURE_PARITY.md` ni `release.yml`, y no altera el benchmark sintético de #76.
+- Este carril no modifica `project.godot`, `README.md`, `docs/FEATURE_PARITY.md` ni `release.yml`, y no altera el benchmark sintético de #76. El runner puede invocarse desde CI; esta entrega no añade un workflow privilegiado.
 
 ## Rollback
 
