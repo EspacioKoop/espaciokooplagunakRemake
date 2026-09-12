@@ -31,7 +31,12 @@ def packages(directory, marker=b"first", module_version=None, magic=b"\x7fELF"):
                 archive.writestr(name, "Synthetic fixture, not a game")
     with zipfile.ZipFile(directory / "espaciokoop-lagunak-foundry.zip", "w") as archive:
         archive.writestr("LICENSE", "Synthetic")
-        archive.writestr("module.json", json.dumps({"id": "espaciokoop-lagunak", "version": module_version or audit.VERSION}))
+        manifest = audit.FOUNDRY_MANIFEST.read_bytes()
+        if module_version is not None:
+            module = json.loads(manifest)
+            module["version"] = module_version
+            manifest = json.dumps(module).encode()
+        archive.writestr("module.json", manifest)
     checksums(directory)
 
 
@@ -223,6 +228,22 @@ class AuditTests(unittest.TestCase):
         shutil.copytree(self.published, self.canonical, dirs_exist_ok=True)
         self.release = metadata(self.published)[0]
         with self.assertRaisesRegex(ValueError, "executable header"): self.compare()
+
+    def test_unchanged_optional_adapter_does_not_need_game_version_bump(self):
+        self.assertEqual(audit.VERSION, "0.9.3")
+        self.assertEqual(json.loads(audit.FOUNDRY_MANIFEST.read_bytes())["version"], "0.9.2")
+        self.assertEqual(set(self.compare()), audit.expected_names())
+
+    def test_same_version_with_other_manifest_drift_is_rejected(self):
+        module = json.loads(audit.FOUNDRY_MANIFEST.read_bytes())
+        module["download"] = "https://example.invalid/unexpected-module.zip"
+        with zipfile.ZipFile(self.published / "espaciokoop-lagunak-foundry.zip", "w") as archive:
+            archive.writestr("LICENSE", "Synthetic")
+            archive.writestr("module.json", json.dumps(module))
+        checksums(self.published)
+        shutil.copytree(self.published, self.canonical, dirs_exist_ok=True)
+        self.release = metadata(self.published)[0]
+        with self.assertRaisesRegex(ValueError, "differs from versioned source"): self.compare()
 
     def test_symlink_download_is_rejected(self):
         path = self.published / "SHA256SUMS"

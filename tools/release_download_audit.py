@@ -23,6 +23,7 @@ from publish_release import verified_assets
 MAX_ASSET_BYTES = 1024 * 1024 * 1024
 MAX_ZIP_EXPANDED_BYTES = 2 * MAX_ASSET_BYTES
 MAX_ZIP_ENTRIES = 4096
+FOUNDRY_MANIFEST = Path(__file__).resolve().parents[1] / "integrations/foundry/module.json"
 
 
 def require(condition: bool, message: str) -> None:
@@ -136,9 +137,13 @@ def compare_downloads(published: Path, canonical: Path, assets: dict) -> dict:
                 require(binary.read(len(magic)) == magic, "Invalid executable header: " + platform)
     with checked_zip(published / "espaciokoop-lagunak-foundry.zip") as archive:
         require(archive.getinfo("module.json").file_size <= 131072, "Oversized Foundry manifest")
-        module = json.loads(archive.read("module.json"))
-        require(isinstance(module, dict) and module.get("id") == "espaciokoop-lagunak" and module.get("version") == VERSION,
-                "Foundry manifest has the wrong identity/version")
+        manifest_bytes = archive.read("module.json")
+        module = json.loads(manifest_bytes)
+        # The optional adapter can remain unchanged across game releases.
+        # Require the COMPLETE versioned source, not an arbitrary older version.
+        require(isinstance(module, dict) and module.get("id") == "espaciokoop-lagunak"
+                and manifest_bytes == FOUNDRY_MANIFEST.read_bytes(),
+                "Foundry manifest has the wrong identity/version or differs from versioned source")
     return result
 
 
