@@ -195,7 +195,7 @@ static func verify(tree: SceneTree, app: Control) -> Dictionary:
 	pending.queue_free()
 	tree.root.size = original_size
 	await _settle(tree)
-	print("HAMACHI_UI_OK ", result.checks, " checks; ", result.failures, " failures; clipboard=", DisplayServer.has_feature(DisplayServer.FEATURE_CLIPBOARD))
+	print("HAMACHI_PANEL_OK ", result.checks, " checks; ", result.failures, " failures; clipboard=", DisplayServer.has_feature(DisplayServer.FEATURE_CLIPBOARD))
 	return result
 
 static func _capture_if_requested(window: Window, label: String) -> void:

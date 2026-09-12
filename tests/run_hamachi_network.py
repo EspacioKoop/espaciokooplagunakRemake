@@ -61,6 +61,19 @@ def wait_ready(process, path, timeout=12.0):
     raise TimeoutError("Host readiness deadline exceeded")
 
 
+def safe_diagnostic(case, text):
+    """Only fixed enums and integer counters can escape private process logs."""
+    if case not in CASES:
+        raise ValueError("Unknown diagnostic case")
+    text = ANSI.sub("", text)
+    result = re.findall(rf"^HAMACHI_RESULT {case} checks=(\d+) failures=(\d+)$", text, re.M)
+    states = re.findall(rf"^HAMACHI_STATE {case} accepted=(true|false) rejected=(true|false) mode=(offline|host|client)$", text, re.M)
+    failures = re.findall(r"HAMACHI_FAIL (\d+) ", text)
+    return {"case": case, "results": [[int(a), int(b)] for a,b in result[:2]],
+            "failed_checks": [int(n) for n in failures[:32]], "states": states[:2],
+            "engine_errors": len(re.findall(r"^\s*(?:SCRIPT ERROR|ERROR):", text, re.M))}
+
+
 def run(godot, output):
     output.mkdir(parents=True, exist_ok=True)
     report_path = output / "report.json"
@@ -101,15 +114,19 @@ def run(godot, output):
             report["cases"].append(validate_result("host", code, host_log.read_text(encoding="utf-8")))
             report["ok"] = True
     finally:
+        report["diagnostics"] = [safe_diagnostic(case, (output / f"{case}.log").read_text(encoding="utf-8", errors="replace"))
+                                 for case in CASES if (output / f"{case}.log").is_file()]
         report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         os.umask(old_umask)
+        if not report["ok"]:
+            print("HAMACHI_DIAGNOSTIC " + json.dumps(report["diagnostics"]))
     return report
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--godot", type=Path, default=Path(os.environ.get("GODOT", ROOT / ".toolchain/godot")))
-    parser.add_argument("--output", type=Path, default=ROOT / "build/hamachi-network")
+    parser.add_argument("--output", type=Path, default=ROOT / "build/release-092/hamachi-network")
     args = parser.parse_args(argv)
     try:
         report = run(args.godot.resolve(), args.output.resolve())

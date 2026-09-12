@@ -9,10 +9,21 @@ import unittest
 from unittest.mock import Mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from run_hamachi_network import CASES, managed_process, validate_result, wait_ready
+from run_hamachi_network import CASES, managed_process, safe_diagnostic, validate_result, wait_ready
 
 
 class HamachiRunnerTests(unittest.TestCase):
+    def test_diagnostics_never_reflect_private_text(self):
+        import json
+        private = "lagunak:v1:192.0.2.1:27840:private-fixture-value"
+        text = private + "\nERROR: HAMACHI_FAIL 7 " + private + "\nHAMACHI_RESULT bad checks=7 failures=1\nHAMACHI_STATE bad accepted=false rejected=false mode=client\n"
+        result = safe_diagnostic("bad", text)
+        self.assertEqual(result["failed_checks"], [7])
+        self.assertEqual(result["results"], [[7, 1]])
+        self.assertEqual(result["states"], [("false", "false", "client")])
+        self.assertNotIn(private, json.dumps(result))
+        self.assertNotIn("192.0.2.1", json.dumps(result))
+
     def test_all_complete_results(self):
         for case, checks in CASES.items():
             with self.subTest(case=case):

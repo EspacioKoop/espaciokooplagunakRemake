@@ -18,7 +18,7 @@ func check(value: bool, label: String) -> void:
 	checks += 1
 	if not value:
 		failures += 1
-		push_error("HAMACHI_FAIL " + label)
+		push_error("HAMACHI_FAIL " + str(checks) + " " + label)
 
 func settle() -> void:
 	for i in 4: await process_frame
@@ -141,6 +141,7 @@ func client_case() -> void:
 	check(not accepted, "starting a connection is not reported as authenticated")
 	if case_name == "good": check(window.invitation_input.text.is_empty(), "join clears private invitation from input")
 	await wait_for(func(): return rejected or (accepted and not session.view.is_empty()))
+	print("HAMACHI_STATE %s accepted=%s rejected=%s mode=%s" % [case_name, accepted, rejected, session.mode])
 	if case_name in ["bad", "busy"]:
 		check(not accepted, "wrong key or occupied station is never accepted")
 		check(rejected and session.mode == "offline", "rejected client returns offline")
