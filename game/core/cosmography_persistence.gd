@@ -3,6 +3,8 @@ extends RefCounted
 ## Standalone persistence contract for CosmographyCatalog v1.
 ## Does not own ExpeditionSystems, Atlas, UI or navigation.
 
+const CosmographyCatalog = preload("res://core/cosmography_catalog.gd")
+
 const FORMAT := "lagunak-cosmography-state"
 const VERSION := 1
 const MAX_SERIALIZED_BYTES := 64 * 1024
@@ -17,7 +19,7 @@ var state: Dictionary = {
 }
 
 static func create(catalog_data: Variant, catalog_id: String) -> Dictionary:
-	var model = CosmographyPersistence.new()
+	var model = load("res://core/cosmography_persistence.gd").new()
 	var result = model.register_catalog(catalog_data, catalog_id)
 	if not result.ok:
 		return result
@@ -26,6 +28,9 @@ static func create(catalog_data: Variant, catalog_id: String) -> Dictionary:
 func register_catalog(catalog_data: Variant, catalog_id: String) -> Dictionary:
 	if not catalog_id is String or catalog_id.strip_edges().is_empty():
 		return _fail("catalog_id obligatorio.")
+	# Guard before the shared validator: its legacy int() check is coercive.
+	if not catalog_data is Dictionary or not _valid_version(catalog_data.get("version")):
+		return _fail("Catálogo: versión cosmográfica no compatible.")
 	var catalog_error := CosmographyCatalog.validate(catalog_data)
 	if not catalog_error.is_empty():
 		return _fail("Catálogo inválido: " + catalog_error)
@@ -58,7 +63,10 @@ func serialize() -> String:
 func restore(serialized: String) -> Dictionary:
 	if serialized.to_utf8_buffer().size() > MAX_SERIALIZED_BYTES:
 		return _fail("Estado cosmográfico demasiado grande.")
-	var parsed = JSON.parse_string(serialized)
+	var parser := JSON.new()
+	if parser.parse(serialized) != OK:
+		return _fail("Estado cosmográfico: JSON inválido.")
+	var parsed: Variant = parser.data
 	if not parsed is Dictionary:
 		return _fail("Estado cosmográfico inválido.")
 	var validation := _validate_state(parsed)
@@ -77,13 +85,15 @@ func snapshot() -> Dictionary:
 	return state.duplicate(true)
 
 func _validate_state(value: Variant) -> String:
+	if not value is Dictionary:
+		return "Estado cosmográfico: debe ser un objeto."
 	for key in value.keys():
 		if key not in ["format", "version", "catalog_id", "current_system_id", "current_planet_id"]:
 			return "Campo de estado no permitido: " + str(key)
 	for key in ["format", "version", "catalog_id", "current_system_id", "current_planet_id"]:
 		if not value.has(key):
 			return "Falta campo de estado: " + key
-	if value.format != FORMAT or int(value.version) != VERSION:
+	if value.format != FORMAT or not _valid_version(value.version):
 		return "Formato o versión de estado no compatible."
 	for key in ["catalog_id", "current_system_id", "current_planet_id"]:
 		if not value[key] is String:
@@ -93,6 +103,10 @@ func _validate_state(value: Variant) -> String:
 	if str(value.current_system_id).is_empty():
 		return "current_system_id no puede estar vacío."
 	return ""
+
+static func _valid_version(value: Variant) -> bool:
+	# JSON represents numbers as floats. Do not coerce strings/bools or truncate.
+	return (typeof(value) == TYPE_INT or typeof(value) == TYPE_FLOAT) and is_finite(value) and value == VERSION
 
 static func _fail(message: String) -> Dictionary:
 	return {"ok": false, "error": message}

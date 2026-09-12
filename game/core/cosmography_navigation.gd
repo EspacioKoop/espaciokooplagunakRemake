@@ -3,6 +3,8 @@ extends RefCounted
 ## Read-only adapter for a validated CosmographyCatalog v1.
 ## It owns no Atlas, physics, UI, network or persistence state.
 
+const CosmographyCatalog = preload("res://core/cosmography_catalog.gd")
+
 const FORMAT := "espaciokoop-cosmography-navigation"
 const VERSION := 1
 const MAX_CONNECTIONS := 512
@@ -14,13 +16,16 @@ var _navigation: Dictionary = {}
 var _nodes: Dictionary = {}
 
 static func create(catalog_data: Variant, navigation_data: Variant) -> Dictionary:
+	# Guard before the shared validator: its legacy int() check is coercive.
+	if not catalog_data is Dictionary or not _valid_version(catalog_data.get("version")):
+		return _fail("Catálogo: versión cosmográfica no compatible.")
 	var catalog_error := CosmographyCatalog.validate(catalog_data)
 	if not catalog_error.is_empty():
 		return _fail("Catálogo inválido: " + catalog_error)
 	var navigation_error := _validate_navigation(catalog_data, navigation_data)
 	if not navigation_error.is_empty():
 		return _fail(navigation_error)
-	var adapter := CosmographyNavigation.new()
+	var adapter = load("res://core/cosmography_navigation.gd").new()
 	adapter._catalog = catalog_data.duplicate(true)
 	adapter._navigation = navigation_data.duplicate(true)
 	adapter._nodes = CosmographyCatalog.by_id(adapter._catalog)
@@ -35,7 +40,7 @@ static func _validate_navigation(catalog_data: Dictionary, navigation_data: Vari
 	for key in ["format", "version", "connections"]:
 		if not navigation_data.has(key):
 			return "Navegación: falta " + key
-	if navigation_data.format != FORMAT or typeof(navigation_data.version) != TYPE_INT or navigation_data.version != VERSION:
+	if navigation_data.format != FORMAT or not _valid_version(navigation_data.version):
 		return "Navegación: formato o versión no compatible."
 	if not navigation_data.connections is Array or navigation_data.connections.size() > MAX_CONNECTIONS:
 		return "Navegación: conexiones inválidas o demasiadas."
@@ -146,6 +151,10 @@ func _marker(entry: Dictionary) -> Dictionary:
 		"provenance": entry.provenance.duplicate(true)
 	}
 	return marker
+
+static func _valid_version(value: Variant) -> bool:
+	# JSON represents numbers as floats. Do not coerce strings/bools or truncate.
+	return (typeof(value) == TYPE_INT or typeof(value) == TYPE_FLOAT) and is_finite(value) and value == VERSION
 
 static func _fail(message: String) -> Dictionary:
 	return {"ok": false, "error": message}

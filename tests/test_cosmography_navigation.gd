@@ -1,6 +1,10 @@
 extends SceneTree
 ## Synthetic catalog only: no HYG download, player save, network or canon decision.
 
+
+const CosmographyNavigation = preload("res://core/cosmography_navigation.gd")
+const CosmographyCatalog = preload("res://core/cosmography_catalog.gd")
+
 var checks := 0
 var failures := 0
 
@@ -9,6 +13,7 @@ func _initialize() -> void:
 
 func check(value: bool, label: String) -> void:
 	checks += 1
+	print("COSMOGRAPHY_NAVIGATION_CHECK index=%d ok=%s" % [checks, str(value)])
 	if not value:
 		failures += 1
 		push_error("COSMOGRAPHY_NAVIGATION_FAIL " + label)
@@ -128,5 +133,59 @@ func run() -> void:
 		check(not disconnected_adapter.adapter.route("earth", "lyra").ok, "unreachable destination is rejected")
 	check(not adapter.marker("missing").ok, "unknown marker is rejected")
 	check(not adapter.route("earth", "missing").ok, "unknown route endpoint is rejected")
+	test_versions(adapter)
+	if "--inject-failure" in OS.get_cmdline_user_args():
+		check(false, "intentional negative control after the complete suite")
 	print("COSMOGRAPHY_NAVIGATION_RESULT checks=%d failures=%d" % [checks, failures])
 	quit(1 if failures else 0)
+
+func test_versions(adapter: CosmographyNavigation) -> void:
+	var markers_before := adapter.markers()
+	var route_before := adapter.route("earth", "lyra")
+	for catalog_version in [1, 1.0]:
+		for navigation_version in [1, 1.0]:
+			var catalog := fixture()
+			var navigation := navigation_fixture()
+			catalog.version = catalog_version
+			navigation.version = navigation_version
+			var opened := CosmographyNavigation.create(catalog, navigation)
+			check(opened.ok, "all exact numeric catalog/navigation version combinations accepted")
+			if opened.ok:
+				check(equivalent(opened.adapter.route("earth", "lyra"), route_before), "numeric version variants preserve route semantics")
+	var parsed_catalog: Variant = JSON.parse_string(JSON.stringify(fixture()))
+	var parsed_navigation: Variant = JSON.parse_string(JSON.stringify(navigation_fixture()))
+	check(typeof(parsed_catalog.version) == TYPE_FLOAT and typeof(parsed_navigation.version) == TYPE_FLOAT, "round-trip uses JSON floats")
+	var round_trip := CosmographyNavigation.create(parsed_catalog, parsed_navigation)
+	check(round_trip.ok, "round-tripped JSON catalog and navigation accepted")
+	if round_trip.ok:
+		check(equivalent(round_trip.adapter.markers(), markers_before), "JSON round-trip preserves markers and provenance")
+		check(equivalent(round_trip.adapter.route("earth", "lyra"), route_before), "JSON round-trip preserves complete route")
+	for version in [1.5, 1.0000000000000002, 0, 2, -1, true, false, "1", "1.0", null, [], [1], {}, {"value": 1}, INF, -INF, NAN]:
+		for target in ["catalog", "navigation"]:
+			var catalog := fixture()
+			var navigation := navigation_fixture()
+			if target == "catalog":
+				catalog.version = version
+			else:
+				navigation.version = version
+			var catalog_before := var_to_bytes(catalog)
+			var navigation_before := var_to_bytes(navigation)
+			check(not CosmographyNavigation.create(catalog, navigation).ok, target + " invalid version rejected")
+			check(var_to_bytes(catalog) == catalog_before, "rejection cannot mutate catalog input")
+			check(var_to_bytes(navigation) == navigation_before, "rejection cannot mutate navigation input")
+			check(equivalent(adapter.markers(), markers_before), "rejection preserves live markers")
+			check(equivalent(adapter.route("earth", "lyra"), route_before), "rejection preserves live route")
+	for invalid in [null, [], {}, {"format": "espaciokoop-cosmography", "entries": []}]:
+		check(not CosmographyNavigation.create(invalid, navigation_fixture()).ok, "malformed catalog rejected before shared validation")
+	var missing_version := navigation_fixture()
+	missing_version.erase("version")
+	check(not CosmographyNavigation.create(fixture(), missing_version).ok, "missing navigation version rejected")
+	# Mutating inputs after successful creation must not affect the accepted copy.
+	var catalog := fixture()
+	var navigation := navigation_fixture()
+	var opened := CosmographyNavigation.create(catalog, navigation)
+	check(opened.ok, "copy isolation fixture opens")
+	if opened.ok:
+		catalog.entries[2].provenance.source = "changed-input"
+		navigation.connections.clear()
+		check(equivalent(opened.adapter.route("earth", "lyra"), route_before), "caller mutations cannot alter accepted route")
