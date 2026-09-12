@@ -29,6 +29,8 @@ var _toast_until = 0.0
 var _capture_mode = false
 var _new_confirmation: ConfirmationDialog
 var _help: AcceptDialog
+var _hamachi_window: Window
+var _network_bridge_pending = false
 
 func _ready() -> void:
 	var args = OS.get_cmdline_user_args()
@@ -52,9 +54,9 @@ func _ready() -> void:
 	Session.notice.connect(_notice)
 	Session.updated.connect(_refresh)
 	Session.joined.connect(func():
-		if _page == "sessions": _go("bridge")
-		else: _refresh())
-	Session.disconnected.connect(func(): _go("sessions"))
+		if _page == "sessions" or (is_instance_valid(_hamachi_window) and _hamachi_window.visible): _network_bridge_pending = true
+		_refresh())
+	Session.disconnected.connect(func(): _network_bridge_pending = false; _go("sessions"))
 	_go("home")
 	if _preferences.fullscreen: DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	if _capture_mode: call_deferred("_capture", args)
@@ -158,6 +160,9 @@ func _home() -> void:
 	resume.disabled = not FileAccess.file_exists("user://campaign.json") and not FileAccess.file_exists("user://campaign.json.bak")
 	controls.add_child(resume)
 	left.add_child(ConsoleUI.label("Juego local · Cooperación en red · Guardado en tu equipo", 14, ConsoleUI.MUTED))
+	var hamachi = ConsoleUI.button("Jugar por Hamachi", _open_hamachi)
+	hamachi.name = "HamachiHomeButton"
+	left.add_child(hamachi)
 	var right = ConsoleUI.card(body)
 	ConsoleUI.expand(right.get_parent())
 	var top = ConsoleUI.row(right)
@@ -725,8 +730,23 @@ func _field(parent: Node, caption: String, text: String = "", secret: bool = fal
 	parent.add_child(edit)
 	return edit
 
+func _open_hamachi() -> void:
+	if is_instance_valid(_hamachi_window):
+		_hamachi_window.grab_focus()
+		return
+	_hamachi_window = load("res://ui/hamachi_window.gd").new()
+	_hamachi_window.configure(Session)
+	add_child(_hamachi_window)
+	_hamachi_window.popup_centered()
+
 func _sessions() -> void:
-	_content.add_child(ConsoleUI.label("Una tripulación, desde varios equipos", 30))
+	var heading = ConsoleUI.row(_content, 16)
+	var title = ConsoleUI.label("Una tripulación, desde varios equipos", 30)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heading.add_child(title)
+	var hamachi = ConsoleUI.button("Jugar por Hamachi", _open_hamachi, true)
+	hamachi.name = "HamachiSessionButton"
+	heading.add_child(hamachi)
 	_content.add_child(ConsoleUI.paragraph("Abre una sesión en tu red y comparte la dirección y la clave con tu tripulación. No hace falta crear una cuenta. El anfitrión conserva el guardado y decide la siguiente misión.", 18))
 	var scroll = ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -850,6 +870,12 @@ func _settings() -> void:
 
 func _refresh() -> void:
 	if _session_label == null: return
+	if _network_bridge_pending:
+		if Session.mode != "client": _network_bridge_pending = false
+		elif not Session.view.is_empty():
+			_network_bridge_pending = false
+			_go("bridge")
+			return
 	_session_label.text = "● " + {"offline": "LOCAL", "host": "ANFITRIÓN", "client": "TRIPULANTE"}.get(Session.mode, "LOCAL")
 	if _refs.has("connection"): _refs.connection.text = Session.connection_status
 	if _refs.has("deck_prompt") and _deck != null: _refs.deck_prompt.text = _deck.prompt
