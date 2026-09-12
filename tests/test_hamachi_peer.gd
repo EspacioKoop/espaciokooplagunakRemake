@@ -85,13 +85,10 @@ func run() -> void:
 func host_case() -> void:
 	var window = await open_window()
 	if window == null: return
-	var address = ""
-	for candidate in IP.get_local_addresses():
-		if Connection.is_valid_address(candidate):
-			address = candidate
-			break
-	check(not address.is_empty(), "local IPv4 available for same-machine network test")
-	if address.is_empty(): return
+	var address = FileAccess.get_file_as_string(exchange.path_join("local-address")).strip_edges()
+	var local_address = Connection.is_valid_address(address) and address in IP.get_local_addresses()
+	check(local_address, "selected primary IPv4 belongs to this same-machine network test")
+	if not local_address: return
 	# Explicit manual address: not represented as automatic Hamachi detection.
 	window.host_address.text = address
 	window.host_address.text_changed.emit(address)

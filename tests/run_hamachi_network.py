@@ -87,6 +87,14 @@ def run(godot, output):
             root = Path(temporary)
             exchange = root / "exchange"
             exchange.mkdir(mode=0o700)
+            # Select the primary local route, not the first adapter returned by
+            # Godot (CI hosts may expose isolated bridge/link-local interfaces).
+            # UDP connect selects a source address but sends NO packet.
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as route:
+                route.connect(("192.0.2.1", 9))
+                address = route.getsockname()[0]
+            (exchange / "local-address").write_text(address, encoding="utf-8")
+            report["address_selection"] = "primary local route; no external packet sent"
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as candidate:
                 candidate.bind(("127.0.0.1", 0))
                 port = candidate.getsockname()[1]
