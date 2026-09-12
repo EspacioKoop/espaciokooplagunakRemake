@@ -15,9 +15,9 @@ Juego nativo de exploración espacial cooperativa construido en **Godot**, con g
 
 ## Estado del proyecto
 
-**Versión preparada: [v0.9.2](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/tag/v0.9.2), 11 de septiembre de 2026.** La publicación de los paquetes Linux/Windows está condicionada a la CI del commit final; la sección [Releases](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases) es la autoridad sobre su disponibilidad. Es una entrega para pruebas de jugadores; **la paridad funcional completa de la 1.0 sigue abierta**.
+**Versión [v0.9.3](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/tag/v0.9.3): acceso guiado por Hamachi.** Los paquetes Linux/Windows se publican únicamente tras la CI del commit final; la sección [Releases](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases) es la autoridad sobre su disponibilidad. Es una entrega para pruebas de jugadores; **la paridad funcional completa de la 1.0 sigue abierta**.
 
-La 0.9.2 reúne correcciones de terminales, escuela de tripulación, combate táctico con modelos 3D, consola GM, taller de NPC, dossier local de sesión, subtítulos de avisos y mejoras de guardados/validación. Incluye también los recursos Itsasargi/Bizi/Portu y el catálogo visual, sin presentarlos como vuelo o aterrizaje de campaña. [Novedades y límites](docs/RELEASE_NOTES.md) · [Guía para probar la 0.9.2](docs/RELEASE_0_9_2.md).
+La 0.9.3 añade **Jugar por Hamachi**: crear una partida, copiar una invitación privada y pegarla para entrar sin configurar dirección, puerto y clave por separado. Conserva las funciones de 0.9.2 y la conexión manual. Hamachi debe estar instalado y conectado; Lagunak no modifica la VPN ni el firewall. [Novedades y límites](docs/RELEASE_NOTES.md) · [Guía de Hamachi](docs/HAMACHI.md) · [Recorrido general heredado de 0.9.2](docs/RELEASE_0_9_2.md).
 
 `main` es la rama de desarrollo y puede contener cambios posteriores a los paquetes publicados. Un PR abierto, una captura o una prueba aislada no convierten una función en parte de una release. Consulta las [notas de publicación](docs/RELEASE_NOTES.md), la [matriz de paridad](docs/FEATURE_PARITY.md) y el [plan maestro](https://github.com/EspacioKoop/espaciokooplagunakRemake/issues/1) para distinguir entregas, avances y pendientes.
 
@@ -27,10 +27,10 @@ La 0.9.2 reúne correcciones de terminales, escuela de tripulación, combate tá
 
 Los paquetes incluyen el juego, sus recursos e instrucciones. **No necesitas instalar Godot, Blender ni Node.js para jugar.** Descomprime el ZIP completo antes de ejecutarlo.
 
-| Plataforma | Paquete v0.9.2 | Ejecutable |
+| Plataforma | Paquete v0.9.3 | Ejecutable |
 | --- | --- | --- |
-| Linux x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.2/EspaciokoopLagunak-0.9.2-linux-x86_64.zip) | `EspaciokoopLagunak.x86_64` |
-| Windows x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.2/EspaciokoopLagunak-0.9.2-windows-x86_64.zip) | `EspaciokoopLagunak.exe` |
+| Linux x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.3/EspaciokoopLagunak-0.9.3-linux-x86_64.zip) | `EspaciokoopLagunak.x86_64` |
+| Windows x86_64 | [Descargar ZIP](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.3/EspaciokoopLagunak-0.9.3-windows-x86_64.zip) | `EspaciokoopLagunak.exe` |
 
 En Linux, si se ha perdido el permiso de ejecución, abre una terminal en la carpeta descomprimida:
 
@@ -39,7 +39,7 @@ chmod +x EspaciokoopLagunak.x86_64
 ./EspaciokoopLagunak.x86_64
 ```
 
-Las sumas de comprobación están en [SHA256SUMS](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.2/SHA256SUMS). En Linux, desde la carpeta que contiene ese archivo y los ZIP descargados:
+Las sumas de comprobación están en [SHA256SUMS](https://github.com/EspacioKoop/espaciokooplagunakRemake/releases/download/v0.9.3/SHA256SUMS). En Linux, desde la carpeta que contiene ese archivo y los ZIP descargados:
 
 ```sh
 sha256sum --check --ignore-missing SHA256SUMS
@@ -165,6 +165,8 @@ La galería incorpora ahora las capturas de los editores de campañas, personaje
 **Partidas en red.** El anfitrión abre **Sesión → Crear sesión** y comparte dirección, puerto UDP —`27840` por defecto— y clave por un canal privado. Los participantes eligen un puesto libre. La campaña permanece en el equipo anfitrión; no hay migración automática del host. La aplicación autentica la entrada con una clave, pero **ENet no cifra el transporte**: no trates la clave de acceso como una garantía de confidencialidad del tráfico. Para jugar fuera de una red de confianza, utiliza una VPN adecuada. [Guía de red](docs/PLAYER_GUIDE.md).
 
 **Guardado local.** Hay autoguardado de campaña, guardado manual y copia anterior `campaign.json.bak`. Las preferencias y el avatar se mantienen localmente. Para comunicar un fallo, comparte únicamente la información necesaria y revisa capturas y registros antes de publicarlos.
+
+**Acceso guiado por Hamachi — 0.9.3.** En **Inicio → Jugar por Hamachi** o **Sesión → Jugar por Hamachi**, el anfitrión puede crear una partida y copiar una invitación privada; los demás la pegan, eligen puesto y se unen. Hamachi debe estar instalado y conectado a la misma red en cada equipo. El juego no instala VPN ni modifica el firewall/router. Esta opción **no está en los ZIP de 0.9.2**; utiliza 0.9.3 y consulta Releases antes de descargar. [Guía y resolución de problemas](docs/HAMACHI.md).
 
 **Servidor dedicado.** El repositorio incluye un anfitrión sin interfaz y despliegue opcional con Docker/Compose, autenticación y almacenamiento persistente. Sigue la [guía de servidor dedicado](docs/DEDICATED_SERVER.md) para configurar la clave fuera del repositorio y el volumen de datos.
 

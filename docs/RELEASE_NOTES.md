@@ -1,106 +1,88 @@
-# Espaciokoop Lagunak 0.9.2
+# Espaciokoop Lagunak 0.9.3
 
-Actualización standalone para pruebas de jugadores en **Linux y Windows x86_64**.
-Incluye las entregas posteriores a 0.9.1 descritas a continuación. **No es la
-certificación de paridad total 1.0**: el plan #1 y la auditoría #32 siguen abiertos.
+**Cooperativo con acceso guiado por Hamachi**, para Linux y Windows x86_64.
+Actualización del juego standalone; no es la certificación de paridad total 1.0.
 
-## Descargar y arrancar
+## Jugar juntos en pocos pasos
 
-Descargar el ZIP de la plataforma, descomprimirlo en una carpeta nueva y ejecutar
-`EspaciokoopLagunak.x86_64` o `EspaciokoopLagunak.exe`. En Linux, dar permiso de
-ejecución con `chmod +x EspaciokoopLagunak.x86_64` cuando sea necesario.
-No hace falta instalar Godot, Foundry ni Docker para jugar.
+1. Instalad y encended **Hamachi** en cada equipo; entrad en la misma red privada.
+2. En Lagunak, pulsad **Inicio → Jugar por Hamachi** o abrid la misma opción desde
+   **Sesión**.
+3. El anfitrión comprueba su IPv4 de Hamachi, pulsa **Crear partida** y comparte
+   **Copiar invitación** por un canal privado.
+4. Los demás abren **Tripulante**, pulsan **Pegar invitación**, eligen un puesto
+   libre y pulsan **Unirse**. No necesitan copiar puerto y clave por separado.
 
-`SHA256SUMS` permite comprobar los paquetes. En Linux: `sha256sum --ignore-missing -c
-SHA256SUMS`, desde la carpeta de descargas. Foundry es un adaptador opcional y se
-entrega en su ZIP separado.
+[Guía de Hamachi y resolución de problemas](https://github.com/EspacioKoop/espaciokooplagunakRemake/blob/v0.9.3/docs/HAMACHI.md).
 
-## Novedades que se pueden probar en el juego
+## Qué cambia
 
-- **Terminales e interiores:** correcciones de consumo de entrada y transición
-  diferida (#35/#42), con apertura, uso, cierre y reapertura comprobables. Se
-  conservan pasillos y escotillas de los siete compartimentos conectados, museo,
-  playa y espacios sociales. El reporte #29 conserva pendiente la confirmación
-  en el equipo afectado; no se afirma haber eliminado cualquier posible crash.
-- **Escuela de tripulación (#62):** primera misión guiada y ocho recorridos de
-  puesto desde Puente → Asistencia entre puestos → Escuela de tripulación.
-  El entrenamiento seguro de asistencia (#46) se mantiene. Usa una sesión
-  desechable y no altera la campaña real.
-- **Combate táctico 3D (#64):** F6 → Expedición táctica incorpora los modelos de
-  tripulantes, enemigos, armas y coberturas de la biblioteca. Cámaras táctica,
-  tercera persona y POV; giro, zoom, recentrado y alternativa 2D. Las reglas,
-  turnos y recursos siguen siendo los existentes. Los recogibles espaciales
-  también usan los modelos de caja y mineral, sin cambiar sus recompensas.
-- **Dirección y autoría:** consola GM conectada al juego y selección de modelos
-  espaciales (#63); taller de NPC con ficha y exportación local (#50); comparadores
-  de estructura y montajes al importar diseños (#44/#49); formato y validador de
-  misiones documentados (#43).
-- **Dossier local de sesión (#37/#38):** exportación de crónica y resumen en
-  F2 → Crónica y bestiario → Exportar sesión…, y briefing de misión desde F4.
-  No es replay ni historia ilimitada.
-- **Legibilidad y avisos:** tamaño de texto persistente (#39) y subtítulos de las
-  cinco señales sonoras locales desde Ajustes → Subtítulos de avisos sonoros…
-  (#66). Funcionan con el sonido silenciado, tienen duración configurable y no
-  graban voz ni conversaciones.
-- **Campaña y cooperación:** validación y migración de guardados reforzadas (#48),
-  comprobaciones adicionales de identidad/privacidad (#45), alerta para entradas
-  tardías y reconexiones (#40), y barrera de preparación de las pruebas ENet (#65).
-  Esto no añade cifrado a ENet ni certifica redes hostiles.
-- **Foundry opcional (#53):** resumen operativo y mapa relativo en su panel, con
-  limpieza al desconectar. La validación manual con una instalación licenciada,
-  la equivalencia completa de puestos y los modificadores dnd5e siguen pendientes.
+- Asistente nativo con pestañas para anfitrión y tripulante, portapapeles explícito
+  y mensajes sobre conexión, errores y puestos ocupados.
+- Detección conservadora de interfaces identificadas como Hamachi, con alternativa
+  manual cuando la tarjeta no aparece o tiene un nombre personalizado. No se
+  presupone que una dirección pertenezca a Hamachi por su prefijo.
+- Invitación privada con dirección IPv4, puerto real del anfitrión y clave. Se
+  valida su formato y sus límites antes de conectar; no es una URL ni ejecuta
+  instrucciones. La contraseña de la red Hamachi no se pide ni se almacena.
+- Se evita reemplazar una sesión activa inadvertidamente y se confirma su cierre.
+  Cerrar la ventana del asistente no cierra la partida.
+- La entrada al puente espera a la primera vista de la nave tras la autenticación:
+  «Conectando» no se confunde con una entrada ya completada.
+- Se conserva el formulario manual de red y el protocolo de autenticación existente,
+  la autoridad del anfitrión, los puestos y los guardados compatibles.
 
-## Biblioteca y recursos de desarrollo
+## Descargar y ejecutar
 
-Se conservan las colecciones Frontera, Órbita y Fieldkit y se incorporan **Itsasargi
-con Bizi (#57)**, **ocho entornos Portu (#60)** y el **catálogo visual de 99 fichas
-con foto (#61)**. Las revisiones fijas del catálogo son un corte documental, no un
-recuento de todos los recursos futuros. Las fuentes Blender y sus fotografías
-permanecen en el repositorio.
+Descomprime el ZIP completo **en una carpeta nueva**, sin sobrescribir la instalación
+0.9.2. Ejecuta `EspaciokoopLagunak.exe` en Windows o `EspaciokoopLagunak.x86_64` en Linux.
+En Linux puede hacer falta dar permiso de ejecución al archivo.
 
-Los planetas Bizi y las salas Portu tienen visores/laboratorios locales; **no son
-nuevos destinos de campaña con vuelo, aterrizaje o desembarco seamless**. Las
-herramientas artísticas no añaden por sí solas inventario, curación o daño.
+El juego y sus recursos van incluidos: no necesitas instalar Godot, Blender,
+Docker o Foundry. **Hamachi sí debe estar instalado y conectado para usar esa VPN**;
+el juego local y la conexión manual no lo requieren.
 
-## Verificación de esta publicación
+La release incluye `SHA256SUMS` para comprobar las descargas. El adaptador Foundry
+sigue siendo un ZIP opcional separado: **conserva su versión 0.9.2, sin cambios de
+código, metadatos o compatibilidad**. Esta función pertenece al juego, no al módulo.
 
-La publicación sólo se habilita tras la CI canónica del commit de `main`, con
-exportación Linux/Windows, sus comprobaciones existentes y arranque Windows.
-Además, la aceptación Linux **extrae el ejecutable del ZIP descargable** y ejecuta
-con gráficos reales la regresión de terminales y la suite de ocio/pasillos.
-No utiliza un proyecto suelto como respaldo; comprueba versión y recursos
-embebidos, guarda capturas y registra el SHA-256 del paquete y del ejecutable.
-Las suites se derivan de las pruebas existentes y se incorporan al mismo PCK,
-verificadas por hash. Un despachador de lista cerrada sólo se activa con
-`--test --release-acceptance=<fase>`; el juego normal no ejecuta las pruebas
-y no se habilita la carga de scripts externos de la plantilla.
+## Seguridad y límites
 
-Las pruebas emplean perfiles sintéticos aislados. El posicionamiento de las
-pruebas de terminales es una fixture, no un paseo humano continuo por todo el
-juego. La suite de ocio sí recorre los seis enlaces físicos en ambos sentidos y
-comprueba los trece destinos. Estas pruebas no sustituyen un playtest humano.
+- La invitación contiene una credencial de acceso. Su formato compacto **no la
+  cifra**; no la publiques ni la incluyas en capturas. El portapapeles puede
+  conservarla después de cerrar el asistente.
+- Lagunak no instala ni configura Hamachi, no modifica el firewall/router, no
+  habilita UPnP y no abre el adaptador Foundry en la VPN. No se deben desactivar
+  protecciones para resolver una conexión fallida.
+- ENet autentica, pero no cifra por sí mismo. Utiliza una VPN conectada y una red
+  de confianza. La detección de la interfaz no demuestra que el túnel del proveedor
+  esté operativo; se mantienen las condiciones y límites de Hamachi.
+- No hay migración de host. Conserva una copia local de la campaña antes de
+  actualizar y usad todos la misma compilación para jugar juntos.
 
-## Partidas y límites
+## Verificación y alcance real
 
-Conservar una copia local de la partida antes de probar una actualización; no
-sobrescribir la carpeta de 0.9.1. Los guardados válidos anteriores conservan las
-migraciones soportadas. Los slots con nombre que aún están en desarrollo no
-forman parte de este corte. No hace falta subir partidas, contraseñas o registros
-personales para comunicar un fallo.
+La publicación depende de la CI canónica del commit final de `main`, las
+exportaciones Linux/Windows, la aceptación gráfica del ZIP Linux y el arranque
+real del ejecutable Windows. Se conservan las comprobaciones de campaña,
+autenticación, privacidad, red, terminales, pasillos, ocio y el adaptador opcional.
 
-No se publican APK Android ni paquete macOS en esta versión. Continúan pendientes
-catálogo y formatos originales completos, cosmografía, localización/accesibilidad
-integrales, validaciones de plataformas y otros criterios de paridad. Tampoco se
+Se añaden pruebas del asistente nativo, validación positiva/negativa de invitaciones
+y controles del ejecutor. Cuatro procesos Godot reales comprueban crear/unirse,
+clave incorrecta, puesto ocupado, recepción autorizada de estado y reconexión,
+con perfiles sintéticos aislados y sin registrar credenciales.
+
+**Estas conexiones automatizadas se realizan en el mismo equipo: no certifican
+un túnel Hamachi entre dos ordenadores ni sustituyen un playtest humano.** La
+instalación del proveedor y las reglas de red de los jugadores necesitan
+comprobarse en sus equipos. La validación con una instalación licenciada de
+Foundry sigue pendiente.
+
+No se incluyen guardados con nombre ni las PR de cosmografía/accesibilidad que
+siguen fuera del corte. El corpus de escenarios continúa siendo un inventario,
+no escenarios jugables nuevos. No se publican paquetes macOS o Android ni se
 anuncian vuelo 6DOF, aterrizaje seamless o rendimiento certificado por hardware.
+#1/#32 mantienen sus pendientes; #29 conserva la confirmación en el equipo afectado.
 
-## Qué probar primero
-
-Caminar por la nave, abrir/usar/cerrar/reabrir terminales; después visitar museo y
-playa, completar una lección, probar F6 y guardar/reabrir una campaña. En
-cooperativo, comprobar entrada tardía, alerta compartida y reconexión. Ajustar los
-subtítulos con el sonido silenciado. La guía detallada está en
-[docs/RELEASE_0_9_2.md](https://github.com/EspacioKoop/espaciokooplagunakRemake/blob/v0.9.2/docs/RELEASE_0_9_2.md).
-
-Para un reporte: **versión 0.9.2, sistema operativo, solo/host/cliente, pasos,
-resultado esperado y observado**. Revisar las capturas antes de compartirlas para
-no incluir información privada.
+Para informar de un fallo, indica **0.9.3, sistema operativo, anfitrión/tripulante,
+pasos y resultado observado**, sin enviar invitaciones, claves ni partidas completas.

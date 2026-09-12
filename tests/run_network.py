@@ -44,3 +44,8 @@ with tempfile.TemporaryDirectory(prefix="lagunak-network-") as temporary:
 # The release workflow already runs this authority boundary. Keep campaign
 # regressions mandatory without adding privileged workflow definitions.
 subprocess.run([sys.executable, str(ROOT / "tests/run_campaign_editor.py"), "--godot", GODOT], check=True)
+
+# Keep the guided-connection path and fail-closed runner controls in the same
+# canonical CI entry point, preserving every existing network/campaign check.
+subprocess.run([sys.executable, str(ROOT / "tests/test_hamachi_runner.py")], check=True)
+subprocess.run([sys.executable, str(ROOT / "tests/run_hamachi_network.py"), "--godot", GODOT], check=True)

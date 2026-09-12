@@ -74,17 +74,17 @@ class PublicationTests(unittest.TestCase):
             self.assertEqual(cli.call_args_list[-1].args[:2], ("release", "edit"))
 
     def test_future_versions_never_auto_publish(self):
-        for version in ("0.9.3", "1.0.0", "1.1.0", "garbage"):
+        for version in ("0.9.4", "1.0.0", "1.1.0", "garbage"):
             with self.subTest(version=version), patch.object(release, "VERSION", version), patch.object(release, "gh") as cli:
                 release.publish(self.root, "owner/repo", "a" * 40, 1)
                 cli.assert_not_called()
 
-    def test_092_explicitly_enabled_and_module_metadata_consistent(self):
-        self.assertEqual(release.VERSION, "0.9.2")
+    def test_093_explicitly_enabled_and_unchanged_module_metadata_consistent(self):
+        self.assertEqual(release.VERSION, "0.9.3")
         root = Path(__file__).resolve().parents[1]
         module = json.loads((root / "integrations/foundry/module.json").read_text())
-        self.assertEqual(module["version"], release.VERSION)
-        self.assertIn("/releases/download/v" + release.VERSION + "/", module["download"])
+        self.assertEqual(module["version"], "0.9.2")  # Unchanged optional adapter, not a new module release.
+        self.assertIn("/releases/download/v" + module["version"] + "/", module["download"])
         self.assertIn("EspacioKoop/espaciokooplagunakRemake", module["manifest"])
         self.assertIn("# Espaciokoop Lagunak " + release.VERSION, (root / "docs/RELEASE_NOTES.md").read_text())
 
