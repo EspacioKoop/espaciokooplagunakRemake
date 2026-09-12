@@ -1,42 +1,36 @@
-## Carril / reserva
+## Alcance y coordinación
 
-- Issue: #
-- CLAIM en #7: sí / no
-- Agente:
-- Rama: `agent/...`
-- Archivos principales reservados:
+Refs #N. Objetivo y aceptación cubierta:
 
-## Qué cambia
+CLAIM en #7, agente, rama y archivos reservados:
 
-Describe comportamiento jugable/visible, no sólo archivos modificados.
+Dependencias, exclusiones y contratos compartidos:
 
-## Autoridad, privacidad y compatibilidad
+## Cambios y compatibilidad
 
-- [ ] No introduce una segunda fuente de verdad.
-- [ ] No expone datos privados/secretos de otros clientes.
-- [ ] Mantiene o migra guardados/protocolo si aplica.
-- [ ] Standalone sigue funcionando sin Foundry/Discord/Docker.
-- [ ] No introduce placeholders/TODOs como funcionalidad final.
+Comportamiento utilizable o resultado de documentación/herramientas:
 
-## Pruebas ejecutadas
+Autoridad, validación de entradas y casos negativos:
 
-Incluye comandos y resultado. Añade casos negativos si cambias red, permisos, formatos, guardado, economía o secretos.
+Guardados/protocolo/formato, migración y reversión:
 
-- [ ] Tests específicos del carril
-- [ ] Tests afectados existentes
-- [ ] Importación Godot sin errores de script
-- [ ] CI del PR verde o fallos explicados como externos/preexistentes
+## Evidencias del candidato
 
-## Conflictos / archivos calientes
+SHA exacto:
 
-Indica si tocaste alguno de los archivos calientes de `AGENTS.md` y por qué era imprescindible.
+Comandos ejecutados, entorno, resultados y enlaces de CI:
 
-## Estado de paridad
+Pruebas no ejecutadas, limitaciones, aceptación humana pendiente:
 
-- `Refs #N` si es avance parcial.
-- `Closes #N` sólo si se cumplen **todos** los criterios de aceptación del issue.
+- [ ] Revisé diff, capturas, logs y artefactos: sin credenciales, partidas ni datos privados.
+- [ ] Conservé las pruebas; no oculté fallos ni atribuí CI de otro SHA.
+- [ ] Actualicé normas/roadmap/milestone sólo si cambió su alcance y con reserva explícita.
+- [ ] Distinguí implementación, integración, release y paridad global.
 
 ## Entrega
 
-- [ ] He publicado `PR_READY issue=#N branch=<rama> pr=#M tests=<resumen>` en #7.
-- [ ] No he hecho merge por mi cuenta.
+PR_READY y checkpoint en #7:
+
+Autorización explícita de integración, cuando exista (PR_READY no la concede):
+
+Efectos remotos y reversión: un revert no elimina milestones ni revierte asignaciones automáticamente.
