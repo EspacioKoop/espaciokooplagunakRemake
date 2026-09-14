@@ -84,6 +84,37 @@ no es un inventario exhaustivo del repositorio original.
 | Paridad completa de estaciones, dnd5e y efectos | Fuera de este cambio; siguen pendientes de la auditoría y de sus respectivos trabajos |
 | Validación contra Foundry real | Procedimiento abajo; no se declara completada por pruebas de un DOM simulado |
 
+### Equivalencias de órdenes y modo de acceso
+
+La siguiente lista es el contrato cerrado que consumen los callers actuales:
+`client.mjs` ofrece estas operaciones, `foundry_authority.gd` vuelve a filtrarlas
+por el puesto nativo resuelto por el host y sólo entonces llama a
+`Simulation.command`. No se amplía la lista por añadir permisos de Foundry ni
+por enviar otros campos en el formulario.
+
+| Operación cerrada | Puesto nativo resuelto por el host | Caller y ruta |
+|---|---|---|
+| `alert` | Mando | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `helm` | Navegación | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `autopilot` | Navegación | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `dock` | Navegación | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `undock` | Navegación | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `power` | Ingeniería | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `coolant` | Ingeniería | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `shields` | Ingeniería | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `fire` | Armas | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `scan` | Sensores | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `hail` | Comunicaciones | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `probe` | Enlace | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+| `repair` | Control de daños | `FoundryAuthority.commands` → `Simulation.command` vía `/v2/command` |
+
+El modo **Consulta pública** sólo usa el token de Sesión para `/v1/state` y
+`/v1/events?after=N`; no obtiene ficha, puesto ni órdenes. Un acceso personal
+de sólo lectura puede usar `/v2/view`, pero recibe una lista de órdenes vacía:
+`control` debe haber sido concedido por el host para que aparezca cualquiera de
+las trece operaciones. Esta tabla describe equivalencias de código y
+documentación, no una instalación ni una experiencia verificada en Foundry 13.
+
 El bloque de alerta ENet para entrada tardía/reconexión y el inventario global de
 paridad pertenecen a otros subcarriles de #32. Esta PR no duplica sus pruebas,
 no edita el núcleo Godot ni cierra #32 o #5.
@@ -118,6 +149,11 @@ El workflow aditivo `foundry-workspace.yml` ejecuta todos los archivos
 `*.test.mjs`, las dos pruebas del ZIP y los contratos de exportación existentes.
 El empaquetador y el fixture de exportación sólo añaden `workspace.mjs` a sus
 listas explícitas; no se amplía la selección a archivos locales arbitrarios.
+El gate aditivo `foundry-equivalences.yml` ejecuta
+`tests/test_foundry_equivalences.py` para detectar deriva entre las trece
+operaciones del cliente, los esquemas/roles del host y esta tabla documental.
+Ese gate es una comprobación estática del código versionado: no ejecuta Godot ni
+instala Foundry y no sustituye la validación manual descrita abajo.
 No sustituye las pruebas HTTP/Godot ni la verificación y el
 empaquetado standalone existentes.
 
