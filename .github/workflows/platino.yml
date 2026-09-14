@@ -1,0 +1,40 @@
+name: Validate Platino adoption
+
+on:
+  pull_request:
+  push:
+    branches: [main, agent/72-platino-adoption]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: platino-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Validate pinned rules and local adoption without network
+        run: |
+          python3 --version
+          python3 -m unittest discover -s docs/platino/upstream/tests -v
+          python3 -m unittest discover -s tests/platino -v
+          python3 tools/platino.py check .platino.json
+          git diff --check
+      - name: Inventory tracked candidate blobs without player data
+        run: python3 tools/repository_inventory.py > "$RUNNER_TEMP/repository-inventory.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: platino-repository-inventory
+          path: ${{ runner.temp }}/repository-inventory.json
+          retention-days: 14
+          if-no-files-found: error

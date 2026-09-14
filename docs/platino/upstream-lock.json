@@ -1,0 +1,72 @@
+{
+  "repository": "EspacioKoop/normas_platino",
+  "commit": "b5e01a2b2060a31268507797708a92a7d14ffc52",
+  "review_date": "2026-09-11",
+  "files": [
+    {
+      "path": ".github/workflows/validar.yml",
+      "sha256": "b65870425eb182a8ea6a76d46c1594c084dc7f55b7be699cdaf49b283b6b2d1a",
+      "git_blob_sha": "e00e9fe267e547e4addbd8f098d2f044739ca543"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "a28a09a9bcc3aad98c8983756e5e356f2155aebb39d45792015c1731a3c4fc9c",
+      "git_blob_sha": "c92913572d41db292c4cb53a2a2da7436df79d2a"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "a905b7cf48b805afbdc11f6e84efc871b3405485252462476c8ef0090bf97815",
+      "git_blob_sha": "66eab0a90275b5fa9c96c200cd486f293d37853b"
+    },
+    {
+      "path": "README.md",
+      "sha256": "20dd37efb4477e7384fa49f29ec06d5f33a22d63f7e1b8ebed79467052fa9aba",
+      "git_blob_sha": "8acc15efd2c2aacadd39272d5fcfbbef144201c7"
+    },
+    {
+      "path": "docs/AUTOMATIZACION.md",
+      "sha256": "a7db6e0668b1f499863a3a282522db9d94bf1958767c462677c9983d3a7348ef",
+      "git_blob_sha": "77639b24fd99fb70fd5630e7c850ad24bbc6ad24"
+    },
+    {
+      "path": "docs/COOPERACION_AUTONOMA.md",
+      "sha256": "ddc3300f6d0771dd42efc04aaf62cd8e35c30c1daa314c2e9253444c61d41226",
+      "git_blob_sha": "b604a83f063590a3e3d4d8c506ef8e058c1d2c26"
+    },
+    {
+      "path": "docs/PLANIFICACION_Y_ENTREGAS.md",
+      "sha256": "450fd65cb187816328cb3a248398688dc8c981b16692da68be9f48ea9cae77c3",
+      "git_blob_sha": "baabcb222edae3925eb6d37feb2be2469e4e6ccf"
+    },
+    {
+      "path": "scripts/platino.py",
+      "sha256": "62c9ea38a39d8bd7f994a1695f0e38ab2e7e0a3ef06cf1efba179034945f91b9",
+      "git_blob_sha": "46f167015ca9acd50efb44d7f57451a881ce9a95"
+    },
+    {
+      "path": "templates/ADOPCION.md",
+      "sha256": "13933ff3a537a238211067b4c2a569914b59b3bf28c9054b132fcf9572fb9162",
+      "git_blob_sha": "6412e43968b9e4877cd9b490613fd892fb8ce96a"
+    },
+    {
+      "path": "templates/ROADMAP.md",
+      "sha256": "5da4ac55bc2446c1c45ce1f9f852b60c39325d9ca91beeea400f9dfb8e484370",
+      "git_blob_sha": "8f9a2cdda97aa100fbb135339c2f79611b449e8d"
+    },
+    {
+      "path": "templates/platino.json",
+      "sha256": "8dc77905b128dafb8d2ea56f7a60c61af03e28a875c63dc52cff4c74b5bbe3ac",
+      "git_blob_sha": "793b18c9406fc4f03ef40717ecc148f42a204864"
+    },
+    {
+      "path": "tests/test_docs.py",
+      "sha256": "550c5e5bdc8c53564b4cf526f4a042512f4defb5013548473a17e522b5a55ff8",
+      "git_blob_sha": "132cec72bd74666776fcd9ef9674abb6d4b6a3f8"
+    },
+    {
+      "path": "tests/test_platino.py",
+      "sha256": "b1e1cbf6932bfe6822dd2eed971f98cc58e6de2c976d015d22f66136003cac6c",
+      "git_blob_sha": "f8b5920f4ef1e1cf320e2069ae890c090b8101fe"
+    }
+  ]
+}

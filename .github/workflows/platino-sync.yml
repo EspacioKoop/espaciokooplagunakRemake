@@ -1,0 +1,109 @@
+name: Sync explicitly approved milestones
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Preview is read-only; apply requires a separately reviewed approval
+        type: choice
+        options: [preview, apply]
+        default: preview
+        required: true
+      expected_sha:
+        description: Exact reviewed main commit (40 hexadecimal characters)
+        type: string
+        required: true
+      approval:
+        description: SHA-256 approval from the reviewed preview; empty for preview
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: platino-milestones
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  TARGET_REPO: EspacioKoop/espaciokooplagunakRemake
+  EXPECTED_SHA: ${{ inputs.expected_sha }}
+  APPROVAL: ${{ inputs.approval }}
+
+jobs:
+  preview:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/main' && inputs.mode == 'preview'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Require exact reviewed main and no approval in preview
+        run: |
+          python3 - <<'PYCODE'
+          import os, re, subprocess
+          sha = os.environ['EXPECTED_SHA']
+          assert re.fullmatch('[0-9a-f]{40}', sha), 'Invalid expected SHA'
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == sha, 'Candidate changed'
+          assert not os.environ['APPROVAL'], 'Preview must not approve a write'
+          PYCODE
+          python3 -m unittest discover -s docs/platino/upstream/tests -v
+          python3 -m unittest discover -s tests/platino -v
+          python3 tools/platino.py check .platino.json
+      - name: Read explicit plan (no writes)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: ''
+        run: python3 tools/platino.py sync .platino.json --repo "$TARGET_REPO" > "$RUNNER_TEMP/platino-preview.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: platino-preview
+          path: ${{ runner.temp }}/platino-preview.json
+          retention-days: 7
+          if-no-files-found: error
+  apply:
+    if: github.repository == 'EspacioKoop/espaciokooplagunakRemake' && github.ref == 'refs/heads/main' && inputs.mode == 'apply'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Check candidate and separately supplied approval before any write
+        run: |
+          python3 - <<'PYCODE'
+          import os, re, subprocess
+          sha = os.environ['EXPECTED_SHA']
+          assert re.fullmatch('[0-9a-f]{40}', sha), 'Invalid expected SHA'
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == sha, 'Candidate changed'
+          assert re.fullmatch('[0-9a-f]{64}', os.environ['APPROVAL']), 'A reviewed preview approval is required'
+          PYCODE
+          python3 -m unittest discover -s docs/platino/upstream/tests -v
+          python3 -m unittest discover -s tests/platino -v
+          python3 tools/platino.py check .platino.json
+      - name: Re-read, apply approved plan and verify remote state
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: ''
+        run: |
+          python3 tools/platino.py sync .platino.json --repo "$TARGET_REPO" --apply --approve "$APPROVAL" > "$RUNNER_TEMP/platino-applied.json"
+          python3 tools/platino.py sync .platino.json --repo "$TARGET_REPO" > "$RUNNER_TEMP/platino-after.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: platino-sync-result
+          path: |
+            ${{ runner.temp }}/platino-applied.json
+            ${{ runner.temp }}/platino-after.json
+          retention-days: 7
+          if-no-files-found: warn

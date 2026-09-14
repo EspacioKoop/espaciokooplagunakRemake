@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "repository": "EspacioKoop/proyecto-ejemplo",
+  "milestones": [
+    {
+      "title": "v0.1.0",
+      "description": "Primera entrega utilizable. Criterio de salida: recorrido principal probado y artefacto verificable. Sustituir por el alcance aprobado del proyecto.",
+      "issues": []
+    }
+  ]
+}

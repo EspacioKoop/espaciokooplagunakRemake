@@ -1,0 +1,25 @@
+name: Validar Normas Platino
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Obtener el candidato sin conservar credenciales
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Pruebas locales, sin red ni escrituras de metadatos
+        run: |
+          python3 --version
+          python3 -m unittest discover -s tests -v
+          python3 scripts/platino.py check templates/platino.json
+          git diff --check

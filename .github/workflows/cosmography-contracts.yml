@@ -1,0 +1,44 @@
+name: Verify cosmography contracts
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cosmography-contracts-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  GODOT: ${{ github.workspace }}/.toolchain/godot
+
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Download official pinned editor with SHA-512 verification
+        run: python3 tools/bootstrap.py
+      - name: Run the complete native persistence suite
+        run: python3 -P tests/run_cosmography_persistence.py
+      - name: Run the complete native navigation suite
+        run: python3 -P tests/run_cosmography_navigation.py
+      - name: Verify runner protocol, isolation and real negative controls
+        run: python3 -P -m unittest discover -s tests -p test_cosmography_contract_runners.py -f -v
+      - name: Check whitespace
+        run: git diff --check
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: cosmography-contract-logs
+          path: build/cosmography-contracts/
+          if-no-files-found: error
+          retention-days: 14

@@ -115,6 +115,9 @@ func run() -> void:
 	check(session.sim.state.operations.coolant.motores > 0 and session.sim.state.cooperation.tokens.is_empty(), "native recipient consumes proposal exactly once")
 	assistance.queue_free()
 	await settle()
+	var hamachi_suite = load(get_script().resource_path.get_base_dir().path_join("test_hamachi_ui.gd"))
+	var hamachi_result: Dictionary = await hamachi_suite.verify(self, app)
+	check(hamachi_result.checks > 0 and hamachi_result.failures == 0, "Hamachi helper and production launcher UI")
 	app._ambient.stop()
 	app._effects.stop()
 	app._ambient.stream = null

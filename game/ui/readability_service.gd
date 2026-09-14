@@ -3,8 +3,11 @@ extends Node
 ## Baselines and weak references prevent cumulative scaling and retain no freed UI.
 signal changed
 const Profile = preload("res://input/readability_profile.gd")
+const AccProfile = preload("res://input/accessibility_profile.gd")
 var profile_path = "user://readability-v1.json"
+var acc_path = "user://accessibility-v1.json"
 var profile: Dictionary = Profile.defaults()
+var acc_profile: Dictionary = AccProfile.defaults()
 var load_error = ""
 var _entries: Dictionary = {}
 var _applying = false
@@ -13,12 +16,34 @@ var _stopping = false
 func _ready() -> void:
 	name = "Readability"
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	if "--test" in OS.get_cmdline_user_args(): profile_path = "user://readability-test-v1.json"
+	if "--test" in OS.get_cmdline_user_args():
+		profile_path = "user://readability-test-v1.json"
+		acc_path = "user://accessibility-test-v1.json"
 	var loaded = Profile.load_file(profile_path)
 	profile = loaded.profile
 	load_error = loaded.error
+	var acc_loaded = AccProfile.load_file(acc_path)
+	acc_profile = acc_loaded.profile
 	get_tree().node_added.connect(_node_added)
 	call_deferred("_scan_existing")
+
+func commit_accessibility(mode: String, reduced_motion: bool) -> String:
+	var candidate = acc_profile.duplicate()
+	candidate.colorblind_mode = mode
+	candidate.global_reduced_motion = reduced_motion
+	var err = AccProfile.validate(candidate)
+	if not err.is_empty(): return err
+	if AccProfile.save_file(acc_path, candidate) != OK:
+		return "No se pudo guardar la configuración de accesibilidad."
+	acc_profile = candidate
+	changed.emit()
+	return ""
+
+func colorblind_filter() -> String:
+	return acc_profile.get("colorblind_mode", "none")
+
+func is_reduced_motion() -> bool:
+	return acc_profile.get("global_reduced_motion", false)
 
 func commit_text_percent(value: Variant) -> String:
 	var candidate = Profile.defaults()

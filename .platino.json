@@ -5,22 +5,52 @@
     {
       "title": "1.0 — Paridad funcional",
       "description": "Cerrar la paridad funcional pendiente del remake con una campaña standalone verificable, conservando el plan maestro #1 como autoridad y sin presentar un check histórico como certificación de 1.0.",
-      "issues": [29, 32]
+      "issues": [
+        29,
+        32
+      ]
     },
     {
       "title": "Cosmografía y navegación",
       "description": "Construir la cosmografía standalone y la navegación espacial pendiente, con aterrizaje, atraque, desembarco, conexiones, procedencia y pruebas reproducibles cuando el alcance quede aprobado.",
-      "issues": [56, 59]
+      "issues": [
+        56,
+        59
+      ]
     },
     {
       "title": "Contenido y catálogo",
       "description": "Completar el inventario de contenido y catálogo pendiente, incluyendo editores, avatares y NPC, interiores, arte, audio y la biblioteca 3D, con consumo verificable desde el ejecutable.",
-      "issues": [2, 3, 6, 52]
+      "issues": [
+        2,
+        3,
+        6,
+        52
+      ]
     },
     {
       "title": "Plataforma y publicación",
       "description": "Completar la distribución, los controles, la accesibilidad, los idiomas y las integraciones de plataforma que sigan pendientes, con paquetes y validación reproducibles.",
-      "issues": [4, 5, 30]
+      "issues": [
+        4,
+        5,
+        30
+      ]
+    },
+    {
+      "title": "Adopción Normas Platino",
+      "description": "Hito de gobernanza sin release de juego. Alcance #72: normas fijadas y copia local íntegra, instrucciones coherentes, roadmap, sincronización explícita y probada e inventario reproducible. Salida: PR revisado e integrado, validación sobre su SHA y comprobación remota de milestones. No certifica paridad ni publica binarios. Decisión y evidencias: #72; reservas: #7.",
+      "issues": [
+        72
+      ]
+    },
+    {
+      "title": "Diseño futuro — decisiones sin release",
+      "description": "Hito de investigación y decisiones, no compromiso de implementar funciones ni promesa de versión. Agrupa los debates #33 (Big Walk) y #71 (PULSAR), aún sin milestone al reconciliar la planificación concurrente. Salida por debate: decisiones explícitas de producto, riesgos, dependencias y seguimiento. No bloquea la paridad 1.0 ni la sustituye. #30 y #59 conservan sus milestones temáticas existentes; su asignación tampoco aprueba mecánicas. Sin fecha ni release asociada.",
+      "issues": [
+        33,
+        71
+      ]
     }
   ]
 }
