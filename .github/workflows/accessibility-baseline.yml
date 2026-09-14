@@ -1,0 +1,54 @@
+name: Accessibility baseline
+
+on:
+  pull_request:
+    paths:
+      - "game/core/accessibility_settings.gd"
+      - "game/ui/accessibility/**"
+      - "tests/test_accessibility_baseline.gd"
+      - "tests/run_accessibility_baseline.py"
+      - "tests/test_accessibility_runner.py"
+      - "tools/bootstrap.py"
+      - "tools/export_targets.py"
+      - "game/project.godot"
+      - "docs/ACCESSIBILITY_BASELINE.md"
+      - ".github/workflows/accessibility-baseline.yml"
+  push:
+    branches: [main]
+    paths:
+      - "game/core/accessibility_settings.gd"
+      - "game/ui/accessibility/**"
+      - "tests/test_accessibility_baseline.gd"
+      - "tests/run_accessibility_baseline.py"
+      - "tests/test_accessibility_runner.py"
+      - "tools/bootstrap.py"
+      - "tools/export_targets.py"
+      - "game/project.godot"
+      - "docs/ACCESSIBILITY_BASELINE.md"
+      - ".github/workflows/accessibility-baseline.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify runner negative controls
+        run: python3 -m unittest discover -s tests -p test_accessibility_runner.py -v
+      - name: Download exact official Godot editor with SHA-512 verification
+        run: timeout 180 python3 tools/bootstrap.py
+      - name: Import isolated project and exercise real accessibility components
+        run: python3 tests/run_accessibility_baseline.py --godot .toolchain/godot --timeout 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: accessibility-baseline-logs
+          path: build/accessibility-baseline/
+          if-no-files-found: warn
+          retention-days: 14
