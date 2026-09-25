@@ -5,6 +5,7 @@ signal zone_changed(name: String)
 signal interaction_requested(entry: Dictionary)
 
 const ZONES = ShipDeckLayout.ZONES
+const GMInteriorTrigger = preload("res://world/gm_interior_trigger.gd")
 var zone = 0
 var prompt = "Pulsa sobre la vista para mirar y caminar."
 var viewport_3d: SubViewport
@@ -38,6 +39,7 @@ var _page_turn = 0.0
 var _studio_lights: Array = []
 var _studio_mode = 0
 var book_open = false
+var _gm_interior_trigger: GMInteriorTrigger
 
 func _session() -> Node:
 	return get_tree().root.get_node_or_null("Session") if is_inside_tree() else null
@@ -172,6 +174,9 @@ func _ready() -> void:
 		presence.changed.connect(_sync_seat)
 		presence.result_received.connect(_seat_result)
 		presence.request_finished.connect(_seat_finished)
+	_gm_interior_trigger = GMInteriorTrigger.new()
+	_gm_interior_trigger.setup(_session())
+	zone_changed.connect(_on_zone_changed)
 	teleport_zone(0)
 
 func _add_door(position: Vector3, destination: int, title: String, source: int) -> void:
@@ -185,6 +190,9 @@ func _add_door(position: Vector3, destination: int, title: String, source: int) 
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	world.add_child(label)
 	_doors.back().label = label
+
+func _on_zone_changed(name: String) -> void:
+	if _gm_interior_trigger != null: _gm_interior_trigger.enter_zone(name)
 
 func teleport_zone(index: int) -> void:
 	stand_up()
